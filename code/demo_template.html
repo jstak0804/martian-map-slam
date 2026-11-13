@@ -195,6 +195,14 @@
   .hud .compass .mk { top: 14px; font-size: 13px; font-weight: 700; }
   .hud .compass::after { content: ""; position: absolute; left: 50%; top: 0; width: 1px; height: 10px; background: #b8ffcf; }
   .hud .lang { position: absolute; bottom: 12px; right: 10px; pointer-events: auto; font: inherit; font-size: 11px; color: #b8ffcf; background: rgba(5,12,10,.7); border: 1px solid rgba(120,255,180,.5); border-radius: 4px; padding: 2px 6px; cursor: pointer; }
+  /* 헬멧 바이저 미리보기 */
+  .visor-wrap { display: grid; gap: 8px; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; }
+  .visor { position: relative; width: 100%; aspect-ratio: 16 / 8; border-radius: 48% 48% 38% 38% / 30% 30% 60% 60%; overflow: hidden;
+    background: #05090b center / cover no-repeat; border: 3px solid #2a3340; box-shadow: inset 0 0 60px rgba(0,0,0,.85), 0 0 0 6px #10151d; }
+  .visor::before { content: ""; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,0) 40%), rgba(255,170,90,.06); pointer-events: none; }
+  .visor .hud { background: radial-gradient(ellipse at center, rgba(0,0,0,0) 45%, rgba(0,10,8,.55) 100%); }
+  .visor .hud .tl { top: 14%; left: 9%; } .visor .hud .tr { top: 14%; right: 9%; } .visor .hud .bl { bottom: 26%; left: 7%; } .visor .hud .br { bottom: 26%; right: 7%; }
+  .visor .hud .alert { top: 9%; } .visor .hud .compass { bottom: 9%; left: 22%; right: 22%; } .visor .hud .lang { bottom: 10%; right: 12%; }
   /* 로드뷰 */
   .rv { display: grid; gap: 8px; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; }
   .rv-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; font-size: 13px; }
@@ -410,12 +418,17 @@
         <canvas class="cells" id="cells"></canvas>
         <canvas class="vec" id="vec" aria-label="지도를 누르면 그 지점에서 거점까지의 귀환 경로를 보여 줍니다"></canvas>
         <div class="loading" id="loading">지형 격자를 푸는 중…</div>
-        <div class="hud" id="hud" hidden></div>
       </div>
       <section class="rv" id="rv" hidden aria-label="로드뷰">
         <div class="rv-head"><b id="rv-title"></b><span class="rv-nav"><button type="button" class="reset" id="rv-prev">◀ 이전</button><button type="button" class="reset" id="rv-next">다음 ▶</button><button type="button" class="reset" id="rv-close">닫기</button></span></div>
         <div class="rv-view" id="rv-view"></div>
         <p class="rv-cap" id="rv-cap"></p>
+      </section>
+      <section class="visor-wrap" id="visor-wrap" hidden aria-label="헬멧 바이저 HUD 미리보기">
+        <div class="rv-head"><b>헬멧 바이저 HUD 미리보기</b><span class="rv-nav"><button type="button" class="reset" id="visor-close">닫기</button></span></div>
+        <p class="rv-cap">헬멧 바이저에는 이렇게 표시할 예정입니다. 배경은 지금 위치 근처에서 로버가 찍은 실제 사진(바이저 너머 풍경 대신), 값은 지도에서 고른 지점·현재 위치·EVA 시뮬레이션 재생 시각 기준으로 바뀝니다.</p>
+        <div class="visor" id="visor"><div class="hud" id="hud"></div></div>
+        <p class="rv-cap" id="visor-cap"></p>
       </section>
       <div class="simbar" id="simbar" hidden>
         <div class="simrow">
@@ -529,7 +542,7 @@
                   simTarget: GOAL, simScenario: "surge", simNoise: 8, simAuto: true, simCustom: "",
                   simSrc: "hr", simLeak: 0, simPNoise: 10, simTcomp: true, simLeakSub: false,
                   mSpeed: false, mEta: false, mDown: false, mSand: false, showmr: false, showsand: false, showphoto: true, showtir: false,
-                  showtargets: true, evaSel: [], evaDwell: 45, hud: false, hudLang: "ko", rv: -1 };
+                  showtargets: true, evaSel: [], evaDwell: 45, hud: false, hudLang: "ko", rv: -1, rvMode: false };
 
   let PRESETS;
   const makePresets = () => [
@@ -1474,11 +1487,18 @@
   }
   function renderHud() {
     const el = $("hud");
-    if (!state.hud || !H) { el.hidden = true; return; }
+    $("visor-wrap").hidden = !state.hud;
+    if (!state.hud || !H) return;
     const L = HL[state.hudLang], S = setNow();
     const simF = state.mode === "sim" && SIM && SIM.ok ? SIM.frames[SIM.idx] : null;
     const pos = simF ? simF.pos : state.mode === "here" ? state.here : state.sel;
-    if (pos < 0 || !S) { el.hidden = true; return; }
+    if (pos < 0 || !S) { el.innerHTML = ""; return; }
+    // 바이저 배경: 이 위치에서 가장 가까운 로버 사진
+    const P = META.photos || [];
+    let bp = null, bd = Infinity;
+    for (const p of P) { const d = Math.hypot(p.x - (pos % W + 0.5), p.y - (((pos / W) | 0) + 0.5)) * CELL; if (d < bd) { bd = d; bp = p; } }
+    $("visor").style.backgroundImage = bp ? `url("${bp.img}")` : "none";
+    $("visor-cap").textContent = bp ? `배경 사진: ${bp.rover} Navcam sol ${bp.sol} (이 위치에서 ${fmt(bd / 1000, 2)} km 떨어진 곳, NASA/JPL-Caltech)` : "이 지형에는 로버 사진이 없어 배경을 비웠습니다.";
     const k = EK(), o2 = EO2(), w = EW() * 1000;
     const need = S.o2[pos] >= 0 ? k * S.o2[pos] : NaN;
     const margin = o2 - C.o2_reserve_g - need;
@@ -1524,7 +1544,7 @@
   }
   function renderRv() {
     const RV = META.roadview || [], box = $("rv");
-    if (state.rv < 0 || !RV.length) { box.hidden = true; $("rv-btn").setAttribute("aria-pressed", "false"); return; }
+    if (state.rv < 0 || !RV.length) { box.hidden = true; return; }
     const st = RV[state.rv], cell = Math.floor(st.y) * W + Math.floor(st.x);
     $("rv-title").textContent = `${st.rover} · sol ${st.sol} · 지점 ${state.rv + 1}/${RV.length}`;
     const imgOf = (f) => f.img || ((META.photos || []).find((p) => p.sol === f.photo_sol) || {}).img || "";
@@ -1533,7 +1553,7 @@
     $("rv-cap").textContent = `거점까지 ${fmt(distKm(cell, state.base), 2)} km, 방위 ${Math.round(bearingTo(cell, state.base))}° · `
       + (st.frames.length > 1 ? "같은 자리에서 여러 방향으로 찍은 수평선 사진을 방위각 순서로 이어 놓았습니다. 옆으로 밀어 둘러보세요. " : "")
       + "NASA/JPL-Caltech 원본 사진. 지도의 노란 고리가 이 지점입니다.";
-    box.hidden = false; $("rv-btn").setAttribute("aria-pressed", "true");
+    box.hidden = false;
   }
   function groundFact(i) {                 // THEMIS 야간 적외선으로 본 지반 (지역 안 상대 순위)
     if (!TIR || i < 0) return "";
@@ -1837,7 +1857,17 @@
       g.strokeStyle = "#0d1016"; g.lineWidth = 5 * lw; g.beginPath(); g.arc(st.x, st.y, 11 * lw, 0, 7); g.stroke();
       g.strokeStyle = "#ffd23f"; g.lineWidth = 2.6 * lw; g.stroke();
     }
-    if (state.showphoto && META.photos) {     // 로버 사진 위치: 카메라 표시
+    if (state.rvMode && META.roadview) {     // 로드뷰 모드: 주황 카메라 아이콘
+      META.roadview.forEach((st, n) => {
+        const on = n === state.rv, r = (on ? 9 : 7) * lw;
+        g.fillStyle = on ? "#ffd23f" : "#e2794d"; g.strokeStyle = "#0d1016"; g.lineWidth = 1.6 * lw;
+        g.beginPath(); g.rect(st.x - r, st.y - r * 0.7, 2 * r, 1.4 * r); g.fill(); g.stroke();
+        g.beginPath(); g.rect(st.x - r * 0.35, st.y - r * 1.05, r * 0.7, r * 0.4); g.fill(); g.stroke();
+        g.fillStyle = "#0d1016"; g.beginPath(); g.arc(st.x, st.y, r * 0.42, 0, 7); g.fill();
+        if (st.frames.length > 1) { g.fillStyle = "#fff"; g.font = `bold ${8 * lw}px system-ui`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("360", st.x, st.y + r * 1.45); }
+      });
+    }
+    if (state.showphoto && META.photos && !state.rvMode) {     // 로버 사진 위치: 카메라 표시
       for (const p of META.photos) {
         const on = POV === p, r = (on ? 6.5 : 4.5) * lw;
         g.fillStyle = on ? "#ffd23f" : "#e7eaf0"; g.strokeStyle = "#0d1016"; g.lineWidth = 1.4 * lw;
@@ -1925,6 +1955,9 @@
     return x < 0 || y < 0 || x >= W || y >= R ? -1 : y * W + x;
   }
   vec.addEventListener("click", (ev) => {
+    const hit = rvHit(ev);
+    if (hit >= 0) { state.rv = hit; renderRv(); drawVec(); $("rv").scrollIntoView({ behavior: "smooth", block: "nearest" }); return; }
+    if (state.rvMode) return;                // 로드뷰 모드에서는 아이콘만 반응
     const i = cellAt(ev); if (i < 0 || !H) return;
     if (state.mode !== "inspect" && !(FLAGS[i] & 1)) { $("hover").textContent = "지형 자료가 없는 칸입니다. 지도 안쪽을 찍어 주세요."; return; }
     if (state.mode === "inspect") state.sel = i;
@@ -2008,7 +2041,7 @@
     $("sim-note").textContent = press
       ? "초록 점선(실제 k)은 시나리오가 정한 값, 파란 선(k 추정)은 압력 감소 기울기로 구한 값입니다. 하늘색(측정 산소)과 빨강(지형 모델 귀환 필요)이 만나면 돌아서야 합니다. 주황 점선은 '지금 소모율 × 귀환 시간'으로 단순 외삽한 값으로, 귀환길이 내리막이면 너무 많이, 오르막이면 너무 적게 잡습니다."
       : "초록 점선(실제 k)은 시나리오가 정한 값이고, 파란 선(k 추정)은 심박만 보고 최근 10분으로 계산한 값입니다. 두 산소 선이 만나는 때가 돌아서야 하는 때입니다. 시나리오 심박이 200 bpm을 넘는 봉우리는 오르막에서도 속도를 0.92 m/s로 고정한 Pandolf 식의 한계입니다(보고서 16).";
-    $("mode-hint").innerHTML = MODE_HINT[state.mode];
+    $("mode-hint").innerHTML = state.rvMode ? "<b>로드뷰 모드</b>: 지도의 주황 카메라 아이콘을 누르면 그 지점에서 로버가 찍은 사진이 아래에 열립니다. 다시 누르면 끕니다." : MODE_HINT[state.mode];
     if (C.cal_status && C.cal_status !== "문헌값") {       // 해커톤 자료 보정값이 켜져 있으면 설명을 그 값으로
       $("m-speed-d").textContent = `V = ${SP.v0_m_s} − ${SP.c_m_s_per_pct} × 오르막 경사(%), 최저 ${SP.v_min_m_s} m/s. ${SP.source || ""}`;
       $("m-eta-t").firstChild.textContent = `표토 지형계수 +${ETA_ADD}`;
@@ -2042,16 +2075,27 @@
     $(id).addEventListener("change", (e) => { state[key] = e.target.checked; activePreset = ""; LMR_KEY = ""; stopSim(); update(); });
   $("showtir").addEventListener("change", (e) => { state.showtir = e.target.checked; update(false); });
   for (const id of ["showmr", "showsand"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
-  $("hud-btn").addEventListener("click", () => { state.hud = !state.hud; $("hud-btn").setAttribute("aria-pressed", String(state.hud)); renderHud(); });
-  $("rv-btn").addEventListener("click", () => {
-    if (state.rv >= 0) state.rv = -1;
-    else { const i = state.mode === "sim" && SIM && SIM.ok ? SIM.frames[SIM.idx].pos : state.mode === "here" ? state.here : state.sel; state.rv = nearestRv(Math.max(0, i)); }
+  $("hud-btn").addEventListener("click", () => { state.hud = !state.hud; $("hud-btn").setAttribute("aria-pressed", String(state.hud)); renderHud(); if (state.hud) $("visor-wrap").scrollIntoView({ behavior: "smooth", block: "nearest" }); });
+  $("visor-close").addEventListener("click", () => { state.hud = false; $("hud-btn").setAttribute("aria-pressed", "false"); renderHud(); });
+  $("rv-btn").addEventListener("click", () => {           // 로드뷰 모드 켜기/끄기: 켜면 지도에 카메라 아이콘, 아이콘을 누르면 사진
+    state.rvMode = !state.rvMode; state.rv = -1;
+    $("rv-btn").setAttribute("aria-pressed", String(state.rvMode));
+    $("mode-hint").innerHTML = state.rvMode ? "<b>로드뷰 모드</b>: 지도의 주황 카메라 아이콘을 누르면 그 지점에서 로버가 찍은 사진이 아래에 열립니다. 다시 누르면 끕니다." : MODE_HINT[state.mode];
     renderRv(); drawVec();
   });
   const rvStep = (d) => { const n = (META.roadview || []).length; if (!n || state.rv < 0) return; state.rv = (state.rv + d + n) % n; renderRv(); drawVec(); };
   $("rv-prev").addEventListener("click", () => rvStep(-1));
   $("rv-next").addEventListener("click", () => rvStep(1));
   $("rv-close").addEventListener("click", () => { state.rv = -1; renderRv(); drawVec(); });
+  function rvHit(ev) {                    // 로드뷰 모드에서 아이콘(16 px 안)을 눌렀는지
+    const RV = META.roadview || [];
+    if (!state.rvMode || !RV.length) return -1;
+    const r = vec.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width * W, y = (ev.clientY - r.top) / r.height * R;
+    const tol = 16 * W / r.width;
+    let best = -1, bd = tol;
+    RV.forEach((s, n) => { const d = Math.hypot(s.x - x, s.y - y); if (d < bd) { bd = d; best = n; } });
+    return best;
+  }
   document.addEventListener("keydown", (e) => { if (state.rv >= 0 && (e.key === "ArrowRight" || e.key === "ArrowLeft") && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) { rvStep(e.key === "ArrowRight" ? 1 : -1); e.preventDefault(); } });
   $("showphoto").addEventListener("change", (e) => { state.showphoto = e.target.checked; update(false); });
   $("showtargets").addEventListener("change", (e) => { state.showtargets = e.target.checked; update(false); });
@@ -2160,7 +2204,7 @@
       : '<div class="hint">이 지형에는 과학 목표 자료가 없습니다.</div>';
     $("showtir-l").hidden = !META.tir;
     $("rv-btn").hidden = !(META.roadview && META.roadview.length);
-    state.rv = -1; renderRv();
+    state.rv = -1; state.rvMode = false; $("rv-btn").setAttribute("aria-pressed", "false"); renderRv();
     const sandOk = st.dune_km2 > 0.01;
     $("m-sand").disabled = !sandOk; $("showsand").disabled = !sandOk;
     if (!sandOk) { state.mSand = false; state.showsand = false; $("m-sand-d").textContent = "이 지형에는 모래언덕 후보를 넣지 않았습니다 (위성 사진 밝기로 뽑으면 급사면 그늘이 잡혀서)."; }
