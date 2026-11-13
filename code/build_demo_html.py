@@ -39,6 +39,11 @@ def gale_site(meta):
             "base_name": GALE["base_name"], "goal_name": GALE["goal_name"], "stats": stats}
 
 
+def targets(site):
+    p = f"../outputs/demo/targets/{site}.json"
+    return json.load(open(p, encoding="utf-8")) if os.path.exists(p) else []
+
+
 def tir(site):
     """build_trek_layers.py 결과(THEMIS 야간 적외선, 데모 격자)를 8비트 PNG data URI로."""
     p = f"../outputs/demo/trek/{site}/themis_night.npy"
@@ -69,6 +74,7 @@ def main():
     meta["site"] = gale_site(meta)
     meta["photos"] = photos("gale")
     meta["tir"] = tir("gale")
+    meta["targets"] = targets("gale")
     sites = []
     for sid in DEMO_SITES:
         d = f"../outputs/demo/sites/{sid}"
@@ -77,6 +83,7 @@ def main():
         sm = json.load(open(f"{d}/meta.json", encoding="utf-8"))
         sm["photos"] = photos(sid)
         sm["tir"] = tir(sid)
+        sm["targets"] = targets(sid)
         sites.append({"meta": sm, "data": b64(f"{d}/data.bin.gz"),
                       "shade": "data:image/png;base64," + b64(f"{d}/hillshade.png"),
                       "ortho": "data:image/jpeg;base64," + b64(f"{d}/basemap.jpg")})

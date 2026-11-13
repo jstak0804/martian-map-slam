@@ -1,0 +1,36 @@
+[
+ {
+  "x": 130.5,
+  "y": 528.5,
+  "sols": [
+   443,
+   535
+  ],
+  "name": "Perseverance 탐사 정지 지점 (sol 443–535)",
+  "why": "Perseverance가 sol 443–535 동안 머물며 조사한 곳 (근접 분석·시료 채취 기간일 가능성)",
+  "source": "NASA MMGIS M20_waypoints (머문 기간으로 선정)"
+ },
+ {
+  "x": 335.5,
+  "y": 672.5,
+  "sols": [
+   203,
+   283
+  ],
+  "name": "Perseverance 탐사 정지 지점 (sol 203–283)",
+  "why": "Perseverance가 sol 203–283 동안 머물며 조사한 곳 (근접 분석·시료 채취 기간일 가능성)",
+  "source": "NASA MMGIS M20_waypoints (머문 기간으로 선정)",
+  "snapped_m": 5
+ },
+ {
+  "x": 103.5,
+  "y": 572.5,
+  "sols": [
+   555,
+   593
+  ],
+  "name": "Perseverance 탐사 정지 지점 (sol 555–593)",
+  "why": "Perseverance가 sol 555–593 동안 머물며 조사한 곳 (근접 분석·시료 채취 기간일 가능성)",
+  "source": "NASA MMGIS M20_waypoints (머문 기간으로 선정)"
+ }
+]

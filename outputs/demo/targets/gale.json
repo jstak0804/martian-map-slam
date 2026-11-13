@@ -1,0 +1,48 @@
+[
+ {
+  "x": 191.5,
+  "y": 502.5,
+  "sols": [
+   751,
+   949
+  ],
+  "name": "Confidence Hills · Mojave · Telegraph Peak 드릴 지점",
+  "why": "Curiosity가 sol 751–949 동안 머물며 조사한 곳, 드릴 시료 채취 sol 759, 882, 908",
+  "source": "NASA MMGIS MSL_waypoints (머문 기간으로 선정), 드릴 sol: NASA 발표",
+  "snapped_m": 7
+ },
+ {
+  "x": 148.5,
+  "y": 531.5,
+  "sols": [
+   995,
+   1072
+  ],
+  "name": "Buckskin 드릴 지점",
+  "why": "Curiosity가 sol 995–1072 동안 머물며 조사한 곳, 드릴 시료 채취 sol 1060",
+  "source": "NASA MMGIS MSL_waypoints (머문 기간으로 선정), 드릴 sol: NASA 발표"
+ },
+ {
+  "x": 337.5,
+  "y": 357.5,
+  "sols": [
+   589,
+   630
+  ],
+  "name": "Windjana 드릴 지점",
+  "why": "Curiosity가 sol 589–630 동안 머물며 조사한 곳, 드릴 시료 채취 sol 621",
+  "source": "NASA MMGIS MSL_waypoints (머문 기간으로 선정), 드릴 sol: NASA 발표"
+ },
+ {
+  "x": 222.5,
+  "y": 482.5,
+  "sols": [
+   696,
+   731
+  ],
+  "name": "Curiosity 탐사 정지 지점 (sol 696–731)",
+  "why": "Curiosity가 sol 696–731 동안 머물며 조사한 곳",
+  "source": "NASA MMGIS MSL_waypoints (머문 기간으로 선정)",
+  "snapped_m": 6
+ }
+]

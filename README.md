@@ -35,6 +35,11 @@ Interplanetary Survival Guide: Martian Map 챌린지로 진행한 SLAM(점진적
   - **Perseverance·Curiosity 원본 사진:** 실제 주행 경로 위 지점마다 Navcam 1인칭 사진을 붙였습니다. 지도를 누르면 250 m 안의 사진이 뜹니다(`code/build_rover_photos.py`).
   - **JPL Mars Trek THEMIS 야간 적외선 모자이크:** 열관성 지도와 지점별 지반 성격으로 넣었습니다(`code/build_trek_layers.py`).
   - 이로써 광학·지형·방사선에 열 자료가 더해졌습니다.
+- **과학 EVA 계획 모드:**
+  - **과학 목표:** 실제 자료에서 뽑았습니다(`code/build_science_targets.py`).
+    - Gale·Jezero: 로버가 오래 머문 곳. Gale은 Curiosity 드릴 지점 이름(Windjana, Pahrump Hills의 Confidence Hills·Mojave·Telegraph Peak, Buckskin)을 붙였습니다.
+    - Aram: THEMIS 열관성이 높은 노출 암반 후보
+  - **계획:** 고른 목표를 거점에서 출발해 돌아오는 가장 산소가 적게 드는 순서로 엮습니다. 경로의 모든 칸에서 귀환 반경을 확인하고, 다 못 들르면 들를 수 있는 최대 조합을 고릅니다.
 - **원격 진행:** 해커톤 중 원격 Claude Code로 자료를 받는 방법은 [`code/hackathon/REMOTE.md`](code/hackathon/REMOTE.md)에 있습니다.
   - 챌린지 자료 탭 감시: `challenge_watch`
   - 링크로 받기: `fetch`

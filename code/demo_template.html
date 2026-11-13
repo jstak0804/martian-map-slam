@@ -170,6 +170,16 @@
   .pov img { width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--rule); display: block; }
   .pov figcaption { font-size: 12px; color: var(--ink-soft); line-height: 1.45; }
   .pov figcaption b { color: var(--ink); }
+  .evalist { display: grid; gap: 4px; }
+  .evalist label { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 8px; align-items: start; font-size: 13px; cursor: pointer; padding: 4px 6px; border-radius: 6px; }
+  .evalist label:hover { background: var(--panel-2); }
+  .evalist small { grid-column: 2; font-size: 11.5px; color: var(--ink-faint); line-height: 1.4; }
+  .evalist b { font-weight: 600; }
+  .evabox { display: grid; gap: 6px; border-top: 1px solid var(--rule); padding-top: 12px; }
+  .evabox h3 { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+  .evaorder { margin: 0; padding-left: 1.4em; display: grid; gap: 6px; font-size: 13px; line-height: 1.45; }
+  .evaorder small { display: block; color: var(--ink-soft); font-size: 12px; }
+  .evaorder .drop { color: var(--ink-faint); text-decoration: line-through; }
   .supply { display: grid; gap: 8px; border-top: 1px solid var(--rule); padding-top: 12px; }
   .supply[hidden] { display: none; }
   .supply h3 { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink-soft); }
@@ -226,6 +236,17 @@
         <div class="row"><label for="q">환경·PLSS 열</label><output id="q-out" for="q"></output></div>
         <input type="range" id="q" min="-150" max="150" step="10" value="0">
         <div class="hint">+는 햇빛·장비 발열로 열을 더 버려야 함, −는 추위로 열을 잃음. 측정값 없는 가정 (보고서 17)</div>
+      </div>
+
+      <div class="group" id="eva-ctl" hidden>
+        <h2>과학 EVA 계획</h2>
+        <div class="hint">들를 과학 목표를 고르세요. 거점에서 출발해 들렀다 돌아오는, 산소가 가장 덜 드는 순서를 찾습니다. 경로의 모든 지점에서 "지금 돌아서도 거점까지 갈 수 있는가"(귀환 반경)를 확인하고, 다 못 들르면 들를 수 있는 가장 많은 조합을 고릅니다.</div>
+        <div class="evalist" id="eva-targets"></div>
+        <div class="ctl">
+          <div class="row"><label for="eva-dwell">목표마다 작업 시간</label><output id="eva-dwell-out" for="eva-dwell"></output></div>
+          <input type="range" id="eva-dwell" min="10" max="120" step="5" value="45">
+          <div class="hint">작업 중 대사량은 평지 보행 수준으로 가정 (시료 채취·관찰)</div>
+        </div>
       </div>
 
       <div class="group" id="rescue-ctl" hidden>
@@ -339,6 +360,7 @@
         <label class="sw"><input type="checkbox" id="showfall"><span>넘어짐 위험 등급</span></label>
         <label class="sw"><input type="checkbox" id="showcomm" checked><span>통신 음영 (빗금)</span></label>
         <label class="sw" id="showtrav-l"><input type="checkbox" id="showtrav" checked><span id="showtrav-t">Curiosity 실제 주행 경로</span></label>
+        <label class="sw" id="showtargets-l"><input type="checkbox" id="showtargets" checked><span>과학 목표 지점<small>로버가 오래 머물며 조사한 곳(Gale·Jezero), 열관성 높은 노출 암반 후보(Aram)</small></span></label>
         <label class="sw" id="showphoto-l"><input type="checkbox" id="showphoto" checked><span>로버 1인칭 사진 위치<small>지도를 누르면 250 m 안의 가장 가까운 로버 사진이 오른쪽에 뜹니다 (NASA 원본 사진)</small></span></label>
       </div>
     </section>
@@ -352,6 +374,7 @@
           <label><input type="radio" name="mode" value="rescue">구조</label>
           <label><input type="radio" name="mode" value="base">거점 옮기기</label>
           <label><input type="radio" name="mode" value="sim">EVA 시뮬레이션</label>
+          <label><input type="radio" name="mode" value="eva">과학 EVA 계획</label>
         </div>
         <div class="modeline"><p class="modehint" id="mode-hint"></p><button type="button" class="reset" id="base-reset" hidden>거점을 원래 자리로 되돌리기</button></div>
       </div>
@@ -398,6 +421,7 @@
         <div class="pt-head"><span class="where" id="pt-where">–</span><span class="verdict" id="pt-verdict">–</span></div>
         <div class="meters" id="pt-meters"></div>
         <dl class="facts" id="pt-facts"></dl>
+        <div class="evabox" id="eva-order" hidden></div>
         <figure class="pov" id="pov" hidden><img id="pov-img" alt=""><figcaption id="pov-cap"></figcaption></figure>
         <div class="supply" id="supply" hidden></div>
         <ol class="simlog" id="sim-log" hidden></ol>
@@ -472,7 +496,8 @@
                   mode: "inspect", sel: GOAL, here: -1, victim: -1, vo2: 150, vwater: 1, vcarry: "walk", base: BASE0,
                   simTarget: GOAL, simScenario: "surge", simNoise: 8, simAuto: true, simCustom: "",
                   simSrc: "hr", simLeak: 0, simPNoise: 10, simTcomp: true, simLeakSub: false,
-                  mSpeed: false, mEta: false, mDown: false, mSand: false, showmr: false, showsand: false, showphoto: true, showtir: false };
+                  mSpeed: false, mEta: false, mDown: false, mSand: false, showmr: false, showsand: false, showphoto: true, showtir: false,
+                  showtargets: true, evaSel: [], evaDwell: 45 };
 
   let PRESETS;
   const makePresets = () => [
@@ -485,6 +510,7 @@
     { id: "safe", label: "안전 우선 운용", s: { nofall: true, relay: true, showfall: true } },
     { id: "simhr", label: "심박 시뮬레이션 예시", s: { mode: "sim", o2: 450, water: 3.6, simScenario: "surge", simAuto: true, simTarget: GOAL, simSrc: "hr", simLeak: 0 } },
     { id: "simpress", label: "압력 측정 예시 (누설 10 g/h)", s: { mode: "sim", o2: 450, water: 3.6, simScenario: "surge", simAuto: true, simTarget: GOAL, simSrc: "press", simLeak: 10, simPNoise: 10, simTcomp: true, simLeakSub: false } },
+    { id: "eva", label: "과학 EVA 예시 (산소 600 g)", s: { mode: "eva", o2: 600 } },
     { id: "lit", label: "문헌 보정 모두 켬", s: { mSpeed: true, mEta: true, mDown: true, mSand: true } },
     { id: "rescue", label: `구조 예시: ${goalShort()}`, s: { mode: "rescue", victim: GOAL, here: -1, o2: 650, vo2: 150, vwater: 1, vcarry: "walk" } },
   ];
@@ -733,7 +759,8 @@
     const needP = state.nofall && !TREES.has(treeKey(state.base, false));   // 넘어짐 금지로 잃은 면적 비교용
     const needV = VIS_BASE !== state.base;
     const needB = state.mode === "sim" && !same(FWDB, state.base);
-    if (!needF && !needR && !needS && !needP && !needV && !needB) { cb(); return; }
+    const needE = state.mode === "eva" && evaNodes().some((c) => !LEGS.has(legKey(c)));
+    if (!needF && !needR && !needS && !needP && !needV && !needB && !needE) { cb(); return; }
     $("busy").hidden = false;
     setTimeout(() => {
       const t0 = performance.now();
@@ -753,6 +780,10 @@
       if (needF) FWD = dijkstra(state.here, false);
       if (needR) REV = dijkstra(state.victim, true);
       if (needB) FWDB = dijkstra(state.base, false);
+      if (needE) {
+        if (LEGS.size > 24) LEGS.clear();
+        for (const c of evaNodes()) if (!LEGS.has(legKey(c))) LEGS.set(legKey(c), dijkstra(c, false));
+      }
       lastSearchMs = performance.now() - t0;
       $("busy").hidden = true;
       cb();
@@ -981,7 +1012,7 @@
     const cnt = new Float64Array(8);
     let safeDark = 0, fallCut = 0, late = 0;
     LATE.fill(0);
-    const mode = !modeReady() || state.mode === "base" || state.mode === "sim" ? "inspect" : state.mode;
+    const mode = !modeReady() || state.mode === "base" || state.mode === "sim" || state.mode === "eva" ? "inspect" : state.mode;
     const vh = victimHours(), vSec = Math.min(vh.o2, vh.water) * 3600;
     // 구조 모드: 구조 대상 지점에서 거점까지(혼자 돌아오는 구조대원)
     const X = state.victim, back = mode === "rescue" && S.o2[X] >= 0
@@ -1304,20 +1335,110 @@
     $("pov-cap").innerHTML = `<b>이 근처에서 ${best.rover}가 본 풍경</b> · 고른 지점에서 ${fmt(bd, 0)} m · sol ${best.sol} (${best.date}) · ${best.camera} · ${best.credit}`;
     $("pov").hidden = false;
   }
+  // ---------- 과학 EVA 계획: 거점 -> 목표 여러 곳 -> 거점, 경로 모든 칸에서 귀환 반경 확인 ----------
+  const LEGS = new Map();                 // 출발 칸 -> 그 칸에서 모든 칸으로 가는 비용 트리 (dijkstra forward)
+  let EVA = null, EVASIG = "";
+  const legKey = (c) => `${c}|${state.nofall ? 1 : 0}|${modelKey()}`;
+  const tCell = (t) => Math.floor(t.y) * W + Math.floor(t.x);
+  const evaSelected = () => (META.targets || []).map((t, i) => i).filter((i) => state.evaSel[i]);
+  const evaNodes = () => [state.base, ...evaSelected().map((i) => tCell(META.targets[i]))];
+  function legPath(L, dst) { const p = [dst]; for (let c = dst; L.pred[c] >= 0; ) { c = L.pred[c]; p.push(c); } return p.reverse(); }
+  function planEva() {
+    const T = META.targets || [], sel = evaSelected();
+    if (!sel.length) return { msg: "왼쪽에서 들를 목표를 하나 이상 고르세요." };
+    const nodes = evaNodes(), L = nodes.map((c) => LEGS.get(legKey(c)));
+    if (L.some((x) => !x)) return { msg: "경로 계산 중…" };
+    const k = EK(), b = budgets(), S = setNow();
+    const dwellModel = levelMR() * C.o2_g_per_j * 60 * state.evaDwell, dwellT = state.evaDwell * 60;
+    const m = nodes.length, cost = (a, c) => L[a].o2[nodes[c]];
+    // 1) 산소 합으로 후보 순서를 모은다 (예산을 넘으면 더 깊이 가지 않음)
+    const cands = [];
+    const dfs = (cur, mask, o2, order) => {
+      if (order.length) { const back = o2 + cost(cur, 0); if (isFinite(back) && k * back <= b.o2) cands.push({ order: order.slice(), total: back }); }
+      for (let j = 1; j < m; j++) {
+        if (mask & (1 << j)) continue;
+        const c = cost(cur, j);
+        if (!isFinite(c)) continue;
+        const n2 = o2 + c + dwellModel;
+        if (k * n2 > b.o2) continue;
+        order.push(j); dfs(j, mask | (1 << j), n2, order); order.pop();
+      }
+    };
+    dfs(0, 1, 0, []);
+    cands.sort((a, c) => c.order.length - a.order.length || a.total - c.total);
+    // 2) 앞에서부터 경로 위 모든 칸의 귀환 여유를 확인
+    const check = (order) => {
+      const seq = [0, ...order, 0], path = [], marks = [];
+      let U = 0, Tm = 0, D = 0, minM = Infinity, minAt = state.base;
+      for (let n = 0; n + 1 < seq.length; n++) {
+        const a = seq[n], c = seq[n + 1], La = L[a], P = legPath(La, nodes[c]);
+        for (const cell of P) {
+          const ret = S.o2[cell];
+          const mg = ret < 0 ? -Infinity : b.o2 - k * (U + La.o2[cell] + ret);
+          if (mg < minM) { minM = mg; minAt = cell; }
+        }
+        U += La.o2[nodes[c]]; Tm += La.t[nodes[c]]; D += La.dose[nodes[c]];
+        path.push(...(path.length ? P.slice(1) : P));
+        if (c !== 0) {                           // 목표에서 작업
+          U += dwellModel; Tm += dwellT; D += RATE1[nodes[c]] * dwellT / 3600;
+          const ret = S.o2[nodes[c]], mg = b.o2 - k * (U + ret);
+          if (mg < minM) { minM = mg; minAt = nodes[c]; }
+          marks.push({ ti: sel[c - 1], arrive: Tm - dwellT, o2: U });
+        }
+      }
+      return { path, marks, o2: U, t: Tm, dose: D, minM, minAt, cls: classifyTot(U, Tm, D, b) };
+    };
+    let tried = 0;
+    for (const cd of cands) {
+      if (++tried > 400) break;
+      const r = check(cd.order);
+      if (r.minM >= 0 && r.cls === 3) return { ok: true, ...r, order: cd.order.map((j) => sel[j - 1]), dropped: sel.filter((ti) => !cd.order.some((j) => sel[j - 1] === ti)) };
+    }
+    return { ok: false, msg: "고른 목표 중 어느 곳도 지금 남은 소모품으로는 다녀올 수 없습니다. 산소를 늘리거나 가까운 목표를 고르세요." };
+  }
+  function paintEva() {
+    const v = $("pt-verdict"), T = META.targets || [];
+    const sig = JSON.stringify([state.base, state.evaSel, state.evaDwell, state.o2, state.water, state.k, state.q, state.spe, state.mult, state.nofall, modelKey(), SITE_I]);
+    if (sig !== EVASIG || !EVA || EVA.msg === "경로 계산 중…") { EVA = planEva(); EVASIG = sig; }
+    if (!EVA.ok) {
+      $("pt-where").textContent = EVA.msg; v.className = "verdict bad"; v.textContent = EVA.msg.startsWith("왼쪽") ? "" : "계획 불가";
+      if (EVA.msg.startsWith("왼쪽") || EVA.msg.startsWith("경로")) v.className = "verdict";
+      $("pt-meters").innerHTML = ""; $("pt-facts").innerHTML = ""; drawVec({ path: null }); return;
+    }
+    const b = budgets(), k = EK(), ps = pathStats(EVA.path);
+    const all = EVA.dropped.length === 0;
+    v.className = "verdict " + (all ? "ok" : "warn"); v.textContent = all ? "고른 목표 모두 다녀올 수 있음" : `${EVA.order.length}곳만 가능`;
+    $("pt-where").textContent = `목표 ${EVA.order.length + EVA.dropped.length}곳 중 ${EVA.order.length}곳 · ${fmt(ps.dist / 1000, 2)} km · ${hm(EVA.t / 3600)}`;
+    $("pt-meters").innerHTML =
+      meter("산소 (예비분 제외 예산)", k * EVA.o2, b.o2, "g", 0) +
+      meter("냉각수 (예비분 제외 예산)", waterOf(EVA.o2, EVA.t, k, state.q), b.water, "g", 0) +
+      meter("선량", multNow() * EVA.dose * 1000, C.dose_budget_msv * 1000, "µSv", 1);
+    const items = EVA.marks.map((mk) => `<li><b>${T[mk.ti].name}</b><small>도착 ${hm(mk.arrive / 3600)} · 그때까지 산소 ${fmt(k * (mk.o2 - levelMR() * C.o2_g_per_j * 60 * state.evaDwell), 0)} g</small></li>`).join("")
+      + EVA.dropped.map((ti) => `<li class="drop">${T[ti].name}<small>넣으면 어느 순간 귀환 반경을 벗어남</small></li>`).join("");
+    $("eva-order").innerHTML = `<h3>들르는 순서 (지도의 번호)</h3><ol class="evaorder">${items}</ol>`;
+    $("eva-order").hidden = false;
+    $("pt-facts").innerHTML = `
+      <dt>가장 빠듯한 순간의 귀환 여유</dt><dd>산소 ${fmt(EVA.minM, 0)} g (지도의 빨간 고리)</dd>
+      <dt>통신 안 닿는 구간</dt><dd>${fmt(ps.dark / 1000, 2)} km (${fmt(ps.dist > 0 ? ps.dark / ps.dist * 100 : 0, 0)}%), 가장 긴 두절 ${fmt(mins(ps.maxRun), 0)}분</dd>
+      <dt>넘어짐 높음 · 중간 칸</dt><dd>${fmt(ps.high, 0)} m · ${fmt(ps.med, 0)} m</dd>
+      <dt>목표마다 작업</dt><dd>${state.evaDwell}분 (평지 보행 수준 대사량 가정)</dd>`;
+    drawVec({ path: EVA.path, color: "#ffffff", eva: true });
+  }
   function groundFact(i) {                 // THEMIS 야간 적외선으로 본 지반 (지역 안 상대 순위)
     if (!TIR || i < 0) return "";
     const v = TIR[i], kind = v <= TIR_Q[0] ? "먼지·고운 모래 쪽 (열관성 낮음, 발이 빠질 수 있음)" : v >= TIR_Q[1] ? "암반·굳은 지반 쪽 (열관성 높음)" : "중간";
     return `<dt>지반 (THEMIS 밤 적외선)</dt><dd>${kind}</dd>`;
   }
   function paintPoint() {
-    const title = { inspect: "선택한 지점에서 돌아오기", here: "현재 위치에서 돌아오기", rescue: "구조 계획", base: "거점", sim: "EVA 시뮬레이션" }[state.mode];
+    const title = { inspect: "선택한 지점에서 돌아오기", here: "현재 위치에서 돌아오기", rescue: "구조 계획", base: "거점", sim: "EVA 시뮬레이션", eva: "과학 EVA 계획" }[state.mode];
     $("h-pt").textContent = title;
     $("sim-log").hidden = state.mode !== "sim";
-    $("pov").hidden = true; POV = null;
+    $("pov").hidden = true; POV = null; $("eva-order").hidden = true;
     if (state.mode === "rescue") return paintRescue();
     $("supply").hidden = true;
     if (state.mode === "sim") return paintSim();
     if (state.mode === "base") return paintBase();
+    if (state.mode === "eva") return paintEva();
     const i = state.mode === "here" ? state.here : state.sel;
     const v = $("pt-verdict");
     showPov(i);
@@ -1587,6 +1708,18 @@
       g.strokeStyle = "rgba(233,235,242,0.55)"; g.lineWidth = 1.1 * lw;
       for (const seg of META.traverse) { g.beginPath(); seg.forEach(([x, y], n) => (n ? g.lineTo(x, y) : g.moveTo(x, y))); g.stroke(); }
     }
+    if ((state.showtargets || state.mode === "eva") && META.targets) {   // 과학 목표: 마름모 (EVA 계획에서는 들르는 순서 번호)
+      const T = META.targets, order = state.mode === "eva" && EVA && EVA.ok ? EVA.order : [];
+      T.forEach((t, ti) => {
+        const n = order.indexOf(ti), sel = state.evaSel[ti], r = (n >= 0 ? 12 : 8) * lw;
+        g.save(); g.translate(t.x, t.y); g.rotate(Math.PI / 4);
+        g.fillStyle = n >= 0 ? "#e2794d" : state.mode === "eva" && sel ? "#6c7588" : "#b48cff";
+        g.strokeStyle = state.mode === "eva" && sel && n < 0 ? "#ef6b5e" : "#0d1016"; g.lineWidth = 1.6 * lw;
+        g.fillRect(-r * 0.7, -r * 0.7, r * 1.4, r * 1.4); g.strokeRect(-r * 0.7, -r * 0.7, r * 1.4, r * 1.4); g.restore();
+        if (n >= 0) { g.fillStyle = "#0d1016"; g.font = `bold ${12 * lw}px system-ui`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(String(n + 1), t.x, t.y + 0.5 * lw); }
+      });
+      if (state.mode === "eva" && EVA && EVA.ok) ring(g, (EVA.minAt % W) + 0.5, ((EVA.minAt / W) | 0) + 0.5, 9 * lw, "#ef6b5e", lw);
+    }
     if (state.showphoto && META.photos) {     // 로버 사진 위치: 카메라 표시
       for (const p of META.photos) {
         const on = POV === p, r = (on ? 6.5 : 4.5) * lw;
@@ -1662,6 +1795,7 @@
 
   // ---------- interaction ----------
   const MODE_HINT = {
+    eva: "왼쪽에서 들를 <b>과학 목표</b>를 고르세요. 마름모 번호가 들르는 순서이고, 빨간 고리는 귀환 여유가 가장 빠듯한 지점입니다.",
     inspect: "지도를 누르면 그 지점에서 거점까지 돌아오는 길을 따져 봅니다.",
     here: "지도를 눌러 <b>대원의 현재 위치</b>를 찍으세요. 거기서 더 갔다가 거점으로 돌아올 수 있는 범위가 그려집니다.",
     rescue: "지도를 눌러 <b>움직일 수 없는 대원의 위치</b>를 찍으세요. 구조대원이 어디서 출발하면 제때 갈 수 있는지 그려집니다. 구조대원 출발점은 \"현재 위치\" 모드에서 찍습니다.",
@@ -1740,6 +1874,8 @@
     $("v-hint").textContent = `가만히 있을 때 시간당 산소 ${fmt(vh.o2h, 0)} g, 냉각수 ${fmt(vh.wh, 0)} g 소모`;
     $("rescue-ctl").hidden = state.mode !== "rescue";
     $("sim-ctl").hidden = state.mode !== "sim";
+    $("eva-ctl").hidden = state.mode !== "eva";
+    $("eva-dwell-out").textContent = `${state.evaDwell}분`;
     $("simbar").hidden = state.mode !== "sim";
     $("k-ctl").dataset.off = String(state.mode === "sim");
     $("sim-custom-ctl").hidden = state.simScenario !== "custom";
@@ -1790,6 +1926,9 @@
   $("showtir").addEventListener("change", (e) => { state.showtir = e.target.checked; update(false); });
   for (const id of ["showmr", "showsand"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
   $("showphoto").addEventListener("change", (e) => { state.showphoto = e.target.checked; update(false); });
+  $("showtargets").addEventListener("change", (e) => { state.showtargets = e.target.checked; update(false); });
+  $("eva-targets").addEventListener("change", (e) => { const ti = e.target.dataset.ti; if (ti === undefined) return; state.evaSel[Number(ti)] = e.target.checked; activePreset = ""; update(); });
+  $("eva-dwell").addEventListener("input", (e) => { state.evaDwell = Number(e.target.value); activePreset = ""; update(); });
   for (const id of ["showfall", "showcomm"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
   $("showtrav").addEventListener("change", (e) => { state.showtrav = e.target.checked; drawVec(); });
   $("modes").addEventListener("change", (e) => { state.mode = e.target.value; stopSim(); update(); });
@@ -1886,6 +2025,11 @@
     $("showtrav-l").hidden = !META.traverse.length;
     $("showtrav-t").textContent = SITE().id === "jezero" ? "Perseverance 실제 주행 경로" : "Curiosity 실제 주행 경로";
     $("showphoto-l").hidden = !(META.photos && META.photos.length);
+    const TG = META.targets || [];
+    $("showtargets-l").hidden = !TG.length;
+    if (state.evaSel.length !== TG.length) state.evaSel = TG.map(() => true);
+    $("eva-targets").innerHTML = TG.length ? TG.map((t, i) => `<label><input type="checkbox" data-ti="${i}"${state.evaSel[i] ? " checked" : ""}><b>${t.name}</b><small>${t.why}</small></label>`).join("")
+      : '<div class="hint">이 지형에는 과학 목표 자료가 없습니다.</div>';
     $("showtir-l").hidden = !META.tir;
     const sandOk = st.dune_km2 > 0.01;
     $("m-sand").disabled = !sandOk; $("showsand").disabled = !sandOk;
@@ -1899,7 +2043,7 @@
     const site = SITE_LIST[i];
     $("loading").hidden = false; $("loading").textContent = "지형 격자를 푸는 중…";
     setGeom(site.meta); allocGrid();
-    H = null; TREES.clear(); FWD = null; REV = null; FWDB = null; VIS = null; VIS_BASE = -1; RELAY_OK = true;
+    H = null; TREES.clear(); LEGS.clear(); EVA = null; EVASIG = ""; FWD = null; REV = null; FWDB = null; VIS = null; VIS_BASE = -1; RELAY_OK = true;
     SIM = null; SIMSIG = ""; SIMTARGET = -1; LMR = null; LMR_KEY = "";
     await decode(site);
     TIR = null; TIR_LO = 0; TIR_HI = 255;
@@ -1918,7 +2062,7 @@
     wrap.style.aspectRatio = `${W} / ${R}`;
     wrap.style.maxWidth = `min(100%, calc(88vh * ${(W / R).toFixed(4)}))`;
     $("shade").src = site.shade; $("ortho").src = site.ortho;
-    Object.assign(state, { base: BASE0, sel: GOAL, here: -1, victim: -1, simTarget: GOAL });
+    Object.assign(state, { base: BASE0, sel: GOAL, here: -1, victim: -1, simTarget: GOAL, evaSel: (site.meta.targets || []).map(() => true) });
     PRESETS = makePresets();
     $("presets").innerHTML = PRESETS.map((p) => `<button type="button" data-id="${p.id}">${p.label}</button>`).join("");
     if (before) before();
