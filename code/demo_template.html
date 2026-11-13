@@ -233,7 +233,7 @@
   <header class="top">
     <div class="brand">
       <div class="eyebrow">Mars Map SLAM · 올인원 데모</div>
-      <h1><span id="site-title">Gale 크레이터</span> EVA 귀환 반경</h1>
+      <h1><span id="site-title">Gale 크레이터</span> EVA 귀환 반경 <button type="button" class="reset" id="lang-btn" style="font-size:12px;vertical-align:middle">EN</button></h1>
       <p class="sub">고장이 난 순간, 지금 남은 산소·냉각수·선량 여유로 거점까지 걸어 돌아올 수 있는 곳은 어디까지인가. 조건을 바꾸면 지도가 바로 다시 그려지고, 지도를 누르면 그 지점에서 돌아오는 길을 따져 봅니다.</p>
     </div>
   </header>
@@ -529,6 +529,29 @@
   }
   setGeom(META0);
   const SITE = () => META.site;
+  // ---------- 영어 전환: 정적 문구는 사전, 숫자가 든 문구는 패턴 (긴 설명 문단은 한국어로 둠) ----------
+  /*__I18N__*/
+  let LANG = "ko";
+  const TRN = new WeakMap();                 // 텍스트 노드 -> {ko, en}
+  function trText(raw) {
+    const t = raw.trim();
+    if (!t || !/[가-힣]/.test(t)) return null;
+    let e = I18N[t];
+    if (e === undefined) for (const [re, rp] of I18N_RE) if (re.test(t)) { e = t.replace(re, rp); break; }
+    return e === undefined ? null : raw.replace(t, e);
+  }
+  function applyLang() {
+    const root = document.querySelector(".app");
+    if (!root) return;
+    const wk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let n; (n = wk.nextNode());) {
+      const rec = TRN.get(n), v = n.nodeValue;
+      if (rec && v === rec.en) { if (LANG === "ko") n.nodeValue = rec.ko; continue; }
+      if (rec && v === rec.ko) { if (LANG === "en") n.nodeValue = rec.en; continue; }
+      if (LANG === "en") { const e = trText(v); if (e) { TRN.set(n, { ko: v, en: e }); n.nodeValue = e; } }
+    }
+    document.documentElement.lang = LANG;
+  }
   const goalShort = () => SITE().goal_name.split(" (")[0];
   const $ = (id) => document.getElementById(id);
 
@@ -1829,6 +1852,7 @@
   let lastVec = { path: null };
   function drawVec(v) {
     queueMicrotask(renderHud);
+    queueMicrotask(applyLang);
     if (v) lastVec = v;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const cw = wrap.clientWidth, ch = wrap.clientHeight;
@@ -2075,6 +2099,11 @@
     $(id).addEventListener("change", (e) => { state[key] = e.target.checked; activePreset = ""; LMR_KEY = ""; stopSim(); update(); });
   $("showtir").addEventListener("change", (e) => { state.showtir = e.target.checked; update(false); });
   for (const id of ["showmr", "showsand"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
+  $("lang-btn").addEventListener("click", () => {
+    LANG = LANG === "ko" ? "en" : "ko"; state.hudLang = LANG;
+    $("lang-btn").textContent = LANG === "ko" ? "EN" : "한국어";
+    siteTexts(); renderHud(); applyLang();
+  });
   $("hud-btn").addEventListener("click", () => { state.hud = !state.hud; $("hud-btn").setAttribute("aria-pressed", String(state.hud)); renderHud(); if (state.hud) $("visor-wrap").scrollIntoView({ behavior: "smooth", block: "nearest" }); });
   $("visor-close").addEventListener("click", () => { state.hud = false; $("hud-btn").setAttribute("aria-pressed", "false"); renderHud(); });
   $("rv-btn").addEventListener("click", () => {           // 로드뷰 모드 켜기/끄기: 켜면 지도에 카메라 아이콘, 아이콘을 누르면 사진
@@ -2185,7 +2214,8 @@
   function siteTexts() {                  // 지형마다 바뀌는 문구
     const st = SITE().stats, gale = SITE_I === 0;
     $("site-title").textContent = SITE().name;
-    $("site-desc").textContent = `${SITE().description} 거점: ${SITE().base_name}. 출처: ${SITE().source}`;
+    $("site-desc").textContent = LANG === "en" && SITE().description_en ? `${SITE().description_en} Base: ${SITE().base_name}. Source: ${SITE().source}`
+      : `${SITE().description} 거점: ${SITE().base_name}. 출처: ${SITE().source}`;
     $("site-stats").innerHTML = [
       ["경사 20° 넘는 칸", fmt(st.impassable_pct, 1) + "%"], ["넘어짐 위험 높음", fmt(st.fall_high_pct, 1) + "%"],
       ["기복", fmt(st.relief_m, 0) + " m"], ["산소 150 g 귀환 면적", fmt(st.baseline_km2, 1) + " km²"],

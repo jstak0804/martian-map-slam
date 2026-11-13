@@ -22,6 +22,7 @@ SITES = {
         "base": {"lat": 18.4447, "lon": 77.4508, "name": "Perseverance 착륙지 (Octavia E. Butler Landing)"},
         "goal": {"auto": "detour", "name": "절벽을 돌아가야 하는 곳 (자동으로 고른 예시 목적지)"},
         "dunes": False,                      # 밝기로 뽑으면 사구가 아니라 삼각주 절벽 그늘이 잡혀 끔
+        "description_en": "Delta-front scarps (tens of metres, steep) to the north-west and layered terrain and craters to the south. Walking around the scarps makes the way home much longer than the straight line.",
         "description": "북서쪽 삼각주 앞 절벽(수십 m 급경사)과 남쪽의 층진 지형·크레이터. 절벽을 돌아가야 해서 귀환 길이 직선보다 훨씬 길어진다.",
         "source": "HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Mars 2020 착륙 후보지 관측), 정사영상 ESP_045994_1985_RED_C",
     },
@@ -35,6 +36,7 @@ SITES = {
         "base": {"auto": "flat", "name": "평탄한 바닥 (자동으로 고른 가상 거점)"},
         "goal": {"auto": "detour", "name": "블록을 돌아가야 하는 곳 (자동으로 고른 예시 목적지)"},
         "dunes": False,                      # 어두운 곳이 사구가 아니라 급사면 그늘이라 끔
+        "description_en": "Chaotic terrain packed with collapsed crustal blocks and hummocks: 19% of cells over 20°, 74% high fall risk on the 1 m DTM. You have to find corridors between blocks to get home.",
         "description": "무너진 지각 블록과 언덕(hummock)이 빽빽한 혼돈 지형. 경사 20° 넘는 칸 19%, 1 m 지형의 넘어짐 위험 '높음' 74%. 블록 사이 통로를 찾아 돌아와야 한다.",
         "source": "HiRISE DTM DTEEC_054753_1825_055452_1825_A01, 정사영상 ESP_054753_1825_RED_C",
     },
@@ -55,6 +57,7 @@ SITES = {
 GALE = {
     "name": "Gale 크레이터", "short": "Gale (Curiosity)",
     "base_name": "Curiosity 착륙지 (Bradbury Landing)", "goal_name": "sol 1282 지점",
+    "description_en": "Gentle plains and the Bagnold dunes from the landing site to the foot of Mt. Sharp. The easiest of the three, used as the baseline.",
     "description": "착륙지에서 Mt. Sharp 기슭까지 완만한 평원과 Bagnold 모래언덕. 세 지역 중 가장 걷기 쉬운 기준 지역.",
     "source": "HiRISE DTM DTEEC_018854_1755_018920_1755_U01, 정사영상 ESP_018854_1755_RED_C, Curiosity 주행 경로(MMGIS)",
 }

@@ -35,7 +35,7 @@ def gale_site(meta):
              "baseline_km2": float((reach & valid).sum() * km2), "base_vis_km2": float(((fl & 2) > 0).sum() * km2),
              "dune_km2": float(((fl & 16) > 0).sum() * km2), "relay_km_from_base": float(np.hypot(rx - bx, ry - by) * meta["cell_m"] / 1000),
              "goal_km_from_base": float(np.hypot(gx - bx, gy - by) * meta["cell_m"] / 1000)}
-    return {"id": "gale", "name": GALE["name"], "short": GALE["short"], "description": GALE["description"], "source": GALE["source"],
+    return {"id": "gale", "name": GALE["name"], "short": GALE["short"], "description": GALE["description"], "description_en": GALE.get("description_en", ""), "source": GALE["source"],
             "base_name": GALE["base_name"], "goal_name": GALE["goal_name"], "stats": stats}
 
 
@@ -97,6 +97,8 @@ def main():
         if not os.path.exists(f"{d}/meta.json"):
             print(f"  {sid}: 자료 없음 (python build_site_data.py {sid}) -> 건너뜀"); continue
         sm = json.load(open(f"{d}/meta.json", encoding="utf-8"))
+        from sites import SITES
+        sm["site"]["description_en"] = SITES[sid].get("description_en", "")
         sm["photos"] = photos(sid)
         sm["tir"] = tir(sid)
         sm["targets"] = targets(sid)
@@ -109,6 +111,7 @@ def main():
            "__SITES__": json.dumps(sites, ensure_ascii=False).replace("</", "<\\/"),
            "__SHADE__": "data:image/png;base64," + b64("../outputs/demo/hillshade.png"),
            "__ORTHO__": "data:image/jpeg;base64," + b64("../outputs/demo/basemap.jpg")}
+    html = html.replace("/*__I18N__*/", open("i18n_en.js", encoding="utf-8").read(), 1)
     for key, val in rep.items():
         assert html.count(key) == 1, key
         html = html.replace(key, val)

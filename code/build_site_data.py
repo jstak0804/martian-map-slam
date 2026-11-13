@@ -194,7 +194,7 @@ def build(site_id):
              "dune_km2": float(dunes.sum() * km2), "relay_km_from_base": float(np.hypot(relay[0] - bx, relay[1] - by) * cell / 1000),
              "goal_km_from_base": float(np.hypot(gx - bx, gy - by) * cell / 1000), "goal_return_o2_g": float(ret[gy, gx]),
              "goal_detour_ratio": float(ret[gy, gx] / (np.hypot(gx - bx, gy - by) * cell * float(o2_g_per_s(metabolic_rate_w(0.0, 1.0, G_RATIO_MARS))) / EVA_WALK_SPEED_M_S))}
-    meta = {"site": {"id": site_id, "name": S["name"], "short": S["short"], "description": S["description"], "source": S["source"],
+    meta = {"site": {"id": site_id, "name": S["name"], "short": S["short"], "description": S["description"], "description_en": S.get("description_en", ""), "source": S["source"],
                      "base_name": S["base"]["name"], "goal_name": gcfg["name"], "stats": stats},
             "rows": rows, "cols": cols, "cell_m": cell, "layout": layout, "h_min": h_min, "h_step": h_step,
             "eta_min": ETA_MIN, "eta_max": ETA_MAX, "none16": NONE16, "offsets": OFFSETS,
