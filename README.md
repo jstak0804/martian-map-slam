@@ -23,6 +23,17 @@ Interplanetary Survival Guide: Martian Map 챌린지로 진행한 SLAM(점진적
 - **데모 다시 만들기:** `code/`에서 `python dune_mask.py && python build_demo_data.py && python build_demo_basemap.py && python build_demo_html.py`
   - HiRISE DTM과 정사영상이 필요합니다(약 460 MB). `data/hirise_dtm/`에 넣으세요.
   - 받을 곳: https://hirise-pds.lpl.arizona.edu/PDS/DTM/ESP/ORB_018800_018899/ESP_018854_1755_ESP_018920_1755/
+- **지형 3개:** 데모 위쪽 버튼으로 지형을 바꿉니다.
+  - **Gale (Curiosity):** 기준 지역
+  - **Jezero 삼각주 (Perseverance 착륙지):** 삼각주 절벽
+  - **Aram Chaos (가상 거점):** 경사 20° 넘는 칸 19%, 넘어짐 위험 높음 74%인 미로 같은 혼돈 지형
+  - 새 지역은 `code/sites.py`에 항목을 더하고 `python build_site_data.py <id>`로 만듭니다.
+- **실제 지형 SLAM 탐사:** `code/slam_site_exploration.py <id>`
+  - 탐사형 SLAM 모델(정지-스캔, 지형 가림, 프런티어 탐사, VO 드리프트)을 HiRISE 지형 전체로 키우고, 루프 클로저를 더했습니다.
+  - 결과 영상: `outputs/slam_sites/<id>/slam_<id>.mp4`
+- **원격 진행:** 해커톤 중 원격 Claude Code로 자료를 받는 방법은 [`code/hackathon/REMOTE.md`](code/hackathon/REMOTE.md)에 있습니다.
+  - 챌린지 자료 탭 감시: `challenge_watch`
+  - 링크로 받기: `fetch`
 - **해커톤 데이터 대비:** [`code/hackathon/`](code/hackathon/README.md)
   - 데이터가 공개되면 `run_all` 한 번으로 접수 → 보정·학습 → 보고서까지 갑니다.
   - 보정·학습 대상: 심박 회귀식, 지형계수, 속도식, 선량, 새 지형 귀환 반경, 분할 모델 미세조정

@@ -1,0 +1,49 @@
+{
+ "site": "jezero",
+ "n_stops": 792,
+ "distance_km": 123.92181945848523,
+ "mission_hours": 1371.2181945848524,
+ "mission_sols": 55.6049551737572,
+ "coverage_pct": 90.00285433013532,
+ "loop_closures": 124,
+ "replans": 601,
+ "final_err_vo_m": 615.3226319879161,
+ "max_err_vo_m": 915.2400697030612,
+ "final_err_slam_m": 15.830625877094366,
+ "max_err_slam_m": 141.84302755704968,
+ "maps": {
+  "oracle": {
+   "iou_high_risk": 0.9890840910258386,
+   "height_rmse_m": 1.9574563020098663,
+   "mapped_pct": 90.00285433013532
+  },
+  "vo": {
+   "iou_high_risk": 0.14725339524941494,
+   "height_rmse_m": 17.15857224292864,
+   "mapped_pct": 82.18985373014347
+  },
+  "slam": {
+   "iou_high_risk": 0.6289305431295961,
+   "height_rmse_m": 2.9290513458754206,
+   "mapped_pct": 89.89421503008697
+  }
+ },
+ "sim_seconds": 58.340606927871704,
+ "params": {
+  "mast_m": 2.0,
+  "range_m": 250.0,
+  "stop_every_m": 200.0,
+  "vo_scale_sigma": 0.015,
+  "vo_heading_sigma_deg_per_100m": 0.4,
+  "loop_min_overlap": 150,
+  "loop_residual_m": 6.0,
+  "loop_residual_deg": 0.3,
+  "drive_m_per_h": 100.0,
+  "scan_min": 10.0,
+  "seed": 7
+ },
+ "video": "slam_jezero.mp4",
+ "playback_speedup": 248654.18138566593,
+ "video_seconds": 19.85,
+ "render_seconds": 101.94013357162476
+}

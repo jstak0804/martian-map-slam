@@ -1,26 +1,68 @@
 """
-demo_template.html + build_demo_data.py 출력물 -> 파일 하나짜리 데모 reports/18-eva-walkback-demo.html
+demo_template.html + 지형 자료 -> 파일 하나짜리 데모 reports/18-eva-walkback-demo.html
 
-실행: python build_demo_data.py && python build_demo_basemap.py && python build_demo_html.py
+- Gale: build_demo_data.py + build_demo_basemap.py 출력 (outputs/demo/)
+- 그 밖의 지역: build_site_data.py 출력 (outputs/demo/sites/<id>/), sites.DEMO_SITES 순서
+
+실행: python build_demo_data.py && python build_demo_basemap.py && python build_site_data.py && python build_demo_html.py
 """
 import base64
+import gzip
+import json
+import os
+
+import numpy as np
+
+from sites import GALE, DEMO_SITES
 
 OUT = "../reports/18-eva-walkback-demo.html"
+b64 = lambda p: base64.b64encode(open(p, "rb").read()).decode()
+
+
+def gale_site(meta):
+    """Gale 자료에서 다른 지역과 같은 형식의 지역 정보·통계를 만든다."""
+    raw = gzip.decompress(open("../outputs/demo/demo_data.bin.gz", "rb").read())
+    view = lambda n, dt: np.frombuffer(raw[meta["layout"][n][0]: meta["layout"][n][0] + meta["layout"][n][1]], dt)
+    fl, cls = view("flags", np.uint8), view("cls", np.uint8)
+    hq, o2q = view("h", "<u2"), view("plain_o2", "<u2")
+    valid = (fl & 1) > 0
+    km2 = (meta["cell_m"] / 1000) ** 2
+    budget = 150 - meta["const"]["o2_reserve_g"]
+    reach = (o2q != meta["none16"]) & (o2q / meta["o2_scale"] <= budget)
+    (bx, by), (rx, ry), (gx, gy) = meta["base"], meta["relay"], meta["goal"]
+    stats = {"valid_km2": float(valid.sum() * km2), "relief_m": float((hq[valid].max() - hq[valid].min()) * meta["h_step"]),
+             "impassable_pct": float(((fl & 8) == 0)[valid].mean() * 100), "fall_high_pct": float((cls == 2)[valid].mean() * 100),
+             "baseline_km2": float((reach & valid).sum() * km2), "base_vis_km2": float(((fl & 2) > 0).sum() * km2),
+             "dune_km2": float(((fl & 16) > 0).sum() * km2), "relay_km_from_base": float(np.hypot(rx - bx, ry - by) * meta["cell_m"] / 1000),
+             "goal_km_from_base": float(np.hypot(gx - bx, gy - by) * meta["cell_m"] / 1000)}
+    return {"id": "gale", "name": GALE["name"], "short": GALE["short"], "description": GALE["description"], "source": GALE["source"],
+            "base_name": GALE["base_name"], "goal_name": GALE["goal_name"], "stats": stats}
 
 
 def main():
     html = open("demo_template.html", encoding="utf-8").read()
-    meta = open("../outputs/demo/demo_meta.json", encoding="utf-8").read()
-    data = base64.b64encode(open("../outputs/demo/demo_data.bin.gz", "rb").read()).decode()
-    shade = "data:image/png;base64," + base64.b64encode(open("../outputs/demo/hillshade.png", "rb").read()).decode()
-    ortho = "data:image/jpeg;base64," + base64.b64encode(open("../outputs/demo/basemap.jpg", "rb").read()).decode()
-    for key, val in (("__META__", meta.replace("</", "<\\/")), ("__DATA__", data), ("__SHADE__", shade),
-                     ("__ORTHO__", ortho)):
+    meta = json.load(open("../outputs/demo/demo_meta.json", encoding="utf-8"))
+    meta["site"] = gale_site(meta)
+    sites = []
+    for sid in DEMO_SITES:
+        d = f"../outputs/demo/sites/{sid}"
+        if not os.path.exists(f"{d}/meta.json"):
+            print(f"  {sid}: 자료 없음 (python build_site_data.py {sid}) -> 건너뜀"); continue
+        sites.append({"meta": json.load(open(f"{d}/meta.json", encoding="utf-8")), "data": b64(f"{d}/data.bin.gz"),
+                      "shade": "data:image/png;base64," + b64(f"{d}/hillshade.png"),
+                      "ortho": "data:image/jpeg;base64," + b64(f"{d}/basemap.jpg")})
+    rep = {"__META__": json.dumps(meta, ensure_ascii=False).replace("</", "<\\/"),
+           "__DATA__": b64("../outputs/demo/demo_data.bin.gz"),
+           "__SITES__": json.dumps(sites, ensure_ascii=False).replace("</", "<\\/"),
+           "__SHADE__": "data:image/png;base64," + b64("../outputs/demo/hillshade.png"),
+           "__ORTHO__": "data:image/jpeg;base64," + b64("../outputs/demo/basemap.jpg")}
+    for key, val in rep.items():
         assert html.count(key) == 1, key
         html = html.replace(key, val)
     with open(OUT, "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"saved {OUT} ({len(html.encode()) / 1e6:.2f} MB)")
+    print(f"saved {OUT} ({len(html.encode()) / 1e6:.2f} MB), 지형 {1 + len(sites)}개: gale, {', '.join(s['meta']['site']['id'] for s in sites)}")
+    print("  Gale 통계:", {k: round(v, 2) for k, v in meta["site"]["stats"].items()})
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-<title>Gale EVA 귀환 반경</title>
+<title>화성 EVA 귀환 반경</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
@@ -98,6 +98,12 @@
   .gc .gd { grid-column: 1 / -1; font-size: 11.5px; color: var(--ink-soft); line-height: 1.4; }
   .gnote { margin: 0 0 12px; font-size: 11.5px; line-height: 1.45; color: var(--ink-faint); }
   @media (max-width: 380px) { .glance { grid-template-columns: 1fr; } }
+  .sitebar { display: grid; gap: 8px; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 12px 14px; }
+  .sitebar .seg { max-width: 760px; }
+  .site-desc { margin: 0; font-size: 13px; color: var(--ink-soft); max-width: 110ch; }
+  .site-stats { display: flex; flex-wrap: wrap; gap: 6px; }
+  .site-stats span { font-size: 12px; background: var(--panel-2); border: 1px solid var(--rule); border-radius: 99px; padding: 2px 10px; color: var(--ink-soft); }
+  .site-stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
   .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .tile { background: var(--panel-2); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; display: grid; gap: 2px; align-content: start; min-width: 0; }
   .tile.wide { grid-column: 1 / -1; }
@@ -180,10 +186,16 @@
   <header class="top">
     <div class="brand">
       <div class="eyebrow">Mars Map SLAM · 올인원 데모</div>
-      <h1>Gale 크레이터 EVA 귀환 반경</h1>
+      <h1><span id="site-title">Gale 크레이터</span> EVA 귀환 반경</h1>
       <p class="sub">고장이 난 순간, 지금 남은 산소·냉각수·선량 여유로 거점까지 걸어 돌아올 수 있는 곳은 어디까지인가. 조건을 바꾸면 지도가 바로 다시 그려지고, 지도를 누르면 그 지점에서 돌아오는 길을 따져 봅니다.</p>
     </div>
   </header>
+
+  <section class="sitebar" aria-label="지형 선택">
+    <div class="seg" id="sites-seg" role="radiogroup" aria-label="지형"></div>
+    <p class="site-desc" id="site-desc"></p>
+    <div class="site-stats" id="site-stats"></div>
+  </section>
 
   <div class="grid">
     <!-- 조건 -->
@@ -294,7 +306,7 @@
 
       <div class="group">
         <label class="sw"><input type="checkbox" id="nofall"><span>넘어짐 위험 "높음" 칸 통행 금지<small>귀환 경로가 1 m 지형의 턱·급사면이 많은 칸을 돌아감 (보고서 16)</small></span></label>
-        <label class="sw"><input type="checkbox" id="relay"><span>Mt. Sharp 비탈에 중계기 설치<small>거점에서 6.7 km, 거점과 가시선이 닿는 자리 (보고서 15)</small></span></label>
+        <label class="sw"><input type="checkbox" id="relay"><span id="relay-t">Mt. Sharp 비탈에 중계기 설치<small id="relay-d">거점에서 6.7 km, 거점과 가시선이 닿는 자리 (보고서 15)</small></span></label>
       </div>
 
       <div class="group" id="model-ctl">
@@ -321,7 +333,7 @@
         <label class="sw"><input type="checkbox" id="showsand"><span>모래언덕 후보 영역</span></label>
         <label class="sw"><input type="checkbox" id="showfall"><span>넘어짐 위험 등급</span></label>
         <label class="sw"><input type="checkbox" id="showcomm" checked><span>통신 음영 (빗금)</span></label>
-        <label class="sw"><input type="checkbox" id="showtrav" checked><span>Curiosity 실제 주행 경로</span></label>
+        <label class="sw" id="showtrav-l"><input type="checkbox" id="showtrav" checked><span id="showtrav-t">Curiosity 실제 주행 경로</span></label>
       </div>
     </section>
 
@@ -335,7 +347,7 @@
           <label><input type="radio" name="mode" value="base">거점 옮기기</label>
           <label><input type="radio" name="mode" value="sim">EVA 시뮬레이션</label>
         </div>
-        <div class="modeline"><p class="modehint" id="mode-hint"></p><button type="button" class="reset" id="base-reset" hidden>거점을 착륙지로 되돌리기</button></div>
+        <div class="modeline"><p class="modehint" id="mode-hint"></p><button type="button" class="reset" id="base-reset" hidden>거점을 원래 자리로 되돌리기</button></div>
       </div>
       <div class="mapwrap" id="mapwrap">
         <img id="ortho" alt="HiRISE 정사영상: Gale 크레이터 착륙지(오른쪽 위)에서 Mt. Sharp 기슭의 Bagnold 모래언덕(아래)까지">
@@ -413,6 +425,7 @@
 
 <script type="application/json" id="meta">__META__</script>
 <script type="application/octet-stream" id="blob">__DATA__</script>
+<script type="application/json" id="sites">__SITES__</script>
 <script>
 (() => {
   "use strict";
@@ -422,14 +435,25 @@
       "이 파일은 데이터를 넣기 전의 틀입니다. reports/18-eva-walkback-demo.standalone.html (공유 패키지에서는 demo/gale-eva-walkback-demo.html)을 여세요.";
     return;
   }
-  const META = JSON.parse(metaText);
-  const C = META.const;
-  const R = META.rows, W = META.cols, N = R * W, CELL = META.cell_m;
-  const KM2 = (CELL / 1000) ** 2;
-  const OFF = META.offsets;
-  const NONE = META.none16;
-  const BASE0 = META.base[1] * W + META.base[0];   // 원래 거점 = Curiosity 착륙지
-  const GOAL = META.goal[1] * W + META.goal[0];
+  const META0 = JSON.parse(metaText);
+  const C = META0.const;
+  const NONE = META0.none16;
+  // 지형 목록: Gale(미리 계산한 귀환 트리 포함) + build_site_data.py로 만든 지역들(귀환 트리는 여기서 계산)
+  const SITE_LIST = [{ meta: META0, b64: () => document.getElementById("blob").textContent.trim(), shade: "__SHADE__", ortho: "__ORTHO__" }];
+  for (const s of JSON.parse(document.getElementById("sites").textContent.trim() || "[]"))
+    SITE_LIST.push({ meta: s.meta, b64: () => s.data, shade: s.shade, ortho: s.ortho });
+  // 지형마다 바뀌는 값 (loadSite에서 다시 채움)
+  let META, R, W, N, CELL, KM2, OFF, BASE0, GOAL, RELAY, STEP_M, SITE_I = 0;
+  function setGeom(meta) {
+    META = meta; R = meta.rows; W = meta.cols; N = R * W; CELL = meta.cell_m; KM2 = (CELL / 1000) ** 2; OFF = meta.offsets;
+    BASE0 = meta.base[1] * W + meta.base[0];          // 원래 거점 (Gale: Curiosity 착륙지)
+    GOAL = meta.goal[1] * W + meta.goal[0];           // 예시 목적지
+    RELAY = meta.relay[1] * W + meta.relay[0];
+    STEP_M = OFF.map(([dx, dy]) => Math.hypot(dx, dy) * CELL);
+  }
+  setGeom(META0);
+  const SITE = () => META.site;
+  const goalShort = () => SITE().goal_name.split(" (")[0];
   const $ = (id) => document.getElementById(id);
 
   const SPE_MIN = 1.2, SPE_MAX = 50;
@@ -443,7 +467,8 @@
                   simSrc: "hr", simLeak: 0, simPNoise: 10, simTcomp: true, simLeakSub: false,
                   mSpeed: false, mEta: false, mDown: false, mSand: false, showmr: false, showsand: false };
 
-  const PRESETS = [
+  let PRESETS;
+  const makePresets = () => [
     { id: "base", label: "기준", s: { base: BASE0 } },
     { id: "spe", label: "관측 SPE ×2.9", s: { spe: true, mult: C.spe_observed } },
     { id: "spe30", label: "대형 SPE ×30 (가정)", s: { spe: true, mult: 30 } },
@@ -454,16 +479,17 @@
     { id: "simhr", label: "심박 시뮬레이션 예시", s: { mode: "sim", o2: 450, water: 3.6, simScenario: "surge", simAuto: true, simTarget: GOAL, simSrc: "hr", simLeak: 0 } },
     { id: "simpress", label: "압력 측정 예시 (누설 10 g/h)", s: { mode: "sim", o2: 450, water: 3.6, simScenario: "surge", simAuto: true, simTarget: GOAL, simSrc: "press", simLeak: 10, simPNoise: 10, simTcomp: true, simLeakSub: false } },
     { id: "lit", label: "문헌 보정 모두 켬", s: { mSpeed: true, mEta: true, mDown: true, mSand: true } },
-    { id: "rescue", label: "구조 예시: sol 1282 지점", s: { mode: "rescue", victim: GOAL, here: -1, o2: 650, vo2: 150, vwater: 1, vcarry: "walk" } },
+    { id: "rescue", label: `구조 예시: ${goalShort()}`, s: { mode: "rescue", victim: GOAL, here: -1, o2: 650, vo2: 150, vwater: 1, vcarry: "walk" } },
   ];
+  PRESETS = makePresets();
   const DEFAULTS = { o2: 150, water: 3.6, k: 1, q: 0, spe: false, mult: C.spe_observed, nofall: false, relay: false, showfall: false,
                      mSpeed: false, mEta: false, mDown: false, mSand: false };
 
   // ---------- data ----------
   let SETS = null, CLS = null, FLAGS = null, H = null, ETA = null, RATE1 = null;
 
-  async function decode() {
-    const b64 = document.getElementById("blob").textContent.trim();
+  async function decode(site) {
+    const b64 = site.b64();
     const bin = atob(b64);
     const bytes = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
@@ -485,9 +511,11 @@
       for (let i = 0; i < N; i++) { const c = pred[i]; if (c < 8) next[i] = i + OFF[c][1] * W + OFF[c][0]; }
       return { o2, t, dose, next };
     };
-    SETS = { plain: mk("plain"), nofall: mk("nofall") };
-    TREES.set(treeKey(BASE0, false, "0000"), SETS.plain);     // 미리 계산한 트리는 기본 모델(모두 끔)
-    TREES.set(treeKey(BASE0, true, "0000"), SETS.nofall);
+    SETS = META.layout.plain_o2 ? { plain: mk("plain"), nofall: mk("nofall") } : null;
+    if (SETS) {                                   // 미리 계산한 트리는 기본 모델(모두 끔). 없는 지형은 ensureTrees가 계산
+      TREES.set(treeKey(BASE0, false, "0000"), SETS.plain);
+      TREES.set(treeKey(BASE0, true, "0000"), SETS.nofall);
+    }
     CLS = view("cls"); FLAGS = view("flags");
     const hq = view("h"), eq = view("eta"), sq = view("shield");
     H = new Float32Array(N); ETA = new Float32Array(N); RATE1 = new Float32Array(N);
@@ -560,7 +588,6 @@
   // Pandolf(중력비로 질량 스케일) = NASA Kim et al. 2025(ICES-2025-129) "gravitational factor" 식과 같은 형태
   const MW = C.body_kg * C.g_ratio, ML = C.suit_kg * C.g_ratio, V0 = C.walk_speed_m_s;
   const PA = 1.5 * MW + 2 * (MW + ML) * (ML / MW) ** 2, PB = MW + ML;
-  const STEP_M = OFF.map(([dx, dy]) => Math.hypot(dx, dy) * CELL);
   // 문헌 보정 옵션 (기본 끔)
   // 보정 파라미터(문헌값, 또는 hackathon.params로 활성화한 해커톤 자료 보정값)
   const CAL = C.cal || {};
@@ -690,7 +717,6 @@
     }
     return true;
   }
-  const RELAY = META.relay[1] * W + META.relay[0];
   let FWD = null, REV = null;
   function ensureTrees(cb) {
     const same = (T, src) => T && T.src === src && T.nofall === state.nofall && T.base === state.base && T.model === modelKey();
@@ -915,10 +941,8 @@
 
   // ---------- render ----------
   const cells = $("cells"), vec = $("vec"), wrap = $("mapwrap");
-  cells.width = W; cells.height = R;
   const cctx = cells.getContext("2d");
-  const img = cctx.createImageData(W, R);
-  const px = new Uint32Array(img.data.buffer);
+  let img, px;
   const rgba = (hex, a) => {
     const n = parseInt(hex.slice(1), 16);
     return ((Math.round(a * 255) << 24) | ((n & 255) << 16) | (((n >> 8) & 255) << 8) | (n >> 16)) >>> 0;
@@ -930,7 +954,13 @@
     edge: rgba("#ffffff", 0.95), high: rgba("#e05a4f", 0.85), med: rgba("#e8c547", 0.45), sand: rgba("#ffb347", 0.95),
   };
   // STATUS: 0 자료 없음, 1 밖, 2 선량, 3 OK, 4 체온 한계로 겨우, 5 냉각수, 6 구조: 편도만
-  const STATUS = new Uint8Array(N), OKO2 = new Uint8Array(N), LATE = new Uint8Array(N);
+  let STATUS, OKO2, LATE;
+  function allocGrid() {                  // 지형 크기에 맞춰 캔버스와 칸 배열을 새로 만든다
+    cells.width = W; cells.height = R;
+    img = cctx.createImageData(W, R); px = new Uint32Array(img.data.buffer);
+    STATUS = new Uint8Array(N); OKO2 = new Uint8Array(N); LATE = new Uint8Array(N);
+  }
+  allocGrid();
   let summary = null;
 
   function modeReady() {
@@ -1057,10 +1087,11 @@
       $("d-area").textContent = f ? `${f.m}분: 남은 산소 ${fmt(f.o2, 0)} g · 냉각수 ${fmt(Math.max(0, f.w), 0)} g · 심박으로 본 k ${fmt(f.k, 2)}` : "목적지를 찍으면 시작합니다";
       $("t-area").classList.toggle("alert", !!f && !f.ok && f.phase !== "home");
     } else if (s.mode === "inspect") {
-      const pct = (s.safe / 18.64 - 1) * 100;
+      const pct = (s.safe / SITE().stats.baseline_km2 - 1) * 100;
+      const B0 = SITE().stats.baseline_km2;
       $("d-area").textContent = state.base === BASE0
-        ? `기준 상황(산소 150 g, 만충, k 1.0) 18.64 km² 대비 ${pct >= 0 ? "+" : ""}${fmt(pct, 0)}% · 산소만 보면 ${fmt(s.o2, 2)} km²`
-        : `거점을 옮김 (착륙지 거점의 기준 상황은 18.64 km²) · 산소만 보면 ${fmt(s.o2, 2)} km²`;
+        ? `기준 상황(산소 150 g, 만충, k 1.0) ${fmt(B0, 2)} km² 대비 ${pct >= 0 ? "+" : ""}${fmt(pct, 0)}% · 산소만 보면 ${fmt(s.o2, 2)} km²`
+        : `거점을 옮김 (원래 거점의 기준 상황은 ${fmt(B0, 2)} km²) · 산소만 보면 ${fmt(s.o2, 2)} km²`;
       $("t-area").classList.toggle("alert", state.base === BASE0 && pct < -25);
     } else if (s.mode === "here") {
       $("d-area").textContent = `여기서 그 칸까지 갔다가 거점으로 돌아올 수 있는 곳. 산소만 보면 ${fmt(s.o2, 2)} km²`;
@@ -1180,7 +1211,7 @@
   const where = (i) => {
     const x = i % W, y = (i / W) | 0;
     const km = Math.hypot(x - state.base % W, y - ((state.base / W) | 0)) * CELL / 1000;
-    return `거점에서 직선 ${fmt(km, 2)} km${i === GOAL ? " · sol " + META.goal_sol + " 지점" : ""}`;
+    return `거점에서 직선 ${fmt(km, 2)} km${i === GOAL ? " · " + goalShort() : ""}`;
   };
   const VERD = { 3: ["ok", "돌아올 수 있음"], 1: ["bad", "산소 부족"], 2: ["bad", "선량 초과"], 4: ["warn", "냉각수 바닥, 체온 비상한계로 겨우"], 5: ["bad", "냉각수 부족"] };
 
@@ -1330,15 +1361,15 @@
     const km0 = Math.hypot(B % W - BASE0 % W, ((B / W) | 0) - ((BASE0 / W) | 0)) * CELL / 1000;
     let visKm2 = 0; for (let i = 0; i < N; i++) visKm2 += VIS[i];
     visKm2 *= KM2;
-    $("pt-where").textContent = moved ? `착륙지에서 ${fmt(km0, 2)} km 옮긴 거점` : "Curiosity 착륙지 (원래 거점)";
+    $("pt-where").textContent = moved ? `원래 거점에서 ${fmt(km0, 2)} km 옮긴 거점` : `${SITE().base_name} (원래 거점)`;
     const v = $("pt-verdict");
     v.className = "verdict ok"; v.textContent = `귀환 가능 ${fmt(summary.safe, 2)} km²`;
     $("pt-meters").innerHTML = "";
     $("pt-facts").innerHTML = `
-      <dt>고도 (착륙지 대비)</dt><dd>${H[B] - H[BASE0] >= 0 ? "+" : "−"}${fmt(Math.abs(H[B] - H[BASE0]), 0)} m</dd>
-      <dt>거점 안테나 가시권</dt><dd>${fmt(visKm2, 1)} km² (착륙지 24.7 km²)</dd>
+      <dt>고도 (원래 거점 대비)</dt><dd>${H[B] - H[BASE0] >= 0 ? "+" : "−"}${fmt(Math.abs(H[B] - H[BASE0]), 0)} m</dd>
+      <dt>거점 안테나 가시권</dt><dd>${fmt(visKm2, 1)} km² (원래 거점 ${fmt(SITE().stats.base_vis_km2, 1)} km²)</dd>
       <dt>중계기와 가시선</dt><dd>${RELAY_OK ? "닿음" : "안 닿음 (중계 불가)"}</dd>
-      <dt>sol ${META.goal_sol} 지점까지 직선</dt><dd>${fmt(Math.hypot(GOAL % W - B % W, ((GOAL / W) | 0) - ((B / W) | 0)) * CELL / 1000, 2)} km</dd>`;
+      <dt>${goalShort()}까지 직선</dt><dd>${fmt(Math.hypot(GOAL % W - B % W, ((GOAL / W) | 0) - ((B / W) | 0)) * CELL / 1000, 2)} km</dd>`;
     drawVec({ path: null });
   }
 
@@ -1497,7 +1528,7 @@
     here: "지도를 눌러 <b>대원의 현재 위치</b>를 찍으세요. 거기서 더 갔다가 거점으로 돌아올 수 있는 범위가 그려집니다.",
     rescue: "지도를 눌러 <b>움직일 수 없는 대원의 위치</b>를 찍으세요. 구조대원이 어디서 출발하면 제때 갈 수 있는지 그려집니다. 구조대원 출발점은 \"현재 위치\" 모드에서 찍습니다.",
     sim: "지도를 눌러 <b>목적지</b>를 찍으세요. 대원이 거점에서 출발해 다녀오는 동안 산소를 빼고(심박 또는 탱크 압력으로 추정), 매 순간의 귀환 가능 영역을 그립니다. 아래 ▶로 재생합니다.",
-    base: "지도를 눌러 <b>거점(★)</b>을 옮기세요. 귀환 경로와 통신 가시권이 새 거점 기준으로 다시 계산됩니다. 점선 원은 원래 거점(착륙지)입니다.",
+    base: "지도를 눌러 <b>거점(★)</b>을 옮기세요. 귀환 경로와 통신 가시권이 새 거점 기준으로 다시 계산됩니다. 점선 원은 원래 거점입니다.",
   };
   function cellAt(ev) {
     const r = vec.getBoundingClientRect();
@@ -1505,7 +1536,7 @@
     return x < 0 || y < 0 || x >= W || y >= R ? -1 : y * W + x;
   }
   vec.addEventListener("click", (ev) => {
-    const i = cellAt(ev); if (i < 0 || !SETS) return;
+    const i = cellAt(ev); if (i < 0 || !H) return;
     if (state.mode !== "inspect" && !(FLAGS[i] & 1)) { $("hover").textContent = "지형 자료가 없는 칸입니다. 지도 안쪽을 찍어 주세요."; return; }
     if (state.mode === "inspect") state.sel = i;
     else if (state.mode === "here") state.here = i;
@@ -1516,7 +1547,7 @@
     update();
   });
   vec.addEventListener("mousemove", (ev) => {
-    const i = cellAt(ev); if (i < 0 || !SETS || !VIS) return;
+    const i = cellAt(ev); if (i < 0 || !H || !VIS) return;
     const S = setNow();
     if (!(FLAGS[i] & 1)) { $("hover").textContent = "지형 자료 없음"; return; }
     const fallN = ["낮음", "중간", "높음"][CLS[i]];
@@ -1604,7 +1635,7 @@
   let activePreset = "base", raf = 0;
   function update(full = true) {
     labels();
-    if (!SETS) return;
+    if (!H) return;                       // 자료를 푸는 중
     cancelAnimationFrame(raf);
     ensureTrees(() => {
       if (state.mode === "sim") ensureSim();
@@ -1699,31 +1730,73 @@
   });
 
   // ---------- boot ----------
-  wrap.style.aspectRatio = `${W} / ${R}`;
-  wrap.style.maxWidth = `min(100%, calc(88vh * ${(W / R).toFixed(4)}))`;
-  $("shade").src = "__SHADE__";
-  $("ortho").src = "__ORTHO__";
   new ResizeObserver(() => drawVec()).observe(wrap);
-  // 개발 확인용: #rescue-demo 로 열면 구조 예시 상황으로 시작
-  if (location.hash === "#rescue-demo") { Object.assign(state, PRESETS.find((p) => p.id === "rescue").s); activePreset = "rescue"; }
-  if (location.hash === "#here-demo") { Object.assign(state, { mode: "here", here: Math.round(META.base[1] + 120) * W + Math.round(META.base[0] - 150) }); activePreset = ""; }
-  if (location.hash === "#sim-demo" || location.hash === "#sim-noauto") {
-    Object.assign(state, PRESETS.find((p) => p.id === "simhr").s); activePreset = "simhr"; pendingJump = true;
-    if (location.hash === "#sim-noauto") { state.simAuto = false; activePreset = ""; }
+  function siteTexts() {                  // 지형마다 바뀌는 문구
+    const st = SITE().stats, gale = SITE_I === 0;
+    $("site-title").textContent = SITE().name;
+    $("site-desc").textContent = `${SITE().description} 거점: ${SITE().base_name}. 출처: ${SITE().source}`;
+    $("site-stats").innerHTML = [
+      ["경사 20° 넘는 칸", fmt(st.impassable_pct, 1) + "%"], ["넘어짐 위험 높음", fmt(st.fall_high_pct, 1) + "%"],
+      ["기복", fmt(st.relief_m, 0) + " m"], ["산소 150 g 귀환 면적", fmt(st.baseline_km2, 1) + " km²"],
+      ["거점 안테나 가시권", fmt(st.base_vis_km2, 1) + " km²"]].map(([k, v]) => `<span>${k} <b>${v}</b></span>`).join("");
+    document.querySelectorAll("#sites-seg input").forEach((r) => { r.checked = Number(r.value) === SITE_I; });
+    $("relay-t").firstChild.textContent = gale ? "Mt. Sharp 비탈에 중계기 설치" : "중계기 설치";
+    $("relay-d").textContent = gale ? "거점에서 6.7 km, 거점과 가시선이 닿는 자리 (보고서 15)"
+      : `거점에서 ${fmt(st.relay_km_from_base, 1)} km, 거점과 가시선이 닿는 곳 중 귀환 영역을 가장 많이 덮는 자리 (자동 선택)`;
+    $("showtrav-l").hidden = !META.traverse.length;
+    const sandOk = st.dune_km2 > 0.01;
+    $("m-sand").disabled = !sandOk; $("showsand").disabled = !sandOk;
+    if (!sandOk) { state.mSand = false; state.showsand = false; $("m-sand-d").textContent = "이 지형에는 모래언덕 후보를 넣지 않았습니다 (위성 사진 밝기로 뽑으면 급사면 그늘이 잡혀서)."; }
+    else if (!C.cal_status || C.cal_status === "문헌값") $("m-sand-d").textContent = `모래언덕 후보 ${fmt(st.dune_km2, 1)} km²(위성 사진 밝기로 추정)에 적용. 0.92 m/s에서 약 3.0, 식의 자료 범위 밖인 0.85 m/s 미만은 0.85 값(3.3)`;
+    $("ortho").alt = `HiRISE 정사영상: ${SITE().name}`;
   }
-  if (location.hash === "#sim-custom") {     // 개발 확인용: 직접 입력 경로
+  async function loadSite(i, before) {    // 지형 바꾸기: 격자·거점·트리·캔버스·사진·문구를 모두 새로
+    stopSim();
+    SITE_I = i;
+    const site = SITE_LIST[i];
+    $("loading").hidden = false; $("loading").textContent = "지형 격자를 푸는 중…";
+    setGeom(site.meta); allocGrid();
+    H = null; TREES.clear(); FWD = null; REV = null; FWDB = null; VIS = null; VIS_BASE = -1; RELAY_OK = true;
+    SIM = null; SIMSIG = ""; SIMTARGET = -1; LMR = null; LMR_KEY = "";
+    await decode(site);
+    wrap.style.aspectRatio = `${W} / ${R}`;
+    wrap.style.maxWidth = `min(100%, calc(88vh * ${(W / R).toFixed(4)}))`;
+    $("shade").src = site.shade; $("ortho").src = site.ortho;
+    Object.assign(state, { base: BASE0, sel: GOAL, here: -1, victim: -1, simTarget: GOAL });
+    PRESETS = makePresets();
+    $("presets").innerHTML = PRESETS.map((p) => `<button type="button" data-id="${p.id}">${p.label}</button>`).join("");
+    if (before) before();
+    siteTexts();
+    $("loading").hidden = true;
+    syncInputs(); update();
+  }
+  $("sites-seg").innerHTML = SITE_LIST.map((s, i) => `<label><input type="radio" name="site" value="${i}"${i === 0 ? " checked" : ""}>${s.meta.site.short}</label>`).join("");
+  $("sites-seg").addEventListener("change", (e) => { activePreset = "base"; loadSite(Number(e.target.value)); });
+  // 주소 끝 #jezero, #aram (또는 #aram-sim-demo 처럼 뒤에 개발 확인용 이름)으로 그 지형부터 열기
+  const HID = location.hash.slice(1);
+  const START = Math.max(0, SITE_LIST.findIndex((s) => HID === s.meta.site.id || HID.startsWith(s.meta.site.id + "-")));
+  const HASH = START > 0 ? "#" + HID.slice(SITE_LIST[START].meta.site.id.length + 1) : location.hash;
+  function devHash() {
+  // 개발 확인용: #rescue-demo 로 열면 구조 예시 상황으로 시작
+  if (HASH === "#rescue-demo") { Object.assign(state, PRESETS.find((p) => p.id === "rescue").s); activePreset = "rescue"; }
+  if (HASH === "#here-demo") { Object.assign(state, { mode: "here", here: Math.round(META.base[1] + 120) * W + Math.round(META.base[0] - 150) }); activePreset = ""; }
+  if (HASH === "#sim-demo" || HASH === "#sim-noauto") {
+    Object.assign(state, PRESETS.find((p) => p.id === "simhr").s); activePreset = "simhr"; pendingJump = true;
+    if (HASH === "#sim-noauto") { state.simAuto = false; activePreset = ""; }
+  }
+  if (HASH === "#sim-custom") {     // 개발 확인용: 직접 입력 경로
     Object.assign(state, PRESETS.find((p) => p.id === "simhr").s, { simScenario: "custom" }); activePreset = ""; pendingJump = true;
     state.simCustom = "minute,bpm\n" + Array.from({ length: 90 }, (_, i) => `${i},${i < 45 ? 125 : 165}`).join("\n");
   }
-  if (location.hash === "#sim-press" || location.hash === "#sim-press-raw") {   // 개발 확인용: 압력 방식
+  if (HASH === "#sim-press" || HASH === "#sim-press-raw") {   // 개발 확인용: 압력 방식
     Object.assign(state, PRESETS.find((p) => p.id === "simpress").s); activePreset = "simpress"; pendingJump = true;
-    if (location.hash === "#sim-press-raw") { state.simTcomp = false; activePreset = ""; }
+    if (HASH === "#sim-press-raw") { state.simTcomp = false; activePreset = ""; }
   }
-  if (location.hash === "#sim-lit") { Object.assign(state, PRESETS.find((p) => p.id === "simhr").s, { mSpeed: true, mEta: true, mDown: true, mSand: true }); activePreset = ""; pendingJump = true; }
-  { const mm = /^#m([01]{4})(mr)?$/.exec(location.hash);      // 개발 확인용: #m1010 = 속도·η·내리막·모래 켜기, 끝에 mr이면 대사량 지도
+  if (HASH === "#sim-lit") { Object.assign(state, PRESETS.find((p) => p.id === "simhr").s, { mSpeed: true, mEta: true, mDown: true, mSand: true }); activePreset = ""; pendingJump = true; }
+  { const mm = /^#m([01]{4})(mr)?$/.exec(HASH);      // 개발 확인용: #m1010 = 속도·η·내리막·모래 켜기, 끝에 mr이면 대사량 지도
     if (mm) { [state.mSpeed, state.mEta, state.mDown, state.mSand] = [...mm[1]].map((c) => c === "1"); if (mm[2]) { state.showmr = true; state.showsand = true; } activePreset = ""; } }
-  if (location.hash === "#base-demo") { state.mode = "base"; state.base = 350 * W + 330; activePreset = ""; }
-  syncInputs();
+  if (HASH === "#base-demo") { state.mode = "base"; state.base = 350 * W + 330; activePreset = ""; }
+  }
   function selfTest() {       // #selftest: 브라우저 이식 코드가 미리 계산한 착륙지 결과와 맞는지
     const t0 = performance.now();
     const T = returnTree(BASE0, false), P = SETS.plain;
@@ -1740,7 +1813,7 @@
       vis_agree_pct: +(agree / nv * 100).toFixed(3), vis_km2_pre: +(pre * KM2).toFixed(2), vis_km2_js: +(js * KM2).toFixed(2),
       vis_ms: Math.round(performance.now() - t1), relay_los: losJS(BASE0, RELAY, C.base_ant_m, C.relay_ant_m) });
   }
-  decode().then(() => { $("loading").hidden = true; if (location.hash === "#selftest") selfTest(); update(); })
-    .catch((err) => { $("loading").textContent = "데이터를 풀지 못했습니다. 최신 Chrome, Edge, Safari, Firefox에서 열어 주세요. (" + err.message + ")"; });
+  loadSite(START, devHash).then(() => { if (HASH === "#selftest" && SETS) selfTest(); })
+    .catch((err) => { $("loading").hidden = false; $("loading").textContent = "데이터를 풀지 못했습니다. 최신 Chrome, Edge, Safari, Firefox에서 열어 주세요. (" + err.message + ")"; });
 })();
 </script>

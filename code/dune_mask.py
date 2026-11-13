@@ -34,14 +34,24 @@ def otsu(x):
     return edges[np.argmax(sb)]
 
 
-def build(shape):
-    rows, cols = shape
+def decode_ortho_4m(path):
+    """JPEG 2000 정사영상을 4 m(1/4)로 디코드. 일부 파일은 1/4 단계가 깨져 있어 1/2로 풀고 2배 줄인다
+    (Jezero ESP_045994_1985_RED_C: reduce=2에서 "broken data stream")."""
     Image.MAX_IMAGE_PIXELS = None
-    im = Image.open(ORTHO)
-    im.reduce = 2
-    full = np.asarray(im.convert("L"))
-    l0, l1 = (v // DECODE_M for v in CROP_LINES)
-    s0, s1 = (v // DECODE_M for v in CROP_SAMPLES)
+    try:
+        im = Image.open(path); im.reduce = 2
+        return np.asarray(im.convert("L"))
+    except OSError:
+        im = Image.open(path); im.reduce = 1
+        a = im.convert("L")
+        return np.asarray(a.resize((a.size[0] // 2, a.size[1] // 2), Image.BOX))
+
+
+def build(shape, ortho=ORTHO, crop_lines=CROP_LINES, crop_samples=CROP_SAMPLES):
+    rows, cols = shape
+    full = decode_ortho_4m(ortho)
+    l0, l1 = (v // DECODE_M for v in crop_lines)
+    s0, s1 = (v // DECODE_M for v in crop_samples)
     g = full[l0:l1, s0:s1].astype(np.float32)
     valid = (g > 0).astype(np.float32)
     # 상자 평균으로 격자에 맞춤 (NoData 제외)
