@@ -48,7 +48,7 @@ def rects(hash_, actions, size):
            "if(e){const r=e.getBoundingClientRect();o[id]=[r.left,r.top+scrollY,r.width,r.height];}}const p=document.createElement('pre');p.id='rects';"
            "p.textContent=JSON.stringify(o);document.body.appendChild(p)},60000);")
     open(f"{WTMP}/rects.html", "w", encoding="utf-8").write(src + f"<script>{js}</script>")
-    out = subprocess.run([CH, "--headless=new", "--disable-gpu", f"--window-size={size[0]},{size[1]}", "--virtual-time-budget=90000",
+    out = subprocess.run([CH, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--window-size={size[0]},{size[1]}", "--virtual-time-budget=90000",
                           "--dump-dom", f"{WURL}/rects.html{hash_}"], capture_output=True, text=True, timeout=300).stdout
     return json.loads(re.search(r'<pre id="rects">(.*?)</pre>', out).group(1))
 

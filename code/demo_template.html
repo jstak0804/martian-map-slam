@@ -985,7 +985,7 @@
       if (phase === "home" || phase === "dead") break;
       if (phase === "out" && !fz.ok && !infeasLogged && m > 0) {
         infeasLogged = true;
-        log.push({ m, cls: "bad", text: `여기부터는 지금 k(${fmt(k, 2)})로 귀환 불가: 필요 산소 ${fmt(fz.need, 0)} g > 쓸 수 있는 ${fmt(o2c - C.o2_reserve_g, 0)} g` });
+        log.push({ m, cls: "bad", text: `여기부터는 지금 k(${fmt(k, 2)})로 귀환 불가: 필요 산소 ${fmt(fz.need, 0)} g${state.planMargin ? ` (+왕복 여유 ${state.planMargin}% = ${fmt(fz.need * (1 + state.planMargin / 100), 0)} g)` : ""} > 쓸 수 있는 ${fmt(o2c - C.o2_reserve_g, 0)} g` });
       }
       if (press && !naiveLogged && isFinite(naive) && m >= K_WIN && Math.abs(naive / fz.need - 1) >= 0.25) {
         naiveLogged = true;
