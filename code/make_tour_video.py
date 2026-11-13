@@ -35,7 +35,7 @@ def page(name, hash_, actions, size=(1480, 1200), budget=90000):
     js = "".join(f"setTimeout(()=>{{try{{{a}}}catch(e){{}}}},{t});" for t, a in actions)
     open(f"{WTMP}/{name}.html", "w", encoding="utf-8").write(src + f"<script>{js}</script>")
     subprocess.run([CH, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--window-size={size[0]},{size[1]}",
-                    f"--virtual-time-budget={budget}", f"--screenshot={WWIN}\\{name}.png", f"{WURL}/{name}.html{hash_}"],
+                    f"--virtual-time-budget={budget}", f"--screenshot={WWIN}\\{name}.png", f"{WURL}/{name}.html{hash_ or '#'}-noworker"],
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=300)
     return Image.open(f"{WTMP}/{name}.png").convert("RGB")
 
@@ -49,7 +49,7 @@ def rects(hash_, actions, size):
            "p.textContent=JSON.stringify(o);document.body.appendChild(p)},60000);")
     open(f"{WTMP}/rects.html", "w", encoding="utf-8").write(src + f"<script>{js}</script>")
     out = subprocess.run([CH, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--window-size={size[0]},{size[1]}", "--virtual-time-budget=90000",
-                          "--dump-dom", f"{WURL}/rects.html{hash_}"], capture_output=True, text=True, timeout=300).stdout
+                          "--dump-dom", f"{WURL}/rects.html{hash_ or '#'}-noworker"], capture_output=True, text=True, timeout=300).stdout
     return json.loads(re.search(r'<pre id="rects">(.*?)</pre>', out).group(1))
 
 

@@ -1052,6 +1052,7 @@
   function wkStart() {                      // 지형을 열 때마다 새 워커에 격자를 복사해 둠
     if (WK) WK.terminate();
     WK = null; WK_CB.clear();
+    if (/noworker/.test(location.hash)) return;   // 헤드리스 가상 시간 녹화용: 워커 없이 메인 스레드에서 계산
     try {
       const url = URL.createObjectURL(new Blob([`(${WORKER_MAIN.toString()})()`], { type: "text/javascript" }));
       const w = new Worker(url);
