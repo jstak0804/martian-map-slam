@@ -270,6 +270,11 @@
         <input type="range" id="q" min="-150" max="150" step="10" value="0">
         <div class="hint">+는 햇빛·장비 발열로 열을 더 버려야 함, −는 추위로 열을 잃음. 측정값 없는 가정 (보고서 17)</div>
       </div>
+      <div class="ctl">
+        <div class="row"><label for="pm">왕복 계획 여유</label><output id="pm-out" for="pm"></output></div>
+        <input type="range" id="pm" min="0" max="50" step="5" value="20">
+        <div class="hint">과학 EVA 계획과 EVA 시뮬레이션의 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 산소·냉각수의 이만큼을 더 남깁니다. 지도 색(절대 한계)은 그대로입니다.</div>
+      </div>
 
       <div class="group" id="eva-ctl" hidden>
         <h2>과학 EVA 계획</h2>
@@ -565,7 +570,7 @@
                   simTarget: GOAL, simScenario: "surge", simNoise: 8, simAuto: true, simCustom: "",
                   simSrc: "hr", simLeak: 0, simPNoise: 10, simTcomp: true, simLeakSub: false,
                   mSpeed: false, mEta: false, mDown: false, mSand: false, showmr: false, showsand: false, showphoto: true, showtir: false,
-                  showtargets: true, evaSel: [], evaDwell: 45, hud: false, hudLang: "ko", rv: -1, rvMode: false };
+                  showtargets: true, evaSel: [], evaDwell: 45, hud: false, hudLang: "ko", rv: -1, rvMode: false, planMargin: 20 };
 
   let PRESETS;
   const makePresets = () => [
@@ -907,7 +912,8 @@
     const S = setNow();
     if (S.o2[pos] < 0) return { ok: false, need: Infinity, needW: Infinity, tRet: Infinity };
     const need = k * S.o2[pos] + extraGs * S.t[pos], needW = waterOf(S.o2[pos], S.t[pos], k, state.q);
-    const ok = need <= o2 - C.o2_reserve_g && needW <= w - waterReserve(state.q) && multNow() * S.dose[pos] <= C.dose_budget_msv;
+    const f = 1 + state.planMargin / 100;       // 왕복 계획 여유: 귀환 필요량에 여유를 얹어 판단
+    const ok = need * f <= o2 - C.o2_reserve_g && needW * f <= w - waterReserve(state.q) && multNow() * S.dose[pos] <= C.dose_budget_msv;
     return { ok, need, needW, tRet: S.t[pos] };
   }
   // 탱크 압력 -> 남은 산소: m = P V M / (Z R T). Z = 1(이상기체)로 둠. 6.2 MPa·21 °C에서 540 g이 되도록 V를 잡음(EMU 1차 탱크 수준, 가정)
@@ -991,7 +997,7 @@
         const fn = simFeasible(nxt.cell, o2c - k * dO2 - knownGs * 60, w - waterOf(dO2, 60, k, state.q), k, knownGs);
         if (!fn.ok && s < tr.len) {
           phase = "back"; turnMin = m; frame.turn = true;
-          log.push({ m, cls: "warn", text: `귀환 경보 → 돌아섬. 1분 더 가면 귀환 불가 (남은 산소 ${press ? "측정 " : ""}${fmt(o2c, 0)} g, 지금 귀환에 ${fmt(fz.need, 0)} g + 예비 ${fmt(C.o2_reserve_g, 0)} g)` });
+          log.push({ m, cls: "warn", text: `귀환 경보 → 돌아섬. 1분 더 가면 ${state.planMargin ? `왕복 여유(+${state.planMargin}%)를 지킬 수 없음` : "귀환 불가"} (남은 산소 ${press ? "측정 " : ""}${fmt(o2c, 0)} g, 지금 귀환에 ${fmt(fz.need, 0)} g + 예비 ${fmt(C.o2_reserve_g, 0)} g)` });
           tr = pathTrack(pathToBase(here)); s = 0;
         }
       }
@@ -1031,7 +1037,7 @@
   }
   function ensureSim() {
     const sig = JSON.stringify([state.simTarget, state.simScenario, state.simNoise, state.simAuto, state.simCustom, state.simSrc, state.simLeak, state.simPNoise, state.simTcomp, state.simLeakSub, modelKey(), state.o2, state.water,
-      state.q, state.spe, state.mult, state.nofall, state.base]);
+      state.q, state.spe, state.mult, state.nofall, state.base, state.planMargin]);
     if (sig === SIMSIG) return;
     const keep = SIM && SIM.ok && SIMTARGET === state.simTarget ? SIM.idx : 0;
     SIMSIG = sig; SIMTARGET = state.simTarget;
@@ -1419,10 +1425,11 @@
     const k = EK(), b = budgets(), S = setNow();
     const dwellModel = levelMR() * C.o2_g_per_j * 60 * state.evaDwell, dwellT = state.evaDwell * 60;
     const m = nodes.length, cost = (a, c) => L[a].o2[nodes[c]];
+    const PMf = 1 + state.planMargin / 100;  // 왕복 계획 여유
     // 1) 산소 합으로 후보 순서를 모은다 (예산을 넘으면 더 깊이 가지 않음)
     const cands = [];
     const dfs = (cur, mask, o2, order) => {
-      if (order.length) { const back = o2 + cost(cur, 0); if (isFinite(back) && k * back <= b.o2) cands.push({ order: order.slice(), total: back }); }
+      if (order.length) { const back = o2 + cost(cur, 0) * PMf; if (isFinite(back) && k * back <= b.o2) cands.push({ order: order.slice(), total: o2 + cost(cur, 0) }); }
       for (let j = 1; j < m; j++) {
         if (mask & (1 << j)) continue;
         const c = cost(cur, j);
@@ -1442,14 +1449,14 @@
         const a = seq[n], c = seq[n + 1], La = L[a], P = legPath(La, nodes[c]);
         for (const cell of P) {
           const ret = S.o2[cell];
-          const mg = ret < 0 ? -Infinity : b.o2 - k * (U + La.o2[cell] + ret);
+          const mg = ret < 0 ? -Infinity : b.o2 - k * (U + La.o2[cell] + ret * PMf);
           if (mg < minM) { minM = mg; minAt = cell; }
         }
         U += La.o2[nodes[c]]; Tm += La.t[nodes[c]]; D += La.dose[nodes[c]];
         path.push(...(path.length ? P.slice(1) : P));
         if (c !== 0) {                           // 목표에서 작업
           U += dwellModel; Tm += dwellT; D += RATE1[nodes[c]] * dwellT / 3600;
-          const ret = S.o2[nodes[c]], mg = b.o2 - k * (U + ret);
+          const ret = S.o2[nodes[c]], mg = b.o2 - k * (U + ret * PMf);
           if (mg < minM) { minM = mg; minAt = nodes[c]; }
           marks.push({ ti: sel[c - 1], arrive: Tm - dwellT, o2: U });
         }
@@ -1466,7 +1473,7 @@
   }
   function paintEva() {
     const v = $("pt-verdict"), T = META.targets || [];
-    const sig = JSON.stringify([state.base, state.evaSel, state.evaDwell, state.o2, state.water, state.k, state.q, state.spe, state.mult, state.nofall, modelKey(), SITE_I]);
+    const sig = JSON.stringify([state.planMargin, state.base, state.evaSel, state.evaDwell, state.o2, state.water, state.k, state.q, state.spe, state.mult, state.nofall, modelKey(), SITE_I]);
     if (sig !== EVASIG || !EVA || EVA.msg === "경로 계산 중…") { EVA = planEva(); EVASIG = sig; }
     if (!EVA.ok) {
       $("pt-where").textContent = EVA.msg; v.className = "verdict bad"; v.textContent = EVA.msg.startsWith("왼쪽") ? "" : "계획 불가";
@@ -1489,7 +1496,8 @@
       <dt>가장 빠듯한 순간의 귀환 여유</dt><dd>산소 ${fmt(EVA.minM, 0)} g (지도의 빨간 고리)</dd>
       <dt>통신 안 닿는 구간</dt><dd>${fmt(ps.dark / 1000, 2)} km (${fmt(ps.dist > 0 ? ps.dark / ps.dist * 100 : 0, 0)}%), 가장 긴 두절 ${fmt(mins(ps.maxRun), 0)}분</dd>
       <dt>넘어짐 높음 · 중간 칸</dt><dd>${fmt(ps.high, 0)} m · ${fmt(ps.med, 0)} m</dd>
-      <dt>목표마다 작업</dt><dd>${state.evaDwell}분 (평지 보행 수준 대사량 가정)</dd>`;
+      <dt>목표마다 작업</dt><dd>${state.evaDwell}분 (평지 보행 수준 대사량 가정)</dd>
+      <dt>왕복 계획 여유</dt><dd>귀환 필요량 +${state.planMargin}% 를 늘 남기는 계획</dd>`;
     drawVec({ path: EVA.path, color: "#ffffff", eva: true });
   }
   // ---------- 헬멧 HUD ----------
@@ -2020,7 +2028,7 @@
   vec.addEventListener("mouseleave", () => { $("hover").textContent = MODE_HINT[state.mode].replace(/<[^>]+>/g, ""); });
 
   function syncInputs() {
-    $("o2").value = state.o2; $("water").value = state.water; $("k").value = state.k; $("q").value = state.q;
+    $("o2").value = state.o2; $("pm").value = state.planMargin; $("water").value = state.water; $("k").value = state.k; $("q").value = state.q;
     $("spe").checked = state.spe; $("mult").value = sliderFromMult(state.mult);
     $("nofall").checked = state.nofall; $("relay").checked = state.relay; $("showfall").checked = state.showfall;
     $("m-speed").checked = state.mSpeed; $("m-eta").checked = state.mEta; $("m-down").checked = state.mDown; $("m-sand").checked = state.mSand;
@@ -2039,6 +2047,7 @@
     $("water-out").textContent = `${fmt(state.water, 2)} kg`;
     $("water-hint").textContent = `만충 3.6 kg · 예비분 ${fmt(waterReserve(state.q), 0)} g을 빼고 ${fmt(Math.max(0, state.water * 1000 - waterReserve(state.q)), 0)} g`;
     $("k-out").textContent = `${fmt(state.k, 2)}`;
+    $("pm-out").textContent = `+${state.planMargin}%`;
     $("q-out").textContent = `${state.q > 0 ? "+" : ""}${state.q} W`;
     $("mult-out").textContent = `×${fmt(state.mult, 1)}${Math.abs(state.mult - C.spe_observed) < 0.05 ? " (관측)" : state.mult > 3 ? " (가정)" : ""}`;
     $("speblock").dataset.off = String(!state.spe);
@@ -2092,7 +2101,7 @@
   }
   const bindRange = (id, key, parse) => $(id).addEventListener("input", (e) => { state[key] = parse(e.target.value); activePreset = ""; update(); });
   bindRange("o2", "o2", Number); bindRange("water", "water", Number); bindRange("k", "k", Number); bindRange("q", "q", Number);
-  bindRange("vo2", "vo2", Number); bindRange("vwater", "vwater", Number);
+  bindRange("vo2", "vo2", Number); bindRange("pm", "planMargin", Number); bindRange("vwater", "vwater", Number);
   $("mult").addEventListener("input", (e) => { state.mult = multFromSlider(Number(e.target.value)); if (!state.spe) state.spe = true; $("spe").checked = true; activePreset = ""; update(); });
   for (const id of ["spe", "nofall", "relay"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; activePreset = ""; update(); });
   for (const [id, key] of [["m-speed", "mSpeed"], ["m-eta", "mEta"], ["m-down", "mDown"], ["m-sand", "mSand"]])

@@ -28,6 +28,19 @@ MSL_DRILLS = {182: "John Klein 드릴 지점", 279: "Cumberland 드릴 지점", 
               1060: "Buckskin 드릴 지점", 1119: "Big Sky 드릴 지점", 1137: "Greenhorn 드릴 지점"}
 
 
+# NASA Mars 2020 시료 목록 (https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/, 2026-06-20 기준 페이지)
+# (번호, 시료 이름, 암석·노두, 채취 구역, 밀봉 sol). 페이지에는 채취 sol이 아니라 밀봉 sol만 있어 그 값을 쓴다.
+M20_SAMPLES = [(1, "Roubion", "Roubion", "Polygon Valley", 164), (2, "Montdenier", "Rochette", "Artuby Ridge", 194),
+               (3, "Montagnac", "Rochette", "Artuby Ridge", 196), (4, "Salette", "Brac", "South Séítah", 262),
+               (5, "Coulettes", "Brac", "South Séítah", 271), (6, "Robine", "Issole", "South Séítah", 298),
+               (7, "Malay", "Issole", "South Séítah", 337), (8, "Ha'ahóni", "Sid", "Ch'ał outcrop", 371),
+               (9, "Atsá", "Sid", "Ch'ał outcrop", 377), (10, "Swift Run", "Skinner Ridge", "Delta Front", 490),
+               (11, "Skyland", "Skinner Ridge", "Delta Front", 495), (12, "Hazeltop", "Wildcat Ridge", "Delta Front", 509),
+               (13, "Bearwallow", "Wildcat Ridge", "Delta Front", 516), (14, "Shuyak", "Amalik", "Delta Front", 575),
+               (15, "Mageik", "Amalik", "Delta Front", 619), (16, "Kukaklek", "Hidden Harbor", "Delta Front", 631),
+               (17, "Atmo Mountain", "Observation Mountain", "Delta Front", 634), (18, "Crosswind Lake", "Observation Mountain", "Delta Front", 639)]
+
+
 def dwell_clusters(xy_sol, cell, rows, cols, base=None):
     pts = sorted(xy_sol, key=lambda t: t[2])
     clusters, cur = [], []
@@ -80,9 +93,18 @@ def jezero():
         xy.append(((sa - s0) / B.BLOCK, (li - l0) / B.BLOCK, int(w["sol"])))
     T = dwell_clusters(xy, meta["cell_m"], meta["rows"], meta["cols"], meta["base"])
     for t in T:
-        t["name"] = f"Perseverance 탐사 정지 지점 (sol {t['sols'][0]}–{t['sols'][1]})"
-        t["why"] = f"Perseverance가 sol {t['sols'][0]}–{t['sols'][1]} 동안 머물며 조사한 곳 (근접 분석·시료 채취 기간일 가능성)"
-        t["source"] = "NASA MMGIS M20_waypoints (머문 기간으로 선정)"
+        smp = [x for x in M20_SAMPLES if t["sols"][0] - 3 <= x[4] <= t["sols"][1] + 3]
+        if smp:
+            feats = list(dict.fromkeys(x[2] for x in smp))
+            t["name"] = f"{' · '.join(feats)} 시료 채취 지점"
+            t["why"] = (f"Perseverance가 sol {t['sols'][0]}–{t['sols'][1]} 동안 머문 곳. 이 기간 밀봉한 시료: "
+                        + ", ".join(f"#{x[0]} {x[1]} (sol {x[4]})" for x in smp) + f" · {smp[0][3]}")
+            t["samples"] = [{"no": x[0], "name": x[1], "feature": x[2], "area": x[3], "sol_sealed": x[4]} for x in smp]
+            t["source"] = "NASA MMGIS M20_waypoints (머문 기간) + NASA Mars 2020 시료 목록 (밀봉 sol로 대조)"
+        else:
+            t["name"] = f"Perseverance 탐사 정지 지점 (sol {t['sols'][0]}–{t['sols'][1]})"
+            t["why"] = f"Perseverance가 sol {t['sols'][0]}–{t['sols'][1]} 동안 머물며 조사한 곳"
+            t["source"] = "NASA MMGIS M20_waypoints (머문 기간으로 선정)"
     return T
 
 

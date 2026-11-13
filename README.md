@@ -46,6 +46,9 @@ Interplanetary Survival Guide: Martian Map 챌린지로 진행한 SLAM(점진적
 - **로드뷰:** "로드뷰" 버튼을 누르면 로버가 멈춘 지점의 Navcam 사진을 주행 경로 순서로 넘겨 봅니다(`code/build_roadview.py`).
   - Jezero 2곳은 수평선 360° 띠 사진입니다.
   - MMGIS 360° 파노라마 모자이크는 서버가 외부 요청을 막아(403) 쓰지 못했습니다.
+- **왕복 계획 여유 (기본 +20%):** 과학 EVA 계획과 EVA 시뮬레이션 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 양보다 더 남깁니다. 심박 예시에서는 120분이 아닌 109분에 돌아서서 산소 81 g으로 도착합니다.
+- **Jezero 목표 이름:** NASA Mars 2020 시료 목록의 밀봉 sol과 대조해 붙였습니다(Skinner Ridge·Wildcat Ridge, Brac, Amalik).
+- **영어 화면:** 맨 위 EN 버튼. 30초 소개 영상은 `outputs/video/eva_walkback_tour.mp4`입니다(`code/make_tour_video.py`).
 - **원격 진행:** 해커톤 중 원격 Claude Code로 자료를 받는 방법은 [`code/hackathon/REMOTE.md`](code/hackathon/REMOTE.md)에 있습니다.
   - 챌린지 자료 탭 감시: `challenge_watch`
   - 링크로 받기: `fetch`

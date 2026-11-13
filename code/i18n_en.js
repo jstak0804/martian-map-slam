@@ -68,6 +68,11 @@ const I18N = {
   "심박 (Hoffmann 회귀식으로 대사량 추정)": "Heart rate (Hoffmann regression)", "탱크 압력 (산소 소모를 직접 측정)": "Tank pressure (direct O2 use)",
   "우주복 누설": "Suit leak", "압력 센서 잡음": "Pressure sensor noise", "처음으로": "Restart",
   "계산 방법과 한계": "Methods and limitations",
+  "왕복 계획 여유": "Round-trip planning margin",
+  "과학 EVA 계획과 EVA 시뮬레이션의 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 산소·냉각수의 이만큼을 더 남깁니다. 지도 색(절대 한계)은 그대로입니다.":
+    "Keeps this much extra over the O2/coolant needed to get home, so science plans and the simulation's turn-back alert don't hug the walk-back boundary. Map colours (absolute limit) are unchanged.",
+  "헬멧 바이저에는 이렇게 표시할 예정입니다. 배경은 지금 위치 근처에서 로버가 찍은 실제 사진(바이저 너머 풍경 대신), 값은 지도에서 고른 지점·현재 위치·EVA 시뮬레이션 재생 시각 기준으로 바뀝니다.":
+    "This is how the helmet visor will look. The background is a real rover photo taken near this spot (standing in for the view through the visor); values follow the selected point, current position or EVA simulation time.",
   "산소·냉각수는 예비분을 빼고 평지를 걸을 때 남은 시간, 선량은 거점 선량률로 귀환 예산을 다 쓰기까지의 시간, 통신은 귀환 가능 영역 중 가시선이 안 닿는 비율. 초록 여유 · 노랑 주의 · 빨강 위험 (산소·냉각수 60분/20분, 선량 8시간/2시간, 통신 15%/40%, 기준값은 가정)":
     "O2/coolant: time left walking on level ground after the reserve. Dose: time until the return budget is used at the base dose rate. Comm: share of the returnable area without line of sight. Green OK · yellow caution · red danger (O2/coolant 60/20 min, dose 8/2 h, comm 15%/40%; thresholds assumed)", "과학 목표": "Science targets", "로드뷰 모드": "Road-view mode",
 };
@@ -80,8 +85,9 @@ const I18N_RE = [
   [/^구조 예시: (.*)$/, "Rescue example: $1"], [/^경사 20° 넘는 칸$/, "Cells over 20°"], [/^넘어짐 위험 높음$/, "High fall risk"],
   [/^기복$/, "Relief"], [/^산소 150 g 귀환 면적$/, "Walk-back area at 150 g O2"], [/^거점 안테나 가시권$/, "Base antenna coverage"],
   [/^(.*) \(하산 포함\)$/, "$1 (incl. descent)"],
+  [/^배경 사진: (\S+) Navcam sol (\d+) \(이 위치에서 ([\d.,]+) km 떨어진 곳, NASA\/JPL-Caltech\)$/, "Background: $1 Navcam sol $2 ($3 km from this spot, NASA/JPL-Caltech)"],
   [/^sol (\d+) 지점$/, "sol $1 site"], [/^절벽을 돌아가야 하는 곳$/, "Spot behind the scarps"], [/^블록을 돌아가야 하는 곳$/, "Spot behind the blocks"],
-  [/^(Curiosity|Perseverance) 탐사 정지 지점 \((.*)\)$/, "$1 science stop ($2)"], [/^(.*) 드릴 지점$/, "$1 drill site"],
+  [/^(Curiosity|Perseverance) 탐사 정지 지점 \((.*)\)$/, "$1 science stop ($2)"], [/^(.*) 시료 채취 지점$/, "$1 sampling site"], [/^(.*) 드릴 지점$/, "$1 drill site"],
   [/^열관성 높은 노출 암반 후보 (\d+)$/, "High-thermal-inertia outcrop candidate $1"],
   [/^예비분 ([\d.,]+) g\(평지 30분\)을 빼고 ([\d.,]+) g으로 다녀야 함$/, "After the $1 g reserve (30 min level walk): $2 g usable"],
   [/^만충 3\.6 kg · 예비분 ([\d,]+) g을 빼고 ([\d,]+) g$/, "Full 3.6 kg · after the $1 g reserve: $2 g"],

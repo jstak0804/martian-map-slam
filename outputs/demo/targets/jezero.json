@@ -6,9 +6,39 @@
    443,
    535
   ],
-  "name": "Perseverance 탐사 정지 지점 (sol 443–535)",
-  "why": "Perseverance가 sol 443–535 동안 머물며 조사한 곳 (근접 분석·시료 채취 기간일 가능성)",
-  "source": "NASA MMGIS M20_waypoints (머문 기간으로 선정)"
+  "name": "Skinner Ridge · Wildcat Ridge 시료 채취 지점",
+  "why": "Perseverance가 sol 443–535 동안 머문 곳. 이 기간 밀봉한 시료: #10 Swift Run (sol 490), #11 Skyland (sol 495), #12 Hazeltop (sol 509), #13 Bearwallow (sol 516) · Delta Front",
+  "samples": [
+   {
+    "no": 10,
+    "name": "Swift Run",
+    "feature": "Skinner Ridge",
+    "area": "Delta Front",
+    "sol_sealed": 490
+   },
+   {
+    "no": 11,
+    "name": "Skyland",
+    "feature": "Skinner Ridge",
+    "area": "Delta Front",
+    "sol_sealed": 495
+   },
+   {
+    "no": 12,
+    "name": "Hazeltop",
+    "feature": "Wildcat Ridge",
+    "area": "Delta Front",
+    "sol_sealed": 509
+   },
+   {
+    "no": 13,
+    "name": "Bearwallow",
+    "feature": "Wildcat Ridge",
+    "area": "Delta Front",
+    "sol_sealed": 516
+   }
+  ],
+  "source": "NASA MMGIS M20_waypoints (머문 기간) + NASA Mars 2020 시료 목록 (밀봉 sol로 대조)"
  },
  {
   "x": 335.5,
@@ -17,9 +47,25 @@
    203,
    283
   ],
-  "name": "Perseverance 탐사 정지 지점 (sol 203–283)",
-  "why": "Perseverance가 sol 203–283 동안 머물며 조사한 곳 (근접 분석·시료 채취 기간일 가능성)",
-  "source": "NASA MMGIS M20_waypoints (머문 기간으로 선정)",
+  "name": "Brac 시료 채취 지점",
+  "why": "Perseverance가 sol 203–283 동안 머문 곳. 이 기간 밀봉한 시료: #4 Salette (sol 262), #5 Coulettes (sol 271) · South Séítah",
+  "samples": [
+   {
+    "no": 4,
+    "name": "Salette",
+    "feature": "Brac",
+    "area": "South Séítah",
+    "sol_sealed": 262
+   },
+   {
+    "no": 5,
+    "name": "Coulettes",
+    "feature": "Brac",
+    "area": "South Séítah",
+    "sol_sealed": 271
+   }
+  ],
+  "source": "NASA MMGIS M20_waypoints (머문 기간) + NASA Mars 2020 시료 목록 (밀봉 sol로 대조)",
   "snapped_m": 5
  },
  {
@@ -29,8 +75,17 @@
    555,
    593
   ],
-  "name": "Perseverance 탐사 정지 지점 (sol 555–593)",
-  "why": "Perseverance가 sol 555–593 동안 머물며 조사한 곳 (근접 분석·시료 채취 기간일 가능성)",
-  "source": "NASA MMGIS M20_waypoints (머문 기간으로 선정)"
+  "name": "Amalik 시료 채취 지점",
+  "why": "Perseverance가 sol 555–593 동안 머문 곳. 이 기간 밀봉한 시료: #14 Shuyak (sol 575) · Delta Front",
+  "samples": [
+   {
+    "no": 14,
+    "name": "Shuyak",
+    "feature": "Amalik",
+    "area": "Delta Front",
+    "sol_sealed": 575
+   }
+  ],
+  "source": "NASA MMGIS M20_waypoints (머문 기간) + NASA Mars 2020 시료 목록 (밀봉 sol로 대조)"
  }
 ]
