@@ -47,7 +47,8 @@ def run(lang):
         acts.append((12000, "document.getElementById('lang-btn').click()"))
     pin = ("const b=document.createElement('div');b.style.cssText='position:fixed;inset:0;background:#0b0e15;z-index:99998';document.body.appendChild(b);"
            "const v=document.getElementById('visor');const r=v.getBoundingClientRect();"
-           "v.style.cssText+=`;position:fixed;top:10px;left:10px;width:${r.width}px;z-index:99999;margin:0`")   # 바이저만 화면 왼쪽 위에 고정
+           "const pw=v.closest('.visor-wrap'); if(pw) pw.style.cssText+=';width:744px';"
+           "v.style.cssText+=`;position:fixed;top:10px;left:10px;width:744px;z-index:99999;margin:0`")   # 바이저만 화면 왼쪽 위에 고정 (PIP 창 크기와 무관하게 744 px)
     simjs = lambda n: f"const t=document.getElementById('sim-t');t.value={n};t.dispatchEvent(new Event('input'))"
     top = {"ko": "헬멧 바이저 HUD 적용 화면 — EVA 시뮬레이션 (Gale, 산소 450 g, 60분부터 대사량 25% 급증)",
            "en": "Helmet visor HUD — EVA simulation (Gale, 450 g O2, metabolic surge +25% from minute 60)"}[lang]

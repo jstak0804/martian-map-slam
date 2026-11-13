@@ -1,8 +1,13 @@
-# Martian Map — SLAM & Risk Heatmap
+# Mars EVA Walkback & Survival Planner
 
-Interplanetary Survival Guide: Martian Map 챌린지로 진행한 SLAM(점진적 지도 생성)·위험도 히트맵·MMGIS 통합 설계 작업 전체를 모은 폴더입니다. 작업 순서대로 번호를 붙였습니다.
+Interplanetary Survival Guide: Martian Map 챌린지 작업 폴더입니다.
 
-## 최신 결과물: Gale 크레이터 EVA 귀환 반경 (2026-11)
+- **제출물(플래너):** 위성 DEM(HiRISE)·로버 관측·RAD 선량 자료를 한 격자에 겹쳐, 10 m 단위로 "지금 남은 산소·냉각수·선량으로 거점까지 걸어 돌아올 수 있는 곳"과 최적 귀환 경로를 계산하는 시뮬레이터입니다. 실시간 센서 측위(SLAM)를 하지 않습니다.
+- **연구 트랙(별도):** 로버가 지도를 점진적으로 만드는 탐사형 SLAM 시뮬레이션·위험도 히트맵·MMGIS 통합 설계. 플래너의 지형 자료가 "처음부터 완벽하지 않을 때"를 따져 보는 보조 연구이며, 플래너 계산에는 들어가지 않습니다. 저장소 이름(martian-map-slam)은 이 트랙에서 시작해 남아 있습니다.
+
+## 최신 결과물: Mars EVA Walkback & Survival Planner (2026-11)
+
+- **v3 (브랜치 `console-v3`):** 다목적 귀환 경로(SPE 때 선량을 피해 돌아가는 길), 인라인 Web Worker 계산, 지도 확대·이동, 지도 위 헬멧 HUD(PIP)·로드뷰 창, 모드별 설정 맨 위 배치, 누적 막대 요약, ⓘ 툴팁, 귀환 가능 영역 윤곽선과 제약별 무늬(색각 이상 배려).
 
 화성 선외활동 중 고장이 났을 때, 남은 산소·냉각수·방사선 선량 여유로 거점까지 걸어서 돌아올 수 있는 곳을 HiRISE 지형 위에 그립니다.
 

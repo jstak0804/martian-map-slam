@@ -215,7 +215,7 @@ def main(files, name, args):
         gs = np.linspace(0, S["grade"][m].max(), 20)
         ax.plot(gs, v0 + slope * gs, "r", label=f"fit {v0:.2f} - {-slope:.3f}*G")
         d0 = DEFAULTS["speed_model"]
-        ax.plot(gs, np.maximum(d0["v_min_m_s"], d0["v0_m_s"] - d0["c_m_s_per_pct"] * gs), "k--", label="literature (lunar)")
+        ax.plot(gs, np.maximum(d0["v_min_m_s"], d0["v0_m_s"] - d0["c_m_s_per_deg"] * np.degrees(np.arctan(gs / 100))), "k--", label="literature (lunar, θ in deg)")
         ax.set_xlabel("uphill grade (%)"); ax.set_ylabel("speed (m/s)"); ax.legend(fontsize=8); ax.set_title("self-paced speed vs grade")
     else:
         axes[2].set_title("no speed + grade data (or forced speed)"); axes[2].axis("off")

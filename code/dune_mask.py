@@ -23,7 +23,7 @@ from mars_walkback import CROP_LINES, CROP_SAMPLES
 ORTHO = "../data/hirise_dtm/ESP_018854_1755_RED_C_01_ORTHO.JP2"
 OUT_DIR = "../outputs/demo"
 DECODE_M = 4
-MIN_BLOB_CELLS = 30          # 0.3 km² 미만 덩어리는 사구로 보지 않음 (설계 가정)
+MIN_BLOB_CELLS = 30          # 30칸(10 m 격자면 0.003 km²) 미만 덩어리는 사구로 보지 않음 (설계 가정; 이전 주석의 0.3 km²는 오기)
 
 
 def otsu(x):

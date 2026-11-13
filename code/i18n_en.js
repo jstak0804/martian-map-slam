@@ -1,10 +1,10 @@
 // 데모 영어 전환 사전 (build_demo_html.py가 demo_template.html의 __I18N__ 자리에 넣는다)
 // 정확히 같은 문구 -> 영어. 숫자가 들어간 문구는 아래 I18N_RE 패턴으로.
 const I18N = {
-  "Mars Map SLAM · 올인원 데모": "Mars Map SLAM · all-in-one demo",
+  "Mars EVA Walkback & Survival Planner": "Mars EVA Walkback & Survival Planner",
   "EVA 귀환 반경": "EVA walk-back radius",
-  "고장이 난 순간, 지금 남은 산소·냉각수·선량 여유로 거점까지 걸어 돌아올 수 있는 곳은 어디까지인가. 조건을 바꾸면 지도가 바로 다시 그려지고, 지도를 누르면 그 지점에서 돌아오는 길을 따져 봅니다.":
-    "If something breaks right now, how far can the crew still walk back to base with the O2, coolant and radiation margin left? Change the conditions and the map redraws; click the map to check the way home from that spot.",
+  "HiRISE 지형·로버 관측·RAD 선량 자료를 한 격자에 겹친": "A", "10 m 단위 귀환 가능 지역·최적 귀환 경로 시뮬레이터": "10 m walk-back zone and optimal return-route simulator",
+  ". 고장이 난 순간 남은 산소·냉각수·선량 여유로 거점까지 걸어 돌아올 수 있는 곳을 그리고, 지도를 누르면 그 지점에서 돌아오는 길을 따져 봅니다.": " built on HiRISE terrain, rover observations and RAD dose data on one grid. It maps where the crew can still walk back to base with the O2, coolant and dose margin left; click the map to check the way home from that spot.",
   "Gale 크레이터": "Gale crater", "Jezero 크레이터 삼각주": "Jezero crater delta", "Aram Chaos 혼돈 지형": "Aram Chaos",
   "Aram Chaos (가상 거점)": "Aram Chaos (virtual base)",
   "고급 설정: 냉각수 · 대사 · 열 · 왕복 여유": "Advanced: coolant · metabolism · heat · round-trip margin",
@@ -13,6 +13,15 @@ const I18N = {
   "고급 물리·생리학 모델 설정": "Advanced physics & physiology model", "안전 운용 · 문헌 기반 보정": "Safety ops · literature-based corrections",
   "① 경로 탐색": "① Route check", "② 과학 EVA 계획": "② Science EVA plan", "③ 실시간 시뮬레이션": "③ Live simulation", "④ 조난 구조": "④ Rescue",
   "🥽 헬멧 HUD 보기": "🥽 Helmet HUD", "📷 1인칭 로드뷰": "📷 Rover POV road view", "(시연 시나리오)": "(demo scenario)",
+  "미세 기복 \"높음\" 칸 통행 금지": "Avoid \"high\" micro-relief cells",
+  "1 m 지형에서 3×3 고도차 0.5 m 이상·경사 20° 이상 화소가 많은 칸을 돌아감. 턱 전용 검출이 아닌 기복 후보 지표": "Routes avoid cells with many 1 m pixels over 0.5 m 3×3 relief or 20° slope. A relief proxy, not a step detector",
+  "THEMIS 야간 적외선 상대 밝기": "THEMIS night-IR relative brightness",
+  "JPL Mars Trek 모자이크(약 100 m)의 8비트 밝기를 격자에 보간한 참고 층. 정량 열관성·지반 강도 자료가 아니며 계산에 쓰지 않음": "8-bit brightness of the JPL Mars Trek mosaic (~100 m) interpolated to the grid. Reference only: not quantitative thermal inertia or ground strength, not used in any calculation",
+  "헬멧 바이저 HUD": "Helmet visor HUD", "돌아올 수 있음": "Can return", "체온 비상한계로 겨우": "Only on body-heat emergency limit",
+  "선량 때문에 못 감": "Lost to dose", "냉각수 때문에 못 감": "Lost to coolant", "넘어짐 금지 때문에 못 감": "Lost to fall-risk ban",
+  "돌아올 수 있음 (선량 회피 경로)": "Can return (dose-avoiding route)", "선량 회피 경로 (산소 최소 경로 대비)": "Dose-avoiding route (vs lowest-O2 route)",
+  "선량 회피 경로로만 돌아올 수 있음": "Returnable only via dose-avoiding route", "귀환 가능 영역 윤곽": "Walk-back zone outline",
+  "산소만 볼 때의 경계": "O2-only boundary",
   "상황 설정": "Situation", "지금 상황": "Status", "지도 표시": "Map layers",
   "기준": "Baseline", "관측 SPE ×2.9": "Observed SPE ×2.9", "대형 SPE ×30 (스트레스 테스트)": "Large SPE ×30 (stress test)", "지친 대원 k 1.2": "Tired crew k 1.2",
   "냉각수 누수 0.6 kg": "Coolant leak 0.6 kg", "누수 + 더운 오후": "Leak + hot afternoon", "안전 우선 운용": "Safety-first ops",
@@ -83,6 +92,12 @@ const I18N = {
     "O2/coolant: time left walking on level ground after the reserve. Dose: time until the return budget is used at the base dose rate. Comm: share of the returnable area without line of sight. Green OK · yellow caution · red danger (O2/coolant 60/20 min, dose 8/2 h, comm 15%/40%; thresholds are simulation parameters)", "과학 목표": "Science targets", "로드뷰 모드": "Road-view mode",
 };
 const I18N_RE = [
+  [/^km² · 지형의 ([\d.,]+)%$/, "km² · $1% of mapped terrain"],
+  [/^기준 상황\(산소 150 g, 만충, k 1\.0\) ([\d.,]+) km² 대비 ([+-]?[\d.,]+)% · 산소만 보면 ([\d.,]+) km²(?: · 선량 회피 경로로 추가 확보 ([\d.,]+) km²)?$/,
+    (m, a, b, c, d) => `vs baseline (O2 150 g, full coolant, k 1.0) ${a} km²: ${b}% · O2 alone ${c} km²${d ? ` · dose-avoiding routes add ${d} km²` : ""}`],
+  [/^산소로는 되는데 (.*) 때문에 ([\d.,]+) km²를 못 감$/, (m, a, b) => `O2 allows it, but ${({ "선량": "dose", "냉각수": "coolant", "넘어짐 금지": "fall-risk ban" })[a] || a} rules out ${b} km²`],
+  [/^산소 ([+-]?[\d.,]+) g · 선량 ([+-]?[\d.,]+) µSv$/, "O2 $1 g · dose $2 µSv"],
+  [/^×([\d.]+) \(시나리오\)$/, "×$1 (scenario)"], [/^×([\d.]+) \(관측\)$/, "×$1 (observed)"],
   [/^거점에서 직선 ([\d.,]+) km( · (.*))?$/, (m, a, b, c) => `${a} km from base${c ? " · " + c : ""}`],
   [/^(\d+)시간 (\d+)분$/, "$1 h $2 min"], [/^(\d+)분$/, "$1 min"], [/^(\d+)분 \/ (\d+)분$/, "$1 / $2 min"],
   [/^평지 보행 · 시간당 ([\d,]+) g$/, "level walking · $1 g/h"], [/^시간당 ([\d,]+) g(.*)$/, "$1 g/h$2"],

@@ -28,8 +28,8 @@ DEFAULTS = {
         "source": "Hoffmann et al. 2021 (NASA, Shuttle/ISS EVA 132회) 표 5.1",
     },
     "speed_model": {
-        "v0_m_s": 0.75, "c_m_s_per_pct": 0.01, "v_min_m_s": 0.3,
-        "source": "Peña-Asensio et al. 2024 달 보행 속도식 (Kim et al. 2025 ICES-2025-129 인용)",
+        "v0_m_s": 0.75, "c_m_s_per_deg": 0.01, "v_min_m_s": 0.3,
+        "source": "Peña-Asensio et al. 2024 달 보행 속도식 (Kim et al. 2025 ICES-2025-129 식 (2), θ는 도 단위)",
     },
     "eta_surface_add": {
         "value": 0.2,

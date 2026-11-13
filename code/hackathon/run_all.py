@@ -109,7 +109,7 @@ def write_report(out_dir, args, man, done, errors, synthetic):
                ("모래 a", T["sand_a"], p.get("eta_sand", {}).get("a")),
                ("모래 b", T["sand_b"], p.get("eta_sand", {}).get("b")),
                ("속도 v0", T["speed_v0"], p.get("speed_model", {}).get("v0_m_s")),
-               ("속도 c", T["speed_c"], p.get("speed_model", {}).get("c_m_s_per_pct")),
+               ("속도 c (%당)", T["speed_c"], p.get("speed_model", {}).get("c_m_s_per_pct")),
                ("배경 선량 mSv/day", round(T["dose_bg_ugy_h"] * 24e-3 * 3.05, 4), p.get("dose", {}).get("bg_msv_day")),
                ("SPE 최대 배율", T["spe_peak_multiplier"], p.get("dose", {}).get("spe_observed"))]
         L += ["", "## 정답 대조 (가짜 데이터)", "", "| 항목 | 정답 | 추정 |", "|---|---|---|"]

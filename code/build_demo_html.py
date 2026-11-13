@@ -86,6 +86,10 @@ def photos(site):
 def main():
     html = open("demo_template.html", encoding="utf-8").read()
     meta = json.load(open("../outputs/demo/demo_meta.json", encoding="utf-8"))
+    from hackathon.params import load_active          # 보정 파라미터는 빌드할 때의 값으로 덮어씀(자료 재생성 없이 반영)
+    CAL = load_active()
+    cal = {k: v for k, v in CAL.items() if not k.startswith("_")}
+    meta["const"]["cal"] = cal; meta["const"]["cal_status"] = CAL["_status"]
     meta["site"] = gale_site(meta)
     meta["photos"] = photos("gale")
     meta["tir"] = tir("gale")
@@ -99,6 +103,7 @@ def main():
         sm = json.load(open(f"{d}/meta.json", encoding="utf-8"))
         from sites import SITES
         sm["site"]["description_en"] = SITES[sid].get("description_en", "")
+        if "const" in sm: sm["const"]["cal"] = cal; sm["const"]["cal_status"] = CAL["_status"]
         sm["photos"] = photos(sid)
         sm["tir"] = tir(sid)
         sm["targets"] = targets(sid)
