@@ -72,6 +72,7 @@
   .mapwrap canvas.cells { image-rendering: pixelated; opacity: var(--cells-alpha); }
   .mapwrap canvas.vec { cursor: crosshair; }
   .loading[hidden], .mapwrap img[hidden] { display: none; }
+  [hidden] { display: none !important; }      /* display를 준 요소(.rv, .visor-wrap, .ctl, .sw)도 hidden이면 숨김 */
   #shade { filter: brightness(1.12) contrast(1.05); }
   .seg { display: flex; gap: 0; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
   .seg label { flex: 1; text-align: center; font-size: 13px; padding: 6px 8px; cursor: pointer; background: var(--panel-2); color: var(--ink-soft); }
