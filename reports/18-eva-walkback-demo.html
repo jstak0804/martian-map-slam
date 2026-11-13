@@ -1184,6 +1184,61 @@
     for (let n = 0; n < 8000 && S.next[cur] >= 0; n++) { cur = S.next[cur]; path.push(cur); }
     return path;
   }
+  // 귀환 경로망에 없는 칸(경사 20° 넘는 언덕 위, 고립된 곳)에서: 지나가는 가장 가파른 경사가 가장 작은 길로
+  // 경로망에 닿을 때까지 내려온다(최소-최대 경사 경로, 같으면 산소가 덜 드는 길). 닿은 뒤로는 기존 귀환 트리.
+  function descentRoute(src) {
+    const S = setNow();
+    const best = new Float64Array(N).fill(Infinity), pred = new Int32Array(N).fill(-1);
+    const o2 = new Float64Array(N), tt = new Float64Array(N), ds = new Float64Array(N), mx = new Float32Array(N);
+    let cap = 1 << 16, hk = new Float64Array(cap), hv = new Int32Array(cap), n = 0;
+    const push = (k, v) => {
+      if (n === cap) { cap *= 2; const k2 = new Float64Array(cap); k2.set(hk); hk = k2; const v2 = new Int32Array(cap); v2.set(hv); hv = v2; }
+      let i = n++;
+      while (i > 0) { const p = (i - 1) >> 1; if (hk[p] <= k) break; hk[i] = hk[p]; hv[i] = hv[p]; i = p; }
+      hk[i] = k; hv[i] = v;
+    };
+    const pop = () => {
+      const top = hv[0], k = hk[--n], v = hv[n];
+      let i = 0;
+      while (true) { let c = 2 * i + 1; if (c >= n) break; if (c + 1 < n && hk[c + 1] < hk[c]) c++; if (hk[c] >= k) break; hk[i] = hk[c]; hv[i] = hv[c]; i = c; }
+      hk[i] = k; hv[i] = v; return top;
+    };
+    const key = (m, o) => Math.round(m * 10) * 1e6 + o;     // 경사(0.1° 단위) 먼저, 같으면 산소
+    best[src] = 0; push(0, src);
+    let exit = -1;
+    while (n > 0) {
+      const k0 = hk[0], u = pop();
+      if (k0 > best[u]) continue;
+      if (u !== src && S.o2[u] >= 0 && (FLAGS[u] & 8)) { exit = u; break; }
+      const ux = u % W, uy = (u / W) | 0;
+      for (let o = 0; o < 8; o++) {
+        const x = ux + OFF[o][0], y = uy + OFF[o][1];
+        if (x < 0 || y < 0 || x >= W || y >= R) continue;
+        const v = y * W + x;
+        if (!(FLAGS[v] & 1)) continue;
+        const d = STEP_M[o];
+        const sl = Math.atan(Math.abs(H[v] - H[u]) / d) * 180 / Math.PI;
+        const m = Math.max(mx[u], sl), oo = o2[u] + edgeO2(u, v, d), kk = key(m, oo);
+        if (kk < best[v]) {
+          best[v] = kk; pred[v] = u; mx[v] = m; o2[v] = oo;
+          const t = edgeT(u, v, d); tt[v] = tt[u] + t; ds[v] = ds[u] + 0.5 * (RATE1[u] + RATE1[v]) * t / 3600;
+          push(kk, v);
+        }
+      }
+    }
+    if (exit < 0) return null;
+    const path = [exit];
+    for (let c = exit; pred[c] >= 0; ) { c = pred[c]; path.push(c); }
+    path.reverse();
+    let steep = 0, dist = 0;
+    for (let j = 1; j < path.length; j++) {
+      const a = path[j - 1], c = path[j];
+      const d = Math.hypot((c % W) - (a % W), ((c / W) | 0) - ((a / W) | 0)) * CELL;
+      dist += d;
+      if (Math.atan(Math.abs(H[c] - H[a]) / d) * 180 / Math.PI > 20) steep += d;
+    }
+    return { path, exit, o2: o2[exit], t: tt[exit], dose: ds[exit], maxSlope: mx[exit], steep, dist, drop: H[src] - H[exit] };
+  }
   function pathToVictim(i) {             // REV 트리: i -> 구조 대상
     const path = [i];
     let cur = i;
@@ -1232,11 +1287,12 @@
     }
     const S = setNow();
     $("pt-where").textContent = where(i);
-    if (!(FLAGS[i] & 1) || S.o2[i] < 0) {
-      v.className = "verdict bad"; v.textContent = "돌아올 길 없음";
-      $("pt-meters").innerHTML = ""; $("pt-facts").innerHTML = "<dt>이 칸</dt><dd>지형 자료가 없거나 경사 20°를 넘는 칸으로 막힘</dd>";
+    if (!(FLAGS[i] & 1)) {
+      v.className = "verdict bad"; v.textContent = "지형 자료 없음";
+      $("pt-meters").innerHTML = ""; $("pt-facts").innerHTML = "<dt>이 칸</dt><dd>HiRISE 지형 자료가 없는 칸입니다</dd>";
       drawVec({ path: null }); return;
     }
+    if (S.o2[i] < 0) return paintDescent(i, S, v);
     const b = budgets();
     const V2 = VERD[classify(S, i, b)];
     v.className = "verdict " + V2[0]; v.textContent = V2[1];
@@ -1254,6 +1310,34 @@
       <dt>넘어짐 높음 · 중간 칸</dt><dd>${fmt(ps.high, 0)} m · ${fmt(ps.med, 0)} m</dd>
       <dt>탱크가 빈 뒤 버틸 시간</dt><dd>평지 보행 약 ${fmt(C.heat_storage_water_eq_g / 1000 * C.latent_j_kg / Math.max(1, state.k * C.level_mr_w + state.q) / 60, 0)}분</dd>`;
     drawVec({ path, color: "#ffffff" });
+  }
+
+  function paintDescent(i, S, v) {        // 언덕 위·고립된 칸: 가장 완만한 길로 내려와 귀환 경로망에 합류
+    const D = descentRoute(i);
+    if (!D) {
+      v.className = "verdict bad"; v.textContent = "돌아올 길 없음";
+      $("pt-meters").innerHTML = ""; $("pt-facts").innerHTML = "<dt>이 칸</dt><dd>거점으로 이어지는 귀환 경로망에 닿는 길이 없습니다</dd>";
+      drawVec({ path: null }); return;
+    }
+    const b = budgets();
+    const o2 = D.o2 + S.o2[D.exit], t = D.t + S.t[D.exit], dose = D.dose + S.dose[D.exit];
+    const cls = classifyTot(o2, t, dose, b);
+    const steep = D.maxSlope > 20;
+    if (cls === 3) { v.className = "verdict " + (steep ? "warn" : "ok"); v.textContent = steep ? "급경사를 내려와야 귀환 가능" : "완만한 길로 내려와 귀환 가능"; }
+    else { v.className = "verdict bad"; v.textContent = VERD[cls][1] + " (하산 포함)"; }
+    $("pt-meters").innerHTML =
+      meter("산소 (예비분 제외 예산)", state.k * o2, b.o2, "g", 0) +
+      meter("냉각수 (예비분 제외 예산)", waterOf(o2, t, state.k, state.q), b.water, "g", 0) +
+      meter("선량", multNow() * dose * 1000, C.dose_budget_msv * 1000, "µSv", 1);
+    const rest = pathToBase(D.exit), ps = pathStats(rest);
+    $("pt-facts").innerHTML = `
+      <dt>하산 구간 (주황 점선)</dt><dd>${fmt(D.dist, 0)} m, 고도 ${D.drop >= 0 ? "−" : "+"}${fmt(Math.abs(D.drop), 0)} m</dd>
+      <dt>하산 중 가장 가파른 경사</dt><dd>${fmt(D.maxSlope, 1)}°${steep ? ` (20° 넘는 구간 ${fmt(D.steep, 0)} m)` : ""}</dd>
+      <dt>그 뒤 귀환 (흰색)</dt><dd>${fmt(ps.dist / 1000, 2)} km · ${hm(S.t[D.exit] / 3600)}</dd>
+      <dt>전체 시간</dt><dd>${hm(t / 3600)}</dd>
+      <dt>넘어짐 높음 · 중간 칸 (귀환 구간)</dt><dd>${fmt(ps.high, 0)} m · ${fmt(ps.med, 0)} m</dd>
+      <dt>주의</dt><dd>${steep ? "보행 한도 20°를 넘는 경사를 지나야 합니다. 실제로는 로프나 동료 부축이 필요할 수 있고, " : ""}이 칸은 귀환 경로망 밖이라 지도 색칠에는 빠져 있습니다. 가파른 내리막의 대사량은 Pandolf 식이 잘 맞추지 못합니다(가정).</dd>`;
+    drawVec({ path: rest, color: "#ffffff", path2: D.path, descent: true });
   }
 
   function paintSim() {
@@ -1483,7 +1567,11 @@
       if (SIM.turnMin >= 0 && SIM.idx >= SIM.turnMin) ring(g, ...xy0(SIM.frames[SIM.turnMin].pos), 6 * lw, "#ffd23f", lw);
       person(g, ...xy0(SIM.frames[SIM.idx].pos), 8 * lw, "#7fd0ff", lw);
     }
-    drawPath(lastVec.path2, lastVec.color2 || "#ffffff");
+    if (lastVec.descent && lastVec.path2) {     // 하산 구간: 통신 색과 상관없이 검은 테두리 + 주황 점선
+      const P = lastVec.path2, line = () => { g.beginPath(); P.forEach((c, n) => { const x = (c % W) + 0.5, y = ((c / W) | 0) + 0.5; n ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); };
+      g.lineJoin = "round"; g.strokeStyle = "rgba(13,16,22,0.85)"; g.lineWidth = 5 * lw; line();
+      g.strokeStyle = "#ffb347"; g.lineWidth = 2.6 * lw; g.setLineDash([6 * lw, 4 * lw]); line(); g.setLineDash([]);
+    } else drawPath(lastVec.path2, lastVec.color2 || "#ffffff");
     drawPath(lastVec.path, lastVec.color || "#ffffff");
     const xy = (i) => [(i % W) + 0.5, ((i / W) | 0) + 0.5];
     dot(g, ...xy(GOAL), 4.5 * lw, "#f2d430", lw);
