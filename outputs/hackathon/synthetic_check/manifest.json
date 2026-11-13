@@ -1,0 +1,371 @@
+{
+ "drop": "/home/takion/spaceChallenge/martian-map-slam/data/hackathon_synthetic",
+ "items": [
+  {
+   "path": "SYNTHETIC.txt",
+   "bytes": 51,
+   "kind": "table",
+   "rows": 0,
+   "columns": [
+    "synthetic",
+    "test",
+    "data",
+    "-",
+    "do",
+    "not",
+    "activate",
+    "calibrations"
+   ],
+   "roles": {}
+  },
+  {
+   "path": "eva_physio.csv",
+   "bytes": 66759,
+   "kind": "table",
+   "rows": 1800,
+   "columns": [
+    "Elapsed (s)",
+    "Heart Rate (bpm)",
+    "Metabolic Rate (W)",
+    "Walking Speed (m/s)",
+    "Grade (%)",
+    "Surface"
+   ],
+   "roles": {
+    "time": {
+     "column": "Elapsed (s)",
+     "unit": "s"
+    },
+    "hr": {
+     "column": "Heart Rate (bpm)",
+     "unit": "bpm"
+    },
+    "mr": {
+     "column": "Metabolic Rate (W)",
+     "unit": "W"
+    },
+    "speed": {
+     "column": "Walking Speed (m/s)",
+     "unit": "m/s"
+    },
+    "grade": {
+     "column": "Grade (%)",
+     "unit": "%"
+    },
+    "surface": {
+     "column": "Surface",
+     "unit": ""
+    }
+   }
+  },
+  {
+   "path": "notes.md",
+   "bytes": 82,
+   "kind": "document"
+  },
+  {
+   "path": "rad_dose.csv",
+   "bytes": 2535,
+   "kind": "table",
+   "rows": 240,
+   "columns": [
+    "hour",
+    "dose_rate (uGy/h)"
+   ],
+   "roles": {
+    "time": {
+     "column": "hour",
+     "unit": "h"
+    },
+    "dose": {
+     "column": "dose_rate (uGy/h)",
+     "unit": "ugy/h"
+    }
+   }
+  },
+  {
+   "path": "seg/images/scene_000.png",
+   "bytes": 12391,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_001.png",
+   "bytes": 12429,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_002.png",
+   "bytes": 12505,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_003.png",
+   "bytes": 12575,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_004.png",
+   "bytes": 12372,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_005.png",
+   "bytes": 12631,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_006.png",
+   "bytes": 12433,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_007.png",
+   "bytes": 12418,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_008.png",
+   "bytes": 12259,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_009.png",
+   "bytes": 12398,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_010.png",
+   "bytes": 12517,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_011.png",
+   "bytes": 12472,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_012.png",
+   "bytes": 12492,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_013.png",
+   "bytes": 12341,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_014.png",
+   "bytes": 12418,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_015.png",
+   "bytes": 12656,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_016.png",
+   "bytes": 12434,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_017.png",
+   "bytes": 12445,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_018.png",
+   "bytes": 12353,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_019.png",
+   "bytes": 12458,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_020.png",
+   "bytes": 12377,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_021.png",
+   "bytes": 12270,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_022.png",
+   "bytes": 12393,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/images/scene_023.png",
+   "bytes": 12421,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_000_mask.png",
+   "bytes": 558,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_001_mask.png",
+   "bytes": 538,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_002_mask.png",
+   "bytes": 545,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_003_mask.png",
+   "bytes": 578,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_004_mask.png",
+   "bytes": 458,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_005_mask.png",
+   "bytes": 475,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_006_mask.png",
+   "bytes": 544,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_007_mask.png",
+   "bytes": 539,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_008_mask.png",
+   "bytes": 556,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_009_mask.png",
+   "bytes": 512,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_010_mask.png",
+   "bytes": 465,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_011_mask.png",
+   "bytes": 503,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_012_mask.png",
+   "bytes": 551,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_013_mask.png",
+   "bytes": 495,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_014_mask.png",
+   "bytes": 545,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_015_mask.png",
+   "bytes": 444,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_016_mask.png",
+   "bytes": 538,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_017_mask.png",
+   "bytes": 524,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_018_mask.png",
+   "bytes": 540,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_019_mask.png",
+   "bytes": 543,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_020_mask.png",
+   "bytes": 568,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_021_mask.png",
+   "bytes": 550,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_022_mask.png",
+   "bytes": 559,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "seg/masks/scene_023_mask.png",
+   "bytes": 544,
+   "kind": "seg_pair"
+  },
+  {
+   "path": "site_dem.tif",
+   "bytes": 36000170,
+   "kind": "dem",
+   "mode": "F",
+   "size": [
+    3000,
+    3000
+   ]
+  },
+  {
+   "path": "truth.json",
+   "bytes": 276,
+   "kind": "json"
+  }
+ ],
+ "pipelines": {
+  "hr_regression": [
+   "eva_physio.csv"
+  ],
+  "terrain_factor": [
+   "eva_physio.csv"
+  ],
+  "speed_model": [
+   "eva_physio.csv"
+  ],
+  "dose": [
+   "rad_dose.csv"
+  ],
+  "dem_walkback": [
+   "site_dem.tif"
+  ],
+  "segmentation": [
+   "."
+  ]
+ },
+ "segmentation": {
+  "pairs": 24,
+  "images_without_mask": 1,
+  "masks_without_image": 0,
+  "example": [
+   "seg/images/scene_000.png",
+   "seg/masks/scene_000_mask.png"
+  ]
+ }
+}

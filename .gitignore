@@ -16,3 +16,8 @@ exports/
 
 # 실행 로그
 outputs/*.log
+
+# 해커톤 파이프라인: 큰 산출물(가중치·격자)은 올리지 않음. 보고서·그림·제안 JSON은 올림
+outputs/hackathon/*/segmentation/*.pt
+outputs/hackathon/*/dem_walkback/*/*.npy
+code/hackathon/params_active.json.bak

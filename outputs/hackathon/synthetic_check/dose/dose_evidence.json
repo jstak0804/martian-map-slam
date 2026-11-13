@@ -1,0 +1,23 @@
+{
+ "files": [
+  {
+   "file": "../data/hackathon_synthetic/rad_dose.csv",
+   "column": "dose_rate (uGy/h)",
+   "unit": "ugy/h",
+   "absorbed_gy": true,
+   "n": 240
+  }
+ ],
+ "q_factor": 3.05,
+ "background_msv_day": 0.6644364,
+ "events": [
+  {
+   "start_h": 101.0,
+   "hours": 9.0,
+   "peak_multiplier": 4.235981051008042,
+   "event_dose_msv": 0.8388841999999999
+  }
+ ],
+ "n": 240,
+ "literature_background_msv_day": 0.655
+}

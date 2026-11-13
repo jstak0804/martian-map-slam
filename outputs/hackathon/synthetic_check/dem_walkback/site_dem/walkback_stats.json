@@ -1,0 +1,23 @@
+{
+ "dem": "../data/hackathon_synthetic/site_dem.tif",
+ "format": "GeoTIFF (Pillow, mode F)",
+ "pixel_m": 2.0,
+ "cell_m": 10.0,
+ "grid": [
+  600,
+  600
+ ],
+ "base_rc": [
+  286,
+  250
+ ],
+ "valid_km2": 35.998200000000004,
+ "passable_km2": 35.987100000000005,
+ "eta_from_roughness": true,
+ "relief_m": 378.1704524993897,
+ "areas_km2": {
+  "150": 33.528400000000005,
+  "300": 35.987100000000005,
+  "450": 35.987100000000005
+ }
+}

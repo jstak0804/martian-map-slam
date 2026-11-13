@@ -1,0 +1,5 @@
+# 분석·데모 빌드 (martian-map-slam/.venv 에서 검증: Python 3.9)
+numpy>=1.26
+scipy>=1.11
+matplotlib>=3.8
+Pillow>=10.0   # build_demo_basemap.py, dune_mask.py는 JPEG 2000(OpenJPEG) 지원 빌드 필요

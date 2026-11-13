@@ -300,10 +300,10 @@
       <div class="group" id="model-ctl">
         <h2>대사량 모델 보정 (문헌 반영)</h2>
         <div class="hint">켜면 귀환 경로를 브라우저에서 다시 계산합니다(1초 안팎). 기본은 모두 끔 = 보고서 15–17과 같은 모델.</div>
-        <label class="sw"><input type="checkbox" id="m-speed"><span>경사에 따라 걷는 속도 줄이기<small>V = 0.75 − 0.01 × 오르막 경사(%), 최저 0.3 m/s. 달 보행 모델(Peña-Asensio 2024, NASA Kim 2025 인용). 끄면 0.92 m/s 고정</small></span></label>
-        <label class="sw"><input type="checkbox" id="m-eta"><span>표토 지형계수 1.2 (자갈·비포장길)<small>Richmond 2015 표 11 권장값. 끄면 매끈한 곳은 트레드밀 1.0</small></span></label>
+        <label class="sw"><input type="checkbox" id="m-speed"><span>경사에 따라 걷는 속도 줄이기<small id="m-speed-d">V = 0.75 − 0.01 × 오르막 경사(%), 최저 0.3 m/s. 달 보행 모델(Peña-Asensio 2024, NASA Kim 2025 인용). 끄면 0.92 m/s 고정</small></span></label>
+        <label class="sw"><input type="checkbox" id="m-eta"><span id="m-eta-t">표토 지형계수 1.2 (자갈·비포장길)<small id="m-eta-d">Richmond 2015 표 11 권장값. 끄면 매끈한 곳은 트레드밀 1.0</small></span></label>
         <label class="sw"><input type="checkbox" id="m-down"><span>내리막 Santee 보정<small>NASA 이동 모델이 쓰는 내리막 보정(Santee 2003). 완만한 내리막은 덜, 가파른 내리막은 더 듦. 끄면 내리막 = 평지</small></span></label>
-        <label class="sw"><input type="checkbox" id="m-sand"><span>모래언덕 지형계수 1.5 + 1.3/V²<small>Bagnold 사구 후보 8.6 km²(위성 사진 밝기로 추정)에 적용. 0.92 m/s에서 약 3.0, 식의 자료 범위 밖인 0.85 m/s 미만은 0.85 값(3.3)</small></span></label>
+        <label class="sw"><input type="checkbox" id="m-sand"><span id="m-sand-t">모래언덕 지형계수 1.5 + 1.3/V²<small id="m-sand-d">Bagnold 사구 후보 8.6 km²(위성 사진 밝기로 추정)에 적용. 0.92 m/s에서 약 3.0, 식의 자료 범위 밖인 0.85 m/s 미만은 0.85 값(3.3)</small></span></label>
         <div class="hint" id="m-hint"></div>
       </div>
 
@@ -562,11 +562,16 @@
   const PA = 1.5 * MW + 2 * (MW + ML) * (ML / MW) ** 2, PB = MW + ML;
   const STEP_M = OFF.map(([dx, dy]) => Math.hypot(dx, dy) * CELL);
   // 문헌 보정 옵션 (기본 끔)
-  const speedAt = (grade) => (state.mSpeed ? Math.min(0.75, Math.max(0.3, 0.75 - 0.01 * Math.max(grade, 0))) : V0);
+  // 보정 파라미터(문헌값, 또는 hackathon.params로 활성화한 해커톤 자료 보정값)
+  const CAL = C.cal || {};
+  const SP = CAL.speed_model || { v0_m_s: 0.75, c_m_s_per_pct: 0.01, v_min_m_s: 0.3 };
+  const ETA_ADD = (CAL.eta_surface_add || { value: 0.2 }).value;
+  const SAND = CAL.eta_sand || { a: 1.5, b: 1.3, v_floor_m_s: 0.85 };
+  const speedAt = (grade) => (state.mSpeed ? Math.min(SP.v0_m_s, Math.max(SP.v_min_m_s, SP.v0_m_s - SP.c_m_s_per_pct * Math.max(grade, 0))) : V0);
   function etaCell(i, v) {                // Richmond 2015 표 11: 자갈·비포장 1.2, 모래 1.5 + 1.3/V²
-    let e = ETA[i] + (state.mEta ? 0.2 : 0);
-    const vs = Math.max(v, 0.85);         // 식의 자료 범위(0.85 m/s 이상) 밖으로 늘리지 않음
-    if (state.mSand && (FLAGS[i] & 16)) e = Math.max(e, 1.5 + 1.3 / (vs * vs));
+    let e = ETA[i] + (state.mEta ? ETA_ADD : 0);
+    const vs = Math.max(v, SAND.v_floor_m_s);   // 식의 자료 범위 밖으로 늘리지 않음
+    if (state.mSand && (FLAGS[i] & 16)) e = Math.max(e, SAND.a + SAND.b / (vs * vs));
     return e;
   }
   function mrOf(grade, e, v) {            // W. 내리막: Santee 2003 보정(CF)을 질량 항마다 중력비로 스케일해 적용
@@ -581,7 +586,7 @@
     return mrOf(grade, e, v) * C.o2_g_per_j * d / v;
   }
   const edgeT = (a, b, d) => d / speedAt((H[b] - H[a]) / d * 100);
-  const levelMR = () => mrOf(0, 1 + (state.mEta ? 0.2 : 0), speedAt(0));
+  const levelMR = () => mrOf(0, 1 + (state.mEta ? ETA_ADD : 0), speedAt(0));
   const levelO2gh = () => levelMR() * C.o2_g_per_j * 3600;
   function passMask(src, nofall) {
     const p = new Uint8Array(N);
@@ -724,7 +729,8 @@
 
   // ---------- 심박 시뮬레이션 ----------
   // 심박 -> 대사량: Hoffmann 2021 표 5.1, MR(BTU/h) = 284.55 + 5.984 x HR
-  const BTU_W = 0.29307107, HR_A = 284.55, HR_B = 5.984;
+  const HRC = (C.cal && C.cal.hr_to_mr) || { a_btu_h: 284.55, b_btu_h_per_bpm: 5.984 };
+  const BTU_W = 0.29307107, HR_A = HRC.a_btu_h, HR_B = HRC.b_btu_h_per_bpm;
   const hrToW = (hr) => (HR_A + HR_B * hr) * BTU_W;
   const wToHr = (w) => (w / BTU_W - HR_A) / HR_B;
   const SIM_K = {
@@ -1581,9 +1587,16 @@
       ? "초록 점선(실제 k)은 시나리오가 정한 값, 파란 선(k 추정)은 압력 감소 기울기로 구한 값입니다. 하늘색(측정 산소)과 빨강(지형 모델 귀환 필요)이 만나면 돌아서야 합니다. 주황 점선은 '지금 소모율 × 귀환 시간'으로 단순 외삽한 값으로, 귀환길이 내리막이면 너무 많이, 오르막이면 너무 적게 잡습니다."
       : "초록 점선(실제 k)은 시나리오가 정한 값이고, 파란 선(k 추정)은 심박만 보고 최근 10분으로 계산한 값입니다. 두 산소 선이 만나는 때가 돌아서야 하는 때입니다. 시나리오 심박이 200 bpm을 넘는 봉우리는 오르막에서도 속도를 0.92 m/s로 고정한 Pandolf 식의 한계입니다(보고서 16).";
     $("mode-hint").innerHTML = MODE_HINT[state.mode];
+    if (C.cal_status && C.cal_status !== "문헌값") {       // 해커톤 자료 보정값이 켜져 있으면 설명을 그 값으로
+      $("m-speed-d").textContent = `V = ${SP.v0_m_s} − ${SP.c_m_s_per_pct} × 오르막 경사(%), 최저 ${SP.v_min_m_s} m/s. ${SP.source || ""}`;
+      $("m-eta-t").firstChild.textContent = `표토 지형계수 +${ETA_ADD}`;
+      $("m-eta-d").textContent = (CAL.eta_surface_add || {}).source || "";
+      $("m-sand-t").firstChild.textContent = `모래언덕 지형계수 ${SAND.a} + ${SAND.b}/V²`;
+      $("m-sand-d").textContent = SAND.source || "";
+    }
     const on = [state.mSpeed && "속도", state.mEta && "η 1.2", state.mDown && "내리막", state.mSand && "모래"].filter(Boolean);
     $("m-hint").textContent = `평지 보행: ${fmt(speedAt(0), 2)} m/s, ${fmt(levelMR(), 0)} W, 시간당 산소 ${fmt(levelO2gh(), 0)} g · 1 km에 ${fmt(levelO2gh() / speedAt(0) / 3.6, 1)} g` +
-      (on.length ? ` (보정: ${on.join(", ")})` : " (기본 모델)");
+      (on.length ? ` (보정: ${on.join(", ")})` : " (기본 모델)") + ` · 파라미터: ${C.cal_status || "문헌값"}`;
     $("base-reset").hidden = state.base === BASE0;
     document.querySelectorAll("#presets button").forEach((bt) => bt.setAttribute("aria-pressed", String(bt.dataset.id === activePreset)));
   }

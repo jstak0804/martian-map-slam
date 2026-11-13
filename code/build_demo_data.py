@@ -50,6 +50,8 @@ from suit_cooling import (
     LATENT_HEAT_J_PER_KG, FEEDWATER_FULL_G, HEAT_STORAGE_WATER_EQ_G, LEVEL_MR_W,
 )
 
+from hackathon.params import load_active
+
 OUT_DIR = "../outputs/demo"
 os.makedirs(OUT_DIR, exist_ok=True)
 GOAL_SOL = 1282
@@ -94,6 +96,11 @@ def q16(a, scale):
 
 
 def main():
+    # 보정 파라미터: 기본은 문헌값. python -m hackathon.params --activate 로 해커톤 자료 보정값을 켤 수 있다.
+    CAL = load_active()
+    import spe_walkback as _sw
+    _sw.D_BACKGROUND_MSV_DAY = CAL["dose"]["bg_msv_day"]     # 귀환 트리의 선량도 같은 배경값으로
+    print(f"모델 파라미터: {CAL['_status']}")
     h, valid, eta, shielding, passable, traverse_xy, base = load_scene()
     rows, cols = h.shape
     bx, by = base
@@ -173,13 +180,14 @@ def main():
             "o2_reserve_g": O2_RESERVE_G, "level_o2_g_h": LEVEL_O2_G_PER_H, "level_mr_w": LEVEL_MR_W,
             "o2_g_per_j": O2_G_PER_L / (O2_KJ_PER_L * 1000), "latent_j_kg": LATENT_HEAT_J_PER_KG,
             "feedwater_full_g": FEEDWATER_FULL_G, "heat_storage_water_eq_g": HEAT_STORAGE_WATER_EQ_G,
-            "dose_budget_msv": DOSE_BUDGET_MSV, "spe_observed": SPE_DOSE_MULTIPLIER,
+            "dose_budget_msv": DOSE_BUDGET_MSV, "spe_observed": CAL["dose"]["spe_observed"],
             "walk_speed_m_s": EVA_WALK_SPEED_M_S,
             "body_kg": BODY_MASS_KG, "suit_kg": SUIT_MASS_KG, "g_ratio": G_RATIO_MARS,
-            "d_bg_msv_day": D_BACKGROUND_MSV_DAY, "shield_max": SHIELDING_MAX_REDUCTION,
+            "d_bg_msv_day": CAL["dose"]["bg_msv_day"], "shield_max": SHIELDING_MAX_REDUCTION,
             "rest_mr_w": float(metabolic_rate_w(0.0, 1.0, G_RATIO_MARS, v=0.0)),
             "base_ant_m": BASE_ANT_M, "suit_ant_m": SUIT_ANT_M, "relay_ant_m": RELAY_ANT_M,
             "mars_radius_m": MARS_RADIUS_M, "los_step": LOS_STEP,
+            "cal": {k: v for k, v in CAL.items() if not k.startswith("_")}, "cal_status": CAL["_status"],
         },
     }
     with open(f"{OUT_DIR}/demo_meta.json", "w") as f:

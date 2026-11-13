@@ -23,6 +23,10 @@ Interplanetary Survival Guide: Martian Map 챌린지로 진행한 SLAM(점진적
 - **데모 다시 만들기:** `code/`에서 `python dune_mask.py && python build_demo_data.py && python build_demo_basemap.py && python build_demo_html.py`
   - HiRISE DTM과 정사영상이 필요합니다(약 460 MB). `data/hirise_dtm/`에 넣으세요.
   - 받을 곳: https://hirise-pds.lpl.arizona.edu/PDS/DTM/ESP/ORB_018800_018899/ESP_018854_1755_ESP_018920_1755/
+- **해커톤 데이터 대비:** [`code/hackathon/`](code/hackathon/README.md)
+  - 데이터가 공개되면 `run_all` 한 번으로 접수 → 보정·학습 → 보고서까지 갑니다.
+  - 보정·학습 대상: 심박 회귀식, 지형계수, 속도식, 선량, 새 지형 귀환 반경, 분할 모델 미세조정
+  - 반영 방법: 검토 후 `--activate` 하면 데모에 반영됩니다. 가짜 데이터로 미리 점검해 두었습니다.
 - **저장소에 없는 것:** 원본 데이터(`data/`, 약 1.4 GB)는 올리지 않았습니다. Curiosity 주행 경로와 HiRISE 라벨 파일만 들어 있습니다.
 
 ## 피치용 요약 — 8개 보고서 중 3가지로 좁히면
