@@ -55,6 +55,9 @@
   details.adv.more { flex-basis: 100%; padding: 4px 8px; }
   details.supwrap > summary { cursor: pointer; font-size: 13px; color: var(--ink-soft); }
   details.supwrap:has(#supply[hidden]) { display: none; }
+  .seg label.sub { flex: 0 0 auto; font-size: 11.5px; opacity: .8; }
+  .reset.feat { background: var(--panel-2); border-color: var(--safe); color: var(--safe); font-weight: 600; font-size: 13px; padding: 5px 12px; }
+  .reset.feat[aria-pressed="true"] { background: var(--safe); color: #0d1016; }
   .presets button:hover { border-color: var(--accent); }
   .presets button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 
@@ -262,21 +265,29 @@
         <input type="range" id="o2" min="40" max="800" step="5" value="150">
         <div class="hint" id="o2-hint"></div>
       </div>
-      <details class="adv"><summary>고급 설정: 냉각수 · 대사 · 열 · 왕복 여유</summary>
       <div class="ctl">
         <div class="row"><label for="water">남은 냉각수</label><output id="water-out" for="water"></output></div>
         <input type="range" id="water" min="0.2" max="3.6" step="0.05" value="3.6">
         <div class="hint" id="water-hint"></div>
       </div>
+      <div class="group speblock" id="speblock" data-off="true">
+        <label class="sw"><input type="checkbox" id="spe"><span>태양입자사건(SPE)<small>배경 대비 선량률 배율. 화성 표면 관측값은 ×2~3 (Curiosity RAD)</small></span></label>
+        <div class="ctl">
+          <div class="row"><label for="mult">SPE 배율</label><output id="mult-out" for="mult"></output></div>
+          <input type="range" id="mult" min="0" max="100" step="1" value="27">
+          <div class="hint">선량 예산 기준치: 귀환 1회 1.0 mSv</div>
+        </div>
+      </div>
+      <details class="adv"><summary>고급 물리·생리학 모델 설정</summary>
       <div class="ctl" id="k-ctl">
         <div class="row"><label for="k">심박 보정계수 k</label><output id="k-out" for="k"></output></div>
         <input type="range" id="k" min="0.8" max="1.6" step="0.05" value="1">
-        <div class="hint">심박으로 추정한 실제 대사량 ÷ 모델 대사량. 1.2면 모델보다 20% 더 씀 (보고서 16)</div>
+        <div class="hint">심박으로 추정한 실제 대사량 ÷ 모델 대사량. 1.2면 모델보다 20% 더 씀 (Hoffmann 2021 심박 회귀식)</div>
       </div>
       <div class="ctl">
         <div class="row"><label for="q">환경·PLSS 열</label><output id="q-out" for="q"></output></div>
         <input type="range" id="q" min="-150" max="150" step="10" value="0">
-        <div class="hint">+는 햇빛·장비 발열로 열을 더 버려야 함, −는 추위로 열을 잃음. 측정값 없는 가정 (보고서 17)</div>
+        <div class="hint">+는 햇빛·장비 발열로 열을 더 버려야 함, −는 추위로 열을 잃음 (시뮬레이션 파라미터)</div>
       </div>
       <div class="ctl">
         <div class="row"><label for="pm">왕복 계획 여유</label><output id="pm-out" for="pm"></output></div>
@@ -292,7 +303,7 @@
         <div class="ctl">
           <div class="row"><label for="eva-dwell">목표마다 작업 시간</label><output id="eva-dwell-out" for="eva-dwell"></output></div>
           <input type="range" id="eva-dwell" min="10" max="120" step="5" value="45">
-          <div class="hint">작업 중 대사량은 평지 보행 수준으로 가정 (시료 채취·관찰)</div>
+          <div class="hint">작업 대사량 기준치: 평지 보행 수준 (시료 채취·관찰)</div>
         </div>
       </div>
 
@@ -346,7 +357,7 @@
           <select id="sim-scn">
             <option value="model">모델대로 (k = 1.0)</option>
             <option value="high">처음부터 20% 높음 (k = 1.2)</option>
-            <option value="surge">60분부터 25% 급증 (보고서 16 시연)</option>
+            <option value="surge">60분부터 25% 급증 (시연 시나리오)</option>
             <option value="fatigue">점점 지침 (3시간에 걸쳐 k 1.0 → 1.4)</option>
             <option value="custom">직접 입력 (분당 bpm)</option>
           </select>
@@ -367,24 +378,16 @@
         <label class="sw"><input type="checkbox" id="sim-auto" checked><span>귀환 경보가 뜨면 바로 돌아서기<small>끄면 목적지까지 간 뒤에야 돌아섭니다</small></span></label>
       </div>
 
-      <details class="adv"><summary>고급 설정: 선량(SPE) · 안전 운용 · 문헌 보정</summary>
-      <div class="group speblock" id="speblock" data-off="true">
-        <label class="sw"><input type="checkbox" id="spe"><span>태양입자사건(SPE)<small>배경 대비 선량률 배율. 화성 표면 관측값은 ×2~3</small></span></label>
-        <div class="ctl">
-          <div class="row"><label for="mult">SPE 배율</label><output id="mult-out" for="mult"></output></div>
-          <input type="range" id="mult" min="0" max="100" step="1" value="27">
-          <div class="hint">선량 예산: 귀환 1회 1.0 mSv (가정)</div>
-        </div>
-      </div>
+      <details class="adv"><summary>안전 운용 · 문헌 기반 보정</summary>
 
       <div class="group">
-        <label class="sw"><input type="checkbox" id="nofall"><span>넘어짐 위험 "높음" 칸 통행 금지<small>귀환 경로가 1 m 지형의 턱·급사면이 많은 칸을 돌아감 (보고서 16)</small></span></label>
-        <label class="sw"><input type="checkbox" id="relay"><span id="relay-t">Mt. Sharp 비탈에 중계기 설치<small id="relay-d">거점에서 6.7 km, 거점과 가시선이 닿는 자리 (보고서 15)</small></span></label>
+        <label class="sw"><input type="checkbox" id="nofall"><span>넘어짐 위험 "높음" 칸 통행 금지<small>귀환 경로가 1 m 지형의 턱·급사면이 많은 칸을 돌아감 (HiRISE 1 m 지형)</small></span></label>
+        <label class="sw"><input type="checkbox" id="relay"><span id="relay-t">Mt. Sharp 비탈에 중계기 설치<small id="relay-d">거점에서 6.7 km, 거점과 가시선이 닿는 자리</small></span></label>
       </div>
 
       <div class="group" id="model-ctl">
         <h2>대사량 모델 보정 (문헌 반영)</h2>
-        <div class="hint">켜면 귀환 경로를 브라우저에서 다시 계산합니다(1초 안팎). 기본은 모두 끔 = 보고서 15–17과 같은 모델.</div>
+        <div class="hint">켜면 귀환 경로를 브라우저에서 다시 계산합니다(1초 안팎). 기본은 모두 끔 = 기준 모델(Pandolf, 화성 중력 보정).</div>
         <label class="sw"><input type="checkbox" id="m-speed"><span>경사에 따라 걷는 속도 줄이기<small id="m-speed-d">V = 0.75 − 0.01 × 오르막 경사(%), 최저 0.3 m/s. 달 보행 모델(Peña-Asensio 2024, NASA Kim 2025 인용). 끄면 0.92 m/s 고정</small></span></label>
         <label class="sw"><input type="checkbox" id="m-eta"><span id="m-eta-t">표토 지형계수 1.2 (자갈·비포장길)<small id="m-eta-d">Richmond 2015 표 11 권장값. 끄면 매끈한 곳은 트레드밀 1.0</small></span></label>
         <label class="sw"><input type="checkbox" id="m-down"><span>내리막 Santee 보정<small>NASA 이동 모델이 쓰는 내리막 보정(Santee 2003). 완만한 내리막은 덜, 가파른 내리막은 더 듦. 끄면 내리막 = 평지</small></span></label>
@@ -420,15 +423,15 @@
     <section class="mapcol" aria-label="귀환 가능 지도">
       <div class="modebar">
         <div class="seg" id="modes" role="radiogroup" aria-label="지도 모드">
-          <label><input type="radio" name="mode" value="inspect" checked>지점 살펴보기</label>
-          <label><input type="radio" name="mode" value="here">현재 위치</label>
-          <label><input type="radio" name="mode" value="rescue">구조</label>
-          <label><input type="radio" name="mode" value="base">거점 옮기기</label>
-          <label><input type="radio" name="mode" value="sim">EVA 시뮬레이션</label>
-          <label><input type="radio" name="mode" value="eva">과학 EVA 계획</label>
+          <label><input type="radio" name="mode" value="inspect" checked>① 경로 탐색</label>
+          <label><input type="radio" name="mode" value="eva">② 과학 EVA 계획</label>
+          <label><input type="radio" name="mode" value="sim">③ 실시간 시뮬레이션</label>
+          <label><input type="radio" name="mode" value="rescue">④ 조난 구조</label>
+          <label class="sub"><input type="radio" name="mode" value="here">현재 위치</label>
+          <label class="sub"><input type="radio" name="mode" value="base">거점 옮기기</label>
         </div>
         <div class="modeline"><p class="modehint" id="mode-hint"></p><button type="button" class="reset" id="base-reset" hidden>거점을 원래 자리로 되돌리기</button>
-          <button type="button" class="reset" id="hud-btn" aria-pressed="false">헬멧 HUD</button><button type="button" class="reset" id="rv-btn" aria-pressed="false">로드뷰</button></div>
+          <button type="button" class="reset feat" id="hud-btn" aria-pressed="false">🥽 헬멧 HUD 보기</button><button type="button" class="reset feat" id="rv-btn" aria-pressed="false">📷 1인칭 로드뷰</button></div>
       </div>
       <div class="mapwrap" id="mapwrap">
         <img id="ortho" alt="HiRISE 정사영상: Gale 크레이터 착륙지(오른쪽 위)에서 Mt. Sharp 기슭의 Bagnold 모래언덕(아래)까지">
@@ -470,7 +473,7 @@
       <section class="panel" aria-labelledby="h-sum">
         <h2 id="h-sum">지금 상황</h2>
         <div class="glance" id="glance" role="list" aria-label="소모품과 통신 상태 한눈에 보기"></div>
-        <p class="gnote">산소·냉각수는 예비분을 빼고 평지를 걸을 때 남은 시간, 선량은 거점 선량률로 귀환 예산을 다 쓰기까지의 시간, 통신은 귀환 가능 영역 중 가시선이 안 닿는 비율. 초록 여유 · 노랑 주의 · 빨강 위험 (산소·냉각수 60분/20분, 선량 8시간/2시간, 통신 15%/40%, 기준값은 가정)</p>
+        <p class="gnote">산소·냉각수는 예비분을 빼고 평지를 걸을 때 남은 시간, 선량은 거점 선량률로 귀환 예산을 다 쓰기까지의 시간, 통신은 귀환 가능 영역 중 가시선이 안 닿는 비율. 초록 여유 · 노랑 주의 · 빨강 위험 (산소·냉각수 60분/20분, 선량 8시간/2시간, 통신 15%/40%, 기준치는 시뮬레이션 파라미터)</p>
         <div class="tiles">
           <div class="tile wide" id="t-area"><div class="k">귀환 가능 면적</div><div class="v" id="v-area">–</div><div class="d" id="d-area"></div></div>
           <div class="tile" id="t-bind"><div class="k">가장 먼저 막는 것</div><div class="v" id="v-bind" style="font-size:18px">–</div><div class="d" id="d-bind"></div></div>
@@ -589,7 +592,7 @@
   const makePresets = () => [
     { id: "base", label: "기준", s: { base: BASE0 } },
     { id: "spe", label: "관측 SPE ×2.9", s: { spe: true, mult: C.spe_observed } },
-    { id: "spe30", label: "대형 SPE ×30 (가정)", s: { spe: true, mult: 30 } },
+    { id: "spe30", label: "대형 SPE ×30 (스트레스 테스트)", s: { spe: true, mult: 30 } },
     { id: "tired", label: "지친 대원 k 1.2", s: { k: 1.2 } },
     { id: "leak", label: "냉각수 누수 0.6 kg", s: { water: 0.6 } },
     { id: "hot", label: "위기: 누수 + 더운 오후", s: { water: 0.6, q: 100 } },
@@ -1515,7 +1518,7 @@
       <dt>가장 빠듯한 순간의 귀환 여유</dt><dd>산소 ${fmt(EVA.minM, 0)} g (지도의 빨간 고리)</dd>
       <dt>통신 안 닿는 구간</dt><dd>${fmt(ps.dark / 1000, 2)} km (${fmt(ps.dist > 0 ? ps.dark / ps.dist * 100 : 0, 0)}%), 가장 긴 두절 ${fmt(mins(ps.maxRun), 0)}분</dd>
       <dt>넘어짐 높음 · 중간 칸</dt><dd>${fmt(ps.high, 0)} m · ${fmt(ps.med, 0)} m</dd>
-      <dt>목표마다 작업</dt><dd>${state.evaDwell}분 (평지 보행 수준 대사량 가정)</dd>
+      <dt>목표마다 작업</dt><dd>${state.evaDwell}분 (작업 대사량 = 평지 보행 기준치)</dd>
       <dt>왕복 계획 여유</dt><dd>귀환 필요량 +${state.planMargin}% 를 늘 남기는 계획</dd>`;
     drawVec({ path: EVA.path, color: "#ffffff", eva: true });
   }
@@ -2068,7 +2071,7 @@
     $("k-out").textContent = `${fmt(state.k, 2)}`;
     $("pm-out").textContent = `+${state.planMargin}%`;
     $("q-out").textContent = `${state.q > 0 ? "+" : ""}${state.q} W`;
-    $("mult-out").textContent = `×${fmt(state.mult, 1)}${Math.abs(state.mult - C.spe_observed) < 0.05 ? " (관측)" : state.mult > 3 ? " (가정)" : ""}`;
+    $("mult-out").textContent = `×${fmt(state.mult, 1)}${Math.abs(state.mult - C.spe_observed) < 0.05 ? " (관측)" : state.mult > 3 ? " (시나리오)" : ""}`;
     $("speblock").dataset.off = String(!state.spe);
     $("vo2-out").textContent = `${state.vo2} g`;
     $("vwater-out").textContent = `${fmt(state.vwater, 2)} kg`;
@@ -2092,7 +2095,7 @@
       : "심박을 대사량으로 바꿔 소모를 셉니다. 누설은 심박에 안 나타나므로 대원은 남은 산소를 실제보다 많게 봅니다.";
     $("sim-note").textContent = press
       ? "초록 점선(실제 k)은 시나리오가 정한 값, 파란 선(k 추정)은 압력 감소 기울기로 구한 값입니다. 하늘색(측정 산소)과 빨강(지형 모델 귀환 필요)이 만나면 돌아서야 합니다. 주황 점선은 '지금 소모율 × 귀환 시간'으로 단순 외삽한 값으로, 귀환길이 내리막이면 너무 많이, 오르막이면 너무 적게 잡습니다."
-      : "초록 점선(실제 k)은 시나리오가 정한 값이고, 파란 선(k 추정)은 심박만 보고 최근 10분으로 계산한 값입니다. 두 산소 선이 만나는 때가 돌아서야 하는 때입니다. 시나리오 심박이 200 bpm을 넘는 봉우리는 오르막에서도 속도를 0.92 m/s로 고정한 Pandolf 식의 한계입니다(보고서 16).";
+      : "초록 점선(실제 k)은 시나리오가 정한 값이고, 파란 선(k 추정)은 심박만 보고 최근 10분으로 계산한 값입니다. 두 산소 선이 만나는 때가 돌아서야 하는 때입니다. 시나리오 심박이 200 bpm을 넘는 봉우리는 오르막에서도 속도를 0.92 m/s로 고정한 Pandolf 식의 한계입니다.";
     $("mode-hint").innerHTML = state.rvMode ? "<b>로드뷰 모드</b>: 지도의 주황 카메라 아이콘을 누르면 그 지점에서 로버가 찍은 사진이 아래에 열립니다. 다시 누르면 끕니다." : MODE_HINT[state.mode];
     if (C.cal_status && C.cal_status !== "문헌값") {       // 해커톤 자료 보정값이 켜져 있으면 설명을 그 값으로
       $("m-speed-d").textContent = `V = ${SP.v0_m_s} − ${SP.c_m_s_per_pct} × 오르막 경사(%), 최저 ${SP.v_min_m_s} m/s. ${SP.source || ""}`;
@@ -2250,7 +2253,7 @@
       ["거점 안테나 가시권", fmt(st.base_vis_km2, 1) + " km²"]].map(([k, v]) => `<span>${k} <b>${v}</b></span>`).join("");
     document.querySelectorAll("#sites-seg input").forEach((r) => { r.checked = Number(r.value) === SITE_I; });
     $("relay-t").firstChild.textContent = gale ? "Mt. Sharp 비탈에 중계기 설치" : "중계기 설치";
-    $("relay-d").textContent = gale ? "거점에서 6.7 km, 거점과 가시선이 닿는 자리 (보고서 15)"
+    $("relay-d").textContent = gale ? "거점에서 6.7 km, 거점과 가시선이 닿는 자리"
       : `거점에서 ${fmt(st.relay_km_from_base, 1)} km, 거점과 가시선이 닿는 곳 중 귀환 영역을 가장 많이 덮는 자리 (자동 선택)`;
     $("showtrav-l").hidden = !META.traverse.length;
     $("showtrav-t").textContent = SITE().id === "jezero" ? "Perseverance 실제 주행 경로" : "Curiosity 실제 주행 경로";
