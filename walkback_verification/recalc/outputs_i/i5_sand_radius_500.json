@@ -1,0 +1,83 @@
+{
+  "model": {
+    "model": "ist_b",
+    "flat_speed_m_s": 0.92,
+    "level_mr_w": 444.4,
+    "level_o2_g_per_h": 113.74,
+    "o2_reserve_g": 45.01,
+    "reserve_mr_w": 351.7
+  },
+  "o2_reserve_g": 45.0,
+  "cases": {
+    "cap20_floor1.0": {
+      "area_km2_100g": 3.181,
+      "area_km2_150g": 9.721,
+      "area_km2_200g": 19.809,
+      "sol1282": {
+        "return_o2_g": 248.2,
+        "return_len_km": 7.138,
+        "crosses_sand": true
+      },
+      "hidden_valley_sol708": {
+        "return_o2_g": 191.1,
+        "return_len_km": 5.516
+      },
+      "sol746": {
+        "return_o2_g": 196.6,
+        "return_len_km": 5.667,
+        "crosses_sand": true
+      }
+    },
+    "cap20_floor1.0_sand": {
+      "area_km2_100g": 3.181,
+      "area_km2_150g": 9.721,
+      "area_km2_200g": 19.809,
+      "sol1282": {
+        "return_o2_g": 249.4,
+        "return_len_km": 7.173,
+        "crosses_sand": false
+      },
+      "hidden_valley_sol708": {
+        "return_o2_g": 197.2,
+        "return_len_km": 5.516
+      },
+      "sol746": {
+        "return_o2_g": 203.1,
+        "return_len_km": 5.67,
+        "crosses_sand": true
+      }
+    },
+    "cap20_floor1.2_sand": {
+      "area_km2_100g": 3.006,
+      "area_km2_150g": 9.152,
+      "area_km2_200g": 18.585,
+      "sol1282": {
+        "return_o2_g": 258.0,
+        "return_len_km": 7.164,
+        "crosses_sand": false
+      },
+      "hidden_valley_sol708": {
+        "return_o2_g": 203.3,
+        "return_len_km": 5.516
+      },
+      "sol746": {
+        "return_o2_g": 209.3,
+        "return_len_km": 5.667,
+        "crosses_sand": true
+      }
+    }
+  },
+  "newly_blocked_in_ref150_km2": {
+    "cap15": 0.014,
+    "cap17": 0.004
+  },
+  "slope_share_pct_valid": {
+    "0-10": 92.94,
+    "10-15": 4.62,
+    "15-17": 0.7,
+    "17-20": 0.6,
+    "20-90": 1.14
+  },
+  "sand_radius_m": 500.0,
+  "sand_cells": 7799
+}

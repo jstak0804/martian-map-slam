@@ -1,0 +1,44 @@
+{
+  "source": "NASA/TP-2010-216115 Fig.22 (IST-1, level) and NASA/TP-2010-216125 Fig.36 (IST-2, grade), 0.12-0.32 g trend lines read from PDF vector paths (recalc/digitize_ist.py), each coefficient regressed linearly on total gravity-adjusted weight TGAW (N).",
+  "units": "VO2 in mL/kg/min (per kg body mass); v in m/s; grade in %; TGAW in N",
+  "level_vo2": "a*v^2 + b*v + c, where [a,b,c] = slope*TGAW + intercept (rows a,b,c; cols [slope, intercept])",
+  "level_lin": [
+    [
+      -0.008064923487398483,
+      4.468922785484057
+    ],
+    [
+      0.052552357866220395,
+      -15.578483484777284
+    ],
+    [
+      -0.033686199820527736,
+      23.43913327247808
+    ]
+  ],
+  "grade_inc_vo2": "A*G^2 + B*G at the IST-2 test speed v_ist2 (G>=0); rows A,B; cols [slope, intercept]",
+  "grade_lin": [
+    [
+      2.4781518730926986e-05,
+      -0.002131028398369114
+    ],
+    [
+      0.0003716770925161927,
+      -0.11363586617919631
+    ]
+  ],
+  "v_ist2_m_s": 0.77,
+  "level_v_range_m_s": [
+    0.62,
+    2.24
+  ],
+  "grade_range_pct": [
+    0.0,
+    30.0
+  ],
+  "tgaw_range_n": [
+    236.0,
+    627.0
+  ],
+  "digitize_check": "axis residual <= 0.017 mL/kg/min, quadratic fit RMS <= 0.10; visual overlay outputs_b/b_digitize_check_*.png"
+}

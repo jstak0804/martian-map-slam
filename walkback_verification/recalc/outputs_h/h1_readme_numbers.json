@@ -1,0 +1,839 @@
+[
+ {
+  "name": "base",
+  "state": {
+   "o2": 150,
+   "water": 3.6,
+   "k": 1,
+   "q": 0,
+   "spe": false,
+   "mult": 2.9,
+   "nofall": false,
+   "sand": false,
+   "relay": false,
+   "showfall": false,
+   "showcomm": true,
+   "showtrav": true,
+   "mode": "inspect",
+   "sel": 389045,
+   "here": -1,
+   "victim": -1,
+   "vo2": 150,
+   "vwater": 1,
+   "vcarry": "walk",
+   "base": 47215,
+   "simTarget": 316209,
+   "simScenario": "surge",
+   "simNoise": 8,
+   "simAuto": true,
+   "simCustom": "",
+   "simSrc": "hr",
+   "simLeak": 0,
+   "simPNoise": 10,
+   "simTcomp": true,
+   "simLeakSub": false
+  },
+  "summary": {
+   "mode": "inspect",
+   "safe": 9.720921890866665,
+   "dose": 0,
+   "water": 0,
+   "dry": 0,
+   "oneway": 0,
+   "alone": 0,
+   "late": 0,
+   "o2": 9.720921890866665,
+   "fall": 0,
+   "dark": 4.991387622403263,
+   "vh": {
+    "o2": 2.6381840865911497,
+    "water": 3.097248243108754,
+    "o2h": 56.85729087761195,
+    "wh": 322.8672426322164
+   }
+  },
+  "text": {}
+ },
+ {
+  "name": "base_sand",
+  "state": {
+   "o2": 150,
+   "water": 3.6,
+   "k": 1,
+   "q": 0,
+   "spe": false,
+   "mult": 2.9,
+   "nofall": false,
+   "sand": true,
+   "relay": false,
+   "showfall": false,
+   "showcomm": true,
+   "showtrav": true,
+   "mode": "inspect",
+   "sel": 389045,
+   "here": -1,
+   "victim": -1,
+   "vo2": 150,
+   "vwater": 1,
+   "vcarry": "walk",
+   "base": 47215,
+   "simTarget": 316209,
+   "simScenario": "surge",
+   "simNoise": 8,
+   "simAuto": true,
+   "simCustom": "",
+   "simSrc": "hr",
+   "simLeak": 0,
+   "simPNoise": 10,
+   "simTcomp": true,
+   "simLeakSub": false
+  },
+  "summary": {
+   "mode": "inspect",
+   "safe": 9.721331356627323,
+   "dose": 0,
+   "water": 0,
+   "dry": 0,
+   "oneway": 0,
+   "alone": 0,
+   "late": 0,
+   "o2": 9.721331356627323,
+   "fall": 0,
+   "dark": 4.991694721723754,
+   "vh": {
+    "o2": 2.6381840865911497,
+    "water": 3.097248243108754,
+    "o2h": 56.85729087761195,
+    "wh": 322.8672426322164
+   }
+  },
+  "text": {}
+ },
+ {
+  "name": "simhr_on",
+  "state": {
+   "o2": 450,
+   "water": 3.6,
+   "k": 1,
+   "q": 0,
+   "spe": false,
+   "mult": 2.9,
+   "nofall": false,
+   "sand": false,
+   "relay": false,
+   "showfall": false,
+   "showcomm": true,
+   "showtrav": true,
+   "mode": "sim",
+   "sel": 389045,
+   "here": -1,
+   "victim": -1,
+   "vo2": 150,
+   "vwater": 1,
+   "vcarry": "walk",
+   "base": 47215,
+   "simTarget": 316209,
+   "simScenario": "surge",
+   "simNoise": 8,
+   "simAuto": true,
+   "simCustom": "",
+   "simSrc": "hr",
+   "simLeak": 0,
+   "simPNoise": 10,
+   "simTcomp": true,
+   "simLeakSub": false
+  },
+  "summary": {
+   "mode": "inspect",
+   "safe": 42.220833512817485,
+   "dose": 0,
+   "water": 0,
+   "dry": 0,
+   "oneway": 0,
+   "alone": 0,
+   "late": 0,
+   "o2": 42.220833512817485,
+   "fall": 0,
+   "dark": 17.767845385729217,
+   "vh": {
+    "o2": 2.6381840865911497,
+    "water": 3.097248243108754,
+    "o2h": 56.85729087761195,
+    "wh": 322.8672426322164
+   }
+  },
+  "sim": {
+   "ok": true,
+   "outLen_km": 5.667353507666948,
+   "turnMin": 92,
+   "minutes": 184,
+   "last": {
+    "m": 184,
+    "pos": 47215,
+    "o2": 44.449240783562686,
+    "o2True": 44.449240783562686,
+    "w": 1297.0577852985352,
+    "k": 1.2439026735584435,
+    "phase": "home",
+    "need": 0,
+    "needW": 0,
+    "ok": false,
+    "hr": null,
+    "hrExp": null,
+    "kTrue": null,
+    "P": null,
+    "T": null,
+    "naive": null
+   },
+   "log": [
+    {
+     "m": 0,
+     "cls": "",
+     "text": "거점 출발 → 목적지 5.67 km (산소 450 g, 냉각수 3,600 g)"
+    },
+    {
+     "m": 65,
+     "cls": "warn",
+     "text": "심박으로 본 k = 1.13: 모델보다 산소를 13% 더 쓰는 중"
+    },
+    {
+     "m": 92,
+     "cls": "warn",
+     "text": "귀환 경보 → 돌아섬. 1분 더 가면 귀환 불가 (남은 산소 260 g, 지금 귀환에 214 g + 예비 45 g)"
+    },
+    {
+     "m": 184,
+     "cls": "warn",
+     "text": "거점 도착: 산소 44 g, 냉각수 1,297 g 남음 (예비분까지 씀)"
+    }
+   ]
+  },
+  "text": {}
+ },
+ {
+  "name": "simhr_off",
+  "state": {
+   "o2": 450,
+   "water": 3.6,
+   "k": 1,
+   "q": 0,
+   "spe": false,
+   "mult": 2.9,
+   "nofall": false,
+   "sand": false,
+   "relay": false,
+   "showfall": false,
+   "showcomm": true,
+   "showtrav": true,
+   "mode": "sim",
+   "sel": 389045,
+   "here": -1,
+   "victim": -1,
+   "vo2": 150,
+   "vwater": 1,
+   "vcarry": "walk",
+   "base": 47215,
+   "simTarget": 316209,
+   "simScenario": "surge",
+   "simNoise": 8,
+   "simAuto": false,
+   "simCustom": "",
+   "simSrc": "hr",
+   "simLeak": 0,
+   "simPNoise": 10,
+   "simTcomp": true,
+   "simLeakSub": false
+  },
+  "summary": {
+   "mode": "inspect",
+   "safe": 42.220833512817485,
+   "dose": 0,
+   "water": 0,
+   "dry": 0,
+   "oneway": 0,
+   "alone": 0,
+   "late": 0,
+   "o2": 42.220833512817485,
+   "fall": 0,
+   "dark": 17.767845385729217,
+   "vh": {
+    "o2": 2.6381840865911497,
+    "water": 3.097248243108754,
+    "o2h": 56.85729087761195,
+    "wh": 322.8672426322164
+   }
+  },
+  "sim": {
+   "ok": true,
+   "outLen_km": 5.667353507666948,
+   "turnMin": -1,
+   "minutes": 203,
+   "last": {
+    "m": 203,
+    "pos": 62957,
+    "o2": -1.7448776252561515,
+    "o2True": -1.7448776252561515,
+    "w": 1034.741951985518,
+    "k": 1.2463679192035677,
+    "phase": "dead",
+    "need": 15.629453659267575,
+    "needW": 88.75270926428765,
+    "ok": false,
+    "hr": null,
+    "hrExp": null,
+    "kTrue": null,
+    "P": null,
+    "T": null,
+    "naive": null
+   },
+   "log": [
+    {
+     "m": 0,
+     "cls": "",
+     "text": "거점 출발 → 목적지 5.67 km (산소 450 g, 냉각수 3,600 g)"
+    },
+    {
+     "m": 65,
+     "cls": "warn",
+     "text": "심박으로 본 k = 1.13: 모델보다 산소를 13% 더 쓰는 중"
+    },
+    {
+     "m": 93,
+     "cls": "bad",
+     "text": "여기부터는 지금 k(1.25)로 귀환 불가: 필요 산소 217 g > 쓸 수 있는 212 g"
+    },
+    {
+     "m": 106,
+     "cls": "",
+     "text": "목적지 도착 → 귀환 시작"
+    },
+    {
+     "m": 203,
+     "cls": "bad",
+     "text": "산소 소진: 거점까지 0.36 km 남음"
+    }
+   ]
+  },
+  "text": {}
+ },
+ {
+  "name": "simhr_k1",
+  "state": {
+   "o2": 450,
+   "water": 3.6,
+   "k": 1,
+   "q": 0,
+   "spe": false,
+   "mult": 2.9,
+   "nofall": false,
+   "sand": false,
+   "relay": false,
+   "showfall": false,
+   "showcomm": true,
+   "showtrav": true,
+   "mode": "sim",
+   "sel": 389045,
+   "here": -1,
+   "victim": -1,
+   "vo2": 150,
+   "vwater": 1,
+   "vcarry": "walk",
+   "base": 47215,
+   "simTarget": 316209,
+   "simScenario": "model",
+   "simNoise": 8,
+   "simAuto": true,
+   "simCustom": "",
+   "simSrc": "hr",
+   "simLeak": 0,
+   "simPNoise": 10,
+   "simTcomp": true,
+   "simLeakSub": false
+  },
+  "summary": {
+   "mode": "inspect",
+   "safe": 42.220833512817485,
+   "dose": 0,
+   "water": 0,
+   "dry": 0,
+   "oneway": 0,
+   "alone": 0,
+   "late": 0,
+   "o2": 42.220833512817485,
+   "fall": 0,
+   "dark": 17.767845385729217,
+   "vh": {
+    "o2": 2.6381840865911497,
+    "water": 3.097248243108754,
+    "o2h": 56.85729087761195,
+    "wh": 322.8672426322164
+   }
+  },
+  "sim": {
+   "ok": true,
+   "outLen_km": 5.667353507666948,
+   "turnMin": -1,
+   "minutes": 210,
+   "last": {
+    "m": 210,
+    "pos": 47215,
+    "o2": 52.980169628116066,
+    "o2True": 52.980169628116066,
+    "w": 1345.5011323278825,
+    "k": 1.0011006437280547,
+    "phase": "home",
+    "need": 0,
+    "needW": 0,
+    "ok": true,
+    "hr": null,
+    "hrExp": null,
+    "kTrue": null,
+    "P": null,
+    "T": null,
+    "naive": null
+   },
+   "log": [
+    {
+     "m": 0,
+     "cls": "",
+     "text": "거점 출발 → 목적지 5.67 km (산소 450 g, 냉각수 3,600 g)"
+    },
+    {
+     "m": 106,
+     "cls": "",
+     "text": "목적지 도착 → 귀환 시작"
+    },
+    {
+     "m": 210,
+     "cls": "ok",
+     "text": "거점 도착: 산소 53 g, 냉각수 1,346 g 남음"
+    }
+   ]
+  },
+  "text": {}
+ },
+ {
+  "name": "simhr_leak10",
+  "state": {
+   "o2": 450,
+   "water": 3.6,
+   "k": 1,
+   "q": 0,
+   "spe": false,
+   "mult": 2.9,
+   "nofall": false,
+   "sand": false,
+   "relay": false,
+   "showfall": false,
+   "showcomm": true,
+   "showtrav": true,
+   "mode": "sim",
+   "sel": 389045,
+   "here": -1,
+   "victim": -1,
+   "vo2": 150,
+   "vwater": 1,
+   "vcarry": "walk",
+   "base": 47215,
+   "simTarget": 316209,
+   "simScenario": "surge",
+   "simNoise": 8,
+   "simAuto": true,
+   "simCustom": "",
+   "simSrc": "hr",
+   "simLeak": 10,
+   "simPNoise": 10,
+   "simTcomp": true,
+   "simLeakSub": false
+  },
+  "summary": {
+   "mode": "inspect",
+   "safe": 42.220833512817485,
+   "dose": 0,
+   "water": 0,
+   "dry": 0,
+   "oneway": 0,
+   "alone": 0,
+   "late": 0,
+   "o2": 42.220833512817485,
+   "fall": 0,
+   "dark": 17.767845385729217,
+   "vh": {
+    "o2": 2.6381840865911497,
+    "water": 3.097248243108754,
+    "o2h": 56.85729087761195,
+    "wh": 322.8672426322164
+   }
+  },
+  "sim": {
+   "ok": true,
+   "outLen_km": 5.667353507666948,
+   "turnMin": 92,
+   "minutes": 184,
+   "last": {
+    "m": 184,
+    "pos": 47215,
+    "o2": 44.449240783562686,
+    "o2True": 13.782574116896493,
+    "w": 1297.0577852985352,
+    "k": 1.2439026735584435,
+    "phase": "home",
+    "need": 0,
+    "needW": 0,
+    "ok": false,
+    "hr": null,
+    "hrExp": null,
+    "kTrue": null,
+    "P": null,
+    "T": null,
+    "naive": null
+   },
+   "log": [
+    {
+     "m": 0,
+     "cls": "",
+     "text": "거점 출발 → 목적지 5.67 km (산소 450 g, 냉각수 3,600 g)"
+    },
+    {
+     "m": 0,
+     "cls": "warn",
+     "text": "누설 10 g/h가 있지만 심박으로는 보이지 않음 → 남은 산소를 실제보다 많게 봄"
+    },
+    {
+     "m": 65,
+     "cls": "warn",
+     "text": "심박으로 본 k = 1.13: 모델보다 산소를 13% 더 쓰는 중"
+    },
+    {
+     "m": 92,
+     "cls": "warn",
+     "text": "귀환 경보 → 돌아섬. 1분 더 가면 귀환 불가 (남은 산소 260 g, 지금 귀환에 214 g + 예비 45 g)"
+    },
+    {
+     "m": 184,
+     "cls": "warn",
+     "text": "거점 도착: 산소 14 g, 냉각수 1,297 g 남음 (예비분까지 씀)"
+    }
+   ]
+  },
+  "text": {}
+ },
+ {
+  "name": "simpress",
+  "state": {
+   "o2": 450,
+   "water": 3.6,
+   "k": 1,
+   "q": 0,
+   "spe": false,
+   "mult": 2.9,
+   "nofall": false,
+   "sand": false,
+   "relay": false,
+   "showfall": false,
+   "showcomm": true,
+   "showtrav": true,
+   "mode": "sim",
+   "sel": 389045,
+   "here": -1,
+   "victim": -1,
+   "vo2": 150,
+   "vwater": 1,
+   "vcarry": "walk",
+   "base": 47215,
+   "simTarget": 316209,
+   "simScenario": "surge",
+   "simNoise": 8,
+   "simAuto": true,
+   "simCustom": "",
+   "simSrc": "press",
+   "simLeak": 10,
+   "simPNoise": 10,
+   "simTcomp": true,
+   "simLeakSub": false
+  },
+  "summary": {
+   "mode": "inspect",
+   "safe": 42.220833512817485,
+   "dose": 0,
+   "water": 0,
+   "dry": 0,
+   "oneway": 0,
+   "alone": 0,
+   "late": 0,
+   "o2": 42.220833512817485,
+   "fall": 0,
+   "dark": 17.767845385729217,
+   "vh": {
+    "o2": 2.6381840865911497,
+    "water": 3.097248243108754,
+    "o2h": 56.85729087761195,
+    "wh": 322.8672426322164
+   }
+  },
+  "sim": {
+   "ok": true,
+   "outLen_km": 5.667353507666948,
+   "turnMin": 84,
+   "minutes": 168,
+   "last": {
+    "m": 168,
+    "pos": 47215,
+    "o2": 52.8390364904366,
+    "o2True": 53.93137574539638,
+    "w": 1509.9021430985804,
+    "k": 1.44777297115938,
+    "phase": "home",
+    "need": 0,
+    "needW": 0,
+    "ok": true,
+    "hr": null,
+    "hrExp": null,
+    "kTrue": null,
+    "P": 582971.8868605511,
+    "T": 277.24276529098506,
+    "naive": 0
+   },
+   "log": [
+    {
+     "m": 0,
+     "cls": "",
+     "text": "거점 출발 → 목적지 5.67 km (산소 450 g, 냉각수 3,600 g) · 탱크 5.17 MPa"
+    },
+    {
+     "m": 25,
+     "cls": "warn",
+     "text": "압력으로 본 k = 1.12: 모델보다 산소를 12% 더 쓰는 중"
+    },
+    {
+     "m": 84,
+     "cls": "warn",
+     "text": "귀환 경보 → 돌아섬. 1분 더 가면 귀환 불가 (남은 산소 측정 264 g, 지금 귀환에 217 g + 예비 45 g)"
+    },
+    {
+     "m": 168,
+     "cls": "ok",
+     "text": "거점 도착: 산소 54 g, 냉각수 1,510 g 남음"
+    }
+   ]
+  },
+  "text": {}
+ },
+ {
+  "name": "simpress_notcomp",
+  "state": {
+   "o2": 450,
+   "water": 3.6,
+   "k": 1,
+   "q": 0,
+   "spe": false,
+   "mult": 2.9,
+   "nofall": false,
+   "sand": false,
+   "relay": false,
+   "showfall": false,
+   "showcomm": true,
+   "showtrav": true,
+   "mode": "sim",
+   "sel": 389045,
+   "here": -1,
+   "victim": -1,
+   "vo2": 150,
+   "vwater": 1,
+   "vcarry": "walk",
+   "base": 47215,
+   "simTarget": 316209,
+   "simScenario": "surge",
+   "simNoise": 8,
+   "simAuto": true,
+   "simCustom": "",
+   "simSrc": "press",
+   "simLeak": 10,
+   "simPNoise": 10,
+   "simTcomp": false,
+   "simLeakSub": false
+  },
+  "summary": {
+   "mode": "inspect",
+   "safe": 42.220833512817485,
+   "dose": 0,
+   "water": 0,
+   "dry": 0,
+   "oneway": 0,
+   "alone": 0,
+   "late": 0,
+   "o2": 42.220833512817485,
+   "fall": 0,
+   "dark": 17.767845385729217,
+   "vh": {
+    "o2": 2.6381840865911497,
+    "water": 3.097248243108754,
+    "o2h": 56.85729087761195,
+    "wh": 322.8672426322164
+   }
+  },
+  "sim": {
+   "ok": true,
+   "outLen_km": 5.667353507666948,
+   "turnMin": 84,
+   "minutes": 168,
+   "last": {
+    "m": 168,
+    "pos": 47215,
+    "o2": 49.79611760829737,
+    "o2True": 53.93137574539638,
+    "w": 1509.9021430985804,
+    "k": 1.3699779791210633,
+    "phase": "home",
+    "need": 0,
+    "needW": 0,
+    "ok": true,
+    "hr": null,
+    "hrExp": null,
+    "kTrue": null,
+    "P": 582971.8868605511,
+    "T": 277.24276529098506,
+    "naive": 0
+   },
+   "log": [
+    {
+     "m": 0,
+     "cls": "",
+     "text": "거점 출발 → 목적지 5.67 km (산소 450 g, 냉각수 3,600 g) · 탱크 5.17 MPa"
+    },
+    {
+     "m": 10,
+     "cls": "warn",
+     "text": "압력으로 본 k = 1.25: 모델보다 산소를 25% 더 쓰는 중"
+    },
+    {
+     "m": 84,
+     "cls": "bad",
+     "text": "여기부터는 지금 k(1.37)로 귀환 불가: 필요 산소 216 g > 쓸 수 있는 208 g"
+    },
+    {
+     "m": 84,
+     "cls": "warn",
+     "text": "귀환 경보 → 돌아섬. 1분 더 가면 귀환 불가 (남은 산소 측정 253 g, 지금 귀환에 216 g + 예비 45 g)"
+    },
+    {
+     "m": 168,
+     "cls": "ok",
+     "text": "거점 도착: 산소 54 g, 냉각수 1,510 g 남음"
+    }
+   ]
+  },
+  "text": {}
+ },
+ {
+  "name": "rescue",
+  "state": {
+   "o2": 650,
+   "water": 3.6,
+   "k": 1,
+   "q": 0,
+   "spe": false,
+   "mult": 2.9,
+   "nofall": false,
+   "sand": false,
+   "relay": false,
+   "showfall": false,
+   "showcomm": true,
+   "showtrav": true,
+   "mode": "rescue",
+   "sel": 389045,
+   "here": -1,
+   "victim": 316209,
+   "vo2": 150,
+   "vwater": 1,
+   "vcarry": "walk",
+   "base": 47215,
+   "simTarget": 316209,
+   "simScenario": "surge",
+   "simNoise": 8,
+   "simAuto": true,
+   "simCustom": "",
+   "simSrc": "press",
+   "simLeak": 10,
+   "simPNoise": 10,
+   "simTcomp": false,
+   "simLeakSub": false
+  },
+  "summary": {
+   "mode": "rescue",
+   "safe": 42.16627220021,
+   "dose": 0,
+   "water": 0,
+   "dry": 0,
+   "oneway": 0,
+   "alone": 0.05456131260748439,
+   "late": 0,
+   "o2": 42.220833512817485,
+   "fall": 0,
+   "dark": 17.749726525820165,
+   "vh": {
+    "o2": 2.6381840865911497,
+    "water": 3.097248243108754,
+    "o2h": 56.85729087761195,
+    "wh": 322.8672426322164
+   }
+  },
+  "sim": {
+   "ok": true,
+   "outLen_km": 5.667353507666948,
+   "turnMin": 84,
+   "minutes": 168,
+   "last": {
+    "m": 168,
+    "pos": 47215,
+    "o2": 49.79611760829737,
+    "o2True": 53.93137574539638,
+    "w": 1509.9021430985804,
+    "k": 1.3699779791210633,
+    "phase": "home",
+    "need": 0,
+    "needW": 0,
+    "ok": true,
+    "hr": null,
+    "hrExp": null,
+    "kTrue": null,
+    "P": 582971.8868605511,
+    "T": 277.24276529098506,
+    "naive": 0
+   },
+   "log": [
+    {
+     "m": 0,
+     "cls": "",
+     "text": "거점 출발 → 목적지 5.67 km (산소 450 g, 냉각수 3,600 g) · 탱크 5.17 MPa"
+    },
+    {
+     "m": 10,
+     "cls": "warn",
+     "text": "압력으로 본 k = 1.25: 모델보다 산소를 25% 더 쓰는 중"
+    },
+    {
+     "m": 84,
+     "cls": "bad",
+     "text": "여기부터는 지금 k(1.37)로 귀환 불가: 필요 산소 216 g > 쓸 수 있는 208 g"
+    },
+    {
+     "m": 84,
+     "cls": "warn",
+     "text": "귀환 경보 → 돌아섬. 1분 더 가면 귀환 불가 (남은 산소 측정 253 g, 지금 귀환에 216 g + 예비 45 g)"
+    },
+    {
+     "m": 168,
+     "cls": "ok",
+     "text": "거점 도착: 산소 54 g, 냉각수 1,510 g 남음"
+    }
+   ]
+  },
+  "text": {
+   "pt-where": "구조 대상: 거점에서 직선 5.63 km · sol 746 지점 · 구조대원 출발: 거점",
+   "pt-verdict": "제때 도착, 보급하고 함께 귀환 가능",
+   "pt-meters": "구조대원 산소 (가서 돌아오기) 396 / 605 g 구조대원 냉각수 2,251 / 3,344 g 구조대원 선량 94.3 / 1,000.0 µSv 도착 시간 / 구조 대상이 버티는 시간 105 / 158 분",
+   "supply": "보급 계산: 구조 대상이 거점까지 돌아오려면 구조 대상에게 줄 최소 산소 191 g 구조 대상에게 줄 최소 냉각수 939 g 구조 대상 필요량 (산소 · 냉각수) 341 g · 1,939 g └ 구조대원 기다리는 동안 (105분, 정지) 100 g · 567 g └ 거점까지 귀환 (104분, 부축 보행) 197 g · 1,117 g └ 예비분 30분 45 g · 256 g 구조 대상이 가진 양 150 g · 1,000 g 구조대원 출발 시 최소량 633 g · 3,446 g └ 지금 설정과 비교 충분"
+  }
+ }
+]

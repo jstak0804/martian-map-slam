@@ -1,0 +1,10 @@
+{
+  "n": 200,
+  "max_rel_err_o2_vs_tree": 2.3200325331525326e-15,
+  "max_rel_err_time_vs_tree": 3.027385369236318e-06,
+  "max_rel_err_time_vs_walkspeed_sum": 0,
+  "monotone": true,
+  "endpoints_ok": true,
+  "max_dur_min": 150.86195070991428,
+  "pass": true
+}

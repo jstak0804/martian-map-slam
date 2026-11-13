@@ -1,0 +1,84 @@
+{
+  "figure_read": {
+    "400": 18.5,
+    "800": 10.7,
+    "1600": 6.0,
+    "2000": 4.9
+  },
+  "cases": {
+    "9.1 lb": [
+      {
+        "mr_btu_h": 400,
+        "mr_w": 117.2,
+        "chart_h": 18.5,
+        "model_h_q0": 27.7,
+        "implied_total_heat_w": 175.6,
+        "implied_extra_heat_w": 58.4
+      },
+      {
+        "mr_btu_h": 800,
+        "mr_w": 234.5,
+        "chart_h": 10.7,
+        "model_h_q0": 13.9,
+        "implied_total_heat_w": 303.7,
+        "implied_extra_heat_w": 69.2
+      },
+      {
+        "mr_btu_h": 1600,
+        "mr_w": 468.9,
+        "chart_h": 6.0,
+        "model_h_q0": 6.9,
+        "implied_total_heat_w": 541.6,
+        "implied_extra_heat_w": 72.7
+      },
+      {
+        "mr_btu_h": 2000,
+        "mr_w": 586.1,
+        "chart_h": 4.9,
+        "model_h_q0": 5.5,
+        "implied_total_heat_w": 663.1,
+        "implied_extra_heat_w": 77.0
+      }
+    ],
+    "8.35 lb": [
+      {
+        "mr_btu_h": 400,
+        "mr_w": 117.2,
+        "chart_h": 18.5,
+        "model_h_q0": 25.4,
+        "implied_total_heat_w": 161.2,
+        "implied_extra_heat_w": 43.9
+      },
+      {
+        "mr_btu_h": 800,
+        "mr_w": 234.5,
+        "chart_h": 10.7,
+        "model_h_q0": 12.7,
+        "implied_total_heat_w": 278.7,
+        "implied_extra_heat_w": 44.2
+      },
+      {
+        "mr_btu_h": 1600,
+        "mr_w": 468.9,
+        "chart_h": 6.0,
+        "model_h_q0": 6.4,
+        "implied_total_heat_w": 496.9,
+        "implied_extra_heat_w": 28.0
+      },
+      {
+        "mr_btu_h": 2000,
+        "mr_w": 586.1,
+        "chart_h": 4.9,
+        "model_h_q0": 5.1,
+        "implied_total_heat_w": 608.5,
+        "implied_extra_heat_w": 22.3
+      }
+    ]
+  },
+  "text_values": {
+    "conservative_usage_lb_h": 0.8,
+    "sts61_average_lb_h": 0.72,
+    "model_at_1000btu_h_g_h": 372.0,
+    "0.8_lb_h_in_g_h": 363.0
+  }
+}

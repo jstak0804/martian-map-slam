@@ -1,0 +1,126 @@
+{
+ "o2_reserve_g": 45.0,
+ "ist_tgaw_range_n": [
+  236.0,
+  627.0
+ ],
+ "rows": [
+  {
+   "body_kg": 60.0,
+   "suit_kg": 70.0,
+   "tgaw_n": 482.4,
+   "tgaw_extrapolated": false,
+   "level_mr_w": 335.1,
+   "standing_mr_w": 167.8,
+   "area_km2_100g": 5.112,
+   "area_km2_150g": 16.142,
+   "area_km2_200g": 31.977,
+   "sol746_roundtrip_o2_g": 299.6,
+   "sol746_roundtrip_plus_reserve_le_450": true
+  },
+  {
+   "body_kg": 60.0,
+   "suit_kg": 90.0,
+   "tgaw_n": 556.6,
+   "tgaw_extrapolated": false,
+   "level_mr_w": 346.7,
+   "standing_mr_w": 289.2,
+   "area_km2_100g": 4.824,
+   "area_km2_150g": 15.177,
+   "area_km2_200g": 30.713,
+   "sol746_roundtrip_o2_g": 310.0,
+   "sol746_roundtrip_plus_reserve_le_450": true
+  },
+  {
+   "body_kg": 60.0,
+   "suit_kg": 110.0,
+   "tgaw_n": 630.9,
+   "tgaw_extrapolated": true,
+   "level_mr_w": 466.0,
+   "standing_mr_w": 466.0,
+   "area_km2_100g": 2.945,
+   "area_km2_150g": 8.921,
+   "area_km2_200g": 18.013,
+   "sol746_roundtrip_o2_g": 416.4,
+   "sol746_roundtrip_plus_reserve_le_450": false
+  },
+  {
+   "body_kg": 75.0,
+   "suit_kg": 70.0,
+   "tgaw_n": 538.1,
+   "tgaw_extrapolated": false,
+   "level_mr_w": 429.8,
+   "standing_mr_w": 138.0,
+   "area_km2_100g": 3.364,
+   "area_km2_150g": 10.311,
+   "area_km2_200g": 21.02,
+   "sol746_roundtrip_o2_g": 383.6,
+   "sol746_roundtrip_plus_reserve_le_450": true
+  },
+  {
+   "body_kg": 75.0,
+   "suit_kg": 90.0,
+   "tgaw_n": 612.3,
+   "tgaw_extrapolated": false,
+   "level_mr_w": 444.4,
+   "standing_mr_w": 222.2,
+   "area_km2_100g": 3.181,
+   "area_km2_150g": 9.721,
+   "area_km2_200g": 19.809,
+   "sol746_roundtrip_o2_g": 396.4,
+   "sol746_roundtrip_plus_reserve_le_450": true
+  },
+  {
+   "body_kg": 75.0,
+   "suit_kg": 110.0,
+   "tgaw_n": 686.5,
+   "tgaw_extrapolated": true,
+   "level_mr_w": 459.0,
+   "standing_mr_w": 343.4,
+   "area_km2_100g": 3.017,
+   "area_km2_150g": 9.196,
+   "area_km2_200g": 18.705,
+   "sol746_roundtrip_o2_g": 409.1,
+   "sol746_roundtrip_plus_reserve_le_450": false
+  },
+  {
+   "body_kg": 90.0,
+   "suit_kg": 70.0,
+   "tgaw_n": 593.8,
+   "tgaw_extrapolated": false,
+   "level_mr_w": 528.9,
+   "standing_mr_w": 124.2,
+   "area_km2_100g": 2.388,
+   "area_km2_150g": 7.16,
+   "area_km2_200g": 14.39,
+   "sol746_roundtrip_o2_g": 471.2,
+   "sol746_roundtrip_plus_reserve_le_450": false
+  },
+  {
+   "body_kg": 90.0,
+   "suit_kg": 90.0,
+   "tgaw_n": 668.0,
+   "tgaw_extrapolated": true,
+   "level_mr_w": 546.4,
+   "standing_mr_w": 187.1,
+   "area_km2_100g": 2.265,
+   "area_km2_150g": 6.769,
+   "area_km2_200g": 13.591,
+   "sol746_roundtrip_o2_g": 486.4,
+   "sol746_roundtrip_plus_reserve_le_450": false
+  },
+  {
+   "body_kg": 90.0,
+   "suit_kg": 110.0,
+   "tgaw_n": 742.2,
+   "tgaw_extrapolated": true,
+   "level_mr_w": 564.0,
+   "standing_mr_w": 276.9,
+   "area_km2_100g": 2.153,
+   "area_km2_150g": 6.415,
+   "area_km2_200g": 12.865,
+   "sol746_roundtrip_o2_g": 501.4,
+   "sol746_roundtrip_plus_reserve_le_450": false
+  }
+ ]
+}

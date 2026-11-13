@@ -1,0 +1,92 @@
+{
+  "model": {
+    "model": "ist_b",
+    "flat_speed_m_s": 0.92,
+    "level_mr_w": 444.4,
+    "level_o2_g_per_h": 113.74,
+    "o2_reserve_g": 45.01,
+    "reserve_mr_w": 351.7
+  },
+  "window_m": 4500.0,
+  "a_route_1m": {
+    "path_cells": 465,
+    "path_len_km": 7.138,
+    "graph_return_o2_g_with_eta": 248.23,
+    "o2_10m_eta1_g": 245.74,
+    "time_10m_h": 2.197,
+    "one_m": {
+      "raw": {
+        "o2_g": 254.77,
+        "time_h": 2.323,
+        "ratio_to_10m": 1.0368,
+        "abs_grade_p50_p90_p99": [
+          3.9,
+          13.0,
+          26.5
+        ],
+        "share_steeper_than_36pct": 0.0036
+      },
+      "gauss_sigma3m": {
+        "o2_g": 250.31,
+        "time_h": 2.262,
+        "ratio_to_10m": 1.0186,
+        "abs_grade_p50_p90_p99": [
+          3.3,
+          10.7,
+          21.7
+        ],
+        "share_steeper_than_36pct": 0.0006
+      },
+      "gauss_sigma5m": {
+        "o2_g": 248.67,
+        "time_h": 2.24,
+        "ratio_to_10m": 1.012,
+        "abs_grade_p50_p90_p99": [
+          3.0,
+          9.4,
+          19.9
+        ],
+        "share_steeper_than_36pct": 0.0003
+      }
+    },
+    "nan_points_on_1m_path": 0
+  },
+  "b_grid": {
+    "20": {
+      "cell_m": 20.235,
+      "shape": [
+        257,
+        266
+      ],
+      "n_edges": 955676,
+      "passable_share": 0.8819,
+      "area_km2_100g": 3.125,
+      "area_km2_150g": 9.635,
+      "area_km2_200g": 19.709
+    },
+    "10": {
+      "cell_m": 10.118,
+      "shape": [
+        515,
+        532
+      ],
+      "n_edges": 3855782,
+      "passable_share": 0.8843,
+      "area_km2_100g": 3.176,
+      "area_km2_150g": 9.715,
+      "area_km2_200g": 19.798
+    },
+    "5": {
+      "cell_m": 5.059,
+      "shape": [
+        1032,
+        1066
+      ],
+      "n_edges": 15491558,
+      "passable_share": 0.8837,
+      "area_km2_100g": 3.205,
+      "area_km2_150g": 9.749,
+      "area_km2_200g": 19.844
+    }
+  }
+}

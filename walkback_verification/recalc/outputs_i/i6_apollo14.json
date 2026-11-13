@@ -1,0 +1,117 @@
+{
+ "measured": {
+  "source": "Waligora & Horrigan 1975 p.780 (Apollo 14, 2.9 km, 2.4 km/h, 300 kcal/h)",
+  "v_m_s": 0.667,
+  "mr_w": 348.7
+ },
+ "v_in_ist_level_range": true,
+ "ist_level_v_range": [
+  0.62,
+  2.24
+ ],
+ "ist_tgaw_range_n": [
+  236.0,
+  627.0
+ ],
+ "ist_w_range": [
+  338.7,
+  387.5
+ ],
+ "pandolf_moon_w_range": [
+  90.2,
+  135.8
+ ],
+ "rows": [
+  {
+   "body_kg": 70.0,
+   "suit_kg": 80.0,
+   "tgaw_n": 243.0,
+   "tgaw_in_ist_range": true,
+   "ist_w": 339.9,
+   "ist_ratio_measured": 0.975,
+   "pandolf_moon_w": 98.5,
+   "pandolf_ratio_measured": 0.282
+  },
+  {
+   "body_kg": 70.0,
+   "suit_kg": 91.0,
+   "tgaw_n": 260.8,
+   "tgaw_in_ist_range": true,
+   "ist_w": 339.0,
+   "ist_ratio_measured": 0.972,
+   "pandolf_moon_w": 124.8,
+   "pandolf_ratio_measured": 0.358
+  },
+  {
+   "body_kg": 70.0,
+   "suit_kg": 95.0,
+   "tgaw_n": 267.3,
+   "tgaw_in_ist_range": true,
+   "ist_w": 338.7,
+   "ist_ratio_measured": 0.971,
+   "pandolf_moon_w": 135.8,
+   "pandolf_ratio_measured": 0.389
+  },
+  {
+   "body_kg": 75.0,
+   "suit_kg": 80.0,
+   "tgaw_n": 251.1,
+   "tgaw_in_ist_range": true,
+   "ist_w": 363.8,
+   "ist_ratio_measured": 1.043,
+   "pandolf_moon_w": 93.8,
+   "pandolf_ratio_measured": 0.269
+  },
+  {
+   "body_kg": 75.0,
+   "suit_kg": 91.0,
+   "tgaw_n": 268.9,
+   "tgaw_in_ist_range": true,
+   "ist_w": 362.8,
+   "ist_ratio_measured": 1.04,
+   "pandolf_moon_w": 117.5,
+   "pandolf_ratio_measured": 0.337
+  },
+  {
+   "body_kg": 75.0,
+   "suit_kg": 95.0,
+   "tgaw_n": 275.4,
+   "tgaw_in_ist_range": true,
+   "ist_w": 362.4,
+   "ist_ratio_measured": 1.039,
+   "pandolf_moon_w": 127.3,
+   "pandolf_ratio_measured": 0.365
+  },
+  {
+   "body_kg": 80.0,
+   "suit_kg": 80.0,
+   "tgaw_n": 259.2,
+   "tgaw_in_ist_range": true,
+   "ist_w": 387.5,
+   "ist_ratio_measured": 1.111,
+   "pandolf_moon_w": 90.2,
+   "pandolf_ratio_measured": 0.259
+  },
+  {
+   "body_kg": 80.0,
+   "suit_kg": 91.0,
+   "tgaw_n": 277.0,
+   "tgaw_in_ist_range": true,
+   "ist_w": 386.5,
+   "ist_ratio_measured": 1.108,
+   "pandolf_moon_w": 111.6,
+   "pandolf_ratio_measured": 0.32
+  },
+  {
+   "body_kg": 80.0,
+   "suit_kg": 95.0,
+   "tgaw_n": 283.5,
+   "tgaw_in_ist_range": true,
+   "ist_w": 386.1,
+   "ist_ratio_measured": 1.107,
+   "pandolf_moon_w": 120.5,
+   "pandolf_ratio_measured": 0.346
+  }
+ ],
+ "note": "한 점 점검이며 검증 아님. 평지 모델 vs 오르막 섞인 실측 평균, 보행 외 활동 혼입 가능, 질량은 범위."
+}
