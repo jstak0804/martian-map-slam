@@ -1,0 +1,1386 @@
+{
+  "assumptions": {
+    "BASE_ANT_M": 3.0,
+    "SUIT_ANT_M": 2.0,
+    "RELAY_ANT_M": 3.0,
+    "SEP_WARN_M": 500.0,
+    "REF_REMAINING_O2_G": 150,
+    "B_STOP_FRACTION": 0.35,
+    "los_model": "terrain + Mars curvature, no refraction/diffraction",
+    "spe_effect": "not modeled (no source for UHF surface-link absorption)"
+  },
+  "smooth_sphere_max_range_km": 8.199855503493412,
+  "coverage": {
+    "valid_km2": 42.709837997481564,
+    "base_visible_km2": 24.745551413077372,
+    "returnable_km2": 18.64318081557274,
+    "returnable_and_visible_km2": 10.331025874244915,
+    "returnable_dark_km2": 8.312154941327828,
+    "returnable_dark_pct": 44.585497633454494,
+    "relay_cell": [
+      639,
+      732
+    ],
+    "relay_km_from_base": 6.726223058137591,
+    "relay_candidates": 281,
+    "gap_fixed_by_relay_km2": 7.926438194789364,
+    "gap_after_relay_km2": 0.3857167465384638
+  },
+  "buddy": {
+    "route_km": 7.263977388259453,
+    "fixed_stop": {
+      "b_stop_km": 2.5423920858908082,
+      "minutes": 133,
+      "minutes_direct": 63,
+      "minutes_relay": 0,
+      "minutes_lost": 70,
+      "first_lost_min": 9.0,
+      "first_lost_a_km": 0.4968,
+      "first_sep_warn_min": 56.0,
+      "longest_lost_streak_min": 36
+    },
+    "comm_aware_stop": {
+      "b_stop_km": 4.945108535148415,
+      "minutes": 133,
+      "minutes_direct": 63,
+      "minutes_relay": 31,
+      "minutes_lost": 39,
+      "first_lost_min": 9.0,
+      "first_lost_a_km": 0.4968,
+      "first_sep_warn_min": 99.0,
+      "longest_lost_streak_min": 6
+    }
+  },
+  "timeline_comm_aware_stop": [
+    {
+      "t_min": 0.0,
+      "a_dist_km": 0.0,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 1.0,
+      "a_dist_km": 0.055200000000000006,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 2.0,
+      "a_dist_km": 0.11040000000000001,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 3.0,
+      "a_dist_km": 0.1656,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 4.0,
+      "a_dist_km": 0.22080000000000002,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 5.0,
+      "a_dist_km": 0.276,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 6.0,
+      "a_dist_km": 0.3312,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 7.0,
+      "a_dist_km": 0.3864,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 8.0,
+      "a_dist_km": 0.44160000000000005,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 9.0,
+      "a_dist_km": 0.4968,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 10.0,
+      "a_dist_km": 0.552,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 11.0,
+      "a_dist_km": 0.6072000000000001,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 12.0,
+      "a_dist_km": 0.6624,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 13.0,
+      "a_dist_km": 0.7176,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 14.0,
+      "a_dist_km": 0.7728,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 15.0,
+      "a_dist_km": 0.828,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 16.0,
+      "a_dist_km": 0.8832000000000001,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 17.0,
+      "a_dist_km": 0.9384000000000001,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 18.0,
+      "a_dist_km": 0.9936,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 19.0,
+      "a_dist_km": 1.0488,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 20.0,
+      "a_dist_km": 1.104,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 21.0,
+      "a_dist_km": 1.1592,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 22.0,
+      "a_dist_km": 1.2144000000000001,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 23.0,
+      "a_dist_km": 1.2696,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 24.0,
+      "a_dist_km": 1.3248,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 25.0,
+      "a_dist_km": 1.38,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 26.0,
+      "a_dist_km": 1.4352,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 27.0,
+      "a_dist_km": 1.4904000000000002,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 28.0,
+      "a_dist_km": 1.5456,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 29.0,
+      "a_dist_km": 1.6008000000000002,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 30.0,
+      "a_dist_km": 1.656,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 31.0,
+      "a_dist_km": 1.7112,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 32.0,
+      "a_dist_km": 1.7664000000000002,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 33.0,
+      "a_dist_km": 1.8216,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 34.0,
+      "a_dist_km": 1.8768000000000002,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 35.0,
+      "a_dist_km": 1.932,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 36.0,
+      "a_dist_km": 1.9872,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 37.0,
+      "a_dist_km": 2.0424,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 38.0,
+      "a_dist_km": 2.0976,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 39.0,
+      "a_dist_km": 2.1528,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 40.0,
+      "a_dist_km": 2.208,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 41.0,
+      "a_dist_km": 2.2632000000000003,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 42.0,
+      "a_dist_km": 2.3184,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 43.0,
+      "a_dist_km": 2.3735999999999997,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 44.0,
+      "a_dist_km": 2.4288000000000003,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 45.0,
+      "a_dist_km": 2.484,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 46.0,
+      "a_dist_km": 2.5392,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 47.0,
+      "a_dist_km": 2.5944000000000003,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 48.0,
+      "a_dist_km": 2.6496,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 49.0,
+      "a_dist_km": 2.7048,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 50.0,
+      "a_dist_km": 2.76,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 51.0,
+      "a_dist_km": 2.8152000000000004,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 52.0,
+      "a_dist_km": 2.8704,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 53.0,
+      "a_dist_km": 2.9255999999999998,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 54.0,
+      "a_dist_km": 2.9808000000000003,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 55.0,
+      "a_dist_km": 3.036,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 56.0,
+      "a_dist_km": 3.0912,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 57.0,
+      "a_dist_km": 3.1464000000000003,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 58.0,
+      "a_dist_km": 3.2016000000000004,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 59.0,
+      "a_dist_km": 3.2568,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 60.0,
+      "a_dist_km": 3.312,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 61.0,
+      "a_dist_km": 3.3672000000000004,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 62.0,
+      "a_dist_km": 3.4224,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 63.0,
+      "a_dist_km": 3.4776000000000002,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 64.0,
+      "a_dist_km": 3.5328000000000004,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 65.0,
+      "a_dist_km": 3.588,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 66.0,
+      "a_dist_km": 3.6432,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 67.0,
+      "a_dist_km": 3.6984,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 68.0,
+      "a_dist_km": 3.7536000000000005,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 69.0,
+      "a_dist_km": 3.8088,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 70.0,
+      "a_dist_km": 3.864,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 71.0,
+      "a_dist_km": 3.9192000000000005,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 72.0,
+      "a_dist_km": 3.9744,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 73.0,
+      "a_dist_km": 4.0296,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 74.0,
+      "a_dist_km": 4.0848,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 75.0,
+      "a_dist_km": 4.14,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 76.0,
+      "a_dist_km": 4.1952,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 77.0,
+      "a_dist_km": 4.250400000000001,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 78.0,
+      "a_dist_km": 4.3056,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 79.0,
+      "a_dist_km": 4.3608,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 80.0,
+      "a_dist_km": 4.416,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 81.0,
+      "a_dist_km": 4.4712,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 82.0,
+      "a_dist_km": 4.526400000000001,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 83.0,
+      "a_dist_km": 4.581600000000001,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": false,
+      "state": "lost",
+      "sep_warn": false
+    },
+    {
+      "t_min": 84.0,
+      "a_dist_km": 4.6368,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 85.0,
+      "a_dist_km": 4.692,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 86.0,
+      "a_dist_km": 4.747199999999999,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 87.0,
+      "a_dist_km": 4.8024000000000004,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 88.0,
+      "a_dist_km": 4.857600000000001,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 89.0,
+      "a_dist_km": 4.9128,
+      "sep_m": 0.0,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 90.0,
+      "a_dist_km": 4.968,
+      "sep_m": 14.30848979900645,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": false
+    },
+    {
+      "t_min": 91.0,
+      "a_dist_km": 5.0232,
+      "sep_m": 71.54244899503225,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": false
+    },
+    {
+      "t_min": 92.0,
+      "a_dist_km": 5.0784,
+      "sep_m": 128.77640819105804,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": false
+    },
+    {
+      "t_min": 93.0,
+      "a_dist_km": 5.1336,
+      "sep_m": 186.01036738708385,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": false
+    },
+    {
+      "t_min": 94.0,
+      "a_dist_km": 5.1888000000000005,
+      "sep_m": 243.24432658310963,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": false
+    },
+    {
+      "t_min": 95.0,
+      "a_dist_km": 5.244,
+      "sep_m": 286.169795980129,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": false
+    },
+    {
+      "t_min": 96.0,
+      "a_dist_km": 5.2992,
+      "sep_m": 343.4037551761548,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": false
+    },
+    {
+      "t_min": 97.0,
+      "a_dist_km": 5.354400000000001,
+      "sep_m": 400.6377143721806,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": false
+    },
+    {
+      "t_min": 98.0,
+      "a_dist_km": 5.4096,
+      "sep_m": 458.09518916539434,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": false
+    },
+    {
+      "t_min": 99.0,
+      "a_dist_km": 5.4648,
+      "sep_m": 508.40462371465793,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 100.0,
+      "a_dist_km": 5.52,
+      "sep_m": 558.764389077019,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 101.0,
+      "a_dist_km": 5.5752,
+      "sep_m": 615.9302129692027,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 102.0,
+      "a_dist_km": 5.630400000000001,
+      "sep_m": 673.1076170765452,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 103.0,
+      "a_dist_km": 5.6856,
+      "sep_m": 715.9966007894117,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 104.0,
+      "a_dist_km": 5.7408,
+      "sep_m": 773.1882116008709,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 105.0,
+      "a_dist_km": 5.796,
+      "sep_m": 830.385657959974,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 106.0,
+      "a_dist_km": 5.8511999999999995,
+      "sep_m": 887.5878117139674,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 107.0,
+      "a_dist_km": 5.9064000000000005,
+      "sep_m": 944.793817841366,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 108.0,
+      "a_dist_km": 5.961600000000001,
+      "sep_m": 1002.0030165273178,
+      "los_ab": false,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "lost",
+      "sep_warn": true
+    },
+    {
+      "t_min": 109.0,
+      "a_dist_km": 6.0168,
+      "sep_m": 1059.2148904726218,
+      "los_ab": false,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "lost",
+      "sep_warn": true
+    },
+    {
+      "t_min": 110.0,
+      "a_dist_km": 6.072,
+      "sep_m": 1102.1253009470545,
+      "los_ab": false,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "lost",
+      "sep_warn": true
+    },
+    {
+      "t_min": 111.0,
+      "a_dist_km": 6.1272,
+      "sep_m": 1159.3409159324547,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 112.0,
+      "a_dist_km": 6.1824,
+      "sep_m": 1216.5582566786827,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 113.0,
+      "a_dist_km": 6.2376000000000005,
+      "sep_m": 1273.777090625182,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 114.0,
+      "a_dist_km": 6.292800000000001,
+      "sep_m": 1330.9972251964068,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 115.0,
+      "a_dist_km": 6.348,
+      "sep_m": 1388.2184995633868,
+      "los_ab": false,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "lost",
+      "sep_warn": true
+    },
+    {
+      "t_min": 116.0,
+      "a_dist_km": 6.403200000000001,
+      "sep_m": 1438.1633855429516,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 117.0,
+      "a_dist_km": 6.4584,
+      "sep_m": 1488.1517283230614,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 118.0,
+      "a_dist_km": 6.5136,
+      "sep_m": 1545.3831398812686,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 119.0,
+      "a_dist_km": 6.5688,
+      "sep_m": 1588.2423676897158,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 120.0,
+      "a_dist_km": 6.624,
+      "sep_m": 1638.337702533823,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 121.0,
+      "a_dist_km": 6.679200000000001,
+      "sep_m": 1695.6918758342895,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 122.0,
+      "a_dist_km": 6.734400000000001,
+      "sep_m": 1746.1634478848048,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 123.0,
+      "a_dist_km": 6.7896,
+      "sep_m": 1789.9915019735292,
+      "los_ab": false,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "lost",
+      "sep_warn": true
+    },
+    {
+      "t_min": 124.0,
+      "a_dist_km": 6.8448,
+      "sep_m": 1833.4977215666836,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 125.0,
+      "a_dist_km": 6.9,
+      "sep_m": 1884.6241997743264,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 126.0,
+      "a_dist_km": 6.9552000000000005,
+      "sep_m": 1929.2864304732313,
+      "los_ab": true,
+      "los_a_base": false,
+      "los_b_base": true,
+      "state": "relay",
+      "sep_warn": true
+    },
+    {
+      "t_min": 127.0,
+      "a_dist_km": 7.010400000000001,
+      "sep_m": 1975.530443009593,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": true
+    },
+    {
+      "t_min": 128.0,
+      "a_dist_km": 7.065600000000001,
+      "sep_m": 2021.0203682766742,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": true
+    },
+    {
+      "t_min": 129.0,
+      "a_dist_km": 7.1208,
+      "sep_m": 2071.5708784786734,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": true
+    },
+    {
+      "t_min": 130.0,
+      "a_dist_km": 7.176,
+      "sep_m": 2111.0963278415275,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": true
+    },
+    {
+      "t_min": 131.0,
+      "a_dist_km": 7.2312,
+      "sep_m": 2151.0852675566507,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": true
+    },
+    {
+      "t_min": 132.0,
+      "a_dist_km": 7.263977388259453,
+      "sep_m": 2189.4561028817902,
+      "los_ab": true,
+      "los_a_base": true,
+      "los_b_base": true,
+      "state": "direct",
+      "sep_warn": true
+    }
+  ]
+}

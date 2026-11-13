@@ -1,0 +1,33 @@
+{
+  "n_steps": 431,
+  "gt_distance_m": 123.54879698204522,
+  "vo_full3d": {
+    "distance_m": 86.77422528284737,
+    "error_pct": 29.765220380528778,
+    "endpoint_error_m": 94.43888707415638,
+    "rms_error_m": 65.65070998331412
+  },
+  "vo_yaw_linearized": {
+    "distance_m": 112.58351086727022,
+    "error_pct": 8.875267410631714,
+    "endpoint_error_m": 108.59392588138184,
+    "rms_error_m": 71.51259074576194
+  },
+  "sun_corrected": {
+    "distance_m": 112.58351086727018,
+    "error_pct": 8.875267410631748,
+    "endpoint_error_m": 146.35349438816837,
+    "rms_error_m": 91.65004889262306
+  },
+  "calibration_gain": -0.1212796212286951,
+  "calibration_window_steps": 50,
+  "vo_yaw_vs_sun_delta_correlation": 0.02826827997651093,
+  "vo_step_stats": {
+    "total": 431,
+    "ok": 428,
+    "fail_features": 0,
+    "fail_depth_pts": 0,
+    "fail_pnp": 3
+  },
+  "note": "\uc694(yaw)\ub9cc 1\ucc28\uadfc\uc0ac\ub85c \uad50\uc815 \u2014 \ud53c\uce58/\ub864 \ub4dc\ub9ac\ud504\ud2b8\ub294 \ubcf4\uc815 \ub300\uc0c1\uc774 \uc544\ub2d8. \ud0dc\uc591\uc13c\uc11c \u0394\ubc29\uc704\uac01\uacfc VO\uc758 \ud504\ub808\uc784\uac04 yaw \uc99d\ubd84\uc740 \uc0c1\uad00\uacc4\uc218\uac00 \uac70\uc758 0\uc774\ub77c (\ub3c5\ub9bd \uc7a1\uc74c\uc5d0 \uac00\uae4c\uc6c0) \ubcf4\uc815\uc774 \uc2e4\uc9c8\uc801 \uac1c\uc120\uc744 \uc8fc\uc9c0 \ubabb\ud588\ub2e4 \u2014 \uc194\uc9c1\ud55c \uc74c\uc131 \uacb0\uacfc."
+}

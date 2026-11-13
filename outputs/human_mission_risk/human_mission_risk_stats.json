@@ -1,0 +1,263 @@
+{
+  "model_params": {
+    "literature_based": {
+      "radiation_background_mSv_day": 0.655,
+      "spe_dose_multiplier": 2.9,
+      "diurnal_temp_range_c": [
+        -95.0,
+        5.0
+      ],
+      "sources": [
+        "Hassler et al. 2014, Science (RAD Mars surface radiation)",
+        "SwRI press release on first Mars surface radiation measurements",
+        "csmonitor.com 2013-12-09 Curiosity radiation report",
+        "JPL REMS diurnal temperature public summaries"
+      ]
+    },
+    "design_assumptions": {
+      "T_SAFE_LOW_C": -70.0,
+      "T_CRITICAL_LOW_C": -95.0,
+      "D_BUDGET_MSV_DAY": 1.0,
+      "SHIELDING_MAX_REDUCTION": 0.5,
+      "W_TERRAIN": 0.6,
+      "W_HUMAN": 0.4,
+      "W_THERMAL": 0.5,
+      "W_RADIATION": 0.5,
+      "WARNING_THRESHOLD": 0.37
+    }
+  },
+  "terrain_only_mean_risk": 0.028832604171220525,
+  "hourly": [
+    {
+      "hour": 0.0,
+      "temperature_c": -88.30127018922194,
+      "thermal_risk": 0.7320508075688775,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.2888680760785135,
+      "warning": false
+    },
+    {
+      "hour": 1.0,
+      "temperature_c": -93.29629131445341,
+      "thermal_risk": 0.9318516525781365,
+      "radiation_risk_mean": 0.9554072676488982,
+      "spe_active": true,
+      "mean_total_risk": 0.3947513465481393,
+      "warning": true
+    },
+    {
+      "hour": 2.0,
+      "temperature_c": -95.0,
+      "thermal_risk": 1.0,
+      "radiation_risk_mean": 0.9554072676488982,
+      "spe_active": true,
+      "mean_total_risk": 0.4083810160325119,
+      "warning": true
+    },
+    {
+      "hour": 3.0,
+      "temperature_c": -93.29629131445341,
+      "thermal_risk": 0.9318516525781365,
+      "radiation_risk_mean": 0.9554072676488982,
+      "spe_active": true,
+      "mean_total_risk": 0.3947513465481393,
+      "warning": true
+    },
+    {
+      "hour": 4.0,
+      "temperature_c": -88.30127018922194,
+      "thermal_risk": 0.7320508075688775,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.2888680760785135,
+      "warning": false
+    },
+    {
+      "hour": 5.0,
+      "temperature_c": -80.35533905932738,
+      "thermal_risk": 0.4142135623730951,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.22530062703935705,
+      "warning": false
+    },
+    {
+      "hour": 6.0,
+      "temperature_c": -69.99999999999999,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 7.0,
+      "temperature_c": -57.940952255126035,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 8.0,
+      "temperature_c": -45.0,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 9.0,
+      "temperature_c": -32.059047744873965,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 10.0,
+      "temperature_c": -19.999999999999993,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 11.0,
+      "temperature_c": -9.644660940672622,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 12.0,
+      "temperature_c": -1.6987298107780617,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 13.0,
+      "temperature_c": 3.2962913144534127,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 14.0,
+      "temperature_c": 5.0,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 15.0,
+      "temperature_c": 3.2962913144534127,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 16.0,
+      "temperature_c": -1.6987298107780617,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 17.0,
+      "temperature_c": -9.644660940672622,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 18.0,
+      "temperature_c": -19.999999999999993,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 19.0,
+      "temperature_c": -32.059047744873965,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 20.0,
+      "temperature_c": -45.0,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 21.0,
+      "temperature_c": -57.940952255126035,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 22.0,
+      "temperature_c": -69.99999999999999,
+      "thermal_risk": 0.0,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.142457914564738,
+      "warning": false
+    },
+    {
+      "hour": 23.0,
+      "temperature_c": -80.35533905932738,
+      "thermal_risk": 0.4142135623730951,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.22530062703935705,
+      "warning": false
+    },
+    {
+      "hour": 24.0,
+      "temperature_c": -88.30127018922194,
+      "thermal_risk": 0.7320508075688775,
+      "radiation_risk_mean": 0.6257917603100284,
+      "spe_active": false,
+      "mean_total_risk": 0.2888680760785135,
+      "warning": false
+    }
+  ],
+  "n_warnings": 3,
+  "warning_hours": [
+    1.0,
+    2.0,
+    3.0
+  ]
+}

@@ -1,0 +1,1733 @@
+<title>Gale EVA 귀환 반경</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout: mission console — controls | live map | readouts; stacks to one column on phones.
+     Deliberately single dark theme: the map is a dark hillshade and the console reads as one instrument. */
+  :root {
+    color-scheme: dark;
+    --cells-alpha: 0.8;
+    --bg: #0d1016;
+    --panel: #151a23;
+    --panel-2: #1b2130;
+    --rule: #283041;
+    --ink: #e7eaf0;
+    --ink-soft: #9aa3b5;
+    --ink-faint: #6c7588;
+    --accent: #e2794d;          /* oxide: controls and focus */
+    --safe: #5cbcc3;
+    --dose: #9b7bff;
+    --water: #d65bd0;
+    --dry: #ffd23f;
+    --fall-high: #e05a4f;
+    --fall-med: #e8c547;
+    --ok: #6cc596;
+    --bad: #ef6b5e;
+    --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  html, body { background: var(--bg); color: var(--ink); }
+  body { font-family: var(--font-body); font-size: 14px; line-height: 1.55; }
+  .app { max-width: 1480px; margin: 0 auto; padding-block: 18px 40px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: grid; gap: 16px; }
+
+  header.top { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: baseline; justify-content: space-between; }
+  .brand { display: grid; gap: 2px; min-width: 0; }
+  .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--accent); }
+  h1 { margin: 0; font-size: clamp(20px, 2.6vw, 26px); font-weight: 700; text-wrap: balance; }
+  .sub { color: var(--ink-soft); font-size: 13px; max-width: 70ch; margin: 0; }
+
+  .grid { display: grid; grid-template-columns: 300px minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
+  @media (max-width: 1180px) { .grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .mapcol { grid-column: 1 / -1; order: -1; } }
+  @media (max-width: 720px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+  .panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 14px; display: grid; gap: 14px; min-width: 0; }
+  .panel h2 { margin: 0; font-size: 12.5px; font-weight: 600; letter-spacing: .03em; color: var(--ink-soft); }
+
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; }
+  .presets button { font: inherit; font-size: 12.5px; color: var(--ink); background: var(--panel-2); border: 1px solid var(--rule);
+    border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+  .presets button:hover { border-color: var(--accent); }
+  .presets button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+  .ctl { display: grid; gap: 4px; }
+  .ctl .row { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .ctl label { font-size: 13.5px; font-weight: 500; }
+  .ctl output { font-family: var(--font-mono); font-size: 13px; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .ctl .hint, #model-ctl .hint { font-size: 12px; color: var(--ink-faint); line-height: 1.45; }
+  input[type="range"] { width: 100%; accent-color: var(--accent); margin: 2px 0; }
+  .sw { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; cursor: pointer; }
+  .sw input { accent-color: var(--accent); width: 16px; height: 16px; margin-top: 3px; flex: none; }
+  .sw small { display: block; color: var(--ink-faint); font-size: 12px; }
+  .group { display: grid; gap: 12px; padding-top: 12px; border-top: 1px solid var(--rule); }
+  .speblock[data-off="true"] .ctl { opacity: .45; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+  .mapcol { display: grid; gap: 10px; min-width: 0; }
+  .mapwrap { position: relative; width: 100%; max-width: 100%; margin: 0 auto; border-radius: 10px; overflow: hidden;
+    border: 1px solid var(--rule); background: #05070a; touch-action: manipulation; }
+  .mapwrap img, .mapwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .mapwrap canvas.cells { image-rendering: pixelated; opacity: var(--cells-alpha); }
+  .mapwrap canvas.vec { cursor: crosshair; }
+  .loading[hidden], .mapwrap img[hidden] { display: none; }
+  #shade { filter: brightness(1.12) contrast(1.05); }
+  .seg { display: flex; gap: 0; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+  .seg label { flex: 1; text-align: center; font-size: 13px; padding: 6px 8px; cursor: pointer; background: var(--panel-2); color: var(--ink-soft); }
+  .seg input { position: absolute; opacity: 0; pointer-events: none; }
+  .seg label:has(input:checked) { background: var(--accent); color: #0d1016; font-weight: 600; }
+  .seg label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .loading { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); background: #05070acc; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--ink-soft); }
+  .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .legend i.line { height: 2px; vertical-align: 3px; background: #fff; }
+  .legend i.hatch { background: repeating-linear-gradient(45deg, var(--safe) 0 3px, #123a40 3px 4px); }
+  .hover { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); min-height: 1.6em; overflow-wrap: anywhere; }
+
+  .glance { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 10px; }
+  .gc { --st: var(--ok); display: grid; gap: 3px; align-content: start;
+    background: var(--panel-2); border: 1px solid var(--rule); border-left: 4px solid var(--st); border-radius: 8px; padding: 9px 10px; min-width: 0; }
+  .gc[data-st="warn"] { --st: var(--dry); } .gc[data-st="bad"] { --st: var(--bad); }
+  .gc svg { width: 22px; height: 22px; color: var(--st); flex: none; }
+  .gc .nm { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); display: flex; gap: 6px; align-items: center; min-width: 0; }
+  .gc .nm .pill { margin-left: auto; }
+  .gc .pill { font-size: 11px; font-weight: 700; color: #0d1016; background: var(--st); border-radius: 99px; padding: 0 7px; white-space: nowrap; }
+  .gc .gv { font-size: 17px; font-weight: 700; word-break: keep-all; font-variant-numeric: tabular-nums; line-height: 1.25; }
+  .gc .gv small { font-size: 12px; font-weight: 500; color: var(--ink-soft); }
+  .gc .gd { grid-column: 1 / -1; font-size: 11.5px; color: var(--ink-soft); line-height: 1.4; }
+  .gnote { margin: 0 0 12px; font-size: 11.5px; line-height: 1.45; color: var(--ink-faint); }
+  @media (max-width: 380px) { .glance { grid-template-columns: 1fr; } }
+  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tile { background: var(--panel-2); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; display: grid; gap: 2px; align-content: start; min-width: 0; }
+  .tile.wide { grid-column: 1 / -1; }
+  .tile .k { font-size: 12px; font-weight: 500; color: var(--ink-soft); }
+  .tile .v { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.25; }
+  .tile .v small { font-size: 13px; font-weight: 500; color: var(--ink-soft); }
+  .tile .d { font-size: 12px; color: var(--ink-soft); line-height: 1.45; }
+  .tile.alert { border-color: var(--bad); }
+  .tile.alert .v { color: var(--bad); }
+
+  .cuts { display: grid; gap: 6px; }
+  .cut { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 13px; }
+  .cut i { width: 10px; height: 10px; border-radius: 2px; }
+  .cut b { font-family: var(--font-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .cut.zero { color: var(--ink-faint); }
+
+  .verdict { display: inline-block; font-size: 12.5px; font-weight: 600; padding: 2px 10px; border-radius: 999px; }
+  .verdict.ok { color: #0d1016; background: var(--safe); }
+  .verdict.warn { color: #0d1016; background: var(--dry); }
+  .verdict.bad { color: #0d1016; background: var(--bad); }
+  .pt-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; justify-content: space-between; }
+  .pt-head .where { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); }
+  .meters { display: grid; gap: 10px; }
+  .meter { display: grid; gap: 4px; }
+  .meter .t { display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; }
+  .meter .t span:last-child { font-family: var(--font-mono); color: var(--ink-soft); font-variant-numeric: tabular-nums; text-align: right; }
+  .bar { position: relative; height: 10px; background: var(--panel-2); border-radius: 3px; overflow: hidden; border: 1px solid var(--rule); }
+  .bar .fill { position: absolute; inset: 0 auto 0 0; background: var(--safe); }
+  .bar .fill.over { background: var(--bad); }
+  .facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; font-size: 13px; margin: 0; }
+  .facts dt { color: var(--ink-soft); }
+  .facts dd { margin: 0; font-family: var(--font-mono); font-size: 12.5px; font-variant-numeric: tabular-nums; text-align: right; }
+
+  .modebar { display: grid; gap: 6px; }
+  .modebar .seg { max-width: 780px; }
+  .ctl[data-off="true"] { opacity: .4; }
+  .ctl select, .ctl textarea { font: inherit; font-size: 13px; color: var(--ink); background: var(--panel-2); border: 1px solid var(--rule); border-radius: 6px; padding: 5px 8px; width: 100%; box-sizing: border-box; }
+  .ctl textarea { font-family: var(--font-mono); font-size: 12.5px; resize: vertical; }
+  .filebtn { font-size: 12.5px; color: var(--ink); border: 1px solid var(--rule); border-radius: 999px; padding: 3px 10px; cursor: pointer; background: var(--panel-2); }
+  .filebtn input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .filebtn:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .simbar { display: grid; gap: 8px; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+  .simbar[hidden], .simlog[hidden], #sim-ctl[hidden], #sim-custom-ctl[hidden] { display: none; }
+  .simrow { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+  .simrow input[type="range"] { flex: 1 1 200px; width: auto; }
+  .play { font-size: 15px; width: 36px; height: 30px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: #0d1016; cursor: pointer; }
+  .speed { font-size: 12.5px; color: var(--ink-soft); display: flex; gap: 6px; align-items: center; }
+  .speed select { font: inherit; font-size: 12.5px; color: var(--ink); background: var(--panel-2); border: 1px solid var(--rule); border-radius: 6px; padding: 2px 4px; }
+  .mono { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  #sim-chart { width: 100%; height: 330px; display: block; }
+  .simlog { margin: 0; padding: 10px 0 0 1.2em; border-top: 1px solid var(--rule); display: grid; gap: 5px; font-size: 12.5px; color: var(--ink-faint); }
+  .simlog li.on { color: var(--ink); }
+  .simlog li.on.warn { color: var(--dry); } .simlog li.on.bad { color: var(--bad); } .simlog li.on.ok { color: var(--ok); }
+  .simlog b { font-family: var(--font-mono); font-weight: 500; }
+  .modeline { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; justify-content: space-between; }
+  .reset { font: inherit; font-size: 12.5px; color: var(--accent); background: transparent; border: 1px solid var(--accent); border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+  .reset[hidden] { display: none; }
+  .modehint { margin: 0; font-size: 13px; color: var(--ink-soft); }
+  .modehint b { color: var(--ink); font-weight: 600; }
+  .busy { font-family: var(--font-mono); font-size: 12.5px; color: var(--accent); }
+  .busy[hidden], .group[hidden] { display: none; }
+  .legend i.late { background: repeating-linear-gradient(45deg, #ef6b5e 0 2px, transparent 2px 4px); border: 1px solid #ef6b5e; }
+  .supply { display: grid; gap: 8px; border-top: 1px solid var(--rule); padding-top: 12px; }
+  .supply[hidden] { display: none; }
+  .supply h3 { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+  .supply .big { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .supply .big div { background: var(--panel-2); border: 1px solid var(--rule); border-radius: 8px; padding: 8px 10px; display: grid; gap: 2px; }
+  .supply .big .k { font-size: 11.5px; color: var(--ink-soft); }
+  .supply .big .v { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .supply .big .v small { font-size: 12px; font-weight: 500; color: var(--ink-soft); }
+  .supply .big div.bad { border-color: var(--bad); } .supply .big div.bad .v { color: var(--bad); }
+  details.notes { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 12px 14px; }
+  details.notes summary { cursor: pointer; font-weight: 600; }
+  details.notes ul { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 6px; color: var(--ink-soft); font-size: 13px; max-width: 110ch; }
+  details.notes a { color: var(--accent); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="eyebrow">Mars Map SLAM · 올인원 데모</div>
+      <h1>Gale 크레이터 EVA 귀환 반경</h1>
+      <p class="sub">고장이 난 순간, 지금 남은 산소·냉각수·선량 여유로 거점까지 걸어 돌아올 수 있는 곳은 어디까지인가. 조건을 바꾸면 지도가 바로 다시 그려지고, 지도를 누르면 그 지점에서 돌아오는 길을 따져 봅니다.</p>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- 조건 -->
+    <section class="panel" aria-labelledby="h-ctl">
+      <h2 id="h-ctl">상황 설정</h2>
+      <div class="presets" id="presets" role="group" aria-label="미리 정한 상황"></div>
+
+      <div class="ctl">
+        <div class="row"><label for="o2">남은 산소</label><output id="o2-out" for="o2"></output></div>
+        <input type="range" id="o2" min="40" max="800" step="5" value="150">
+        <div class="hint" id="o2-hint"></div>
+      </div>
+      <div class="ctl">
+        <div class="row"><label for="water">남은 냉각수</label><output id="water-out" for="water"></output></div>
+        <input type="range" id="water" min="0.2" max="3.6" step="0.05" value="3.6">
+        <div class="hint" id="water-hint"></div>
+      </div>
+      <div class="ctl" id="k-ctl">
+        <div class="row"><label for="k">심박 보정계수 k</label><output id="k-out" for="k"></output></div>
+        <input type="range" id="k" min="0.8" max="1.6" step="0.05" value="1">
+        <div class="hint">심박으로 추정한 실제 대사량 ÷ 모델 대사량. 1.2면 모델보다 20% 더 씀 (보고서 16)</div>
+      </div>
+      <div class="ctl">
+        <div class="row"><label for="q">환경·PLSS 열</label><output id="q-out" for="q"></output></div>
+        <input type="range" id="q" min="-150" max="150" step="10" value="0">
+        <div class="hint">+는 햇빛·장비 발열로 열을 더 버려야 함, −는 추위로 열을 잃음. 측정값 없는 가정 (보고서 17)</div>
+      </div>
+
+      <div class="group" id="rescue-ctl" hidden>
+        <h2>구조 대상 (움직일 수 없는 대원)</h2>
+        <div class="ctl">
+          <div class="row"><label for="vo2">구조 대상의 남은 산소</label><output id="vo2-out" for="vo2"></output></div>
+          <input type="range" id="vo2" min="20" max="600" step="10" value="150">
+        </div>
+        <div class="ctl">
+          <div class="row"><label for="vwater">구조 대상의 남은 냉각수</label><output id="vwater-out" for="vwater"></output></div>
+          <input type="range" id="vwater" min="0.1" max="3.6" step="0.05" value="1">
+          <div class="hint" id="v-hint"></div>
+        </div>
+        <div class="ctl">
+          <span style="font-size:13.5px;font-weight:500">구조 대상의 귀환 방식</span>
+          <div class="seg" id="vcarry" role="radiogroup" aria-label="구조 대상의 귀환 방식">
+            <label><input type="radio" name="vcarry" value="walk" checked>부축받아 걷기</label>
+            <label><input type="radio" name="vcarry" value="carried">들것·로버 이송</label>
+          </div>
+          <div class="hint">걷기는 구조대원과 같은 보행 대사량, 이송은 가만히 있는 대사량으로 귀환 시간 동안 소모</div>
+        </div>
+        <div class="hint">위의 산소·냉각수·k·열 설정은 <strong>구조대원</strong>의 값으로 씁니다. 구조대원은 "현재 위치"에서 찍은 곳에서, 찍지 않았으면 거점에서 출발합니다.</div>
+      </div>
+
+      <div class="group" id="sim-ctl" hidden>
+        <h2>EVA 시뮬레이션</h2>
+        <div class="hint">대원이 거점에서 출발해 지도에서 찍은 목적지(★가 아닌 주황 깃발)까지 갔다가 돌아옵니다. 출발할 때 산소·냉각수는 위 슬라이더 값이고, k는 아래에서 고른 방법으로 매분 추정합니다.</div>
+        <div class="ctl">
+          <label for="sim-src">k 추정 근거</label>
+          <select id="sim-src">
+            <option value="hr">심박 (Hoffmann 회귀식으로 대사량 추정)</option>
+            <option value="press">탱크 압력 (산소 소모를 직접 측정)</option>
+          </select>
+          <div class="hint" id="sim-src-hint"></div>
+        </div>
+        <div class="ctl">
+          <div class="row"><label for="sim-leak">우주복 누설</label><output id="sim-leak-out" for="sim-leak"></output></div>
+          <input type="range" id="sim-leak" min="0" max="30" step="1" value="0">
+        </div>
+        <div id="press-ctl" hidden>
+          <div class="ctl">
+            <div class="row"><label for="sim-pnoise">압력 센서 잡음</label><output id="sim-pnoise-out" for="sim-pnoise"></output></div>
+            <input type="range" id="sim-pnoise" min="0" max="30" step="1" value="10">
+          </div>
+          <label class="sw"><input type="checkbox" id="sim-tcomp" checked><span>탱크 온도 보정 (P/T로 계산)<small>끄면 충전 온도 21 °C로 고정해 계산합니다. 탱크가 식는 것을 산소 소모로 착각합니다</small></span></label>
+          <label class="sw"><input type="checkbox" id="sim-leaksub"><span>알려진 누설률을 빼고 k 계산<small>끄면 누설이 대사량으로 섞여 k가 커집니다(보수적)</small></span></label>
+        </div>
+        <div class="ctl">
+          <label for="sim-scn">심박 데이터</label>
+          <select id="sim-scn">
+            <option value="model">모델대로 (k = 1.0)</option>
+            <option value="high">처음부터 20% 높음 (k = 1.2)</option>
+            <option value="surge">60분부터 25% 급증 (보고서 16 시연)</option>
+            <option value="fatigue">점점 지침 (3시간에 걸쳐 k 1.0 → 1.4)</option>
+            <option value="custom">직접 입력 (분당 bpm)</option>
+          </select>
+        </div>
+        <div class="ctl" id="sim-noise-ctl">
+          <div class="row"><label for="sim-noise">심박 잡음</label><output id="sim-noise-out" for="sim-noise"></output></div>
+          <input type="range" id="sim-noise" min="0" max="15" step="1" value="8">
+        </div>
+        <div class="ctl" id="sim-custom-ctl" hidden>
+          <label for="sim-custom">분당 심박 (한 줄에 하나, 또는 "분,bpm")</label>
+          <textarea id="sim-custom" rows="6" spellcheck="false"></textarea>
+          <div class="row" style="gap:8px;justify-content:flex-start;flex-wrap:wrap">
+            <label class="filebtn">CSV 불러오기<input type="file" id="sim-file" accept=".csv,.txt,text/csv,text/plain"></label>
+            <button type="button" class="reset" id="sim-apply">적용</button>
+          </div>
+          <div class="hint" id="sim-custom-hint">입력이 경로보다 짧으면 마지막 값을 계속 씁니다.</div>
+        </div>
+        <label class="sw"><input type="checkbox" id="sim-auto" checked><span>귀환 경보가 뜨면 바로 돌아서기<small>끄면 목적지까지 간 뒤에야 돌아섭니다</small></span></label>
+      </div>
+
+      <div class="group speblock" id="speblock" data-off="true">
+        <label class="sw"><input type="checkbox" id="spe"><span>태양입자사건(SPE)<small>배경 대비 선량률 배율. 화성 표면 관측값은 ×2~3</small></span></label>
+        <div class="ctl">
+          <div class="row"><label for="mult">SPE 배율</label><output id="mult-out" for="mult"></output></div>
+          <input type="range" id="mult" min="0" max="100" step="1" value="27">
+          <div class="hint">선량 예산: 귀환 1회 1.0 mSv (가정)</div>
+        </div>
+      </div>
+
+      <div class="group">
+        <label class="sw"><input type="checkbox" id="nofall"><span>넘어짐 위험 "높음" 칸 통행 금지<small>귀환 경로가 1 m 지형의 턱·급사면이 많은 칸을 돌아감 (보고서 16)</small></span></label>
+        <label class="sw"><input type="checkbox" id="relay"><span>Mt. Sharp 비탈에 중계기 설치<small>거점에서 6.7 km, 거점과 가시선이 닿는 자리 (보고서 15)</small></span></label>
+      </div>
+
+      <div class="group" id="model-ctl">
+        <h2>대사량 모델 보정 (문헌 반영)</h2>
+        <div class="hint">켜면 귀환 경로를 브라우저에서 다시 계산합니다(1초 안팎). 기본은 모두 끔 = 보고서 15–17과 같은 모델.</div>
+        <label class="sw"><input type="checkbox" id="m-speed"><span>경사에 따라 걷는 속도 줄이기<small>V = 0.75 − 0.01 × 오르막 경사(%), 최저 0.3 m/s. 달 보행 모델(Peña-Asensio 2024, NASA Kim 2025 인용). 끄면 0.92 m/s 고정</small></span></label>
+        <label class="sw"><input type="checkbox" id="m-eta"><span>표토 지형계수 1.2 (자갈·비포장길)<small>Richmond 2015 표 11 권장값. 끄면 매끈한 곳은 트레드밀 1.0</small></span></label>
+        <label class="sw"><input type="checkbox" id="m-down"><span>내리막 Santee 보정<small>NASA 이동 모델이 쓰는 내리막 보정(Santee 2003). 완만한 내리막은 덜, 가파른 내리막은 더 듦. 끄면 내리막 = 평지</small></span></label>
+        <label class="sw"><input type="checkbox" id="m-sand"><span>모래언덕 지형계수 1.5 + 1.3/V²<small>Bagnold 사구 후보 8.6 km²(위성 사진 밝기로 추정)에 적용. 0.92 m/s에서 약 3.0, 식의 자료 범위 밖인 0.85 m/s 미만은 0.85 값(3.3)</small></span></label>
+        <div class="hint" id="m-hint"></div>
+      </div>
+
+      <div class="group">
+        <h2>지도 표시</h2>
+        <div class="seg" role="radiogroup" aria-label="바탕 지도">
+          <label><input type="radio" name="basemap" id="bm-ortho" value="ortho" checked>위성 사진 (HiRISE)</label>
+          <label><input type="radio" name="basemap" id="bm-shade" value="shade">음영 기복도 (DTM)</label>
+        </div>
+        <div class="ctl">
+          <div class="row"><label for="alpha">판정 색 진하기</label><output id="alpha-out" for="alpha"></output></div>
+          <input type="range" id="alpha" min="0" max="100" step="5" value="80">
+        </div>
+        <label class="sw"><input type="checkbox" id="showmr"><span>칸별 대사량 지도<small>각 칸을 가장 가파른 방향으로 오를 때의 대사량. 파랑 낮음 → 노랑 높음, 흰색은 20° 넘는 금지 구역 (NASA Kim 2025 방식)</small></span></label>
+        <label class="sw"><input type="checkbox" id="showsand"><span>모래언덕 후보 영역</span></label>
+        <label class="sw"><input type="checkbox" id="showfall"><span>넘어짐 위험 등급</span></label>
+        <label class="sw"><input type="checkbox" id="showcomm" checked><span>통신 음영 (빗금)</span></label>
+        <label class="sw"><input type="checkbox" id="showtrav" checked><span>Curiosity 실제 주행 경로</span></label>
+      </div>
+    </section>
+
+    <!-- 지도 -->
+    <section class="mapcol" aria-label="귀환 가능 지도">
+      <div class="modebar">
+        <div class="seg" id="modes" role="radiogroup" aria-label="지도 모드">
+          <label><input type="radio" name="mode" value="inspect" checked>지점 살펴보기</label>
+          <label><input type="radio" name="mode" value="here">현재 위치</label>
+          <label><input type="radio" name="mode" value="rescue">구조</label>
+          <label><input type="radio" name="mode" value="base">거점 옮기기</label>
+          <label><input type="radio" name="mode" value="sim">EVA 시뮬레이션</label>
+        </div>
+        <div class="modeline"><p class="modehint" id="mode-hint"></p><button type="button" class="reset" id="base-reset" hidden>거점을 착륙지로 되돌리기</button></div>
+      </div>
+      <div class="mapwrap" id="mapwrap">
+        <img id="ortho" alt="HiRISE 정사영상: Gale 크레이터 착륙지(오른쪽 위)에서 Mt. Sharp 기슭의 Bagnold 모래언덕(아래)까지">
+        <img id="shade" alt="같은 지역의 HiRISE DTM 음영 기복도" hidden>
+        <canvas class="cells" id="cells"></canvas>
+        <canvas class="vec" id="vec" aria-label="지도를 누르면 그 지점에서 거점까지의 귀환 경로를 보여 줍니다"></canvas>
+        <div class="loading" id="loading">지형 격자를 푸는 중…</div>
+      </div>
+      <div class="simbar" id="simbar" hidden>
+        <div class="simrow">
+          <button type="button" class="play" id="sim-play" aria-label="재생">▶</button>
+          <button type="button" class="reset" id="sim-restart">처음으로</button>
+          <input type="range" id="sim-t" min="0" max="0" step="1" value="0" aria-label="시뮬레이션 시각">
+          <output id="sim-t-out" for="sim-t" class="mono"></output>
+          <label class="speed" for="sim-speed">속도
+            <select id="sim-speed"><option value="5">5분/초</option><option value="10" selected>10분/초</option><option value="20">20분/초</option><option value="40">40분/초</option></select>
+          </label>
+        </div>
+        <canvas id="sim-chart" height="330" aria-label="심박, 보정계수 k, 남은 산소와 귀환에 필요한 산소의 시간 그래프"></canvas>
+        <p class="modehint" id="sim-note"></p>
+      </div>
+      <div class="legend" id="legend" aria-label="범례">      </div>
+      <div class="hover" id="hover" aria-live="polite">지도 위에 커서를 올리면 그 칸의 귀환 비용이 나옵니다.</div>
+    </section>
+
+    <!-- 결과 -->
+    <div style="display:grid;gap:16px;min-width:0">
+      <section class="panel" aria-labelledby="h-sum">
+        <h2 id="h-sum">지금 상황</h2>
+        <div class="glance" id="glance" role="list" aria-label="소모품과 통신 상태 한눈에 보기"></div>
+        <p class="gnote">산소·냉각수는 예비분을 빼고 평지를 걸을 때 남은 시간, 선량은 거점 선량률로 귀환 예산을 다 쓰기까지의 시간, 통신은 귀환 가능 영역 중 가시선이 안 닿는 비율. 초록 여유 · 노랑 주의 · 빨강 위험 (산소·냉각수 60분/20분, 선량 8시간/2시간, 통신 15%/40%, 기준값은 가정)</p>
+        <div class="tiles">
+          <div class="tile wide" id="t-area"><div class="k">귀환 가능 면적</div><div class="v" id="v-area">–</div><div class="d" id="d-area"></div></div>
+          <div class="tile" id="t-bind"><div class="k">가장 먼저 막는 것</div><div class="v" id="v-bind" style="font-size:18px">–</div><div class="d" id="d-bind"></div></div>
+        </div>
+        <div class="cuts" id="cuts"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="h-pt">
+        <h2 id="h-pt">선택한 지점에서 돌아오기</h2>
+        <div class="busy" id="busy" hidden>경로 계산 중…</div>
+        <div class="pt-head"><span class="where" id="pt-where">–</span><span class="verdict" id="pt-verdict">–</span></div>
+        <div class="meters" id="pt-meters"></div>
+        <dl class="facts" id="pt-facts"></dl>
+        <div class="supply" id="supply" hidden></div>
+        <ol class="simlog" id="sim-log" hidden></ol>
+      </section>
+    </div>
+  </div>
+
+  <pre id="selftest" hidden></pre>
+  <details class="notes">
+    <summary>계산 방법과 한계</summary>
+    <ul>
+      <li>지형: HiRISE DTM DTEEC_018854_1755_018920_1755_U01(Gale, 1 m)을 10 m 칸으로 묶음. 거점은 Curiosity 착륙지, 노란 점은 sol 1282 지점.</li>
+      <li>바탕 사진: 같은 DTM의 정사영상 ESP_018854_1755_RED_C_01_ORTHO(1 m, 4 m로 줄임). DTM과 같은 격자라 판정 칸과 화소 단위로 맞음. HiRISE RED 밴드는 흑백이라 밝기를 화성 표토 색조로 바꿔 칠했음(표시용 가색). <a href="https://hirise-pds.lpl.arizona.edu/PDS/DTM/ESP/ORB_018800_018899/ESP_018854_1755_ESP_018920_1755/">HiRISE PDS</a></li>
+      <li>산소: Pandolf 보행 대사량(화성 0.38 g, 체중 75 kg + 우주복 90 kg, 속도 0.92 m/s 고정)을 산소로 환산. 예비분은 평지 보행 30분어치(39 g).</li>
+      <li>귀환 경로: 칸마다 산소가 가장 적게 드는 길 하나를 미리 계산해 두고, 같은 길 위에서 선량·냉각수를 따짐. 원 분석(spe_walkback.py)은 선량·냉각수 몫까지 섞어 길을 고르므로 아주 큰 SPE에서 면적이 조금 다름(×30: 원 분석 16.03 km², 데모 15.97 km²).</li>
+      <li>선량: Curiosity RAD 배경 0.655 mSv/일, 골짜기 지형 차폐로 최대 50% 감소(근사), 귀환 1회 예산 1.0 mSv(가정).</li>
+      <li>냉각수: 대사열 + 환경·PLSS 열을 물 증발(2.477 MJ/kg)로 버림. 만충 3.6 kg(Nabity et al. 2007). 물이 떨어진 뒤에는 체온 비상한계 2.0 BTU/lb까지 버팀 = 냉각수 141 g어치(ICES-2026-170). 환경 열이 음수일 때 구간별 0 하한은 경로 전체 합에만 적용.</li>
+      <li>통신: 거점 안테나 3 m, 우주복 2 m, 중계기 3 m. 지형과 화성 곡률만 반영한 가시선. SPE 때 UHF 감쇠는 자료가 없어 넣지 않음.</li>
+      <li>넘어짐: 1 m 지형에서 3 m 안 높이차 0.5 m 이상 또는 1 m 경사 20° 이상인 화소가 칸의 25% 이상이면 높음, 5% 이상이면 중간. 기준값은 가정이고, 2~15 cm 걸림 장애물은 DTM 오차보다 작아 보이지 않음.</li>
+      <li>현재 위치·구조 모드: 찍은 지점에서 출발하는 길(또는 그 지점으로 가는 길)을 브라우저에서 바로 계산함(산소 최소 경로, 같은 Pandolf 식). 현재 위치 모드의 면적 = 거기서 그 칸까지 갔다가 거점으로 돌아올 수 있는 곳. 구조 모드의 면적 = 그 칸에서 출발한 구조대원이 구조 대상에게 갈 수 있는 곳(왕복은 구조 대상 지점에서 거점까지 혼자 돌아오는 것까지 포함). 구조 대상을 업고 오는 부담은 넣지 않음.</li>
+      <li>심박 시뮬레이션: 분당 심박을 Hoffmann 2021 회귀식(대사량 BTU/h = 284.55 + 5.984 × 심박)으로 대사량으로 바꿔 산소·냉각수를 뺌. k = 최근 10분 심박 대사량 ÷ 같은 구간 Pandolf 예측. 매분 "1분 더 가면 지금 k로 돌아올 수 없는가"를 보고 경보. 시나리오의 심박은 k × 모델 대사량에서 거꾸로 만든 합성값(잡음은 고정 시드). 회귀식은 무중력 EVA 자료라 화성 보행에 그대로 맞는지는 검증되지 않음.</li>
+      <li>대사량 모델 보정(기본 끔, 왼쪽 "대사량 모델 보정"): ① 경사별 속도 V = 0.75 − 0.01 × 오르막 경사(%), 0.3~0.75 m/s. 달 보행 모델(Peña-Asensio et al. 2024, NASA Kim et al. 2025 ICES-2025-129에서 인용)이며 경사 단위(%/도)는 원문 확인 필요. ② 표토 지형계수 +0.2(바위 거칠기 계수 위에 더함): Richmond, Potter & Santee 2015 표 11의 자갈·비포장길 1.2. ③ 내리막: Santee 2003 보정 M = Pandolf − CF, CF = η[G·(W+L)·V/3.5 − (W+L)(G+6)²/W + (25 − V²)]에서 질량 항(W+L)마다 중력비를 곱함. NASA 슬라이드는 첫 항에만 중력을 곱해 0% 경사에서 값이 끊기므로(356 W vs 301 W) 이렇게 해석했고, 원 논문으로 확인 필요. ④ 모래: η = 1.5 + 1.3/V²(Richmond 2015 식 16, 자료 범위 0.85 m/s 이상이라 그보다 느리면 0.85 값). 모래언덕 후보는 HiRISE 정사영상 밝기에 Otsu 문턱을 두 번 적용해 뽑은 추정 영역(dune_mask.py)이며, 지구 모래 자료를 화성 0.38 g에 그대로 쓴 것도 가정. 기준 상황 면적: 기본 18.64 → 속도 15.20, η 16.75, 내리막 20.11, 모래 17.67, 모두 14.79 km².</li>
+      <li>칸별 대사량 지도: 각 칸의 가장 가파른 경사를 오른다고 보고 계산한 대사량(W). NASA Kim 2025의 "local metabolic rate" 지도처럼 경사 20° 초과 칸은 흰색(금지). 경로 방향을 모르는 상태의 최악값이라 실제 경로 비용과 다름.</li>
+      <li>탱크 압력 방식(회의 제안): 남은 산소 m = PVM/(ZRT), Z = 1. 탱크 부피는 6.2 MPa·21 °C에서 540 g이 되도록 잡은 가정값(ISS EMU 1차 탱크 900 psia 수준). 탱크 온도는 21 °C에서 1 °C로 90분 시상수로 식는다고 가정. 센서 잡음은 매분 정규분포(고정 시드). 최근 10분 표본에 직선을 맞춰 남은 양과 소모율을 구하고, k = (소모율 − 알려진 누설) ÷ 같은 구간 Pandolf 예측. 귀환 판단은 측정한 남은 양과 지형 모델(k × 귀환 경로 산소)로 하며, "지금 소모율 × 귀환 시간" 단순 외삽은 비교용으로만 그림. ISS도 압력 감소로 소모를 근사하며 잡음·누설을 오차 원인으로 꼽음(NASA ISS RDC 2024).</li>
+      <li>거점 옮기기: 새 거점까지의 귀환 경로와 거점 안테나의 가시권을 브라우저에서 다시 계산함(comm_los.py와 같은 광선 방식). 중계기는 원래 자리에 두고, 새 거점과 가시선이 닿을 때만 중계로 침. 선량률·넘어짐 등급은 거점과 무관함.</li>
+      <li>보급 계산: 구조 대상 필요량 = 구조대원을 기다리는 동안(정지 대사량) + 거점까지 귀환(부축 보행이면 보행 대사량 k = 1, 이송이면 정지 대사량) + 30분 예비분. 가진 양을 넘는 만큼이 줘야 할 최소량. 구조대원 출발 시 최소량 = 자기 왕복 + 그 보급량 + 자기 예비분. 냉각수는 같은 열을 버리는 데 드는 물로 환산한 값이라, 실제로는 물을 옮겨 담거나 동료 냉각 회로에 연결(Apollo BSLSS 방식, 화성 PLSS에서 검토 중)하는 방식이 됨. 옮기는 동안의 손실은 넣지 않음.</li>
+      <li>구조 대상이 버티는 시간: 가만히 서 있는 대사량(Pandolf, 짐 진 채 정지, 222 W)으로 산소와 냉각수가 떨어지는 시간 중 짧은 쪽. 다친 사람의 실제 대사량은 이보다 높을 수 있음.</li>
+      <li>올해 해커톤 데이터가 공개되기 전이라 공개 NASA 자료로 만든 프로토타입입니다. 심박 보정계수 k와 환경 열은 슬라이더로 넣는 값이고, 실제 측정값이 아닙니다.</li>
+    </ul>
+  </details>
+</div>
+
+<script type="application/json" id="meta">__META__</script>
+<script type="application/octet-stream" id="blob">__DATA__</script>
+<script>
+(() => {
+  "use strict";
+  const metaText = document.getElementById("meta").textContent.trim();
+  if (metaText.startsWith("__")) {
+    document.getElementById("loading").textContent =
+      "이 파일은 데이터를 넣기 전의 틀입니다. reports/18-eva-walkback-demo.standalone.html (공유 패키지에서는 demo/gale-eva-walkback-demo.html)을 여세요.";
+    return;
+  }
+  const META = JSON.parse(metaText);
+  const C = META.const;
+  const R = META.rows, W = META.cols, N = R * W, CELL = META.cell_m;
+  const KM2 = (CELL / 1000) ** 2;
+  const OFF = META.offsets;
+  const NONE = META.none16;
+  const BASE0 = META.base[1] * W + META.base[0];   // 원래 거점 = Curiosity 착륙지
+  const GOAL = META.goal[1] * W + META.goal[0];
+  const $ = (id) => document.getElementById(id);
+
+  const SPE_MIN = 1.2, SPE_MAX = 50;
+  const multFromSlider = (s) => SPE_MIN * Math.pow(SPE_MAX / SPE_MIN, s / 100);
+  const sliderFromMult = (m) => Math.round(100 * Math.log(m / SPE_MIN) / Math.log(SPE_MAX / SPE_MIN));
+
+  const state = { o2: 150, water: 3.6, k: 1, q: 0, spe: false, mult: C.spe_observed, nofall: false, relay: false,
+                  showfall: false, showcomm: true, showtrav: true,
+                  mode: "inspect", sel: GOAL, here: -1, victim: -1, vo2: 150, vwater: 1, vcarry: "walk", base: BASE0,
+                  simTarget: GOAL, simScenario: "surge", simNoise: 8, simAuto: true, simCustom: "",
+                  simSrc: "hr", simLeak: 0, simPNoise: 10, simTcomp: true, simLeakSub: false,
+                  mSpeed: false, mEta: false, mDown: false, mSand: false, showmr: false, showsand: false };
+
+  const PRESETS = [
+    { id: "base", label: "기준", s: { base: BASE0 } },
+    { id: "spe", label: "관측 SPE ×2.9", s: { spe: true, mult: C.spe_observed } },
+    { id: "spe30", label: "대형 SPE ×30 (가정)", s: { spe: true, mult: 30 } },
+    { id: "tired", label: "지친 대원 k 1.2", s: { k: 1.2 } },
+    { id: "leak", label: "냉각수 누수 0.6 kg", s: { water: 0.6 } },
+    { id: "hot", label: "누수 + 더운 오후", s: { water: 0.6, q: 100 } },
+    { id: "safe", label: "안전 우선 운용", s: { nofall: true, relay: true, showfall: true } },
+    { id: "simhr", label: "심박 시뮬레이션 예시", s: { mode: "sim", o2: 450, water: 3.6, simScenario: "surge", simAuto: true, simTarget: GOAL, simSrc: "hr", simLeak: 0 } },
+    { id: "simpress", label: "압력 측정 예시 (누설 10 g/h)", s: { mode: "sim", o2: 450, water: 3.6, simScenario: "surge", simAuto: true, simTarget: GOAL, simSrc: "press", simLeak: 10, simPNoise: 10, simTcomp: true, simLeakSub: false } },
+    { id: "lit", label: "문헌 보정 모두 켬", s: { mSpeed: true, mEta: true, mDown: true, mSand: true } },
+    { id: "rescue", label: "구조 예시: sol 1282 지점", s: { mode: "rescue", victim: GOAL, here: -1, o2: 650, vo2: 150, vwater: 1, vcarry: "walk" } },
+  ];
+  const DEFAULTS = { o2: 150, water: 3.6, k: 1, q: 0, spe: false, mult: C.spe_observed, nofall: false, relay: false, showfall: false,
+                     mSpeed: false, mEta: false, mDown: false, mSand: false };
+
+  // ---------- data ----------
+  let SETS = null, CLS = null, FLAGS = null, H = null, ETA = null, RATE1 = null;
+
+  async function decode() {
+    const b64 = document.getElementById("blob").textContent.trim();
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));
+    const buf = await new Response(stream).arrayBuffer();
+    const view = (name) => {
+      const [off, len, dt] = META.layout[name];
+      const slice = buf.slice(off, off + len);
+      return dt === "uint16" ? new Uint16Array(slice) : new Uint8Array(slice);
+    };
+    const mk = (key) => {
+      const o2q = view(key + "_o2"), tq = view(key + "_time"), dq = view(key + "_dose");
+      const o2 = new Float32Array(N), t = new Float32Array(N), dose = new Float32Array(N);
+      for (let i = 0; i < N; i++) {
+        if (o2q[i] === NONE) { o2[i] = -1; t[i] = -1; dose[i] = -1; continue; }
+        o2[i] = o2q[i] / META.o2_scale; t[i] = tq[i]; dose[i] = dq[i] / META.dose_scale;
+      }
+      const pred = view(key + "_pred"), next = new Int32Array(N).fill(-1);
+      for (let i = 0; i < N; i++) { const c = pred[i]; if (c < 8) next[i] = i + OFF[c][1] * W + OFF[c][0]; }
+      return { o2, t, dose, next };
+    };
+    SETS = { plain: mk("plain"), nofall: mk("nofall") };
+    TREES.set(treeKey(BASE0, false, "0000"), SETS.plain);     // 미리 계산한 트리는 기본 모델(모두 끔)
+    TREES.set(treeKey(BASE0, true, "0000"), SETS.nofall);
+    CLS = view("cls"); FLAGS = view("flags");
+    const hq = view("h"), eq = view("eta"), sq = view("shield");
+    H = new Float32Array(N); ETA = new Float32Array(N); RATE1 = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      H[i] = META.h_min + hq[i] * META.h_step;
+      ETA[i] = META.eta_min + eq[i] / 255 * (META.eta_max - META.eta_min);
+      RATE1[i] = C.d_bg_msv_day / 24 * (1 - C.shield_max * sq[i] / 255);   // mSv/h, SPE 배율 1
+    }
+  }
+
+  // ---------- model ----------
+  const waterReserve = (q) => Math.max(0, C.level_mr_w + q) / C.latent_j_kg * 1000 * 1800;
+  const waterOf = (o2, t, k, q) => Math.max(0, k * o2 / C.o2_g_per_j + q * t) / C.latent_j_kg * 1000;
+  const multNow = () => (state.spe ? state.mult : 1);
+  // 거점 가시권(VIS)과 중계기-거점 가시선(RELAY_OK)은 거점을 옮기면 다시 계산
+  let VIS = null, VIS_BASE = -1, RELAY_OK = true;
+  const linked = (i) => VIS[i] || (state.relay && RELAY_OK && (FLAGS[i] & 4));
+  // 귀환 트리: o2(-1 = 못 감), t, dose, next(거점 쪽 다음 칸). 착륙지 거점 2벌은 미리 계산한 것
+  const TREES = new Map();
+  const modelKey = () => `${+state.mSpeed}${+state.mEta}${+state.mDown}${+state.mSand}`;
+  const treeKey = (base, nofall, mk = modelKey()) => `${base}|${nofall ? 1 : 0}|${mk}`;
+  const setNow = () => TREES.get(treeKey(state.base, state.nofall));
+  const plainNow = () => TREES.get(treeKey(state.base, false));
+
+  // 심박 시뮬레이션 중에는 그 시각의 남은 산소·냉각수와 심박으로 추정한 k로 지도를 그림
+  const simFrame = () => (state.mode === "sim" && SIM && SIM.ok ? SIM.frames[SIM.idx] : null);
+  const EK = () => { const f = simFrame(); return f ? f.k : state.k; };
+  const EO2 = () => { const f = simFrame(); return f ? f.o2 : state.o2; };
+  const EW = () => { const f = simFrame(); return f ? f.w / 1000 : state.water; };
+  function budgets() {
+    return { o2: EO2() - C.o2_reserve_g, water: EW() * 1000 - waterReserve(state.q),
+             dry: EW() * 1000 + C.heat_storage_water_eq_g };
+  }
+  // 산소·시간·선량(배율 1) 합계 -> 1 산소 부족, 2 선량 초과, 3 OK, 4 탱크 비고 체온 한계로 겨우, 5 냉각수 부족
+  function classifyTot(o2, t, dose1, b) {
+    const k = EK();
+    if (k * o2 > b.o2) return 1;
+    if (multNow() * dose1 > C.dose_budget_msv) return 2;
+    const w = waterOf(o2, t, k, state.q);
+    if (w <= b.water) return 3;
+    if (w > EW() * 1000 && w <= b.dry) return 4;
+    return 5;
+  }
+  function classify(S, i, b) { return S.o2[i] < 0 ? 1 : classifyTot(S.o2[i], S.t[i], S.dose[i], b); }
+
+  // 구조 대상이 가만히 있을 때 버티는 시간(시간). 짐 진 채 서 있는 Pandolf 대사량 기준
+  function victimHours() {
+    const o2h = C.rest_mr_w * C.o2_g_per_j * 3600;
+    const wh = Math.max(1e-6, C.rest_mr_w + state.q) / C.latent_j_kg * 1000 * 3600;
+    return { o2: state.vo2 / o2h, water: state.vwater * 1000 / wh, o2h, wh };
+  }
+
+  // 구조 대상이 구조대원 도착(t_go 초) 뒤 거점까지 돌아가는 데 필요한 양과, 모자라서 공급해야 할 최소량.
+  // 필요량 = 대기(정지 대사량 x t_go) + 귀환(걷기: 보행 대사량 k = 1 / 이송: 정지 대사량 x 귀환 시간) + 30분 예비분
+  const REST_O2_GS = () => C.rest_mr_w * C.o2_g_per_j;
+  const REST_W_GS = () => Math.max(0, C.rest_mr_w + state.q) / C.latent_j_kg * 1000;
+  function victimReturn(X) {
+    const S = setNow();
+    if (S.o2[X] < 0) return null;
+    if (state.vcarry === "walk") return { o2: S.o2[X], w: waterOf(S.o2[X], S.t[X], 1, state.q), t: S.t[X] };
+    return { o2: REST_O2_GS() * S.t[X], w: REST_W_GS() * S.t[X], t: S.t[X] };
+  }
+  function victimSupply(tGo, ret) {
+    const needO2 = REST_O2_GS() * tGo + ret.o2 + C.o2_reserve_g;
+    const needW = REST_W_GS() * tGo + ret.w + waterReserve(state.q);
+    return { needO2, needW, o2: Math.max(0, needO2 - state.vo2), w: Math.max(0, needW - state.vwater * 1000) };
+  }
+
+  // ---------- 브라우저 다익스트라 (mars_walkback.build_o2_graph와 같은 간선 비용) ----------
+  // Pandolf(중력비로 질량 스케일) = NASA Kim et al. 2025(ICES-2025-129) "gravitational factor" 식과 같은 형태
+  const MW = C.body_kg * C.g_ratio, ML = C.suit_kg * C.g_ratio, V0 = C.walk_speed_m_s;
+  const PA = 1.5 * MW + 2 * (MW + ML) * (ML / MW) ** 2, PB = MW + ML;
+  const STEP_M = OFF.map(([dx, dy]) => Math.hypot(dx, dy) * CELL);
+  // 문헌 보정 옵션 (기본 끔)
+  const speedAt = (grade) => (state.mSpeed ? Math.min(0.75, Math.max(0.3, 0.75 - 0.01 * Math.max(grade, 0))) : V0);
+  function etaCell(i, v) {                // Richmond 2015 표 11: 자갈·비포장 1.2, 모래 1.5 + 1.3/V²
+    let e = ETA[i] + (state.mEta ? 0.2 : 0);
+    const vs = Math.max(v, 0.85);         // 식의 자료 범위(0.85 m/s 이상) 밖으로 늘리지 않음
+    if (state.mSand && (FLAGS[i] & 16)) e = Math.max(e, 1.5 + 1.3 / (vs * vs));
+    return e;
+  }
+  function mrOf(grade, e, v) {            // W. 내리막: Santee 2003 보정(CF)을 질량 항마다 중력비로 스케일해 적용
+    if (!state.mDown || grade >= 0) return PA + e * PB * (1.5 * v * v + 0.35 * v * Math.max(grade, 0));
+    const mp = PA + e * PB * (1.5 * v * v + 0.35 * v * grade);
+    const cf = e * (grade * PB * v / 3.5 - PB * (grade + 6) ** 2 / C.body_kg + (25 - v * v));
+    return mp - cf;
+  }
+  function edgeO2(a, b, d) {
+    const grade = (H[b] - H[a]) / d * 100, v = speedAt(grade);
+    const e = 0.5 * (etaCell(a, v) + etaCell(b, v));
+    return mrOf(grade, e, v) * C.o2_g_per_j * d / v;
+  }
+  const edgeT = (a, b, d) => d / speedAt((H[b] - H[a]) / d * 100);
+  const levelMR = () => mrOf(0, 1 + (state.mEta ? 0.2 : 0), speedAt(0));
+  const levelO2gh = () => levelMR() * C.o2_g_per_j * 3600;
+  function passMask(src, nofall) {
+    const p = new Uint8Array(N);
+    for (let i = 0; i < N; i++) p[i] = (FLAGS[i] & 8) && !(nofall && CLS[i] === 2) ? 1 : 0;
+    p[state.base] = 1; if (src >= 0) p[src] = 1;   // 서 있는 칸·거점은 경사와 무관하게 출입 허용
+    return p;
+  }
+  // reverse = false: src에서 각 칸으로 가는 비용 / true: 각 칸에서 src로 가는 비용
+  function dijkstra(src, reverse, nofall = state.nofall) {
+    const pass = passMask(src, nofall);
+    const dist = new Float64Array(N).fill(Infinity), tt = new Float32Array(N), dd = new Float32Array(N);
+    const pred = new Int32Array(N).fill(-1);
+    let cap = 1 << 20, hk = new Float64Array(cap), hv = new Int32Array(cap), n = 0;
+    const push = (k, v) => {
+      if (n === cap) { cap *= 2; const k2 = new Float64Array(cap); k2.set(hk); hk = k2; const v2 = new Int32Array(cap); v2.set(hv); hv = v2; }
+      let i = n++;
+      while (i > 0) { const p = (i - 1) >> 1; if (hk[p] <= k) break; hk[i] = hk[p]; hv[i] = hv[p]; i = p; }
+      hk[i] = k; hv[i] = v;
+    };
+    const pop = () => {
+      const top = hv[0]; const k = hk[--n], v = hv[n];
+      let i = 0;
+      while (true) {
+        let c = 2 * i + 1; if (c >= n) break;
+        if (c + 1 < n && hk[c + 1] < hk[c]) c++;
+        if (hk[c] >= k) break;
+        hk[i] = hk[c]; hv[i] = hv[c]; i = c;
+      }
+      hk[i] = k; hv[i] = v; return top;
+    };
+    dist[src] = 0; push(0, src);
+    while (n > 0) {
+      const k0 = hk[0], u = pop();
+      if (k0 > dist[u]) continue;
+      const ux = u % W, uy = (u / W) | 0;
+      for (let o = 0; o < 8; o++) {
+        const x = ux + OFF[o][0], y = uy + OFF[o][1];
+        if (x < 0 || y < 0 || x >= W || y >= R) continue;
+        const v = y * W + x;
+        if (!pass[v]) continue;
+        const d = STEP_M[o];
+        const a = reverse ? v : u, b = reverse ? u : v;
+        const nd = dist[u] + edgeO2(a, b, d);
+        if (nd < dist[v]) {
+          dist[v] = nd; pred[v] = u;
+          const t = edgeT(a, b, d);
+          tt[v] = tt[u] + t; dd[v] = dd[u] + 0.5 * (RATE1[a] + RATE1[b]) * t / 3600;
+          push(nd, v);
+        }
+      }
+    }
+    return { o2: dist, t: tt, dose: dd, pred, src, nofall, base: state.base, model: modelKey() };
+  }
+  function returnTree(base, nofall) {     // 각 칸 -> base 귀환 트리 (미리 계산한 것과 같은 형식)
+    const r = dijkstra(base, true, nofall);
+    const o2 = new Float32Array(N);
+    for (let i = 0; i < N; i++) o2[i] = isFinite(r.o2[i]) ? r.o2[i] : -1;
+    return { o2, t: r.t, dose: r.dose, next: r.pred };
+  }
+
+  // ---------- 가시선 (comm_los.py viewshed / los 이식) ----------
+  const rint = (v) => { const f = Math.floor(v), d = v - f; return d > 0.5 ? f + 1 : d < 0.5 ? f : (f % 2 === 0 ? f : f + 1); };
+  function viewshedJS(obs, obsAnt, tgtAnt) {
+    const ox = obs % W, oy = (obs / W) | 0, eye = H[obs] + obsAnt, st = C.los_step, R2 = 2 * C.mars_radius_m;
+    const vis = new Uint32Array(N), tot = new Uint32Array(N), unk = new Uint32Array(N);
+    const border = [];
+    for (let x = 0; x < W; x++) { border.push([x, 0]); border.push([x, R - 1]); }
+    for (let y = 1; y < R - 1; y++) { border.push([0, y]); border.push([W - 1, y]); }
+    for (const [tx, ty] of border) {
+      const L = Math.hypot(tx - ox, ty - oy);
+      if (L < 1) continue;
+      let maxS = -Infinity, unknown = false;
+      for (let n = 1; n * st <= L + 1e-9; n++) {
+        const t = n * st;
+        const ix = Math.min(W - 1, Math.max(0, rint(ox + (tx - ox) * t / L)));
+        const iy = Math.min(R - 1, Math.max(0, rint(oy + (ty - oy) * t / L)));
+        const i = iy * W + ix, d = t * CELL;
+        if (!(FLAGS[i] & 1)) unknown = true;
+        const hs = H[i] - d * d / R2;
+        tot[i]++;
+        if ((hs + tgtAnt - eye) / d >= maxS) vis[i]++;
+        if (unknown) unk[i]++;
+        maxS = Math.max(maxS, (hs - eye) / d);
+      }
+    }
+    const out = new Uint8Array(N);
+    for (let i = 0; i < N; i++) out[i] = (FLAGS[i] & 1) && tot[i] > 0 && vis[i] / tot[i] >= 0.5 && unk[i] / tot[i] < 0.5 ? 1 : 0;
+    out[obs] = 1;
+    return out;
+  }
+  function losJS(p, q, antP, antQ) {
+    const px = p % W, py = (p / W) | 0, qx = q % W, qy = (q / W) | 0;
+    const L = Math.hypot(qx - px, qy - py);
+    if (L < 1.5) return true;
+    const D = L * CELL, hp = H[p] + antP, hq = H[q] + antQ;
+    for (let t = 1.0; t < L - 0.99; t += C.los_step) {
+      const i = rint(py + (qy - py) * t / L) * W + rint(px + (qx - px) * t / L);
+      if (!(FLAGS[i] & 1)) return false;
+      const x = t * CELL;
+      if (H[i] + x * (D - x) / (2 * C.mars_radius_m) > hp + (hq - hp) * x / D) return false;
+    }
+    return true;
+  }
+  const RELAY = META.relay[1] * W + META.relay[0];
+  let FWD = null, REV = null;
+  function ensureTrees(cb) {
+    const same = (T, src) => T && T.src === src && T.nofall === state.nofall && T.base === state.base && T.model === modelKey();
+    const needF = state.mode === "here" && state.here >= 0 && !same(FWD, state.here);
+    const needR = state.mode === "rescue" && state.victim >= 0 && !same(REV, state.victim);
+    const needS = !TREES.has(treeKey(state.base, state.nofall));
+    const needP = state.nofall && !TREES.has(treeKey(state.base, false));   // 넘어짐 금지로 잃은 면적 비교용
+    const needV = VIS_BASE !== state.base;
+    const needB = state.mode === "sim" && !same(FWDB, state.base);
+    if (!needF && !needR && !needS && !needP && !needV && !needB) { cb(); return; }
+    $("busy").hidden = false;
+    setTimeout(() => {
+      const t0 = performance.now();
+      if (needS || needP) {
+        for (const key of [...TREES.keys()]) {       // 착륙지 2벌과 지금 거점 것만 남김
+          const [b, , mk] = key.split("|");
+          if ((Number(b) !== BASE0 && Number(b) !== state.base) || (mk !== "0000" && mk !== modelKey())) TREES.delete(key);
+        }
+        if (needS) TREES.set(treeKey(state.base, state.nofall), returnTree(state.base, state.nofall));
+        if (needP) TREES.set(treeKey(state.base, false), returnTree(state.base, false));
+      }
+      if (needV) {
+        if (state.base === BASE0) { VIS = new Uint8Array(N); for (let i = 0; i < N; i++) VIS[i] = FLAGS[i] & 2 ? 1 : 0; RELAY_OK = true; }
+        else { VIS = viewshedJS(state.base, C.base_ant_m, C.suit_ant_m); RELAY_OK = losJS(state.base, RELAY, C.base_ant_m, C.relay_ant_m); }
+        VIS_BASE = state.base;
+      }
+      if (needF) FWD = dijkstra(state.here, false);
+      if (needR) REV = dijkstra(state.victim, true);
+      if (needB) FWDB = dijkstra(state.base, false);
+      lastSearchMs = performance.now() - t0;
+      $("busy").hidden = true;
+      cb();
+    }, 20);
+  }
+  let lastSearchMs = 0;
+
+  // ---------- 심박 시뮬레이션 ----------
+  // 심박 -> 대사량: Hoffmann 2021 표 5.1, MR(BTU/h) = 284.55 + 5.984 x HR
+  const BTU_W = 0.29307107, HR_A = 284.55, HR_B = 5.984;
+  const hrToW = (hr) => (HR_A + HR_B * hr) * BTU_W;
+  const wToHr = (w) => (w / BTU_W - HR_A) / HR_B;
+  const SIM_K = {
+    model: () => 1, high: () => 1.2, surge: (m) => (m < 60 ? 1 : 1.25),
+    fatigue: (m) => 1 + 0.4 * Math.min(1, m / 180), custom: () => NaN,
+  };
+  const STEP_PER_MIN = 60, K_WIN = 10, MAX_MIN = 600;      // 경로 위치를 시간(초)으로 셈: 경사별 속도 옵션과 맞물림
+  let FWDB = null, SIM = null, SIMSIG = "", SIMTARGET = -1;
+  function mulberry(seed) {
+    return () => { seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  }
+  function parseCustom(text) {            // 한 줄에 bpm 하나, 또는 "분,bpm" (줄의 마지막 숫자를 씀)
+    const out = [];
+    for (const line of text.split(/\r?\n/)) {
+      const nums = line.match(/-?\d+(\.\d+)?/g);
+      if (!nums) continue;
+      const v = Number(nums[nums.length - 1]);
+      if (v > 20 && v < 250) out.push(v);
+    }
+    return out;
+  }
+  function pathTrack(cells) {             // 경로 칸 -> 누적 걷는 시간(초), 누적 거리, 누적 모델 산소(Pandolf)
+    const cd = new Float64Array(cells.length), cm = new Float64Array(cells.length), co = new Float64Array(cells.length);
+    for (let j = 1; j < cells.length; j++) {
+      const a = cells[j - 1], b = cells[j];
+      const d = Math.hypot((b % W) - (a % W), ((b / W) | 0) - ((a / W) | 0)) * CELL;
+      cd[j] = cd[j - 1] + edgeT(a, b, d); cm[j] = cm[j - 1] + d; co[j] = co[j - 1] + edgeO2(a, b, d);
+    }
+    const last = cells.length - 1;
+    return { cells, cd, cm, co, len: cd[last], lenM: cm[last] };
+  }
+  function trackAt(tr, s) {
+    const last = tr.cells.length - 1;
+    if (s <= 0 || last === 0) return { cell: tr.cells[0], o2: 0, m: 0 };
+    if (s >= tr.len) return { cell: tr.cells[last], o2: tr.co[last], m: tr.cm[last] };
+    let lo = 0, hi = last;
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (tr.cd[mid] <= s) lo = mid; else hi = mid; }
+    const f = (s - tr.cd[lo]) / (tr.cd[hi] - tr.cd[lo]);
+    return { cell: f < 0.5 ? tr.cells[lo] : tr.cells[hi], o2: tr.co[lo] + f * (tr.co[hi] - tr.co[lo]), m: tr.cm[lo] + f * (tr.cm[hi] - tr.cm[lo]) };
+  }
+  function simFeasible(pos, o2, w, k, extraGs = 0) {   // 지금 이 자리에서 돌아서면 거점까지 갈 수 있는가 (extraGs: 대원이 아는 누설 g/s)
+    const S = setNow();
+    if (S.o2[pos] < 0) return { ok: false, need: Infinity, needW: Infinity, tRet: Infinity };
+    const need = k * S.o2[pos] + extraGs * S.t[pos], needW = waterOf(S.o2[pos], S.t[pos], k, state.q);
+    const ok = need <= o2 - C.o2_reserve_g && needW <= w - waterReserve(state.q) && multNow() * S.dose[pos] <= C.dose_budget_msv;
+    return { ok, need, needW, tRet: S.t[pos] };
+  }
+  // 탱크 압력 -> 남은 산소: m = P V M / (Z R T). Z = 1(이상기체)로 둠. 6.2 MPa·21 °C에서 540 g이 되도록 V를 잡음(EMU 1차 탱크 수준, 가정)
+  const TK = { M: 0.032, R: 8.314, V: 0.54 * 8.314 * 294.15 / (6.2e6 * 0.032), T0: 294.15, Tend: 274.15, tau: 90 };
+  const tankT = (m) => TK.Tend + (TK.T0 - TK.Tend) * Math.exp(-m / TK.tau);      // 탱크가 화성 주변 온도로 식음 (가정)
+  const pFromG = (g, T) => g / 1000 * TK.R * T / (TK.V * TK.M);                   // Pa
+  const gFromP = (P, T) => P * TK.V * TK.M / (TK.R * T) * 1000;                   // g
+  function linfit(ys) {                   // 1분 간격 표본의 최소제곱 직선: 마지막 시각의 값과 기울기(g/분)
+    const n = ys.length; if (n < 2) return { v: ys[n - 1], b: 0 };
+    let sx = 0, sy = 0, sxx = 0, sxy = 0;
+    ys.forEach((y, x) => { sx += x; sy += y; sxx += x * x; sxy += x * y; });
+    const b = (n * sxy - sx * sy) / (n * sxx - sx * sx), a = (sy - b * sx) / n;
+    return { v: a + b * (n - 1), b };
+  }
+  function buildSim() {
+    const target = state.simTarget;
+    if (!isFinite(FWDB.o2[target])) return { ok: false, msg: "거점에서 그 목적지까지 걸어갈 길이 없습니다. 다른 곳을 찍어 주세요." };
+    const out = [target];
+    for (let cur = target; FWDB.pred[cur] >= 0;) { cur = FWDB.pred[cur]; out.push(cur); }
+    out.reverse();
+    const custom = state.simScenario === "custom" ? parseCustom(state.simCustom) : null;
+    if (custom && !custom.length) return { ok: false, msg: "직접 입력한 심박이 없습니다. 분당 bpm을 한 줄에 하나씩 넣고 '적용'을 누르세요." };
+    const kTrue = SIM_K[state.simScenario];
+    const rnd = mulberry(7); let spare = null;
+    const gauss = () => {
+      if (spare !== null) { const v = spare; spare = null; return v; }
+      let u = 0; while (u === 0) u = rnd();
+      const v = rnd(), r = Math.sqrt(-2 * Math.log(u));
+      spare = r * Math.sin(2 * Math.PI * v); return r * Math.cos(2 * Math.PI * v);
+    };
+    const outTr = pathTrack(out);
+    const press = state.simSrc === "press";
+    const leakGs = state.simLeak / 3600;                                  // 실제 누설 (g/s)
+    const knownGs = press && state.simLeakSub ? leakGs : 0;               // 대원이 알고 귀환 계산에 넣는 누설
+    const prnd = mulberry(11); let pspare = null;
+    const pgauss = () => {
+      if (pspare !== null) { const v = pspare; pspare = null; return v; }
+      let u = 0; while (u === 0) u = prnd();
+      const v = prnd(), r = Math.sqrt(-2 * Math.log(u));
+      pspare = r * Math.sin(2 * Math.PI * v); return r * Math.cos(2 * Math.PI * v);
+    };
+    let tr = outTr, s = 0, phase = "out", o2 = state.o2, o2Seen = state.o2, w = state.water * 1000, k = 1, turnMin = -1;
+    let infeasLogged = false, kLogged = false, dryLogged = false, naiveLogged = false;
+    const win = [], frames = [], log = [], meas = [], modelPM = [];
+    const restO2perMin = C.rest_mr_w * C.o2_g_per_j * 60;
+    log.push({ m: 0, cls: "", text: `거점 출발 → 목적지 ${fmt(outTr.lenM / 1000, 2)} km (산소 ${fmt(o2, 0)} g, 냉각수 ${fmt(w, 0)} g)` +
+      (press ? ` · 탱크 ${fmt(pFromG(o2, TK.T0) / 1e6, 2)} MPa` : "") });
+    if (state.simLeak > 0 && !press) log.push({ m: 0, cls: "warn", text: `누설 ${state.simLeak} g/h가 있지만 심박으로는 보이지 않음 → 남은 산소를 실제보다 많게 봄` });
+    for (let m = 0; m <= MAX_MIN; m++) {
+      const here = trackAt(tr, s).cell;
+      // 대원이 보는 남은 산소: 심박 방식은 소모 적분값(누설 모름), 압력 방식은 탱크 압력 측정
+      let o2c = o2, P = NaN, T = NaN, rate = NaN;
+      if (press) {
+        T = tankT(m);
+        P = pFromG(Math.max(0, o2), T) + state.simPNoise * 1000 * pgauss();
+        meas.push(gFromP(P, state.simTcomp ? T : TK.T0));
+        const recent = meas.slice(-(K_WIN + 1)), fit = linfit(recent);
+        o2c = fit.v; rate = -fit.b;                                       // g/분 (누설 포함)
+        if (recent.length >= 4) {
+          const mod = modelPM.slice(-(recent.length - 1)), mm = mod.reduce((x, y) => x + y, 0) / mod.length;
+          k = Math.max(0.3, (rate - knownGs * 60) / Math.max(1e-6, mm));
+        }
+      } else o2c = o2Seen;
+      const fz = simFeasible(here, o2c, w, k, knownGs);
+      const naive = press && isFinite(rate) && meas.length >= 4 && isFinite(fz.tRet) ? rate * fz.tRet / 60 : NaN;
+      const frame = { m, pos: here, o2: o2c, o2True: o2, w, k, phase, need: fz.need, needW: fz.needW, ok: fz.ok,
+                      hr: NaN, hrExp: NaN, kTrue: NaN, P, T, naive };
+      frames.push(frame);
+      if (phase === "home" || phase === "dead") break;
+      if (phase === "out" && !fz.ok && !infeasLogged && m > 0) {
+        infeasLogged = true;
+        log.push({ m, cls: "bad", text: `여기부터는 지금 k(${fmt(k, 2)})로 귀환 불가: 필요 산소 ${fmt(fz.need, 0)} g > 쓸 수 있는 ${fmt(o2c - C.o2_reserve_g, 0)} g` });
+      }
+      if (press && !naiveLogged && isFinite(naive) && m >= K_WIN && Math.abs(naive / fz.need - 1) >= 0.25) {
+        naiveLogged = true;
+        const lo = naive < fz.need;
+        log.push({ m, cls: lo ? "bad" : "warn", text: `단순 외삽(지금 소모율 × 귀환 시간) ${fmt(naive, 0)} g vs 지형 모델 ${fmt(fz.need, 0)} g: ${lo ? "귀환길을 너무 적게 잡음" : "귀환길을 너무 많이 잡음 (지금 오르막, 귀환은 내리막)"}` });
+      }
+      if (phase === "out" && state.simAuto) {   // 경보: 1분 더 가면 돌아올 수 없는가
+        const now = trackAt(tr, s), nxt = trackAt(tr, s + STEP_PER_MIN), dO2 = nxt.o2 - now.o2;
+        const fn = simFeasible(nxt.cell, o2c - k * dO2 - knownGs * 60, w - waterOf(dO2, 60, k, state.q), k, knownGs);
+        if (!fn.ok && s < tr.len) {
+          phase = "back"; turnMin = m; frame.turn = true;
+          log.push({ m, cls: "warn", text: `귀환 경보 → 돌아섬. 1분 더 가면 귀환 불가 (남은 산소 ${press ? "측정 " : ""}${fmt(o2c, 0)} g, 지금 귀환에 ${fmt(fz.need, 0)} g + 예비 ${fmt(C.o2_reserve_g, 0)} g)` });
+          tr = pathTrack(pathToBase(here)); s = 0;
+        }
+      }
+      let left = STEP_PER_MIN, modelO2 = 0;      // 1분 동안 걸은 거리의 모델 산소, 남는 시간은 서 있음
+      while (left > 1e-6 && (phase === "out" || phase === "back")) {
+        const a = trackAt(tr, s), step = Math.min(left, tr.len - s), b = trackAt(tr, s + step);
+        modelO2 += b.o2 - a.o2; s += step; left -= step;
+        if (s >= tr.len - 1e-6) {
+          if (phase === "out") { phase = "back"; log.push({ m: m + 1, cls: "", text: "목적지 도착 → 귀환 시작" }); tr = pathTrack(pathToBase(tr.cells[tr.cells.length - 1])); s = 0; }
+          else phase = "home";
+        }
+      }
+      if (left > 1e-6) modelO2 += restO2perMin * left / STEP_PER_MIN;
+      modelPM.push(modelO2);
+      const mrModel = modelO2 / (60 * C.o2_g_per_j);
+      const kt = kTrue(m);
+      const hr = custom ? custom[Math.min(m, custom.length - 1)] : wToHr(kt * mrModel) + state.simNoise * gauss();
+      const mrHr = Math.max(0, hrToW(hr));
+      frame.hr = hr; frame.hrExp = wToHr(mrModel); frame.kTrue = custom ? (press ? mrHr / Math.max(1e-6, mrModel) : NaN) : kt;
+      const used = mrHr * 60 * C.o2_g_per_j;
+      o2 -= used + leakGs * 60; o2Seen -= used;
+      w -= Math.max(0, mrHr + state.q) * 60 / C.latent_j_kg * 1000;
+      if (!press) {
+        win.push([mrHr, mrModel]); if (win.length > K_WIN) win.shift();
+        k = win.reduce((a, v) => a + v[0], 0) / Math.max(1e-6, win.reduce((a, v) => a + v[1], 0));
+      }
+      if (!kLogged && m + 1 >= K_WIN && Math.abs(k - 1) >= 0.1) {
+        kLogged = true;
+        log.push({ m: m + 1, cls: "warn", text: `${press ? "압력" : "심박"}으로 본 k = ${fmt(k, 2)}: 모델보다 산소를 ${fmt(Math.abs(k - 1) * 100, 0)}% ${k > 1 ? "더" : "덜"} 쓰는 중` });
+      }
+      if (!dryLogged && w <= 0) { dryLogged = true; log.push({ m: m + 1, cls: "bad", text: "냉각수 바닥: 이제부터 체온이 오름" }); }
+      if (o2 <= 0) { phase = "dead"; log.push({ m: m + 1, cls: "bad", text: `산소 소진: 거점까지 ${fmt(Math.max(0, tr.lenM - trackAt(tr, s).m) / 1000, 2)} km 남음` }); }
+      else if (w < -C.heat_storage_water_eq_g) { phase = "dead"; log.push({ m: m + 1, cls: "bad", text: "체온 비상한계 초과 (냉각수 141 g어치를 넘김)" }); }
+      else if (phase === "home") log.push({ m: m + 1, cls: o2 >= C.o2_reserve_g ? "ok" : "warn", text: `거점 도착: 산소 ${fmt(o2, 0)} g, 냉각수 ${fmt(Math.max(0, w), 0)} g 남음${o2 >= C.o2_reserve_g ? "" : " (예비분까지 씀)"}` });
+    }
+    return { ok: true, frames, log, out, outLen: outTr.lenM, turnMin, idx: 0 };
+  }
+  function ensureSim() {
+    const sig = JSON.stringify([state.simTarget, state.simScenario, state.simNoise, state.simAuto, state.simCustom, state.simSrc, state.simLeak, state.simPNoise, state.simTcomp, state.simLeakSub, modelKey(), state.o2, state.water,
+      state.q, state.spe, state.mult, state.nofall, state.base]);
+    if (sig === SIMSIG) return;
+    const keep = SIM && SIM.ok && SIMTARGET === state.simTarget ? SIM.idx : 0;
+    SIMSIG = sig; SIMTARGET = state.simTarget;
+    SIM = buildSim();
+    if (SIM.ok) {
+      SIM.idx = Math.min(keep, SIM.frames.length - 1);
+      if (pendingJump) { SIM.idx = SIM.turnMin >= 0 ? SIM.turnMin : Math.floor(SIM.frames.length / 2); pendingJump = false; }
+      $("sim-t").max = SIM.frames.length - 1; $("sim-t").value = SIM.idx;
+    }
+    simLabel();
+  }
+  let pendingJump = false;
+
+  // ---------- render ----------
+  const cells = $("cells"), vec = $("vec"), wrap = $("mapwrap");
+  cells.width = W; cells.height = R;
+  const cctx = cells.getContext("2d");
+  const img = cctx.createImageData(W, R);
+  const px = new Uint32Array(img.data.buffer);
+  const rgba = (hex, a) => {
+    const n = parseInt(hex.slice(1), 16);
+    return ((Math.round(a * 255) << 24) | ((n & 255) << 16) | (((n >> 8) & 255) << 8) | (n >> 16)) >>> 0;
+  };
+  const COL = {
+    out: rgba("#05070a", 0.55), safe: rgba("#3fc1cc", 0.55), safeDark: rgba("#123a40", 0.80),
+    dose: rgba("#9b7bff", 0.62), water: rgba("#d65bd0", 0.60), dry: rgba("#ffd23f", 0.80),
+    oneway: rgba("#5b7cfa", 0.58), alone: rgba("#a6e07a", 0.62), late: rgba("#ef3b2c", 0.95),
+    edge: rgba("#ffffff", 0.95), high: rgba("#e05a4f", 0.85), med: rgba("#e8c547", 0.45), sand: rgba("#ffb347", 0.95),
+  };
+  // STATUS: 0 자료 없음, 1 밖, 2 선량, 3 OK, 4 체온 한계로 겨우, 5 냉각수, 6 구조: 편도만
+  const STATUS = new Uint8Array(N), OKO2 = new Uint8Array(N), LATE = new Uint8Array(N);
+  let summary = null;
+
+  function modeReady() {
+    if (state.mode === "here") return state.here >= 0 && FWD;
+    if (state.mode === "rescue") return state.victim >= 0 && REV;
+    return true;
+  }
+
+  function recompute() {
+    const S = setNow(), b = budgets(), P0 = plainNow(), kEff = EK();
+    const cnt = new Float64Array(8);
+    let safeDark = 0, fallCut = 0, late = 0;
+    LATE.fill(0);
+    const mode = !modeReady() || state.mode === "base" || state.mode === "sim" ? "inspect" : state.mode;
+    const vh = victimHours(), vSec = Math.min(vh.o2, vh.water) * 3600;
+    // 구조 모드: 구조 대상 지점에서 거점까지(혼자 돌아오는 구조대원)
+    const X = state.victim, back = mode === "rescue" && S.o2[X] >= 0
+      ? { o2: S.o2[X], t: S.t[X], dose: S.dose[X] } : null;
+    const vRet = mode === "rescue" ? victimReturn(X) : null;
+    for (let i = 0; i < N; i++) {
+      if (!(FLAGS[i] & 1)) { STATUS[i] = 0; OKO2[i] = 0; continue; }
+      let s, o2tot = -1;
+      if (mode === "inspect") {
+        s = classify(S, i, b); o2tot = S.o2[i];
+      } else if (mode === "here") {
+        const f = FWD.o2[i];
+        if (!isFinite(f) || S.o2[i] < 0) s = 1;
+        else { o2tot = f + S.o2[i]; s = classifyTot(o2tot, FWD.t[i] + S.t[i], FWD.dose[i] + S.dose[i], b); }
+      } else {
+        const r = REV.o2[i];
+        if (!isFinite(r)) s = 1;
+        else {
+          const rt = back ? classifyTot(r + back.o2, REV.t[i] + back.t, REV.dose[i] + back.dose, b) : 1;
+          if (rt === 3) {
+            const sup = victimSupply(REV.t[i], vRet);
+            const withO2 = state.k * (r + back.o2) + sup.o2 <= b.o2;
+            const withW = waterOf(r + back.o2, REV.t[i] + back.t, state.k, state.q) + sup.w <= b.water;
+            s = withO2 && withW ? 3 : 7;
+          } else s = classifyTot(r, REV.t[i], REV.dose[i], b) === 3 ? 6 : 1;
+          o2tot = r;
+          if (s !== 1 && REV.t[i] > vSec) { LATE[i] = 1; late++; }
+        }
+      }
+      STATUS[i] = s; cnt[s]++;
+      OKO2[i] = o2tot >= 0 && kEff * o2tot <= b.o2 ? 1 : 0;
+      if (s === 3 && !linked(i)) safeDark++;
+      if (mode === "inspect" && state.nofall && s !== 3 && classify(P0, i, b) === 3) fallCut++;
+    }
+    let o2only = 0;
+    for (let i = 0; i < N; i++) o2only += OKO2[i];
+    summary = { mode, safe: cnt[3] * KM2, dose: cnt[2] * KM2, water: (cnt[4] + cnt[5]) * KM2, dry: cnt[4] * KM2,
+                oneway: cnt[6] * KM2, alone: cnt[7] * KM2, late: late * KM2, o2: o2only * KM2, fall: fallCut * KM2, dark: safeDark * KM2, vh };
+    paintCells();
+    paintSummary();
+    paintLegend();
+  }
+
+  // 칸별 대사량(W): 그 칸에서 가장 가파른 방향으로 오를 때. NASA Kim 2025 "local metabolic rate" 지도와 같은 발상
+  let LMR = null, LMR_KEY = "";
+  const MR_LO = 250, MR_HI = 900;       // NASA Kim 2025 지도 색 범위(최대 약 3000 BTU/h ≈ 880 W)와 비슷하게
+  function localMR() {
+    const key = modelKey();
+    if (LMR && LMR_KEY === key) return LMR;
+    LMR = new Float32Array(N).fill(NaN);
+    for (let y = 1; y < R - 1; y++) for (let x = 1; x < W - 1; x++) {
+      const i = y * W + x;
+      if (!(FLAGS[i] & 1)) continue;
+      const gx = (H[i + 1] - H[i - 1]) / (2 * CELL), gy = (H[i + W] - H[i - W]) / (2 * CELL);
+      const grade = Math.hypot(gx, gy) * 100, v = speedAt(grade);
+      LMR[i] = (FLAGS[i] & 8) ? mrOf(grade, etaCell(i, v), v) : -1;      // -1 = 경사 20° 초과 금지 구역
+    }
+    LMR_KEY = key; return LMR;
+  }
+  const RAMP = [[44, 123, 217], [63, 193, 160], [242, 208, 59]];
+  function mrColor(w) {
+    const t = Math.min(1, Math.max(0, (w - MR_LO) / (MR_HI - MR_LO))) * 2, k = Math.min(1, Math.floor(t)), f = t - k;
+    const c = RAMP[k].map((v, j) => Math.round(v + (RAMP[k + 1][j] - v) * f));
+    return ((230 << 24) | (c[2] << 16) | (c[1] << 8) | c[0]) >>> 0;
+  }
+  function paintCells() {
+    const comm = state.showcomm, fall = state.showfall, sand = state.showsand;
+    if (state.showmr) {
+      const L = localMR(), white = rgba("#ffffff", 0.78);
+      for (let i = 0; i < N; i++) {
+        const v = L[i];
+        px[i] = Number.isNaN(v) ? 0 : v < 0 ? white : mrColor(v);
+        if (sand && (FLAGS[i] & 16) && ((i % W) + ((i / W) | 0)) % 6 === 0) px[i] = COL.sand;
+      }
+      cctx.putImageData(img, 0, 0); return;
+    }
+    for (let y = 0; y < R; y++) {
+      for (let x = 0; x < W; x++) {
+        const i = y * W + x;
+        const s = STATUS[i];
+        let c = 0;
+        if (s === 1) c = COL.out;
+        else if (s === 2) c = COL.dose;
+        else if (s === 3) c = comm && !linked(i) && ((x + y) & 3) === 0 ? COL.safeDark : COL.safe;
+        else if (s === 4) c = COL.dry;
+        else if (s === 5) c = COL.water;
+        else if (s === 6) c = COL.oneway;
+        else if (s === 7) c = COL.alone;
+        if (LATE[i] && ((x - y) & 3) === 0) c = COL.late;
+        if (sand && (FLAGS[i] & 16) && (x + y) % 6 === 0) c = COL.sand;
+        if (fall && s !== 0) { if (CLS[i] === 2) c = COL.high; else if (CLS[i] === 1 && ((x ^ y) & 1)) c = COL.med; }
+        if (OKO2[i] && ((x + 1 < W && !OKO2[i + 1]) || (x > 0 && !OKO2[i - 1]) || (y + 1 < R && !OKO2[i + W]) || (y > 0 && !OKO2[i - W]))) c = COL.edge;
+        px[i] = c;
+      }
+    }
+    cctx.putImageData(img, 0, 0);
+  }
+
+  const fmt = (v, d = 1) => v.toLocaleString("ko-KR", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const hm = (h) => { if (!isFinite(h) || h < 0) return "–"; const m = Math.round(h * 60); return `${Math.floor(m / 60)}시간 ${String(m % 60).padStart(2, "0")}분`; };
+
+  function paintSummary() {
+    const s = summary;
+    const areaLabel = { inspect: "거점으로 돌아올 수 있는 면적", here: "현재 위치에서 더 갈 수 있는 면적", rescue: "보급하고 함께 돌아올 수 있는 출발 지점" }[s.mode];
+    $("t-area").querySelector(".k").textContent = areaLabel;
+    $("v-area").innerHTML = `${fmt(s.safe, 2)} <small>km²</small>`;
+    if (state.mode === "sim") {
+      const f = simFrame();
+      $("t-area").querySelector(".k").textContent = "지금 남은 양으로 거점에 돌아올 수 있는 면적";
+      $("d-area").textContent = f ? `${f.m}분: 남은 산소 ${fmt(f.o2, 0)} g · 냉각수 ${fmt(Math.max(0, f.w), 0)} g · 심박으로 본 k ${fmt(f.k, 2)}` : "목적지를 찍으면 시작합니다";
+      $("t-area").classList.toggle("alert", !!f && !f.ok && f.phase !== "home");
+    } else if (s.mode === "inspect") {
+      const pct = (s.safe / 18.64 - 1) * 100;
+      $("d-area").textContent = state.base === BASE0
+        ? `기준 상황(산소 150 g, 만충, k 1.0) 18.64 km² 대비 ${pct >= 0 ? "+" : ""}${fmt(pct, 0)}% · 산소만 보면 ${fmt(s.o2, 2)} km²`
+        : `거점을 옮김 (착륙지 거점의 기준 상황은 18.64 km²) · 산소만 보면 ${fmt(s.o2, 2)} km²`;
+      $("t-area").classList.toggle("alert", state.base === BASE0 && pct < -25);
+    } else if (s.mode === "here") {
+      $("d-area").textContent = `여기서 그 칸까지 갔다가 거점으로 돌아올 수 있는 곳. 산소만 보면 ${fmt(s.o2, 2)} km²`;
+      $("t-area").classList.toggle("alert", s.safe < 1);
+    } else {
+      $("d-area").textContent = `여기서 출발한 구조대원이 구조 대상에게 모자란 산소·냉각수를 나눠 주고 함께 거점까지 올 수 있는 곳. 구조대원 혼자만 돌아올 수 있는 곳 ${fmt(s.alone, 2)} km² · 가기만 가능 ${fmt(s.oneway, 2)} km² · 도착 전에 구조 대상의 소모품이 떨어지는 곳 ${fmt(s.late, 2)} km²`;
+      $("t-area").classList.toggle("alert", s.safe < 0.5);
+    }
+
+    const cuts = [
+      { name: "선량", v: s.dose, color: "var(--dose)" },
+      { name: "냉각수", v: s.water, color: "var(--water)" },
+      { name: "넘어짐 금지", v: s.fall, color: "var(--fall-high)" },
+    ];
+    const top = cuts.reduce((a, c) => (c.v > a.v ? c : a), { name: "산소", v: 0.01 });
+    if (s.mode === "rescue") {
+      $("t-bind").querySelector(".k").textContent = "구조 대상이 버티는 시간";
+      const vh = s.vh, lim = Math.min(vh.o2, vh.water);
+      $("v-bind").textContent = hm(lim);
+      $("d-bind").textContent = `산소 ${hm(vh.o2)}, 냉각수 ${hm(vh.water)} (가만히 있을 때 ${fmt(C.rest_mr_w, 0)} W). ${vh.water < vh.o2 ? "냉각수" : "산소"}가 먼저 떨어짐`;
+      $("t-bind").classList.toggle("alert", lim < 1);
+    } else {
+      $("t-bind").querySelector(".k").textContent = "가장 먼저 막는 것";
+      $("v-bind").textContent = top.name;
+      $("d-bind").textContent = top.name === "산소" ? "다른 제약은 산소 경계 안쪽을 깎지 않음" : `산소로는 되는데 ${top.name} 때문에 ${fmt(top.v, 2)} km²를 못 감`;
+      $("t-bind").classList.toggle("alert", top.name !== "산소");
+    }
+
+    // 한눈에 보기: 아이콘 + 평지로 걸을 때 쓸 수 있는 시간(예비분 제외) + 신호등 색
+    const darkPct = s.safe > 0 ? s.dark / s.safe * 100 : 0;
+    const o2Rate = levelO2gh() * EK();                                      // g/h
+    const o2h = Math.max(0, EO2() - C.o2_reserve_g) / o2Rate;
+    const wRate = waterOf(levelO2gh() / 3600, 1, EK(), state.q) * 3600;     // g/h
+    const wh = wRate > 0 ? Math.max(0, EW() * 1000 - waterReserve(state.q)) / wRate : Infinity;
+    const doseRate = RATE1[state.base] * multNow();                           // 거점 칸의 mSv/h
+    const doseH = C.dose_budget_msv / doseRate;
+    const st = (v, okAt, warnAt, lowerBad = true) => (lowerBad ? (v >= okAt ? "ok" : v >= warnAt ? "warn" : "bad") : (v <= okAt ? "ok" : v <= warnAt ? "warn" : "bad"));
+    const PILL = { ok: "여유", warn: "주의", bad: "위험" };
+    const ICON = {
+      o2: '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="10" y="8" width="12" height="21" rx="5"/><path d="M13 8V5h6v3M16 2v3"/><text x="16" y="23" font-size="7.5" font-weight="700" text-anchor="middle" fill="currentColor" stroke="none">O₂</text></svg>',
+      water: '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M16 3c5 7 9 11.5 9 16.5a9 9 0 0 1-18 0C7 14.5 11 10 16 3z"/><path d="M11.5 20a4.5 4.5 0 0 0 4.5 4.5" stroke-linecap="round"/></svg>',
+      dose: '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/><g fill="currentColor"><path d="M16 16 L10.2 6.3 A11 11 0 0 1 21.8 6.3 Z" transform="rotate(0 16 16)"/><path d="M16 16 L10.2 6.3 A11 11 0 0 1 21.8 6.3 Z" transform="rotate(120 16 16)"/><path d="M16 16 L10.2 6.3 A11 11 0 0 1 21.8 6.3 Z" transform="rotate(240 16 16)"/></g><circle cx="16" cy="16" r="4.6" fill="var(--panel-2)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>',
+      comm: '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M16 15v14M12 29h8"/><circle cx="16" cy="13" r="2.2" fill="currentColor"/><path d="M10.5 7.5a8 8 0 0 0 0 11M21.5 7.5a8 8 0 0 1 0 11M6.5 3.8a13 13 0 0 0 0 18.4M25.5 3.8a13 13 0 0 1 0 18.4"/></svg>',
+    };
+    const who = s.mode === "rescue" ? "구조대원 · " : "";
+    const hmS = (h) => { if (!isFinite(h) || h < 0) return "–"; const m = Math.round(h * 60); return m < 60 ? `${m}분` : `${Math.floor(m / 60)}시간 ${m % 60}분`; };
+    const cards = [
+      { id: "o2", nm: "산소", st: st(o2h * 60, 60, 20), gv: hmS(o2h), gd: `${who}평지 보행 · 시간당 ${fmt(o2Rate, 0)} g` },
+      { id: "water", nm: "냉각수", st: st(wh * 60, 60, 20), gv: isFinite(wh) ? hmS(wh) : "제한 없음", gd: `${who}시간당 ${fmt(wRate, 0)} g${wh < o2h ? " · 산소보다 먼저 바닥" : ""}` },
+      { id: "dose", nm: "선량", st: st(doseH, 8, 2), gv: doseH > 99 ? "99시간+" : hmS(doseH), gd: `예산 ${fmt(C.dose_budget_msv, 1)} mSv까지 · ${state.spe ? `SPE ×${fmt(state.mult, 1)}` : "배경"}` },
+      { id: "comm", nm: "통신", st: st(darkPct, 15, 40, false), gv: `${fmt(darkPct, 0)}<small>% 음영</small>`, gd: `귀환 영역 중 ${fmt(s.dark, 1)} km²${state.relay ? (RELAY_OK ? " · 중계기 포함" : " · 중계기 안 닿음") : ""}` },
+    ];
+    $("glance").innerHTML = cards.map((c) => `<div class="gc" role="listitem" data-st="${c.st}"><div class="nm">${ICON[c.id]}<span>${c.nm}</span><span class="pill">${PILL[c.st]}</span></div><div class="gv">${c.gv}</div><div class="gd">${c.gd}</div></div>`).join("");
+
+    $("cuts").innerHTML = s.mode === "rescue" ? "" :
+      cuts.map((c) => `<div class="cut${c.v < 0.005 ? " zero" : ""}"><i style="background:${c.color}"></i><span>${c.name} 때문에 못 가는 면적</span><b>${fmt(c.v, 2)} km²</b></div>`).join("")
+      + `<div class="cut${s.dry < 0.005 ? " zero" : ""}"><i style="background:var(--dry)"></i><span>그중 체온 비상한계로 겨우 오는 띠</span><b>${fmt(s.dry, 2)} km²</b></div>`;
+  }
+
+  function paintLegend() {
+    const m = summary.mode;
+    const item = (style, text, cls = "") => `<span><i class="${cls}" style="${style}"></i>${text}</span>`;
+    let html;
+    if (m === "rescue") {
+      html = item("background:var(--safe)", "여기서 출발하면 보급하고 함께 거점까지 돌아올 수 있음")
+        + item("background:#a6e07a", "구조대원 혼자만 돌아올 수 있음 (보급할 여유 없음)")
+        + item("background:#5b7cfa", "구조 대상에게 가기만 가능")
+        + item("", "도착 전에 구조 대상의 산소·냉각수가 떨어짐", "late")
+        + item("", "구조 대상까지 가는 산소 경계", "line");
+    } else {
+      html = item("background:var(--safe)", m === "here" ? "여기서 갔다가 거점으로 돌아올 수 있음" : "돌아올 수 있음")
+        + item("", "그중 통신 음영", "hatch")
+        + item("background:var(--dose)", "선량 초과") + item("background:var(--water)", "냉각수 부족")
+        + item("background:var(--dry)", "탱크가 비고 체온 비상한계로 겨우")
+        + item("", "산소만 볼 때의 경계", "line");
+    }
+    if (state.showmr) {
+      html = `<span><i style="width:90px;background:linear-gradient(90deg,rgb(44,123,217),rgb(63,193,160),rgb(242,208,59))"></i>칸별 대사량 ${MR_LO} W 이하 → ${MR_HI} W 이상 (가장 가파른 방향으로 오를 때)</span>`
+        + item("background:#ffffff", "경사 20° 초과: 걸어서 못 감");
+    }
+    if (state.showsand) html += `<span><i class="hatch" style="background:repeating-linear-gradient(45deg,#ffb347 0 2px,transparent 2px 5px)"></i>모래언덕 후보 (위성 사진 밝기로 추정)</span>`;
+    if (state.showfall) html += `<span><i style="background:var(--fall-high)"></i>넘어짐 높음 <i style="background:var(--fall-med);margin-left:8px"></i>중간</span>`;
+    $("legend").innerHTML = html;
+  }
+
+  // ---------- paths ----------
+  function pathToBase(i) {               // 귀환 트리를 따라 거점까지
+    const S = setNow(), path = [i];
+    let cur = i;
+    for (let n = 0; n < 8000 && S.next[cur] >= 0; n++) { cur = S.next[cur]; path.push(cur); }
+    return path;
+  }
+  function pathToVictim(i) {             // REV 트리: i -> 구조 대상
+    const path = [i];
+    let cur = i;
+    for (let n = 0; n < 8000 && REV.pred[cur] >= 0; n++) { cur = REV.pred[cur]; path.push(cur); }
+    return path;
+  }
+  function pathStats(path) {
+    let dist = 0, dark = 0, run = 0, maxRun = 0, high = 0, med = 0;
+    for (let n = 1; n < path.length; n++) {
+      const a = path[n - 1], c = path[n];
+      const d = Math.hypot((c % W) - (a % W), ((c / W) | 0) - ((a / W) | 0)) * CELL;
+      dist += d;
+      if (!linked(c)) { dark += d; run += d; maxRun = Math.max(maxRun, run); } else run = 0;
+      if (CLS[c] === 2) high += d; else if (CLS[c] === 1) med += d;
+    }
+    return { dist, dark, maxRun, high, med };
+  }
+  const mins = (m) => m / speedAt(0) / 60;
+  const meter = (label, need, budget, unit, d) => {
+    const frac = budget > 0 ? need / budget : Infinity;
+    const w = Math.min(100, Math.max(0, frac * 100));
+    return `<div class="meter"><div class="t"><span>${label}</span><span>${fmt(need, d)} / ${fmt(Math.max(budget, 0), d)} ${unit}</span></div>
+      <div class="bar" role="img" aria-label="${label} ${fmt(need, d)} ${unit}, 예산 ${fmt(Math.max(budget, 0), d)} ${unit}"><div class="fill${frac > 1 ? " over" : ""}" style="width:${w}%"></div></div></div>`;
+  };
+  const where = (i) => {
+    const x = i % W, y = (i / W) | 0;
+    const km = Math.hypot(x - state.base % W, y - ((state.base / W) | 0)) * CELL / 1000;
+    return `거점에서 직선 ${fmt(km, 2)} km${i === GOAL ? " · sol " + META.goal_sol + " 지점" : ""}`;
+  };
+  const VERD = { 3: ["ok", "돌아올 수 있음"], 1: ["bad", "산소 부족"], 2: ["bad", "선량 초과"], 4: ["warn", "냉각수 바닥, 체온 비상한계로 겨우"], 5: ["bad", "냉각수 부족"] };
+
+  function paintPoint() {
+    const title = { inspect: "선택한 지점에서 돌아오기", here: "현재 위치에서 돌아오기", rescue: "구조 계획", base: "거점", sim: "EVA 시뮬레이션" }[state.mode];
+    $("h-pt").textContent = title;
+    $("sim-log").hidden = state.mode !== "sim";
+    if (state.mode === "rescue") return paintRescue();
+    $("supply").hidden = true;
+    if (state.mode === "sim") return paintSim();
+    if (state.mode === "base") return paintBase();
+    const i = state.mode === "here" ? state.here : state.sel;
+    const v = $("pt-verdict");
+    if (i < 0) {
+      $("pt-where").textContent = "지도를 눌러 현재 위치를 찍으세요";
+      v.className = "verdict"; v.textContent = "";
+      $("pt-meters").innerHTML = ""; $("pt-facts").innerHTML = ""; drawVec({ path: null }); return;
+    }
+    const S = setNow();
+    $("pt-where").textContent = where(i);
+    if (!(FLAGS[i] & 1) || S.o2[i] < 0) {
+      v.className = "verdict bad"; v.textContent = "돌아올 길 없음";
+      $("pt-meters").innerHTML = ""; $("pt-facts").innerHTML = "<dt>이 칸</dt><dd>지형 자료가 없거나 경사 20°를 넘는 칸으로 막힘</dd>";
+      drawVec({ path: null }); return;
+    }
+    const b = budgets();
+    const V2 = VERD[classify(S, i, b)];
+    v.className = "verdict " + V2[0]; v.textContent = V2[1];
+    $("pt-meters").innerHTML =
+      meter("산소 (예비분 제외 예산)", state.k * S.o2[i], b.o2, "g", 0) +
+      meter("냉각수 (예비분 제외 예산)", waterOf(S.o2[i], S.t[i], state.k, state.q), b.water, "g", 0) +
+      meter("선량", multNow() * S.dose[i] * 1000, C.dose_budget_msv * 1000, "µSv", 1);
+    const path = pathToBase(i), ps = pathStats(path);
+    const spare = b.o2 - state.k * S.o2[i];
+    $("pt-facts").innerHTML = `
+      <dt>귀환 거리 · 시간</dt><dd>${fmt(ps.dist / 1000, 2)} km · ${hm(S.t[i] / 3600)}</dd>
+      ${state.mode === "here" ? `<dt>귀환하고 남는 산소</dt><dd>${fmt(spare, 0)} g (평지 ${fmt(Math.max(0, spare) / (levelO2gh() * state.k) * 60, 0)}분어치)</dd>` : ""}
+      <dt>통신 안 닿는 구간</dt><dd>${fmt(ps.dark / 1000, 2)} km (${fmt(ps.dist > 0 ? ps.dark / ps.dist * 100 : 0, 0)}%)</dd>
+      <dt>가장 긴 두절</dt><dd>${fmt(ps.maxRun / 1000, 2)} km ≈ ${fmt(mins(ps.maxRun), 0)}분</dd>
+      <dt>넘어짐 높음 · 중간 칸</dt><dd>${fmt(ps.high, 0)} m · ${fmt(ps.med, 0)} m</dd>
+      <dt>탱크가 빈 뒤 버틸 시간</dt><dd>평지 보행 약 ${fmt(C.heat_storage_water_eq_g / 1000 * C.latent_j_kg / Math.max(1, state.k * C.level_mr_w + state.q) / 60, 0)}분</dd>`;
+    drawVec({ path, color: "#ffffff" });
+  }
+
+  function paintSim() {
+    const v = $("pt-verdict"), lg = $("sim-log");
+    if (!SIM || !SIM.ok) {
+      $("pt-where").textContent = SIM ? SIM.msg : "지도를 눌러 목적지를 찍으세요";
+      v.className = "verdict"; v.textContent = ""; $("pt-meters").innerHTML = ""; $("pt-facts").innerHTML = "";
+      lg.innerHTML = ""; drawVec({ path: null }); drawSimChart(); return;
+    }
+    const f = SIM.frames[SIM.idx], prev = SIM.frames[Math.max(0, SIM.idx - (isNaN(f.hr) ? 1 : 0))];
+    const PH = { out: "가는 중", back: "돌아오는 중", home: "거점 도착", dead: "귀환 실패" };
+    $("pt-where").textContent = `${f.m}분 · ${PH[f.phase]} · ${where(f.pos)}`;
+    if (f.phase === "home") { v.className = "verdict ok"; v.textContent = "거점 도착"; }
+    else if (f.phase === "dead") { v.className = "verdict bad"; v.textContent = "귀환 실패"; }
+    else if (f.ok) { v.className = "verdict ok"; v.textContent = f.phase === "back" ? "귀환 중, 여유 있음" : "지금 돌아서도 귀환 가능"; }
+    else { v.className = "verdict bad"; v.textContent = "이 위치에서는 귀환 불가"; }
+    const wres = waterReserve(state.q);
+    $("pt-meters").innerHTML = f.phase === "home" || f.phase === "dead" ? "" :
+      meter("귀환에 필요한 산소 / 쓸 수 있는 산소", f.need, f.o2 - C.o2_reserve_g, "g", 0) +
+      meter("귀환에 필요한 냉각수 / 쓸 수 있는 냉각수", f.needW, f.w - wres, "g", 0);
+    const press = state.simSrc === "press";
+    $("pt-facts").innerHTML = (press
+      ? `<dt>탱크 압력 · 온도</dt><dd>${fmt(f.P / 1e6, 3)} MPa · ${fmt(f.T - 273.15, 1)} °C</dd>
+      <dt>산소 소모율 (최근 10분 측정)</dt><dd>${isFinite(f.naive) && f.need > 0 ? fmt(f.naive / (setNow().t[f.pos] / 60), 2) + " g/분" : "표본 모으는 중"}</dd>
+      <dt>단순 외삽 · 지형 모델 귀환 산소</dt><dd>${isFinite(f.naive) ? fmt(f.naive, 0) : "–"} · ${isFinite(f.need) ? fmt(f.need, 0) : "–"} g</dd>`
+      : `<dt>심박 (측정 · 모델 기대)</dt><dd>${fmt(prev.hr, 0)} · ${fmt(prev.hrExp, 0)} bpm</dd>`) + `
+      <dt>k (최근 10분 추정 · 실제)</dt><dd>${fmt(f.k, 2)} · ${isNaN(prev.kTrue) ? "모름 (직접 입력)" : fmt(prev.kTrue, 2)}</dd>
+      <dt>남은 산소 (대원이 보는 값 · 실제)</dt><dd>${fmt(f.o2, 0)} · ${fmt(f.o2True, 0)} g</dd>
+      <dt>남은 냉각수</dt><dd>${fmt(Math.max(0, f.w), 0)} g</dd>
+      <dt>우주복 누설</dt><dd>${state.simLeak} g/h${state.simLeak > 0 ? (press ? (state.simLeakSub ? " (알고 뺌)" : " (k에 섞임)") : " (심박으로는 안 보임)") : ""}</dd>`;
+    $("pt-facts").innerHTML += `
+<dt>귀환 경보</dt><dd>${SIM.turnMin >= 0 ? SIM.turnMin + "분에 돌아섬" : state.simAuto ? "울리지 않음" : "자동 돌아서기 꺼짐"}</dd>
+      <dt>목적지까지 경로</dt><dd>${fmt(SIM.outLen / 1000, 2)} km</dd>`;
+    lg.innerHTML = SIM.log.map((e) => `<li class="${e.m <= f.m ? "on " : ""}${e.cls}"><b>${e.m}분</b> ${e.text}</li>`).join("");
+    drawVec({ sim: true });
+    drawSimChart();
+  }
+  function simLabel() {
+    const T = SIM && SIM.ok ? SIM.frames.length - 1 : 0, m = SIM && SIM.ok ? SIM.frames[SIM.idx].m : 0;
+    $("sim-t-out").textContent = `${m}분 / ${T}분`;
+  }
+  function drawSimChart() {
+    const cv = $("sim-chart"); if (cv.offsetParent === null) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2), cw = cv.clientWidth, ch = cw < 520 ? 362 : cw < 760 ? 346 : 330;
+    cv.style.height = ch + "px";
+    cv.width = Math.round(cw * dpr); cv.height = Math.round(ch * dpr);
+    const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, cw, ch);
+    if (!SIM || !SIM.ok) return;
+    const F = SIM.frames, T = Math.max(1, F.length - 1), L = 44, Rp = 10, X = (m) => L + (cw - L - Rp) * m / T;
+    const press = state.simSrc === "press";
+    const panels = [
+      press ? { title: "탱크 압력 (MPa, 센서 값)", y0: 6, h: 82, series: [
+          { v: (f) => f.P / 1e6, c: "#ff8a65", w: 1.2 }] }
+      : { title: "심박 (bpm)", y0: 6, h: 82, series: [
+          { v: (f) => f.hr, c: "#ff8a65", w: 1.4 }, { v: (f) => f.hrExp, c: "#9aa3b5", w: 1.2, dash: [4, 3] }] },
+      { title: press ? "k (측정 소모율 ÷ 모델 산소)" : "k (심박 ÷ 모델 대사량)", y0: 104, h: 70, ref: 1, series: [
+          { v: (f) => f.k, c: "#7fd0ff", w: 1.8 }, { v: (f) => f.kTrue, c: "#a6e07a", w: 1.2, dash: [4, 3] }] },
+      { title: "산소 (g): 쓸 수 있는 양 vs 귀환에 필요한 양", y0: 190, h: 86, zero: true, series: [
+          { v: (f) => f.o2True - C.o2_reserve_g, c: "#9aa3b5", w: 1, dash: [2, 3] },
+          { v: (f) => f.o2 - C.o2_reserve_g, c: "#3fc1cc", w: 1.8 }, { v: (f) => (isFinite(f.need) ? f.need : NaN), c: "#ef6b5e", w: 1.8 },
+          ...(press ? [{ v: (f) => f.naive, c: "#ffb74d", w: 1.2, dash: [5, 3] }] : [])] },
+    ];
+    g.font = '11px "IBM Plex Sans KR", system-ui, sans-serif';
+    for (const p of panels) {
+      let lo = Infinity, hi = -Infinity;
+      for (const f of F) for (const sr of p.series) { const v = sr.v(f); if (isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }
+      if (p.ref !== undefined) { lo = Math.min(lo, p.ref); hi = Math.max(hi, p.ref); }
+      if (p.zero) lo = Math.min(0, lo);
+      if (!isFinite(lo)) { lo = 0; hi = 1; }
+      const pad = (hi - lo) * 0.08 || 1; lo -= pad; hi += pad;
+      const Y = (v) => p.y0 + p.h - (v - lo) / (hi - lo) * p.h;
+      g.fillStyle = "#151a23"; g.fillRect(L, p.y0, cw - L - Rp, p.h);
+      g.strokeStyle = "#283041"; g.lineWidth = 1; g.strokeRect(L + 0.5, p.y0 + 0.5, cw - L - Rp - 1, p.h - 1);
+      g.fillStyle = "#9aa3b5"; g.textAlign = "right"; g.textBaseline = "middle";
+      for (const v of [lo + pad, hi - pad]) g.fillText(Math.abs(hi - lo) < 5 ? v.toFixed(2) : Math.round(v), L - 5, Y(v));
+      if (p.ref !== undefined) { g.strokeStyle = "#3a4356"; g.setLineDash([2, 3]); g.beginPath(); g.moveTo(L, Y(p.ref)); g.lineTo(cw - Rp, Y(p.ref)); g.stroke(); g.setLineDash([]); }
+      if (p.zero) { g.strokeStyle = "#3a4356"; g.beginPath(); g.moveTo(L, Y(0)); g.lineTo(cw - Rp, Y(0)); g.stroke(); }
+      for (const sr of p.series) {
+        g.strokeStyle = sr.c; g.lineWidth = sr.w; g.setLineDash(sr.dash || []); g.beginPath();
+        let pen = false;
+        F.forEach((f, i) => { const v = sr.v(f); if (!isFinite(v)) { pen = false; return; } const x = X(i), y = Y(v); if (pen) g.lineTo(x, y); else { g.moveTo(x, y); pen = true; } });
+        g.stroke(); g.setLineDash([]);
+      }
+      g.fillStyle = "#e7eaf0"; g.textAlign = "left"; g.textBaseline = "top"; g.fillText(p.title, L + 6, p.y0 + 4);
+    }
+    g.fillStyle = "#9aa3b5"; g.textAlign = "center"; g.textBaseline = "top";
+    for (let m = 0; m <= T; m += T > 240 ? 60 : 30) g.fillText(`${m}분`, X(m), 282);
+    if (SIM.turnMin >= 0) { g.strokeStyle = "#ffd23f"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(X(SIM.turnMin), 6); g.lineTo(X(SIM.turnMin), 276); g.stroke(); }
+    g.strokeStyle = "#ffffff"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(X(SIM.idx), 6); g.lineTo(X(SIM.idx), 276); g.stroke();
+    g.textAlign = "left"; g.textBaseline = "alphabetic";
+    const lg = press
+      ? [["#ff8a65", "압력"], ["#7fd0ff", "k 추정"], ["#a6e07a", "실제 k"], ["#3fc1cc", "측정 산소"], ["#9aa3b5", "실제 산소"], ["#ef6b5e", "지형 모델 귀환 필요"], ["#ffb74d", "단순 외삽"], ["#ffd23f", "경보"]]
+      : [["#ff8a65", "측정 심박"], ["#9aa3b5", "모델 기대 심박"], ["#7fd0ff", "k 추정"], ["#a6e07a", "실제 k"], ["#3fc1cc", "쓸 수 있는 산소"], ["#ef6b5e", "귀환 필요 산소"], ["#ffd23f", "귀환 경보"]];
+    let lx = L, ly = 312;
+    for (const [c, t] of lg) {
+      const wd = g.measureText(t).width + 26;
+      if (lx + wd > cw - Rp && lx > L) { lx = L; ly += 15; }
+      g.fillStyle = c; g.fillRect(lx, ly - 8, 10, 3); g.fillStyle = "#9aa3b5"; g.fillText(t, lx + 13, ly - 3); lx += wd;
+    }
+  }
+
+  function paintBase() {
+    const B = state.base, moved = B !== BASE0;
+    const km0 = Math.hypot(B % W - BASE0 % W, ((B / W) | 0) - ((BASE0 / W) | 0)) * CELL / 1000;
+    let visKm2 = 0; for (let i = 0; i < N; i++) visKm2 += VIS[i];
+    visKm2 *= KM2;
+    $("pt-where").textContent = moved ? `착륙지에서 ${fmt(km0, 2)} km 옮긴 거점` : "Curiosity 착륙지 (원래 거점)";
+    const v = $("pt-verdict");
+    v.className = "verdict ok"; v.textContent = `귀환 가능 ${fmt(summary.safe, 2)} km²`;
+    $("pt-meters").innerHTML = "";
+    $("pt-facts").innerHTML = `
+      <dt>고도 (착륙지 대비)</dt><dd>${H[B] - H[BASE0] >= 0 ? "+" : "−"}${fmt(Math.abs(H[B] - H[BASE0]), 0)} m</dd>
+      <dt>거점 안테나 가시권</dt><dd>${fmt(visKm2, 1)} km² (착륙지 24.7 km²)</dd>
+      <dt>중계기와 가시선</dt><dd>${RELAY_OK ? "닿음" : "안 닿음 (중계 불가)"}</dd>
+      <dt>sol ${META.goal_sol} 지점까지 직선</dt><dd>${fmt(Math.hypot(GOAL % W - B % W, ((GOAL / W) | 0) - ((B / W) | 0)) * CELL / 1000, 2)} km</dd>`;
+    drawVec({ path: null });
+  }
+
+  function paintRescue() {
+    const v = $("pt-verdict"), X = state.victim;
+    if (X < 0 || !REV) {
+      $("pt-where").textContent = "지도를 눌러 움직일 수 없는 대원의 위치를 찍으세요";
+      v.className = "verdict"; v.textContent = "";
+      $("pt-meters").innerHTML = ""; $("pt-facts").innerHTML = ""; $("supply").hidden = true; drawVec({ path: null }); return;
+    }
+    const S = setNow(), b = budgets();
+    const start = state.here >= 0 ? state.here : state.base;
+    const startName = state.here >= 0 ? "현재 위치" : "거점";
+    $("pt-where").textContent = `구조 대상: ${where(X)} · 구조대원 출발: ${startName}`;
+    const vh = victimHours(), vSec = Math.min(vh.o2, vh.water) * 3600;
+    if (!isFinite(REV.o2[start])) {
+      v.className = "verdict bad"; v.textContent = "걸어서 갈 길 없음";
+      $("pt-meters").innerHTML = ""; $("pt-facts").innerHTML = "<dt>구조 대상 칸</dt><dd>경사 20°를 넘는 칸으로 막혀 있음. 로버·장비 필요</dd>"; $("supply").hidden = true;
+      drawVec({ path: null }); return;
+    }
+    const go = { o2: REV.o2[start], t: REV.t[start], dose: REV.dose[start] };
+    const vRet = victimReturn(X);
+    const sup = vRet ? victimSupply(go.t, vRet) : null;
+    const hasBack = S.o2[X] >= 0;
+    const tot = hasBack ? { o2: go.o2 + S.o2[X], t: go.t + S.t[X], dose: go.dose + S.dose[X] } : null;
+    const okGo = classifyTot(go.o2, go.t, go.dose, b) === 3;
+    const okRound = tot && classifyTot(tot.o2, tot.t, tot.dose, b) === 3;
+    const inTime = go.t <= vSec;
+    // 구조대원이 출발할 때 있어야 할 최소량 = 자기 왕복 + 구조 대상 보급 + 자기 예비분
+    const own = tot ? { o2: state.k * tot.o2, w: waterOf(tot.o2, tot.t, state.k, state.q) } : null;
+    const minStart = own && sup ? { o2: own.o2 + sup.o2 + C.o2_reserve_g, w: own.w + sup.w + waterReserve(state.q) } : null;
+    const canSupply = minStart && minStart.o2 <= state.o2 && minStart.w <= state.water * 1000;
+    let verdict;
+    if (!okGo) verdict = ["bad", "구조대원 소모품으로 도달 불가"];
+    else if (!inTime) verdict = ["bad", "도착 전에 구조 대상의 소모품이 떨어짐"];
+    else if (!hasBack) verdict = ["warn", "제때 도착, 구조 대상 위치에서 거점까지 걸어갈 길 없음"];
+    else if (okRound && canSupply) verdict = ["ok", "제때 도착, 보급하고 함께 귀환 가능"];
+    else if (okRound) verdict = ["warn", "제때 도착, 구조대원 혼자만 귀환 가능 (보급량 부족)"];
+    else verdict = ["warn", "제때 도착, 구조대원도 귀환 불가 (로버·소모품 보급 필요)"];
+    v.className = "verdict " + verdict[0]; v.textContent = verdict[1];
+    const use = tot || go;
+    $("pt-meters").innerHTML =
+      meter(tot ? "구조대원 산소 (가서 돌아오기)" : "구조대원 산소 (가기만)", state.k * use.o2, b.o2, "g", 0) +
+      meter("구조대원 냉각수", waterOf(use.o2, use.t, state.k, state.q), b.water, "g", 0) +
+      meter("구조대원 선량", multNow() * use.dose * 1000, C.dose_budget_msv * 1000, "µSv", 1) +
+      meter("도착 시간 / 구조 대상이 버티는 시간", go.t / 60, vSec / 60, "분", 0);
+    const p1 = pathToVictim(start), s1 = pathStats(p1);
+    const p2 = hasBack ? pathToBase(X) : null, s2 = p2 ? pathStats(p2) : null;
+    $("pt-facts").innerHTML = `
+      <dt>가는 길</dt><dd>${fmt(s1.dist / 1000, 2)} km · ${hm(go.t / 3600)}</dd>
+      <dt>도착 여유</dt><dd>${vSec >= go.t ? "+" : "−"}${hm(Math.abs(vSec - go.t) / 3600)}</dd>
+      <dt>구조 대상 → 거점</dt><dd>${s2 ? `${fmt(s2.dist / 1000, 2)} km · ${hm(S.t[X] / 3600)}` : "걸어서 갈 길 없음"}</dd>
+      <dt>구조 대상 위치 통신</dt><dd>${linked(X) ? "거점과 닿음" : "음영 (위치 보고 불가)"}</dd>
+      <dt>가는 길 통신 두절</dt><dd>${fmt(s1.dark / 1000, 2)} km, 가장 긴 ${fmt(mins(s1.maxRun), 0)}분</dd>
+      <dt>가는 길 넘어짐 높음 · 중간</dt><dd>${fmt(s1.high, 0)} m · ${fmt(s1.med, 0)} m</dd>`;
+    const box = $("supply");
+    if (sup && inTime && okGo) {
+      const lack = (have, need) => Math.max(0, need - have);
+      box.hidden = false;
+      box.innerHTML = `<h3>보급 계산: 구조 대상이 거점까지 돌아오려면</h3>
+        <div class="big">
+          <div class="${sup.o2 > 0 ? "bad" : ""}"><span class="k">구조 대상에게 줄 최소 산소</span><span class="v">${fmt(sup.o2, 0)} <small>g</small></span></div>
+          <div class="${sup.w > 0 ? "bad" : ""}"><span class="k">구조 대상에게 줄 최소 냉각수</span><span class="v">${fmt(sup.w, 0)} <small>g</small></span></div>
+        </div>
+        <dl class="facts">
+          <dt>구조 대상 필요량 (산소 · 냉각수)</dt><dd>${fmt(sup.needO2, 0)} g · ${fmt(sup.needW, 0)} g</dd>
+          <dt>└ 구조대원 기다리는 동안 (${fmt(go.t / 60, 0)}분, 정지)</dt><dd>${fmt(REST_O2_GS() * go.t, 0)} g · ${fmt(REST_W_GS() * go.t, 0)} g</dd>
+          <dt>└ 거점까지 귀환 (${fmt(vRet.t / 60, 0)}분, ${state.vcarry === "walk" ? "부축 보행" : "이송, 정지"})</dt><dd>${fmt(vRet.o2, 0)} g · ${fmt(vRet.w, 0)} g</dd>
+          <dt>└ 예비분 30분</dt><dd>${fmt(C.o2_reserve_g, 0)} g · ${fmt(waterReserve(state.q), 0)} g</dd>
+          <dt>구조 대상이 가진 양</dt><dd>${fmt(state.vo2, 0)} g · ${fmt(state.vwater * 1000, 0)} g</dd>
+          ${minStart ? `<dt>구조대원 출발 시 최소량</dt><dd>${fmt(minStart.o2, 0)} g · ${fmt(minStart.w, 0)} g</dd>
+          <dt>└ 지금 설정과 비교</dt><dd>${canSupply ? "충분" : `산소 ${fmt(lack(state.o2, minStart.o2), 0)} g · 냉각수 ${fmt(lack(state.water * 1000, minStart.w), 0)} g 부족`}</dd>` : ""}
+        </dl>`;
+    } else { box.hidden = true; box.innerHTML = ""; }
+    drawVec({ path: p1, color: "#ffffff", path2: p2, color2: "#7fd0ff" });
+  }
+
+  // ---------- vector overlay ----------
+  let lastVec = { path: null };
+  function drawVec(v) {
+    if (v) lastVec = v;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const cw = wrap.clientWidth, ch = wrap.clientHeight;
+    vec.width = Math.round(cw * dpr); vec.height = Math.round(ch * dpr);
+    const g = vec.getContext("2d");
+    g.setTransform(dpr * cw / W, 0, 0, dpr * ch / R, 0, 0);
+    const lw = W / cw;
+    if (state.showtrav) {
+      g.strokeStyle = "rgba(233,235,242,0.55)"; g.lineWidth = 1.1 * lw;
+      for (const seg of META.traverse) { g.beginPath(); seg.forEach(([x, y], n) => (n ? g.lineTo(x, y) : g.moveTo(x, y))); g.stroke(); }
+    }
+    const drawPath = (path, color) => {
+      if (!path || path.length < 2 || !FLAGS || !VIS) return;
+      for (let n = 1; n < path.length; n++) {
+        const a = path[n - 1], c = path[n];
+        const ok = linked(c);
+        g.strokeStyle = ok ? color : "#ef6b5e"; g.lineWidth = (ok ? 2.2 : 3) * lw;
+        g.beginPath(); g.moveTo((a % W) + 0.5, ((a / W) | 0) + 0.5); g.lineTo((c % W) + 0.5, ((c / W) | 0) + 0.5); g.stroke();
+      }
+    };
+    if (state.mode === "sim" && SIM && SIM.ok) {
+      const xy0 = (i) => [(i % W) + 0.5, ((i / W) | 0) + 0.5];
+      g.strokeStyle = "rgba(255,255,255,0.7)"; g.lineWidth = 1.6 * lw; g.setLineDash([5 * lw, 4 * lw]); g.beginPath();
+      SIM.out.forEach((c, n) => { const [x, y] = xy0(c); n ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); g.setLineDash([]);
+      g.strokeStyle = "#0d1016"; g.lineWidth = 5 * lw; g.beginPath();
+      for (let n = 0; n <= SIM.idx; n++) { const [x, y] = xy0(SIM.frames[n].pos); n ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
+      g.strokeStyle = "#ffd23f"; g.lineWidth = 2.6 * lw; g.stroke();
+      const [tx, ty] = xy0(state.simTarget);
+      g.strokeStyle = "#0d1016"; g.lineWidth = 2 * lw; g.beginPath(); g.moveTo(tx, ty); g.lineTo(tx, ty - 16 * lw); g.stroke();
+      g.fillStyle = "#ff8a3d"; g.beginPath(); g.moveTo(tx, ty - 16 * lw); g.lineTo(tx + 11 * lw, ty - 12 * lw); g.lineTo(tx, ty - 8 * lw); g.closePath(); g.fill(); g.stroke();
+      if (SIM.turnMin >= 0 && SIM.idx >= SIM.turnMin) ring(g, ...xy0(SIM.frames[SIM.turnMin].pos), 6 * lw, "#ffd23f", lw);
+      person(g, ...xy0(SIM.frames[SIM.idx].pos), 8 * lw, "#7fd0ff", lw);
+    }
+    drawPath(lastVec.path2, lastVec.color2 || "#ffffff");
+    drawPath(lastVec.path, lastVec.color || "#ffffff");
+    const xy = (i) => [(i % W) + 0.5, ((i / W) | 0) + 0.5];
+    dot(g, ...xy(GOAL), 4.5 * lw, "#f2d430", lw);
+    if (state.relay) diamond(g, ...xy(META.relay[1] * W + META.relay[0]), 7 * lw, "#e2794d", lw);
+    star(g, ...xy(state.base), (state.mode === "base" ? 12 : 9) * lw, "#a7e8a0", lw);
+    if (state.base !== BASE0) { g.strokeStyle = "#0d1016"; g.lineWidth = 4 * lw; g.beginPath(); g.arc(...xy(BASE0), 9 * lw, 0, 7); g.stroke(); g.strokeStyle = "#a7e8a0"; g.lineWidth = 2 * lw; g.setLineDash([4 * lw, 3 * lw]); g.stroke(); g.setLineDash([]); }
+    if (state.mode === "inspect" && lastVec.path) ring(g, ...xy(state.sel), 7 * lw, "#ffffff", lw);
+    if (state.here >= 0 && state.mode !== "inspect") person(g, ...xy(state.here), 8 * lw, "#7fd0ff", lw);
+    if (state.victim >= 0 && state.mode === "rescue") cross(g, ...xy(state.victim), 9 * lw, lw);
+    scalebar(g, lw);
+  }
+  const dot = (g, x, y, r, c, lw) => { g.fillStyle = c; g.strokeStyle = "#0d1016"; g.lineWidth = 1.5 * lw; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.stroke(); };
+  const ring = (g, x, y, r, c, lw) => { g.strokeStyle = "#0d1016"; g.lineWidth = 4 * lw; g.beginPath(); g.arc(x, y, r, 0, 7); g.stroke(); g.strokeStyle = c; g.lineWidth = 2 * lw; g.stroke(); };
+  const diamond = (g, x, y, r, c, lw) => { g.fillStyle = c; g.strokeStyle = "#0d1016"; g.lineWidth = 1.5 * lw; g.beginPath(); g.moveTo(x, y - r); g.lineTo(x + r, y); g.lineTo(x, y + r); g.lineTo(x - r, y); g.closePath(); g.fill(); g.stroke(); };
+  const star = (g, x, y, r, c, lw) => {
+    g.fillStyle = c; g.strokeStyle = "#0d1016"; g.lineWidth = 1.5 * lw; g.beginPath();
+    for (let n = 0; n < 10; n++) { const a = -Math.PI / 2 + n * Math.PI / 5, rr = n % 2 ? r * 0.45 : r; g.lineTo(x + rr * Math.cos(a), y + rr * Math.sin(a)); }
+    g.closePath(); g.fill(); g.stroke();
+  };
+  const person = (g, x, y, r, c, lw) => {
+    g.fillStyle = c; g.strokeStyle = "#0d1016"; g.lineWidth = 2 * lw;
+    g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.stroke();
+    g.fillStyle = "#0d1016"; g.beginPath(); g.arc(x, y - r * 0.3, r * 0.28, 0, 7); g.fill();
+    g.beginPath(); g.arc(x, y + r * 0.55, r * 0.5, Math.PI, 0); g.fill();
+  };
+  const cross = (g, x, y, r, lw) => {
+    g.fillStyle = "#ffffff"; g.strokeStyle = "#0d1016"; g.lineWidth = 2 * lw;
+    g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.stroke();
+    g.fillStyle = "#e0312b"; const a = r * 0.22, b = r * 0.68;
+    g.fillRect(x - a, y - b, 2 * a, 2 * b); g.fillRect(x - b, y - a, 2 * b, 2 * a);
+  };
+  function scalebar(g, lw) {
+    const km = 1000 / CELL, x0 = 14 * lw, y0 = R - 16 * lw;
+    g.fillStyle = "rgba(5,7,10,0.65)"; g.fillRect(x0 - 6 * lw, y0 - 18 * lw, km + 12 * lw, 28 * lw);
+    g.strokeStyle = "#e7eaf0"; g.lineWidth = 2 * lw; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0 + km, y0); g.stroke();
+    g.fillStyle = "#e7eaf0"; g.font = `${11 * lw}px "IBM Plex Mono", monospace`; g.fillText("1 km  ↑N", x0, y0 - 6 * lw);
+  }
+
+  // ---------- interaction ----------
+  const MODE_HINT = {
+    inspect: "지도를 누르면 그 지점에서 거점까지 돌아오는 길을 따져 봅니다.",
+    here: "지도를 눌러 <b>대원의 현재 위치</b>를 찍으세요. 거기서 더 갔다가 거점으로 돌아올 수 있는 범위가 그려집니다.",
+    rescue: "지도를 눌러 <b>움직일 수 없는 대원의 위치</b>를 찍으세요. 구조대원이 어디서 출발하면 제때 갈 수 있는지 그려집니다. 구조대원 출발점은 \"현재 위치\" 모드에서 찍습니다.",
+    sim: "지도를 눌러 <b>목적지</b>를 찍으세요. 대원이 거점에서 출발해 다녀오는 동안 산소를 빼고(심박 또는 탱크 압력으로 추정), 매 순간의 귀환 가능 영역을 그립니다. 아래 ▶로 재생합니다.",
+    base: "지도를 눌러 <b>거점(★)</b>을 옮기세요. 귀환 경로와 통신 가시권이 새 거점 기준으로 다시 계산됩니다. 점선 원은 원래 거점(착륙지)입니다.",
+  };
+  function cellAt(ev) {
+    const r = vec.getBoundingClientRect();
+    const x = Math.floor((ev.clientX - r.left) / r.width * W), y = Math.floor((ev.clientY - r.top) / r.height * R);
+    return x < 0 || y < 0 || x >= W || y >= R ? -1 : y * W + x;
+  }
+  vec.addEventListener("click", (ev) => {
+    const i = cellAt(ev); if (i < 0 || !SETS) return;
+    if (state.mode !== "inspect" && !(FLAGS[i] & 1)) { $("hover").textContent = "지형 자료가 없는 칸입니다. 지도 안쪽을 찍어 주세요."; return; }
+    if (state.mode === "inspect") state.sel = i;
+    else if (state.mode === "here") state.here = i;
+    else if (state.mode === "base") state.base = i;
+    else if (state.mode === "sim") { state.simTarget = i; stopSim(); }
+    else state.victim = i;
+    activePreset = "";
+    update();
+  });
+  vec.addEventListener("mousemove", (ev) => {
+    const i = cellAt(ev); if (i < 0 || !SETS || !VIS) return;
+    const S = setNow();
+    if (!(FLAGS[i] & 1)) { $("hover").textContent = "지형 자료 없음"; return; }
+    const fallN = ["낮음", "중간", "높음"][CLS[i]];
+    const tail = ` · 통신 ${linked(i) ? "닿음" : "음영"} · 넘어짐 ${fallN}`;
+    const m = summary ? summary.mode : "inspect";
+    if (m === "rescue") {
+      const r = REV.o2[i];
+      if (!isFinite(r)) { $("hover").textContent = "여기서는 구조 대상에게 걸어갈 길 없음" + tail; return; }
+      const nm = { 3: "보급하고 함께 귀환 가능", 7: "구조대원 혼자만 귀환", 6: "가기만 가능", 1: "구조대원 소모품 부족" }[STATUS[i]] || "";
+      $("hover").textContent = `여기서 출발: ${nm}${LATE[i] ? " (늦음)" : ""} · 구조 대상까지 ${hm(REV.t[i] / 3600)}, 산소 ${fmt(state.k * r, 0)} g` + tail;
+      return;
+    }
+    if (m === "here") {
+      const f = FWD.o2[i];
+      if (!isFinite(f) || S.o2[i] < 0) { $("hover").textContent = "현재 위치에서 갈 길이 없거나 돌아올 길 없음" + tail; return; }
+      const names = ["", "산소 부족", "선량 초과", "갔다가 돌아올 수 있음", "체온 비상한계로 겨우", "냉각수 부족"];
+      $("hover").textContent = `${names[STATUS[i]]} · 가는 데 산소 ${fmt(state.k * f, 0)} g + 돌아오는 데 ${fmt(state.k * S.o2[i], 0)} g · ${hm((FWD.t[i] + S.t[i]) / 3600)}` + tail;
+      return;
+    }
+    if (S.o2[i] < 0) { $("hover").textContent = "돌아올 길 없음 (급경사로 막힘)"; return; }
+    const names = ["", "산소 부족", "선량 초과", "돌아올 수 있음", "체온 비상한계로 겨우", "냉각수 부족"];
+    $("hover").textContent = `${names[STATUS[i]]} · 산소 ${fmt(state.k * S.o2[i], 0)} g · 냉각수 ${fmt(waterOf(S.o2[i], S.t[i], state.k, state.q), 0)} g · 선량 ${fmt(multNow() * S.dose[i] * 1000, 1)} µSv · ${hm(S.t[i] / 3600)}` + tail;
+  });
+  vec.addEventListener("mouseleave", () => { $("hover").textContent = MODE_HINT[state.mode].replace(/<[^>]+>/g, ""); });
+
+  function syncInputs() {
+    $("o2").value = state.o2; $("water").value = state.water; $("k").value = state.k; $("q").value = state.q;
+    $("spe").checked = state.spe; $("mult").value = sliderFromMult(state.mult);
+    $("nofall").checked = state.nofall; $("relay").checked = state.relay; $("showfall").checked = state.showfall;
+    $("m-speed").checked = state.mSpeed; $("m-eta").checked = state.mEta; $("m-down").checked = state.mDown; $("m-sand").checked = state.mSand;
+    $("showmr").checked = state.showmr; $("showsand").checked = state.showsand;
+    $("vo2").value = state.vo2; $("vwater").value = state.vwater;
+    $("sim-scn").value = state.simScenario; $("sim-noise").value = state.simNoise; $("sim-auto").checked = state.simAuto;
+    $("sim-src").value = state.simSrc; $("sim-leak").value = state.simLeak; $("sim-pnoise").value = state.simPNoise;
+    $("sim-tcomp").checked = state.simTcomp; $("sim-leaksub").checked = state.simLeakSub;
+    document.querySelectorAll('#vcarry input').forEach((r) => { r.checked = r.value === state.vcarry; });
+    document.querySelectorAll('#modes input').forEach((r) => { r.checked = r.value === state.mode; });
+    labels();
+  }
+  function labels() {
+    $("o2-out").textContent = `${state.o2} g`;
+    $("o2-hint").textContent = `예비분 ${fmt(C.o2_reserve_g, 0)} g(평지 30분)을 빼고 ${fmt(Math.max(0, state.o2 - C.o2_reserve_g), 0)} g으로 다녀야 함`;
+    $("water-out").textContent = `${fmt(state.water, 2)} kg`;
+    $("water-hint").textContent = `만충 3.6 kg · 예비분 ${fmt(waterReserve(state.q), 0)} g을 빼고 ${fmt(Math.max(0, state.water * 1000 - waterReserve(state.q)), 0)} g`;
+    $("k-out").textContent = `${fmt(state.k, 2)}`;
+    $("q-out").textContent = `${state.q > 0 ? "+" : ""}${state.q} W`;
+    $("mult-out").textContent = `×${fmt(state.mult, 1)}${Math.abs(state.mult - C.spe_observed) < 0.05 ? " (관측)" : state.mult > 3 ? " (가정)" : ""}`;
+    $("speblock").dataset.off = String(!state.spe);
+    $("vo2-out").textContent = `${state.vo2} g`;
+    $("vwater-out").textContent = `${fmt(state.vwater, 2)} kg`;
+    const vh = victimHours();
+    $("v-hint").textContent = `가만히 있을 때 시간당 산소 ${fmt(vh.o2h, 0)} g, 냉각수 ${fmt(vh.wh, 0)} g 소모`;
+    $("rescue-ctl").hidden = state.mode !== "rescue";
+    $("sim-ctl").hidden = state.mode !== "sim";
+    $("simbar").hidden = state.mode !== "sim";
+    $("k-ctl").dataset.off = String(state.mode === "sim");
+    $("sim-custom-ctl").hidden = state.simScenario !== "custom";
+    $("sim-noise-ctl").dataset.off = String(state.simScenario === "custom");
+    $("sim-noise-out").textContent = `±${state.simNoise} bpm`;
+    const press = state.simSrc === "press";
+    $("press-ctl").hidden = !press;
+    $("sim-leak-out").textContent = `${state.simLeak} g/h`;
+    $("sim-pnoise-out").textContent = `±${state.simPNoise} kPa`;
+    $("sim-src-hint").textContent = press
+      ? `남은 양은 탱크 압력으로 재고(m = PV·M/ZRT, ${fmt(TK.V * 1000, 2)} L, 6.2 MPa에 540 g), 최근 10분 감소 기울기를 모델 예측으로 나눠 k를 구합니다. 심박 데이터는 실제 소모를 만드는 데만 씁니다.`
+      : "심박을 대사량으로 바꿔 소모를 셉니다. 누설은 심박에 안 나타나므로 대원은 남은 산소를 실제보다 많게 봅니다.";
+    $("sim-note").textContent = press
+      ? "초록 점선(실제 k)은 시나리오가 정한 값, 파란 선(k 추정)은 압력 감소 기울기로 구한 값입니다. 하늘색(측정 산소)과 빨강(지형 모델 귀환 필요)이 만나면 돌아서야 합니다. 주황 점선은 '지금 소모율 × 귀환 시간'으로 단순 외삽한 값으로, 귀환길이 내리막이면 너무 많이, 오르막이면 너무 적게 잡습니다."
+      : "초록 점선(실제 k)은 시나리오가 정한 값이고, 파란 선(k 추정)은 심박만 보고 최근 10분으로 계산한 값입니다. 두 산소 선이 만나는 때가 돌아서야 하는 때입니다. 시나리오 심박이 200 bpm을 넘는 봉우리는 오르막에서도 속도를 0.92 m/s로 고정한 Pandolf 식의 한계입니다(보고서 16).";
+    $("mode-hint").innerHTML = MODE_HINT[state.mode];
+    const on = [state.mSpeed && "속도", state.mEta && "η 1.2", state.mDown && "내리막", state.mSand && "모래"].filter(Boolean);
+    $("m-hint").textContent = `평지 보행: ${fmt(speedAt(0), 2)} m/s, ${fmt(levelMR(), 0)} W, 시간당 산소 ${fmt(levelO2gh(), 0)} g · 1 km에 ${fmt(levelO2gh() / speedAt(0) / 3.6, 1)} g` +
+      (on.length ? ` (보정: ${on.join(", ")})` : " (기본 모델)");
+    $("base-reset").hidden = state.base === BASE0;
+    document.querySelectorAll("#presets button").forEach((bt) => bt.setAttribute("aria-pressed", String(bt.dataset.id === activePreset)));
+  }
+
+  let activePreset = "base", raf = 0;
+  function update(full = true) {
+    labels();
+    if (!SETS) return;
+    cancelAnimationFrame(raf);
+    ensureTrees(() => {
+      if (state.mode === "sim") ensureSim();
+      raf = requestAnimationFrame(() => { if (full) recompute(); else { paintCells(); paintLegend(); } paintPoint(); });
+    });
+  }
+  const bindRange = (id, key, parse) => $(id).addEventListener("input", (e) => { state[key] = parse(e.target.value); activePreset = ""; update(); });
+  bindRange("o2", "o2", Number); bindRange("water", "water", Number); bindRange("k", "k", Number); bindRange("q", "q", Number);
+  bindRange("vo2", "vo2", Number); bindRange("vwater", "vwater", Number);
+  $("mult").addEventListener("input", (e) => { state.mult = multFromSlider(Number(e.target.value)); if (!state.spe) state.spe = true; $("spe").checked = true; activePreset = ""; update(); });
+  for (const id of ["spe", "nofall", "relay"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; activePreset = ""; update(); });
+  for (const [id, key] of [["m-speed", "mSpeed"], ["m-eta", "mEta"], ["m-down", "mDown"], ["m-sand", "mSand"]])
+    $(id).addEventListener("change", (e) => { state[key] = e.target.checked; activePreset = ""; LMR_KEY = ""; stopSim(); update(); });
+  for (const id of ["showmr", "showsand"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
+  for (const id of ["showfall", "showcomm"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
+  $("showtrav").addEventListener("change", (e) => { state.showtrav = e.target.checked; drawVec(); });
+  $("modes").addEventListener("change", (e) => { state.mode = e.target.value; stopSim(); update(); });
+
+  // 심박 시뮬레이션 조작
+  let playing = false, lastTs = 0, acc = 0;
+  function setSimIdx(i) {
+    if (!SIM || !SIM.ok) return;
+    SIM.idx = Math.max(0, Math.min(SIM.frames.length - 1, i));
+    $("sim-t").value = SIM.idx; simLabel();
+    recompute(); paintPoint();
+  }
+  function stopSim() { playing = false; $("sim-play").textContent = "▶"; $("sim-play").setAttribute("aria-label", "재생"); }
+  function tick(ts) {
+    if (!playing) return;
+    acc += (ts - lastTs) / 1000 * Number($("sim-speed").value); lastTs = ts;
+    if (acc >= 1) {
+      const n = Math.floor(acc); acc -= n;
+      if (SIM.idx >= SIM.frames.length - 1) { stopSim(); return; }
+      setSimIdx(SIM.idx + n);
+    }
+    requestAnimationFrame(tick);
+  }
+  $("sim-play").addEventListener("click", () => {
+    if (!SIM || !SIM.ok) return;
+    if (playing) { stopSim(); return; }
+    if (SIM.idx >= SIM.frames.length - 1) setSimIdx(0);
+    playing = true; acc = 0; lastTs = performance.now();
+    $("sim-play").textContent = "⏸"; $("sim-play").setAttribute("aria-label", "일시정지");
+    requestAnimationFrame(tick);
+  });
+  $("sim-restart").addEventListener("click", () => { stopSim(); setSimIdx(0); });
+  $("sim-t").addEventListener("input", (e) => { stopSim(); setSimIdx(Number(e.target.value)); });
+  $("sim-scn").addEventListener("change", (e) => {
+    state.simScenario = e.target.value; activePreset = "";
+    if (state.simScenario === "custom" && !$("sim-custom").value.trim()) {
+      // 직접 입력의 출발점: 지금까지 보던 시나리오의 심박을 그대로 채워 넣음
+      const src = SIM && SIM.ok ? SIM.frames.filter((f) => isFinite(f.hr)).map((f) => Math.round(f.hr)) : [];
+      $("sim-custom").value = (src.length ? src : [110, 120, 130, 140, 150]).join("\n");
+      state.simCustom = $("sim-custom").value;
+    }
+    stopSim(); update();
+  });
+  $("sim-noise").addEventListener("input", (e) => { state.simNoise = Number(e.target.value); update(); });
+  $("sim-src").addEventListener("change", (e) => { state.simSrc = e.target.value; activePreset = ""; stopSim(); update(); });
+  $("sim-leak").addEventListener("input", (e) => { state.simLeak = Number(e.target.value); activePreset = ""; update(); });
+  $("sim-pnoise").addEventListener("input", (e) => { state.simPNoise = Number(e.target.value); activePreset = ""; update(); });
+  $("sim-tcomp").addEventListener("change", (e) => { state.simTcomp = e.target.checked; activePreset = ""; stopSim(); update(); });
+  $("sim-leaksub").addEventListener("change", (e) => { state.simLeakSub = e.target.checked; activePreset = ""; stopSim(); update(); });
+  $("sim-auto").addEventListener("change", (e) => { state.simAuto = e.target.checked; stopSim(); update(); });
+  $("sim-apply").addEventListener("click", () => { state.simCustom = $("sim-custom").value; stopSim(); update(); });
+  $("sim-file").addEventListener("change", (e) => {
+    const file = e.target.files && e.target.files[0]; if (!file) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      $("sim-custom").value = String(rd.result);
+      state.simCustom = $("sim-custom").value;
+      $("sim-custom-hint").textContent = `${file.name}: 심박 ${parseCustom(state.simCustom).length}개를 읽었습니다. 입력이 경로보다 짧으면 마지막 값을 계속 씁니다.`;
+      stopSim(); update();
+    };
+    rd.readAsText(file);
+  });
+  new ResizeObserver(() => { if (state.mode === "sim") drawSimChart(); }).observe($("simbar"));
+  $("base-reset").addEventListener("click", () => { state.base = BASE0; activePreset = ""; update(); });
+  $("vcarry").addEventListener("change", (e) => { state.vcarry = e.target.value; activePreset = ""; update(); });
+  const setBasemap = (v) => { $("ortho").hidden = v !== "ortho"; $("shade").hidden = v !== "shade"; };
+  for (const id of ["bm-ortho", "bm-shade"]) $(id).addEventListener("change", (e) => setBasemap(e.target.value));
+  const setAlpha = (v) => { document.documentElement.style.setProperty("--cells-alpha", String(v / 100)); $("alpha-out").textContent = `${v}%`; };
+  $("alpha").addEventListener("input", (e) => setAlpha(Number(e.target.value)));
+  setAlpha(80);
+
+  $("presets").innerHTML = PRESETS.map((p) => `<button type="button" data-id="${p.id}">${p.label}</button>`).join("");
+  $("presets").addEventListener("click", (e) => {
+    const bt = e.target.closest("button"); if (!bt) return;
+    const p = PRESETS.find((q) => q.id === bt.dataset.id);
+    Object.assign(state, DEFAULTS, p.s);
+    activePreset = p.id; syncInputs(); update();
+  });
+
+  // ---------- boot ----------
+  wrap.style.aspectRatio = `${W} / ${R}`;
+  wrap.style.maxWidth = `min(100%, calc(88vh * ${(W / R).toFixed(4)}))`;
+  $("shade").src = "__SHADE__";
+  $("ortho").src = "__ORTHO__";
+  new ResizeObserver(() => drawVec()).observe(wrap);
+  // 개발 확인용: #rescue-demo 로 열면 구조 예시 상황으로 시작
+  if (location.hash === "#rescue-demo") { Object.assign(state, PRESETS.find((p) => p.id === "rescue").s); activePreset = "rescue"; }
+  if (location.hash === "#here-demo") { Object.assign(state, { mode: "here", here: Math.round(META.base[1] + 120) * W + Math.round(META.base[0] - 150) }); activePreset = ""; }
+  if (location.hash === "#sim-demo" || location.hash === "#sim-noauto") {
+    Object.assign(state, PRESETS.find((p) => p.id === "simhr").s); activePreset = "simhr"; pendingJump = true;
+    if (location.hash === "#sim-noauto") { state.simAuto = false; activePreset = ""; }
+  }
+  if (location.hash === "#sim-custom") {     // 개발 확인용: 직접 입력 경로
+    Object.assign(state, PRESETS.find((p) => p.id === "simhr").s, { simScenario: "custom" }); activePreset = ""; pendingJump = true;
+    state.simCustom = "minute,bpm\n" + Array.from({ length: 90 }, (_, i) => `${i},${i < 45 ? 125 : 165}`).join("\n");
+  }
+  if (location.hash === "#sim-press" || location.hash === "#sim-press-raw") {   // 개발 확인용: 압력 방식
+    Object.assign(state, PRESETS.find((p) => p.id === "simpress").s); activePreset = "simpress"; pendingJump = true;
+    if (location.hash === "#sim-press-raw") { state.simTcomp = false; activePreset = ""; }
+  }
+  if (location.hash === "#sim-lit") { Object.assign(state, PRESETS.find((p) => p.id === "simhr").s, { mSpeed: true, mEta: true, mDown: true, mSand: true }); activePreset = ""; pendingJump = true; }
+  { const mm = /^#m([01]{4})(mr)?$/.exec(location.hash);      // 개발 확인용: #m1010 = 속도·η·내리막·모래 켜기, 끝에 mr이면 대사량 지도
+    if (mm) { [state.mSpeed, state.mEta, state.mDown, state.mSand] = [...mm[1]].map((c) => c === "1"); if (mm[2]) { state.showmr = true; state.showsand = true; } activePreset = ""; } }
+  if (location.hash === "#base-demo") { state.mode = "base"; state.base = 350 * W + 330; activePreset = ""; }
+  syncInputs();
+  function selfTest() {       // #selftest: 브라우저 이식 코드가 미리 계산한 착륙지 결과와 맞는지
+    const t0 = performance.now();
+    const T = returnTree(BASE0, false), P = SETS.plain;
+    let maxd = 0, mism = 0;
+    for (let i = 0; i < N; i++) {
+      if ((T.o2[i] < 0) !== (P.o2[i] < 0)) { mism++; continue; }
+      if (P.o2[i] >= 0) maxd = Math.max(maxd, Math.abs(T.o2[i] - P.o2[i]));
+    }
+    const t1 = performance.now();
+    const vs = viewshedJS(BASE0, C.base_ant_m, C.suit_ant_m);
+    let agree = 0, nv = 0, both = 0, pre = 0, js = 0;
+    for (let i = 0; i < N; i++) if (FLAGS[i] & 1) { nv++; const a = (FLAGS[i] & 2) ? 1 : 0; agree += a === vs[i]; pre += a; js += vs[i]; }
+    $("selftest").textContent = JSON.stringify({ tree_max_abs_g: +maxd.toFixed(4), tree_reach_mismatch: mism, tree_ms: Math.round(t1 - t0),
+      vis_agree_pct: +(agree / nv * 100).toFixed(3), vis_km2_pre: +(pre * KM2).toFixed(2), vis_km2_js: +(js * KM2).toFixed(2),
+      vis_ms: Math.round(performance.now() - t1), relay_los: losJS(BASE0, RELAY, C.base_ant_m, C.relay_ant_m) });
+  }
+  decode().then(() => { $("loading").hidden = true; if (location.hash === "#selftest") selfTest(); update(); })
+    .catch((err) => { $("loading").textContent = "데이터를 풀지 못했습니다. 최신 Chrome, Edge, Safari, Firefox에서 열어 주세요. (" + err.message + ")"; });
+})();
+</script>

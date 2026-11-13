@@ -1,0 +1,133 @@
+{
+  "threshold_sweep": [
+    {
+      "thresh": 0.0,
+      "val_mean_iou": 0.09766604583038464
+    },
+    {
+      "thresh": 0.05,
+      "val_mean_iou": 0.11908373223103787
+    },
+    {
+      "thresh": 0.1,
+      "val_mean_iou": 0.1380209001943375
+    },
+    {
+      "thresh": 0.15000000000000002,
+      "val_mean_iou": 0.13217643241587
+    },
+    {
+      "thresh": 0.2,
+      "val_mean_iou": 0.15107708662757632
+    },
+    {
+      "thresh": 0.25,
+      "val_mean_iou": 0.10008374060815585
+    },
+    {
+      "thresh": 0.30000000000000004,
+      "val_mean_iou": 0.0827607895943862
+    },
+    {
+      "thresh": 0.35000000000000003,
+      "val_mean_iou": 0.08074582223621571
+    },
+    {
+      "thresh": 0.4,
+      "val_mean_iou": 0.04448000481114296
+    },
+    {
+      "thresh": 0.45,
+      "val_mean_iou": 0.03639627906155063
+    },
+    {
+      "thresh": 0.5,
+      "val_mean_iou": 0.03461630467501132
+    },
+    {
+      "thresh": 0.55,
+      "val_mean_iou": 0.03460472560896841
+    },
+    {
+      "thresh": 0.6000000000000001,
+      "val_mean_iou": 0.01881721643999525
+    },
+    {
+      "thresh": 0.65,
+      "val_mean_iou": 0.0015497969848736744
+    },
+    {
+      "thresh": 0.7000000000000001,
+      "val_mean_iou": 0.0003082921953054196
+    },
+    {
+      "thresh": 0.75,
+      "val_mean_iou": 0.0001457767180192417
+    },
+    {
+      "thresh": 0.8,
+      "val_mean_iou": 0.0
+    },
+    {
+      "thresh": 0.8500000000000001,
+      "val_mean_iou": 0.0
+    },
+    {
+      "thresh": 0.9,
+      "val_mean_iou": 0.0
+    },
+    {
+      "thresh": 0.9500000000000001,
+      "val_mean_iou": 0.0
+    },
+    {
+      "thresh": 1.0,
+      "val_mean_iou": 0.0
+    }
+  ],
+  "selected_threshold": 0.2,
+  "selected_threshold_val_iou": 0.15107708662757632,
+  "holdout_results": {
+    "per_sample": [
+      {
+        "precision": 0.9909244718946089,
+        "recall": 0.34142579816285296,
+        "iou": 0.34036148826869855,
+        "gt_rock_pct": 38.49918398385835,
+        "detected_pct": 13.265001514369073,
+        "name": "NLB_486372898EDR_F0481570NCAM00322M1"
+      },
+      {
+        "precision": 0.0,
+        "recall": NaN,
+        "iou": 0.0,
+        "gt_rock_pct": 0.0,
+        "detected_pct": 0.03765435681744781,
+        "name": "NLB_542921313EDR_F0612232NCAM00320M1"
+      },
+      {
+        "precision": NaN,
+        "recall": NaN,
+        "iou": NaN,
+        "gt_rock_pct": 0.0,
+        "detected_pct": 0.0,
+        "name": "NLB_461147286EDR_F0401240NCAM00385M1"
+      }
+    ],
+    "mean_precision": 0.49546223594730443,
+    "mean_recall": 0.34142579816285296,
+    "mean_iou": 0.17018074413434928
+  },
+  "baselines": {
+    "classical_cv_only": {
+      "precision": 0.279,
+      "recall": 0.386,
+      "iou": 0.12
+    },
+    "trained_model_only": {
+      "precision": 0.473,
+      "recall": 0.104,
+      "iou": 0.052
+    }
+  }
+}

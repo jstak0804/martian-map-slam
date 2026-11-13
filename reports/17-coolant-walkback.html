@@ -1,0 +1,281 @@
+<title>냉각수 귀환 반경</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout: single reading column (~760px) with full-width tables; mission-console labels in mono */
+  :root {
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --ink: #1b2230;
+    --ink-soft: #5a6478;
+    --rule: #dde1e8;
+    --accent: #c4552b;        /* oxide, used sparingly */
+    --accent-soft: #f6e4dc;
+    --ok: #2f7d55;  --ok-bg: #e2f2e9;
+    --warn: #9a6a0c; --warn-bg: #f7eed6;
+    --muted: #6b7280; --muted-bg: #eceef2;
+    --bar-a: #9aa5b8;
+    --bar-b: #c4552b;
+    --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151c; --surface: #191d26; --ink: #e6e9ef; --ink-soft: #9aa3b5; --rule: #2a303c;
+      --accent: #e57a51; --accent-soft: #3a2219;
+      --ok: #6cc596; --ok-bg: #1a3328; --warn: #e2b450; --warn-bg: #3a2f14; --muted: #a0a7b4; --muted-bg: #262b35;
+      --bar-a: #5d6779; --bar-b: #e57a51;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12151c; --surface: #191d26; --ink: #e6e9ef; --ink-soft: #9aa3b5; --rule: #2a303c;
+    --accent: #e57a51; --accent-soft: #3a2219;
+    --ok: #6cc596; --ok-bg: #1a3328; --warn: #e2b450; --warn-bg: #3a2f14; --muted: #a0a7b4; --muted-bg: #262b35;
+    --bar-a: #5d6779; --bar-b: #e57a51;
+    color-scheme: dark;
+  }
+
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15.5px; line-height: 1.7; }
+  .page { max-width: 820px; margin: 0 auto; padding-block: 40px 72px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: grid; gap: 44px; }
+  header { display: grid; gap: 10px; }
+  .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(26px, 4.4vw, 36px); line-height: 1.25; margin: 0; font-weight: 700; text-wrap: balance; }
+  .lede { color: var(--ink-soft); margin: 0; max-width: 64ch; }
+  .meta { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); }
+
+  section { display: grid; gap: 14px; min-width: 0; }
+  section > h3 { margin: 12px 0 0; font-size: 17px; font-weight: 600; text-wrap: balance; }
+  h2 { font-size: 20px; margin: 0; font-weight: 600; text-wrap: balance; display: flex; gap: 10px; align-items: baseline; }
+  h2 .n { font-family: var(--font-mono); font-size: 13px; color: var(--accent); font-weight: 500; }
+  p { margin: 0; max-width: 68ch; }
+  .soft { color: var(--ink-soft); }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+  code, .mono { font-family: var(--font-mono); font-size: .9em; }
+  code { background: var(--muted-bg); padding: 1px 5px; border-radius: 4px; }
+
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .sum.alert { border-color: var(--warn); }
+  .sum.alert .v { color: var(--warn); }
+
+  figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
+  figure img, figure video { width: 100%; max-width: 100%; height: auto; display: block; border-radius: 6px; background: #0b0e15; border: 1px solid var(--rule); }
+  figcaption { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; }
+  figcaption strong { color: var(--ink); font-weight: 600; }
+  .flow { display: grid; gap: 28px; }
+  .step { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; }
+  .step .idx { font-family: var(--font-mono); font-size: 13px; color: var(--accent); border: 1px solid var(--accent); border-radius: 50%; width: 28px; height: 28px; display: grid; place-items: center; }
+  .step .body { display: grid; gap: 10px; min-width: 0; }
+  .step h3 { margin: 0; font-size: 16px; font-weight: 600; text-wrap: balance; }
+  .pair2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 640px) { .pair2 { grid-template-columns: 1fr; } .step { grid-template-columns: 1fr; } }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; background: var(--accent-soft); border-radius: 8px; padding: 14px 16px; }
+  .cta a { font-weight: 600; }
+  .sum { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
+  .sum .k { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-soft); }
+  .sum .v { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .sum .d { font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; }
+  .sum.changed { border-color: var(--accent); }
+  .sum.changed .v { color: var(--accent); }
+  @media (max-width: 640px) { .summary { grid-template-columns: 1fr; } }
+
+  .tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 560px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 11.5px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-soft); background: var(--bg); }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: var(--font-mono); font-size: 13.5px; }
+
+  .chip { display: inline-block; font-size: 12px; font-weight: 500; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+  .chip.ok { color: var(--ok); background: var(--ok-bg); }
+  .chip.warn { color: var(--warn); background: var(--warn-bg); }
+  .chip.muted { color: var(--muted); background: var(--muted-bg); }
+  .chip.accent { color: var(--accent); background: var(--accent-soft); }
+
+  .callout { border-left: 3px solid var(--warn); background: var(--warn-bg); padding: 12px 16px; border-radius: 0 6px 6px 0; font-size: 14.5px; }
+  .callout p { max-width: none; }
+
+  /* dose scale */
+  .scale { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 18px 18px 14px; display: grid; gap: 12px; }
+  .row { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr) 84px; gap: 12px; align-items: center; font-size: 13.5px; }
+  .row .lbl { color: var(--ink-soft); line-height: 1.35; }
+  .track { height: 14px; background: var(--muted-bg); border-radius: 3px; position: relative; overflow: hidden; }
+  .fill { height: 100%; border-radius: 3px; background: var(--bar-a); }
+  .fill.hot { background: var(--bar-b); }
+  .fill.line { background: transparent; border-right: 2px dashed var(--ink); border-radius: 0; }
+  .row .val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+  .scale .axis { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-soft); }
+  @media (max-width: 560px) { .row { grid-template-columns: minmax(0, 1fr) 70px; } .row .lbl { grid-column: 1 / -1; } }
+
+  /* ETA bars */
+  .eta { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 18px; display: grid; gap: 16px; }
+  .eta-item { display: grid; gap: 6px; }
+  .eta-item .t { font-size: 13.5px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .eta-item .t span:last-child { font-family: var(--font-mono); color: var(--ink-soft); }
+  .pair { display: grid; gap: 4px; }
+  .bar { display: grid; grid-template-columns: 64px minmax(0, 1fr) 56px; gap: 10px; align-items: center; font-family: var(--font-mono); font-size: 12px; }
+  .bar .val { text-align: right; font-variant-numeric: tabular-nums; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-soft); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+  ol.next { margin: 0; padding-left: 1.3em; display: grid; gap: 8px; max-width: 68ch; }
+  ul.files { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; font-size: 14.5px; }
+  footer { font-size: 13px; color: var(--ink-soft); border-top: 1px solid var(--rule); padding-top: 16px; }
+</style>
+
+<div class="page">
+  <header>
+    <div class="eyebrow">Mars Map SLAM · Report 17</div>
+    <h1>냉각수 잔량과 귀환 반경</h1>
+    <p class="lede">우주복은 몸에서 나는 열을 냉각수를 증발시켜 버립니다. 버린 물은 돌아오지 않으므로 냉각수도 산소처럼 "다 쓰면 끝"인 소모품입니다. 냉각수를 산소·선량에 이어 귀환 반경의 세 번째 예산으로 넣었습니다. 남은 냉각수가 얼마 아래로 떨어지면 산소보다 먼저 귀환을 막는지 계산했습니다.</p>
+    <div class="meta">2026-11-05 · 지형: HiRISE DTM (Gale 크레이터, 10 m) · 냉각: NASA ICES 2007·2026 논문, UMD 우주복 열관리 강의</div>
+  </header>
+
+  <section aria-label="요약">
+    <div class="summary">
+      <div class="sum">
+        <div class="k">화성 평지 보행</div>
+        <div class="v">438 g/h</div>
+        <div class="d">301 W를 전부 증발로 버릴 때. 산소 77 g/h의 약 5.7배. 만충 3.6 kg이면 8.2시간</div>
+      </div>
+      <div class="sum alert">
+        <div class="k">냉각수가 산소보다 먼저 묶는 선</div>
+        <div class="v">약 0.85 kg</div>
+        <div class="d">산소 150 g이 남았을 때 냉각수가 이보다 적으면 귀환 반경이 냉각수로 정해짐. 열 조건에 따라 0.57~1.13 kg</div>
+      </div>
+      <div class="sum alert">
+        <div class="k">냉각수 0.6 kg 남음</div>
+        <div class="v">반경 −60%</div>
+        <div class="d">귀환 가능 면적 18.6 → 7.4 km². 우주복이 열을 100 W 더 받으면 3.2 km²</div>
+      </div>
+      <div class="sum changed">
+        <div class="k">물이 떨어진 뒤</div>
+        <div class="v">약 19분</div>
+        <div class="d">대사열이 몸에 쌓여 비상 체온 한계에 닿기까지 평지 보행 시간(약 1.1 km). 냉각수 141 g어치</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">1</span>왜 냉각수인가</h2>
+    <p>NASA는 우주복 냉각수를 "8시간 EVA에서 가장 큰 소모품"이라고 부릅니다. 승화기 장치 자체는 1.58 kg인데, 여기에 물 3.6 kg(8 lb)을 싣고 대부분을 증발시켜 버립니다. 화성에서는 사정이 더 까다롭습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>사실</th><th>귀환 반경에 주는 뜻</th><th>출처</th></tr></thead>
+        <tbody>
+          <tr><td>Apollo·셔틀의 <strong>승화기는 화성에서 못 씁니다.</strong> 물의 삼중점(611 Pa)보다 낮은 압력에서만 작동하기 때문입니다.</td><td>화성 우주복은 막 증발기(SWME)를 씁니다. 10 Torr(1333 Pa)까지 시험했고, 성능 저하와 먼지 필터 문제가 남아 있습니다.</td><td>ICES-2026-126 p.4, p.10</td></tr>
+          <tr><td>NASA는 첫 화성 EVA 후보지를 <strong>대기압 7~8 Torr 이하</strong>인 곳으로 가정합니다.</td><td>냉각 방식이 EVA 가능 장소 자체를 제한합니다. Gale 크레이터는 저지대라 화성 평균(약 4.6 Torr)보다 기압이 높습니다.</td><td>ICES-2026-126 p.7</td></tr>
+          <tr><td>기존 EMU는 <strong>냉각수 잔량을 연속으로 재지 못했습니다.</strong> 1차 주머니가 비면 2차 주머니가 열리는 압력 변화로만 알았습니다.</td><td>"남은 냉각수"는 직접 잰 값이 아니라 쓴 양을 적분한 추정치일 수 있습니다. 연속 잔량 센서는 지금 개발 중입니다.</td><td>ICES-2026-126 p.13</td></tr>
+          <tr><td>화성 PLSS는 고장 난 사람이 동료의 냉각 회로에 연결하는 <strong>버디 냉각</strong>(Apollo BSLSS 방식)을 검토 중입니다.</td><td>보고서 15의 2인 EVA와 이어집니다. 냉각 고장이면 동료가 곁에 있어야 합니다.</td><td>ICES-2026-126 p.4, p.12</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>모델</h2>
+    <div class="scale">
+      <div class="mono">냉각수(g/s) = max(0, 대사량 W + Q_extra W) ÷ 2.477 MJ/kg × 1000</div>
+      <div class="mono">귀환 가능 = 산소 OK  AND  선량 OK  AND  [귀환 냉각수 ≤ 남은 냉각수 − 30분 예비분]</div>
+    </div>
+    <p>대사량은 산소 계산과 같은 Pandolf 식에서 구합니다. 그래서 같은 경로의 산소와 냉각수를 한 번에 냅니다. <code>Q_extra</code>는 PLSS 전자장비 발열과 환경에서 들어오거나(+) 빠져나가는(−) 열을 합친 값입니다. 측정치가 없어 −100, 0, +100 W 세 경우로 돌렸습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>값</th><th>근거</th><th>수준</th></tr></thead>
+        <tbody>
+          <tr><td>증발잠열 2.477 MJ/kg</td><td>10 °C 물의 증기표 값. 화성 SWME는 보통 10 °C에서 작동</td><td><span class="chip ok">문헌</span></td></tr>
+          <tr><td>만충 냉각수 3.6 kg</td><td>Nabity et al. 2007, 8시간 EVA. 셔틀·ISS EMU는 3.9 kg을 싣고 7 h × 1000 BTU/h로 정격</td><td><span class="chip ok">문헌</span></td></tr>
+          <tr><td>비상 체온 한계 2.0 BTU/lb (4.65 kJ/kg)</td><td>NASA 우주복 시험의 "인지 저하 시작(CDO)" 상한. 정상 운용 쾌적 상한은 1.3 BTU/lb</td><td><span class="chip ok">문헌</span></td></tr>
+          <tr><td>대사열 전부를 증발로 버림</td><td>호흡·위치에너지로 빠지는 몫은 무시. 냉각수를 더 쓰는 쪽(보수적)</td><td><span class="chip warn">가정</span></td></tr>
+          <tr><td>예비분 30분</td><td>산소와 같은 원칙(Apollo 소모품 30분 예비)을 그대로 적용. Q_extra = 0이면 219 g</td><td><span class="chip warn">가정</span></td></tr>
+          <tr><td>Q_extra ±100 W</td><td>화성 기압에서 다층단열(MLI) 성능이 진공의 1/100로 떨어진다는 보고(&lt;1 → &gt;100 W/m²)와 평균 기온 −60 °C로 보면 열을 잃는 쪽(−)일 가능성이 큼. 햇빛과 PLSS 발열은 +</td><td><span class="chip warn">가정</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="soft">검산: 셔틀·ISS EMU의 정격 7 h × 1000 BTU/h를 이 식에 넣으면 물 약 3.0 kg이 나옵니다(UMD 강의 p.8은 승화열로 계산해 2.87 kg). 실제로 싣는 3.9 kg보다 약 1 kg 적으니, 실제 탱크에는 그만큼 여유가 있습니다.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>언제 냉각수가 산소보다 먼저 막나</h2>
+    <p>남은 산소는 보고서 15의 기준인 150 g으로 고정했습니다. 그다음 남은 냉각수를 1.6 kg에서 0.3 kg까지 줄여 가며 귀환 가능 면적을 다시 계산했습니다. SPE는 껐습니다.</p>
+    <figure>
+      <img src="img/water_vs_o2_sweep.png" alt="남은 냉각수(가로축)에 따른 귀환 가능 면적. 세 열 조건 곡선이 각각 0.5, 0.8, 1.1 kg 아래에서 산소만 볼 때의 18.6 km²보다 줄어듦">
+      <figcaption><strong>Q_extra = 0이면 냉각수 0.8~0.9 kg 아래에서 면적이 줄기 시작합니다.</strong> 산소 150 g을 쓰는 동안 쓰는 냉각수 852 g(예비분 포함)과 맞습니다. 열을 100 W 더 받으면 이 선이 1.1 kg으로 올라가고, 100 W를 잃으면 0.5 kg으로 내려갑니다.</figcaption>
+    </figure>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>남은 냉각수 (kg)</th><th>0.3</th><th>0.4</th><th>0.5</th><th>0.6</th><th>0.7</th><th>0.8</th><th>0.9</th><th>1.0</th><th>1.1</th><th>1.2</th></tr></thead>
+        <tbody>
+          <tr><td>열 손실 −100 W</td><td class="num">2.9</td><td class="num">6.9</td><td class="num">12.7</td><td class="num">18.6</td><td class="num">18.6</td><td class="num">18.6</td><td class="num">18.6</td><td class="num">18.6</td><td class="num">18.6</td><td class="num">18.6</td></tr>
+          <tr><td><strong>Q_extra = 0</strong></td><td class="num">0.5</td><td class="num">2.1</td><td class="num">4.4</td><td class="num"><strong>7.4</strong></td><td class="num">11.2</td><td class="num">15.9</td><td class="num">18.6</td><td class="num">18.6</td><td class="num">18.6</td><td class="num">18.6</td></tr>
+          <tr><td>열 유입 +100 W</td><td class="num">0.0</td><td class="num">0.5</td><td class="num">1.7</td><td class="num">3.2</td><td class="num">5.2</td><td class="num">7.6</td><td class="num">10.5</td><td class="num">13.9</td><td class="num">17.8</td><td class="num">18.6</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="soft">표의 값은 귀환 가능 면적(km²)입니다. 산소만 볼 때는 18.6 km²입니다.</p>
+    <div class="callout"><p><strong>해석.</strong> 냉각수와 산소는 둘 다 대사량에 비례해서 줄어듭니다. 정상이면 만충 3.6 kg이 8시간을 버티므로 산소가 먼저 묶입니다. 냉각수가 문제가 되는 것은 이 비율이 깨질 때입니다. 누수·과소충전으로 냉각수만 줄었거나, 햇빛·장비 발열로 열을 더 버려야 할 때입니다. 그래서 경보는 "남은 산소 시간"과 "남은 냉각수 시간"을 나란히 내고, <strong>둘 중 짧은 쪽</strong>으로 귀환 반경을 그려야 합니다.</p></div>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span>냉각수 0.6 kg이 남았을 때의 지도</h2>
+    <figure>
+      <img src="img/coolant_walkback_map.png" alt="세 지도. 열 손실 −100 W에서는 산소 경계와 같고, Q_extra 0과 +100 W에서는 파란 영역이 거점 쪽으로 줄고 분홍·노랑 띠가 생김">
+      <figcaption><strong>파랑: 돌아올 수 있음. 분홍: 산소는 되지만 냉각수가 모자람(예비분을 헐어야 함). 노랑: 길 위에서 탱크가 비고, 남은 길은 몸에 열을 쌓으며 비상 한계 안에서 겨우 돌아옴.</strong> Q_extra = 0이면 7.4 km², +100 W면 3.2 km²입니다. −100 W면 산소 경계(18.6 km²)와 같습니다.</figcaption>
+    </figure>
+    <p>모양은 산소 경계와 같은 동심원 띠입니다. 귀환 경로마다 냉각수와 산소의 비율을 따로 계산해 봐도, +100 W일 때 평지 보행 비율과의 차이가 2% 안이었습니다(중앙값 0.985, 하위 10% 0.980, 상위 10% 0.991). 이 지형에서는 냉각수가 <strong>어디서</strong> 막히는지보다 <strong>얼마나 안쪽에서</strong> 막히는지가 문제라는 뜻입니다. 경사에 따라 차이가 나려면 오르막 감속(시간에 비례하는 열)이 들어가야 합니다.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span>물이 떨어진 뒤: 몸에 쌓을 수 있는 열</h2>
+    <p>냉각수가 떨어져도 바로 쓰러지지는 않습니다. 대사열이 몸에 쌓이고, 일정 한계를 넘으면 판단력이 떨어지기 시작합니다. NASA 우주복 시험은 이 한계를 체중 1 lb당 2.0 BTU로 둡니다(비상 운용 기준).</p>
+    <div class="scale">
+      <div class="mono">버틸 수 있는 열 = 2.0 BTU/lb × 2.326 kJ/kg per BTU/lb × 75 kg = 349 kJ</div>
+      <div class="mono">평지 보행 301 W로 349 kJ = 19분 ≈ 1.1 km = 냉각수 141 g어치</div>
+    </div>
+    <p>즉 몸은 "냉각수 141 g짜리 비상 탱크"와 같습니다. 지도의 노란 띠가 이 탱크로 돌아올 수 있는 영역입니다. 다만 이것은 대사열이 하나도 빠져나가지 않는다는 최악의 가정입니다. 한계도 판단력이 떨어지기 <strong>시작</strong>하는 선이지 안전한 운용선이 아닙니다. 같은 논문의 시험(액체냉각복 없이 공기로만 냉각, 30 °C 방)에서 체구가 가장 작은 피험자는 약 45분 시험 안에 여러 조건에서 이 한계에 닿거나 넘었습니다.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">6</span>실행 방법</h2>
+    <p>보고서 15의 SPE 상황 명령에 냉각수 옵션을 붙였습니다. 기본값은 만충(3.6 kg), <code>Q_extra</code> 0 W입니다. 냉각수가 만충이면 경로 선택은 예전과 같아서 보고서 15의 수치는 그대로입니다(다시 돌려 확인함).</p>
+    <div class="scale">
+      <div class="mono">python spe_walkback.py --spe off --water-left 0.6</div>
+      <div class="mono">python spe_walkback.py --spe on --water-left 0.6 --heat-extra 100</div>
+      <div class="mono">python coolant_walkback.py        # 이 보고서의 그림과 수치 전체</div>
+    </div>
+    <p class="soft">예: SPE 관측 배율(×2.9) + 냉각수 0.6 kg + 열 +100 W → 귀환 가능 3.22 km². 냉각수 때문에 잘린 면적 15.42 km², 그중 노란 띠 4.84 km². 이때 SPE 자체가 줄인 면적은 0입니다.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">7</span>한계와 다음 단계</h2>
+    <ol class="next">
+      <li><strong>Q_extra가 가장 큰 미지수입니다.</strong> 프로젝트에 이미 있는 Curiosity REMS 기온(보고서 14)과 태양 고도로 시간대별 환경 열을 추정하면, "오후에는 냉각수 반경이 몇 % 준다"처럼 시간에 따라 바뀌는 반경을 그릴 수 있습니다.</li>
+      <li><strong>추울 때의 위험은 넣지 않았습니다.</strong> 열을 잃는 쪽(−)은 냉각수에는 유리하지만, 히터 전력과 저체온이라는 다른 문제를 만듭니다.</li>
+      <li><strong>심박 보정(보고서 16)을 냉각수에도 써야 합니다.</strong> k가 1.2면 냉각수도 20% 더 씁니다. 연속 잔량 센서가 없다면 심박으로 쓴 열을 적분해 남은 냉각수를 추정하는 방법도 있습니다.</li>
+      <li><strong>화성 SWME의 실제 효율은 모릅니다.</strong> 먼지 필터의 배압, 7~8 Torr에서의 성능 저하를 반영하면 같은 열에 물이 더 듭니다.</li>
+      <li>오르막 감속이 들어가면 시간에 비례하는 항(Q_extra) 때문에 냉각수 경계가 산소 경계와 다른 모양이 됩니다.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="n">8</span>파일</h2>
+    <ul class="files">
+      <li><code>code/suit_cooling.py</code> 냉각수 소모율, 예비분, 물이 떨어진 뒤 비상 한계까지의 시간</li>
+      <li><code>code/spe_walkback.py</code> 귀환 반경 엔진에 냉각수 예산 추가, <code>--water-left</code> <code>--heat-extra</code> 옵션</li>
+      <li><code>code/coolant_walkback.py</code> 냉각수 잔량 스윕, 열 조건 3가지, 지도</li>
+      <li><code>outputs/coolant/</code> 그림 2장, <code>coolant_stats.json</code></li>
+    </ul>
+  </section>
+
+  <footer>
+    출처:
+    <a href="https://ntrs.nasa.gov/citations/20260003024">Ogilvie et al., Mars Portable Life Support System Status and Plan (ICES-2026-126)</a> ·
+    <a href="https://ntrs.nasa.gov/citations/20070013698">Nabity et al., Space Suit Radiator Performance in Lunar and Mars Environments (07ICES-221)</a> ·
+    <a href="https://ntrs.nasa.gov/citations/20260005313">Mah &amp; Machak, Performance Evaluation of IVA Spacesuit without LCG (ICES-2026-170)</a> ·
+    <a href="https://spacecraft.ssl.umd.edu/academics/697S23/697S23L25.thermalx.pdf">Akin, UMD ENAE 697 Thermal Analysis and Modeling</a>
+  </footer>
+</div>

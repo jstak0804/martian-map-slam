@@ -1,0 +1,2011 @@
+{
+ "coldest_sol": 510,
+ "summary": {
+  "cosine": {
+   "min_temp_c": -95.0,
+   "max_thermal_risk": 1.0,
+   "warning_hours": [
+    1,
+    2,
+    3
+   ],
+   "peak_hour": 2.0,
+   "peak_mean_risk": 0.4083810160325119,
+   "min_safe_zone_pct": 5.636363636363637
+  },
+  "sol242": {
+   "min_temp_c": -67.45172077922076,
+   "max_thermal_risk": 0.0,
+   "warning_hours": [],
+   "peak_hour": 1.0,
+   "peak_mean_risk": 0.20838101603251194,
+   "min_safe_zone_pct": 97.17561983471074
+  },
+  "sol510": {
+   "min_temp_c": -80.87272727272725,
+   "max_thermal_risk": 0.43490909090908986,
+   "warning_hours": [],
+   "peak_hour": 3.0,
+   "peak_mean_risk": 0.2813256913571871,
+   "min_safe_zone_pct": 94.3801652892562
+  },
+  "sol540": {
+   "min_temp_c": -77.18269480519479,
+   "max_thermal_risk": 0.2873077922077914,
+   "warning_hours": [],
+   "peak_hour": 3.0,
+   "peak_mean_risk": 0.2658425744740702,
+   "min_safe_zone_pct": 95.12190082644628
+  },
+  "sol570": {
+   "min_temp_c": -80.69027027027025,
+   "max_thermal_risk": 0.42761081081080987,
+   "warning_hours": [],
+   "peak_hour": 3.0,
+   "peak_mean_risk": 0.2783365295460253,
+   "min_safe_zone_pct": 94.50826446280992
+  },
+  "sol600": {
+   "min_temp_c": -80.55189189189186,
+   "max_thermal_risk": 0.4220756756756742,
+   "warning_hours": [],
+   "peak_hour": 3.0,
+   "peak_mean_risk": 0.26033191016775387,
+   "min_safe_zone_pct": 95.34917355371901
+  },
+  "sol630": {
+   "min_temp_c": -77.73774350649347,
+   "max_thermal_risk": 0.30950974025973893,
+   "warning_hours": [],
+   "peak_hour": 3.0,
+   "peak_mean_risk": 0.26206010694160264,
+   "min_safe_zone_pct": 95.27272727272728
+  },
+  "sol660": {
+   "min_temp_c": -73.52950414154878,
+   "max_thermal_risk": 0.14118016566195138,
+   "warning_hours": [],
+   "peak_hour": 3.0,
+   "peak_mean_risk": 0.22205971733121305,
+   "min_safe_zone_pct": 96.69628099173553
+  }
+ },
+ "timelines": {
+  "cosine": [
+   {
+    "hour": 0.0,
+    "temperature_c": -88.30127018922194,
+    "thermal_risk": 0.7320508075688775,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.2888680760785135,
+    "safe_zone_pct": 94.08471074380166,
+    "warning": false
+   },
+   {
+    "hour": 1.0,
+    "temperature_c": -93.29629131445341,
+    "thermal_risk": 0.9318516525781365,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.3947513465481393,
+    "safe_zone_pct": 11.960743801652892,
+    "warning": true
+   },
+   {
+    "hour": 2.0,
+    "temperature_c": -95.0,
+    "thermal_risk": 1.0,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.4083810160325119,
+    "safe_zone_pct": 5.636363636363637,
+    "warning": true
+   },
+   {
+    "hour": 3.0,
+    "temperature_c": -93.29629131445341,
+    "thermal_risk": 0.9318516525781365,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.3947513465481393,
+    "safe_zone_pct": 11.960743801652892,
+    "warning": true
+   },
+   {
+    "hour": 4.0,
+    "temperature_c": -88.30127018922194,
+    "thermal_risk": 0.7320508075688775,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.2888680760785135,
+    "safe_zone_pct": 94.08471074380166,
+    "warning": false
+   },
+   {
+    "hour": 5.0,
+    "temperature_c": -80.35533905932738,
+    "thermal_risk": 0.4142135623730951,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.22530062703935705,
+    "safe_zone_pct": 96.68801652892563,
+    "warning": false
+   },
+   {
+    "hour": 6.0,
+    "temperature_c": -69.99999999999999,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 7.0,
+    "temperature_c": -57.940952255126035,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 8.0,
+    "temperature_c": -45.0,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 9.0,
+    "temperature_c": -32.059047744873965,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 10.0,
+    "temperature_c": -19.999999999999993,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 11.0,
+    "temperature_c": -9.644660940672622,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 12.0,
+    "temperature_c": -1.6987298107780617,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 13.0,
+    "temperature_c": 3.2962913144534127,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 14.0,
+    "temperature_c": 5.0,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 15.0,
+    "temperature_c": 3.2962913144534127,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 16.0,
+    "temperature_c": -1.6987298107780617,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 17.0,
+    "temperature_c": -9.644660940672622,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 18.0,
+    "temperature_c": -19.999999999999993,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 19.0,
+    "temperature_c": -32.059047744873965,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 20.0,
+    "temperature_c": -45.0,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 21.0,
+    "temperature_c": -57.940952255126035,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 22.0,
+    "temperature_c": -69.99999999999999,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 23.0,
+    "temperature_c": -80.35533905932738,
+    "thermal_risk": 0.4142135623730951,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.22530062703935705,
+    "safe_zone_pct": 96.68801652892563,
+    "warning": false
+   }
+  ],
+  "sol242": [
+   {
+    "hour": 0.0,
+    "temperature_c": -53.14368506493504,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 1.0,
+    "temperature_c": -56.5321753246753,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.20838101603251194,
+    "safe_zone_pct": 97.17561983471074,
+    "warning": false
+   },
+   {
+    "hour": 2.0,
+    "temperature_c": -59.16360389610388,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.20838101603251194,
+    "safe_zone_pct": 97.17561983471074,
+    "warning": false
+   },
+   {
+    "hour": 3.0,
+    "temperature_c": -62.30090909090907,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.20838101603251194,
+    "safe_zone_pct": 97.17561983471074,
+    "warning": false
+   },
+   {
+    "hour": 4.0,
+    "temperature_c": -64.95974025974024,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 5.0,
+    "temperature_c": -67.45172077922076,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 6.0,
+    "temperature_c": -67.35112964621584,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 7.0,
+    "temperature_c": -65.56666605032163,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 8.0,
+    "temperature_c": -63.49180263787202,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 9.0,
+    "temperature_c": -56.66180194805193,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 10.0,
+    "temperature_c": -45.028084415584395,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 11.0,
+    "temperature_c": -34.48319805194803,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 12.0,
+    "temperature_c": -26.367759740259714,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 13.0,
+    "temperature_c": -20.21490259740257,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 14.0,
+    "temperature_c": -13.797743506493482,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 15.0,
+    "temperature_c": -7.408425324675301,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 16.0,
+    "temperature_c": -2.8639772727272494,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 17.0,
+    "temperature_c": -3.4142370129869897,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 18.0,
+    "temperature_c": -11.397759740259715,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 19.0,
+    "temperature_c": -25.45925324675322,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 20.0,
+    "temperature_c": -37.86790584415582,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 21.0,
+    "temperature_c": -42.757435064935045,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 22.0,
+    "temperature_c": -46.99633116883115,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 23.0,
+    "temperature_c": -50.178798701298675,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   }
+  ],
+  "sol510": [
+   {
+    "hour": 0.0,
+    "temperature_c": -72.40894671085906,
+    "thermal_risk": 0.09635786843436221,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.16172948825161043,
+    "safe_zone_pct": 98.44214876033058,
+    "warning": false
+   },
+   {
+    "hour": 1.0,
+    "temperature_c": -75.66586038961037,
+    "thermal_risk": 0.2266344155844149,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.25370789914939496,
+    "safe_zone_pct": 95.58677685950413,
+    "warning": false
+   },
+   {
+    "hour": 2.0,
+    "temperature_c": -77.43066558441556,
+    "thermal_risk": 0.2972266233766226,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.26782634070783645,
+    "safe_zone_pct": 95.02272727272727,
+    "warning": false
+   },
+   {
+    "hour": 3.0,
+    "temperature_c": -79.11808441558439,
+    "thermal_risk": 0.3647233766233757,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.2813256913571871,
+    "safe_zone_pct": 94.3801652892562,
+    "warning": false
+   },
+   {
+    "hour": 4.0,
+    "temperature_c": -80.87272727272725,
+    "thermal_risk": 0.43490909090908986,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.22943973274655596,
+    "safe_zone_pct": 96.5702479338843,
+    "warning": false
+   },
+   {
+    "hour": 5.0,
+    "temperature_c": -80.24759052161828,
+    "thermal_risk": 0.40990362086473114,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.22443863873768422,
+    "safe_zone_pct": 96.72314049586777,
+    "warning": false
+   },
+   {
+    "hour": 6.0,
+    "temperature_c": -78.19098248186798,
+    "thermal_risk": 0.3276392992747191,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.2079857744196818,
+    "safe_zone_pct": 97.24793388429752,
+    "warning": false
+   },
+   {
+    "hour": 7.0,
+    "temperature_c": -75.28545364856136,
+    "thermal_risk": 0.2114181459424543,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.18474154375322888,
+    "safe_zone_pct": 97.93181818181819,
+    "warning": false
+   },
+   {
+    "hour": 8.0,
+    "temperature_c": -66.35051948051945,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 9.0,
+    "temperature_c": -56.66672077922075,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 10.0,
+    "temperature_c": -48.70826298701296,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 11.0,
+    "temperature_c": -38.035584002748664,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 12.0,
+    "temperature_c": -29.926733080421464,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 13.0,
+    "temperature_c": -26.54241725949096,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 14.0,
+    "temperature_c": -25.49444999999998,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 15.0,
+    "temperature_c": -25.368311688311664,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 16.0,
+    "temperature_c": -26.45175324675322,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 17.0,
+    "temperature_c": -34.43470829492511,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 18.0,
+    "temperature_c": -44.56163884342689,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 19.0,
+    "temperature_c": -53.1062811978524,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 20.0,
+    "temperature_c": -60.79014610389608,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 21.0,
+    "temperature_c": -65.24855519480518,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 22.0,
+    "temperature_c": -68.98271103896101,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 23.0,
+    "temperature_c": -70.44996943813177,
+    "thermal_risk": 0.017998777525270952,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.14605767006979214,
+    "safe_zone_pct": 98.78305785123966,
+    "warning": false
+   }
+  ],
+  "sol540": [
+   {
+    "hour": 0.0,
+    "temperature_c": -71.67972614652086,
+    "thermal_risk": 0.06718904586083455,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.15589572373690488,
+    "safe_zone_pct": 98.56404958677686,
+    "warning": false
+   },
+   {
+    "hour": 1.0,
+    "temperature_c": -73.94175324675322,
+    "thermal_risk": 0.1576701298701289,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.2399150420065377,
+    "safe_zone_pct": 96.09917355371901,
+    "warning": false
+   },
+   {
+    "hour": 2.0,
+    "temperature_c": -75.84774350649349,
+    "thermal_risk": 0.23390974025973946,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.2551629640844598,
+    "safe_zone_pct": 95.52479338842976,
+    "warning": false
+   },
+   {
+    "hour": 3.0,
+    "temperature_c": -77.18269480519479,
+    "thermal_risk": 0.2873077922077914,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.2658425744740702,
+    "safe_zone_pct": 95.12190082644628,
+    "warning": false
+   },
+   {
+    "hour": 4.0,
+    "temperature_c": -77.07334228477339,
+    "thermal_risk": 0.28293369139093555,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.19904465284292505,
+    "safe_zone_pct": 97.53512396694215,
+    "warning": false
+   },
+   {
+    "hour": 5.0,
+    "temperature_c": -76.1156346031606,
+    "thermal_risk": 0.244625384126424,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.19138299139002277,
+    "safe_zone_pct": 97.74793388429752,
+    "warning": false
+   },
+   {
+    "hour": 6.0,
+    "temperature_c": -75.72335685990627,
+    "thermal_risk": 0.228934274396251,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.18824476944398819,
+    "safe_zone_pct": 97.7995867768595,
+    "warning": false
+   },
+   {
+    "hour": 7.0,
+    "temperature_c": -73.37450609996063,
+    "thermal_risk": 0.13498024399842506,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.169453963364423,
+    "safe_zone_pct": 98.2892561983471,
+    "warning": false
+   },
+   {
+    "hour": 8.0,
+    "temperature_c": -63.9443831168831,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 9.0,
+    "temperature_c": -53.77081168831167,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 10.0,
+    "temperature_c": -45.31157467532465,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 11.0,
+    "temperature_c": -35.22000606321387,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 12.0,
+    "temperature_c": -28.123787984332925,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 13.0,
+    "temperature_c": -24.68636098394809,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 14.0,
+    "temperature_c": -22.94064724464722,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 15.0,
+    "temperature_c": -23.055308441558417,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 16.0,
+    "temperature_c": -25.17780844155842,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 17.0,
+    "temperature_c": -34.41366566273636,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 18.0,
+    "temperature_c": -45.29021506041389,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 19.0,
+    "temperature_c": -53.504114332742446,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 20.0,
+    "temperature_c": -61.21152597402596,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 21.0,
+    "temperature_c": -65.42224025974024,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 22.0,
+    "temperature_c": -69.05623376623373,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 23.0,
+    "temperature_c": -70.69324887379358,
+    "thermal_risk": 0.02772995495174314,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.1480039055550866,
+    "safe_zone_pct": 98.75,
+    "warning": false
+   }
+  ],
+  "sol570": [
+   {
+    "hour": 0.0,
+    "temperature_c": -71.4377610760057,
+    "thermal_risk": 0.05751044304022798,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.15396000317278358,
+    "safe_zone_pct": 98.61363636363636,
+    "warning": false
+   },
+   {
+    "hour": 1.0,
+    "temperature_c": -74.66215909090907,
+    "thermal_risk": 0.18648636363636284,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.24567828875978454,
+    "safe_zone_pct": 95.88842975206612,
+    "warning": false
+   },
+   {
+    "hour": 2.0,
+    "temperature_c": -76.48724675324672,
+    "thermal_risk": 0.2594898701298689,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.26027899005848576,
+    "safe_zone_pct": 95.34917355371901,
+    "warning": false
+   },
+   {
+    "hour": 3.0,
+    "temperature_c": -78.74443918918917,
+    "thermal_risk": 0.3497775675675666,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.2783365295460253,
+    "safe_zone_pct": 94.50826446280992,
+    "warning": false
+   },
+   {
+    "hour": 4.0,
+    "temperature_c": -80.69027027027025,
+    "thermal_risk": 0.42761081081080987,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.22798007672689996,
+    "safe_zone_pct": 96.6198347107438,
+    "warning": false
+   },
+   {
+    "hour": 5.0,
+    "temperature_c": -79.515022015147,
+    "thermal_risk": 0.3806008806058799,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.21857809068591397,
+    "safe_zone_pct": 96.900826446281,
+    "warning": false
+   },
+   {
+    "hour": 6.0,
+    "temperature_c": -76.31488098856184,
+    "thermal_risk": 0.25259523954247354,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.1929769624732327,
+    "safe_zone_pct": 97.71694214876034,
+    "warning": false
+   },
+   {
+    "hour": 7.0,
+    "temperature_c": -71.94723875579459,
+    "thermal_risk": 0.07788955023178346,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.15803582461109467,
+    "safe_zone_pct": 98.51859504132231,
+    "warning": false
+   },
+   {
+    "hour": 8.0,
+    "temperature_c": -62.242711038961005,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 9.0,
+    "temperature_c": -49.94621753246751,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 10.0,
+    "temperature_c": -40.33178571428569,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 11.0,
+    "temperature_c": -32.67885158435868,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 12.0,
+    "temperature_c": -27.127495386267952,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 13.0,
+    "temperature_c": -23.76482486339519,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 14.0,
+    "temperature_c": -22.520515477070333,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 15.0,
+    "temperature_c": -22.482759740259716,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 16.0,
+    "temperature_c": -24.251363636363614,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 17.0,
+    "temperature_c": -34.399342857499036,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 18.0,
+    "temperature_c": -45.569036214695856,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 19.0,
+    "temperature_c": -53.40691738317082,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 20.0,
+    "temperature_c": -60.40154220779218,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 21.0,
+    "temperature_c": -64.47884740259738,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 22.0,
+    "temperature_c": -67.96915584415582,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 23.0,
+    "temperature_c": -69.31714419288883,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   }
+  ],
+  "sol600": [
+   {
+    "hour": 0.0,
+    "temperature_c": -70.5152843102843,
+    "thermal_risk": 0.02061137241137203,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.14658018904701237,
+    "safe_zone_pct": 98.77685950413223,
+    "warning": false
+   },
+   {
+    "hour": 1.0,
+    "temperature_c": -71.50094155844154,
+    "thermal_risk": 0.06003766233766157,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.22038854850004427,
+    "safe_zone_pct": 96.75206611570249,
+    "warning": false
+   },
+   {
+    "hour": 2.0,
+    "temperature_c": -74.1346541501976,
+    "thermal_risk": 0.1653861660079042,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.24145824923409281,
+    "safe_zone_pct": 96.06198347107437,
+    "warning": false
+   },
+   {
+    "hour": 3.0,
+    "temperature_c": -76.49386176690524,
+    "thermal_risk": 0.2597544706762096,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.26033191016775387,
+    "safe_zone_pct": 95.34917355371901,
+    "warning": false
+   },
+   {
+    "hour": 4.0,
+    "temperature_c": -78.94108108108107,
+    "thermal_risk": 0.35764324324324265,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.21398656321338652,
+    "safe_zone_pct": 97.08677685950413,
+    "warning": false
+   },
+   {
+    "hour": 5.0,
+    "temperature_c": -80.50040540540537,
+    "thermal_risk": 0.42001621621621493,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.22646115780798098,
+    "safe_zone_pct": 96.64669421487602,
+    "warning": false
+   },
+   {
+    "hour": 6.0,
+    "temperature_c": -80.55189189189186,
+    "thermal_risk": 0.4220756756756742,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.22687304969987288,
+    "safe_zone_pct": 96.63842975206612,
+    "warning": false
+   },
+   {
+    "hour": 7.0,
+    "temperature_c": -72.6351351351351,
+    "thermal_risk": 0.10540540540540405,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.1635389956458188,
+    "safe_zone_pct": 98.40082644628099,
+    "warning": false
+   },
+   {
+    "hour": 8.0,
+    "temperature_c": -57.190405405405386,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 9.0,
+    "temperature_c": -43.454459459459436,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 10.0,
+    "temperature_c": -34.985945945945915,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 11.0,
+    "temperature_c": -30.72135135135132,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 12.0,
+    "temperature_c": -28.302027027027002,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 13.0,
+    "temperature_c": -26.113513513513492,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 14.0,
+    "temperature_c": -22.382027027027007,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 15.0,
+    "temperature_c": -18.56256756756754,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 16.0,
+    "temperature_c": -19.22270270270268,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 17.0,
+    "temperature_c": -26.807702702702684,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 18.0,
+    "temperature_c": -40.336351351351325,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 19.0,
+    "temperature_c": -52.847702702702676,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 20.0,
+    "temperature_c": -59.43040540540538,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 21.0,
+    "temperature_c": -63.62148648648646,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 22.0,
+    "temperature_c": -66.95837837837836,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 23.0,
+    "temperature_c": -69.692027027027,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   }
+  ],
+  "sol630": [
+   {
+    "hour": 0.0,
+    "temperature_c": -70.44467026825632,
+    "thermal_risk": 0.01778681073025268,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.1460152767107885,
+    "safe_zone_pct": 98.78305785123966,
+    "warning": false
+   },
+   {
+    "hour": 1.0,
+    "temperature_c": -73.49590909090907,
+    "thermal_risk": 0.13983636363636265,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.23634828875978448,
+    "safe_zone_pct": 96.22727272727273,
+    "warning": false
+   },
+   {
+    "hour": 2.0,
+    "temperature_c": -75.12737012987012,
+    "thermal_risk": 0.2050948051948046,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.24939997707147285,
+    "safe_zone_pct": 95.7396694214876,
+    "warning": false
+   },
+   {
+    "hour": 3.0,
+    "temperature_c": -76.70988636363634,
+    "thermal_risk": 0.2683954545454537,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.26206010694160264,
+    "safe_zone_pct": 95.27272727272728,
+    "warning": false
+   },
+   {
+    "hour": 4.0,
+    "temperature_c": -77.73774350649347,
+    "thermal_risk": 0.30950974025973893,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.20435986261668576,
+    "safe_zone_pct": 97.37190082644628,
+    "warning": false
+   },
+   {
+    "hour": 5.0,
+    "temperature_c": -77.11395954733023,
+    "thermal_risk": 0.284558381893209,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.1993695909433798,
+    "safe_zone_pct": 97.52685950413223,
+    "warning": false
+   },
+   {
+    "hour": 6.0,
+    "temperature_c": -74.86196541243287,
+    "thermal_risk": 0.19447861649731465,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.18135363786420092,
+    "safe_zone_pct": 98.02685950413223,
+    "warning": false
+   },
+   {
+    "hour": 7.0,
+    "temperature_c": -68.09406105990782,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 8.0,
+    "temperature_c": -53.96336038961037,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 9.0,
+    "temperature_c": -38.093279220779195,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 10.0,
+    "temperature_c": -27.643896103896083,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 11.0,
+    "temperature_c": -25.235501470698182,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 12.0,
+    "temperature_c": -25.53358570590742,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 13.0,
+    "temperature_c": -20.975697871572848,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 14.0,
+    "temperature_c": -13.015568181818157,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 15.0,
+    "temperature_c": -9.403782467532444,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 16.0,
+    "temperature_c": -14.628590768853869,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 17.0,
+    "temperature_c": -27.52447102167755,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 18.0,
+    "temperature_c": -39.107094901355644,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 19.0,
+    "temperature_c": -48.731669193986505,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 20.0,
+    "temperature_c": -57.87970779220777,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 21.0,
+    "temperature_c": -62.342678571428536,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 22.0,
+    "temperature_c": -65.51527597402594,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 23.0,
+    "temperature_c": -67.7379332552693,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   }
+  ],
+  "sol660": [
+   {
+    "hour": 0.0,
+    "temperature_c": -64.74264225181597,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 1.0,
+    "temperature_c": -67.5013636363636,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.20838101603251194,
+    "safe_zone_pct": 97.17561983471074,
+    "warning": false
+   },
+   {
+    "hour": 2.0,
+    "temperature_c": -69.6981331168831,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.20838101603251194,
+    "safe_zone_pct": 97.17561983471074,
+    "warning": false
+   },
+   {
+    "hour": 3.0,
+    "temperature_c": -71.70983766233763,
+    "thermal_risk": 0.06839350649350535,
+    "radiation_risk_mean": 0.9554072676488982,
+    "spe_active": true,
+    "mean_total_risk": 0.22205971733121305,
+    "safe_zone_pct": 96.69628099173553,
+    "warning": false
+   },
+   {
+    "hour": 4.0,
+    "temperature_c": -73.50245129870126,
+    "thermal_risk": 0.1400980519480504,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.1704775249543481,
+    "safe_zone_pct": 98.27479338842974,
+    "warning": false
+   },
+   {
+    "hour": 5.0,
+    "temperature_c": -73.52950414154878,
+    "thermal_risk": 0.14118016566195138,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.17069394769712826,
+    "safe_zone_pct": 98.27066115702479,
+    "warning": false
+   },
+   {
+    "hour": 6.0,
+    "temperature_c": -71.83867871697336,
+    "thermal_risk": 0.07354714867893448,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.1571673443005249,
+    "safe_zone_pct": 98.53305785123968,
+    "warning": false
+   },
+   {
+    "hour": 7.0,
+    "temperature_c": -67.59339201412304,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 8.0,
+    "temperature_c": -59.64251289324392,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 9.0,
+    "temperature_c": -50.502305194805174,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 10.0,
+    "temperature_c": -40.530811688311665,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 11.0,
+    "temperature_c": -28.62472801002005,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 12.0,
+    "temperature_c": -20.339206500279793,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 13.0,
+    "temperature_c": -15.977351866883094,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 14.0,
+    "temperature_c": -9.921720779220756,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 15.0,
+    "temperature_c": -7.5206006493506266,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 16.0,
+    "temperature_c": -12.188100649350627,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 17.0,
+    "temperature_c": -24.710661961124195,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 18.0,
+    "temperature_c": -36.98258970930195,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 19.0,
+    "temperature_c": -45.30713878713877,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 20.0,
+    "temperature_c": -53.01152597402596,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 21.0,
+    "temperature_c": -57.126558441558416,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 22.0,
+    "temperature_c": -60.192954545454526,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   },
+   {
+    "hour": 23.0,
+    "temperature_c": -62.487885758309474,
+    "thermal_risk": 0.0,
+    "radiation_risk_mean": 0.6257917603100284,
+    "spe_active": false,
+    "mean_total_risk": 0.142457914564738,
+    "safe_zone_pct": 98.80371900826447,
+    "warning": false
+   }
+  ]
+ }
+}

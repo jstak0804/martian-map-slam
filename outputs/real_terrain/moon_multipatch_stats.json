@@ -1,0 +1,127 @@
+{
+  "patches": [
+    {
+      "patch_id": 0,
+      "row0": 150,
+      "col0": 150,
+      "elevation_range_m": [
+        -2462.0,
+        617.0
+      ],
+      "mean_slope_deg": 11.593117713928223,
+      "pct_slope_over_15deg": 25.77567901234568,
+      "mean_risk": 0.846435546875,
+      "pct_high_risk": 95.74777777777777
+    },
+    {
+      "patch_id": 1,
+      "row0": 150,
+      "col0": 3342,
+      "elevation_range_m": [
+        -3959.0,
+        -596.5
+      ],
+      "mean_slope_deg": 11.27426815032959,
+      "pct_slope_over_15deg": 29.776049382716046,
+      "mean_risk": 0.7607599496841431,
+      "pct_high_risk": 83.97567901234568
+    },
+    {
+      "patch_id": 2,
+      "row0": 150,
+      "col0": 6534,
+      "elevation_range_m": [
+        -2043.5,
+        1965.5
+      ],
+      "mean_slope_deg": 12.693669319152832,
+      "pct_slope_over_15deg": 32.1162962962963,
+      "mean_risk": 0.8431143760681152,
+      "pct_high_risk": 95.45654320987654
+    },
+    {
+      "patch_id": 3,
+      "row0": 3342,
+      "col0": 150,
+      "elevation_range_m": [
+        -2271.5,
+        489.5
+      ],
+      "mean_slope_deg": 11.909876823425293,
+      "pct_slope_over_15deg": 28.084074074074074,
+      "mean_risk": 0.8066592812538147,
+      "pct_high_risk": 91.69740740740741
+    },
+    {
+      "patch_id": 4,
+      "row0": 3342,
+      "col0": 3342,
+      "elevation_range_m": [
+        -2846.5,
+        1738.5
+      ],
+      "mean_slope_deg": 18.13002586364746,
+      "pct_slope_over_15deg": 53.46913580246914,
+      "mean_risk": 0.9112081527709961,
+      "pct_high_risk": 98.2825925925926
+    },
+    {
+      "patch_id": 5,
+      "row0": 3342,
+      "col0": 6534,
+      "elevation_range_m": [
+        -2661.5,
+        578.5
+      ],
+      "mean_slope_deg": 10.658499717712402,
+      "pct_slope_over_15deg": 24.181851851851853,
+      "mean_risk": 0.8083136081695557,
+      "pct_high_risk": 93.36567901234568
+    },
+    {
+      "patch_id": 6,
+      "row0": 6534,
+      "col0": 150,
+      "elevation_range_m": [
+        -2667.0,
+        -1518.5
+      ],
+      "mean_slope_deg": 6.667789936065674,
+      "pct_slope_over_15deg": 6.111111111111111,
+      "mean_risk": 0.63937908411026,
+      "pct_high_risk": 73.56888888888888
+    },
+    {
+      "patch_id": 7,
+      "row0": 6534,
+      "col0": 3342,
+      "elevation_range_m": [
+        -1842.0,
+        558.5
+      ],
+      "mean_slope_deg": 8.743410110473633,
+      "pct_slope_over_15deg": 10.622716049382715,
+      "mean_risk": 0.7559638619422913,
+      "pct_high_risk": 90.19185185185185
+    },
+    {
+      "patch_id": 8,
+      "row0": 6534,
+      "col0": 6534,
+      "elevation_range_m": [
+        -504.5,
+        530.5
+      ],
+      "mean_slope_deg": 7.273638725280762,
+      "pct_slope_over_15deg": 7.180246913580247,
+      "mean_risk": 0.6849958300590515,
+      "pct_high_risk": 81.77777777777779
+    }
+  ],
+  "mean_risk_overall": 0.7840921878814697,
+  "mean_risk_std": 0.07938814572786784,
+  "pct_high_risk_overall": 89.34046639231825,
+  "pct_high_risk_std": 7.5691029870372155,
+  "original_patch_mean_risk": 0.829,
+  "original_patch_pct_high_risk": 93.1
+}

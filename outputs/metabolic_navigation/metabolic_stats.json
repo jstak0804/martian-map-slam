@@ -1,0 +1,163 @@
+{
+  "model": {
+    "equation": "Pandolf 1977, mass terms scaled by g ratio; downhill treated as level",
+    "BODY_MASS_KG": 75.0,
+    "SUIT_MASS_KG": 90.0,
+    "EVA_WALK_SPEED_M_S": 0.92,
+    "MAX_WALK_SLOPE_DEG": 20.0,
+    "ETA_RANGE": [
+      1.0,
+      1.5
+    ],
+    "O2_KJ_PER_L": 20.1,
+    "level_metabolic_w": {
+      "mars": 301.335552,
+      "moon": 131.53536000000003,
+      "apollo_plan": 351.68399999999997
+    },
+    "level_o2_g_per_h_mars": 77.12391112979105
+  },
+  "mars_sim_patch": {
+    "terrain": "Mars procedural patch 44 m x 44 m, cell 0.2 m",
+    "g_ratio": 0.378,
+    "start": [
+      15,
+      200
+    ],
+    "goal": [
+      200,
+      20
+    ],
+    "metrics": {
+      "shortest": {
+        "dist_m": 51.91168824543136,
+        "time_min": 0.9404291348810028,
+        "o2_g": 1.2947261349795511,
+        "ascent_m": 0.4282115907173166,
+        "max_slope_deg": 14.2660270062135,
+        "n_cells_over_slope_cap": 0,
+        "max_risk": 0.38593106235104996
+      },
+      "shortest_capped": {
+        "dist_m": 51.91168824543136,
+        "time_min": 0.9404291348810028,
+        "o2_g": 1.2947261349795511,
+        "ascent_m": 0.4282115907173166,
+        "max_slope_deg": 14.2660270062135,
+        "n_cells_over_slope_cap": 0,
+        "max_risk": 0.38593106235104996
+      },
+      "risk_weighted": {
+        "dist_m": 53.669047558312066,
+        "time_min": 0.9722653543172476,
+        "o2_g": 1.2595985481260448,
+        "ascent_m": 0.05104462028368266,
+        "max_slope_deg": 1.6467892618903093,
+        "n_cells_over_slope_cap": 0,
+        "max_risk": 0.16589949317698544
+      },
+      "o2_optimal": {
+        "dist_m": 52.49747468305826,
+        "time_min": 0.9510412080264177,
+        "o2_g": 1.2453310030620468,
+        "ascent_m": 0.11194909942585642,
+        "max_slope_deg": 6.016351264721463,
+        "n_cells_over_slope_cap": 0,
+        "max_risk": 0.25080939619269815
+      }
+    }
+  },
+  "lola_patch": {
+    "terrain": "LOLA south pole 20 m/px, 300x300 (6 km), row0=4600 col0=5200",
+    "g_ratio": 0.378,
+    "start": [
+      20,
+      280
+    ],
+    "goal": [
+      280,
+      20
+    ],
+    "metrics": {
+      "shortest": {
+        "dist_m": 7353.910524340137,
+        "time_min": 133.22301674529234,
+        "o2_g": 264.7514052870091,
+        "ascent_m": 310.0,
+        "max_slope_deg": 36.873716908301304,
+        "n_cells_over_slope_cap": 47,
+        "max_risk": 1.0
+      },
+      "shortest_capped": {
+        "dist_m": 8464.894654563466,
+        "time_min": 153.34954084354104,
+        "o2_g": 289.13248040656816,
+        "ascent_m": 289.0,
+        "max_slope_deg": 19.925580658184323,
+        "n_cells_over_slope_cap": 0,
+        "max_risk": 1.0
+      },
+      "risk_weighted": {
+        "dist_m": 7646.803743153584,
+        "time_min": 138.52905331799968,
+        "o2_g": 284.75711425510514,
+        "ascent_m": 364.0,
+        "max_slope_deg": 35.28547711987678,
+        "n_cells_over_slope_cap": 47,
+        "max_risk": 1.0
+      },
+      "o2_optimal": {
+        "dist_m": 8464.894654563477,
+        "time_min": 153.34954084354123,
+        "o2_g": 262.43004849638453,
+        "ascent_m": 174.5,
+        "max_slope_deg": 19.827028653408167,
+        "n_cells_over_slope_cap": 0,
+        "max_risk": 1.0
+      }
+    },
+    "same_paths_at_moon_g": {
+      "shortest": {
+        "dist_m": 7353.910524340137,
+        "time_min": 133.22301674529234,
+        "o2_g": 115.56608960940878,
+        "ascent_m": 310.0,
+        "max_slope_deg": 36.873716908301304,
+        "n_cells_over_slope_cap": 47
+      },
+      "shortest_capped": {
+        "dist_m": 8464.894654563466,
+        "time_min": 153.34954084354104,
+        "o2_g": 126.20862239969267,
+        "ascent_m": 289.0,
+        "max_slope_deg": 19.925580658184323,
+        "n_cells_over_slope_cap": 0
+      },
+      "risk_weighted": {
+        "dist_m": 7646.803743153584,
+        "time_min": 138.52905331799968,
+        "o2_g": 124.29874034945063,
+        "ascent_m": 364.0,
+        "max_slope_deg": 35.28547711987678,
+        "n_cells_over_slope_cap": 47
+      },
+      "o2_optimal": {
+        "dist_m": 8464.894654563477,
+        "time_min": 153.34954084354123,
+        "o2_g": 114.55279894683449,
+        "ascent_m": 174.5,
+        "max_slope_deg": 19.827028653408167,
+        "n_cells_over_slope_cap": 0
+      }
+    },
+    "o2_optimal_reverse_trip": {
+      "dist_m": 8464.89465456348,
+      "time_min": 153.34954084354132,
+      "o2_g": 414.3648018588208,
+      "ascent_m": 825.5,
+      "max_slope_deg": 19.827028653408167,
+      "n_cells_over_slope_cap": 0
+    },
+    "pct_cells_over_slope_cap": 11.186666666666667
+  }
+}

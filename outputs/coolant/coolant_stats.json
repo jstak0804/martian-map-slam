@@ -1,0 +1,448 @@
+{
+  "sources": {
+    "latent_heat": "water at 10 C, SWME operating temp (ICES-2026-126 p.10)",
+    "feedwater_full": "3.6 kg (8 lbm) for 8 h EVA, Nabity et al. 07ICES-221 abstract; EMU 3.9 kg @ 7 h x 1000 BTU/hr (Akin UMD ENAE 697 p.8)",
+    "heat_storage_limits": "nominal <= 1.3 BTU/lb, contingency CDO <= 2.0 BTU/lb (ICES-2026-170 slide 5)",
+    "mars_cooling": "sublimator infeasible on Mars; SWME tested to 10 Torr; sites assumed <= 7-8 Torr (ICES-2026-126 p.4,7,10)"
+  },
+  "assumptions": {
+    "q_extra_scenarios_w": [
+      -100.0,
+      0.0,
+      100.0
+    ],
+    "all_metabolic_heat_to_evaporator": true,
+    "water_reserve": "30 min level walk (same rule as O2)",
+    "body_mass_kg_for_heat_storage": 75
+  },
+  "level_walk": {
+    "mr_w": 301.335552,
+    "water_g_h": 437.9523565603553,
+    "full_tank_hours": 8.220072220353208,
+    "minutes_to_cdo_after_dry": 19.29742428799108,
+    "heat_storage_water_eq_g": 140.85587404117885
+  },
+  "o2_only_area_km2": 18.634786767479284,
+  "water_equiv_of_o2_budget_g": {
+    "-100.0": 569.1138797453995,
+    "0.0": 851.7832215938771,
+    "100.0": 1134.4525634423546
+  },
+  "crossover_water_left_g": {
+    "-100.0": 500.0,
+    "0.0": 800.0,
+    "100.0": 1100.0
+  },
+  "map_water_left_g": 600.0,
+  "map_panels": [
+    {
+      "label": "cold: suit loses 100 W",
+      "area_o2_only_km2": 18.639290890846507,
+      "area_safe_km2": 18.639290890846507,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "label": "neutral: Q_extra = 0",
+      "area_o2_only_km2": 18.642976082692414,
+      "area_safe_km2": 7.383486596158788,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 11.259489486533626,
+      "area_water_contingency_km2": 1.7666400243526559
+    },
+    {
+      "label": "warm: +100 W (sun, PLSS)",
+      "area_o2_only_km2": 18.64113348676946,
+      "area_safe_km2": 3.216353549957147,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 15.424779936812312,
+      "area_water_contingency_km2": 4.837837962157058
+    }
+  ],
+  "ratio_warm_q100": {
+    "median": 0.9850904817520879,
+    "p10": 0.9797166329118856,
+    "p90": 0.9907475956713299
+  },
+  "sweep": [
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 300.0,
+      "area_o2_only_km2": 18.63345600375715,
+      "area_safe_km2": 2.895127660722089,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 15.738328343035061,
+      "area_water_contingency_km2": 9.286069253049416
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 400.0,
+      "area_o2_only_km2": 18.635503332560432,
+      "area_safe_km2": 6.889159056606176,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 11.746344275954256,
+      "area_water_contingency_km2": 2.7441371614799888
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 500.0,
+      "area_o2_only_km2": 18.637550661363715,
+      "area_safe_km2": 12.652287271406859,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 5.985263389956857,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 600.0,
+      "area_o2_only_km2": 18.639290890846507,
+      "area_safe_km2": 18.639290890846507,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 700.0,
+      "area_o2_only_km2": 18.64062165456864,
+      "area_safe_km2": 18.64062165456864,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 800.0,
+      "area_o2_only_km2": 18.64092875388913,
+      "area_safe_km2": 18.64092875388913,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 900.0,
+      "area_o2_only_km2": 18.64133821964979,
+      "area_safe_km2": 18.64133821964979,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 1000.0,
+      "area_o2_only_km2": 18.641747685410444,
+      "area_safe_km2": 18.641747685410444,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 1100.0,
+      "area_o2_only_km2": 18.64113348676946,
+      "area_safe_km2": 18.64113348676946,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 1200.0,
+      "area_o2_only_km2": 18.64164531897028,
+      "area_safe_km2": 18.64164531897028,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 1300.0,
+      "area_o2_only_km2": 18.641747685410444,
+      "area_safe_km2": 18.641747685410444,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 1400.0,
+      "area_o2_only_km2": 18.641952418290774,
+      "area_safe_km2": 18.641952418290774,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 1500.0,
+      "area_o2_only_km2": 18.641952418290774,
+      "area_safe_km2": 18.641952418290774,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": -100.0,
+      "water_left_g": 1600.0,
+      "area_o2_only_km2": 18.642054784730938,
+      "area_safe_km2": 18.642054784730938,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 300.0,
+      "area_o2_only_km2": 18.64318081557274,
+      "area_safe_km2": 0.4907447141468671,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 18.152436101425877,
+      "area_water_contingency_km2": 4.730148467104388
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 400.0,
+      "area_o2_only_km2": 18.64318081557274,
+      "area_safe_km2": 2.067392625554887,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 16.575788190017857,
+      "area_water_contingency_km2": 5.8912909978861805
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 500.0,
+      "area_o2_only_km2": 18.64318081557274,
+      "area_safe_km2": 4.350368974095444,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 14.292811841477299,
+      "area_water_contingency_km2": 6.580421873071143
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 600.0,
+      "area_o2_only_km2": 18.642976082692414,
+      "area_safe_km2": 7.383486596158788,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 11.259489486533626,
+      "area_water_contingency_km2": 1.7666400243526559
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 700.0,
+      "area_o2_only_km2": 18.64287371625225,
+      "area_safe_km2": 11.240961160863918,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 7.401912555388332,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 800.0,
+      "area_o2_only_km2": 18.64287371625225,
+      "area_safe_km2": 15.898122356131276,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 2.7447513601209734,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 900.0,
+      "area_o2_only_km2": 18.64287371625225,
+      "area_safe_km2": 18.64287371625225,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 1000.0,
+      "area_o2_only_km2": 18.64287371625225,
+      "area_safe_km2": 18.64287371625225,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 1100.0,
+      "area_o2_only_km2": 18.64287371625225,
+      "area_safe_km2": 18.64287371625225,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 1200.0,
+      "area_o2_only_km2": 18.6421571511711,
+      "area_safe_km2": 18.6421571511711,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 1300.0,
+      "area_o2_only_km2": 18.6421571511711,
+      "area_safe_km2": 18.6421571511711,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 1400.0,
+      "area_o2_only_km2": 18.6421571511711,
+      "area_safe_km2": 18.6421571511711,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 1500.0,
+      "area_o2_only_km2": 18.6421571511711,
+      "area_safe_km2": 18.6421571511711,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 0.0,
+      "water_left_g": 1600.0,
+      "area_o2_only_km2": 18.642054784730938,
+      "area_safe_km2": 18.642054784730938,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 300.0,
+      "area_o2_only_km2": 18.639495623726834,
+      "area_safe_km2": 0.0057325206491916055,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 18.63376310307764,
+      "area_water_contingency_km2": 2.8688194855999063
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 400.0,
+      "area_o2_only_km2": 18.640314555248146,
+      "area_safe_km2": 0.5142889953846184,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 18.12602555986353,
+      "area_water_contingency_km2": 3.5065624078224724
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 500.0,
+      "area_o2_only_km2": 18.64113348676946,
+      "area_safe_km2": 1.6806522146147818,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 16.960481272154677,
+      "area_water_contingency_km2": 4.173479765491817
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 600.0,
+      "area_o2_only_km2": 18.64113348676946,
+      "area_safe_km2": 3.216353549957147,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 15.424779936812312,
+      "area_water_contingency_km2": 4.837837962157058
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 700.0,
+      "area_o2_only_km2": 18.64092875388913,
+      "area_safe_km2": 5.193663708167595,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 13.447265045721537,
+      "area_water_contingency_km2": 5.024349616136114
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 800.0,
+      "area_o2_only_km2": 18.64133821964979,
+      "area_safe_km2": 7.640835826731426,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 11.000502392918364,
+      "area_water_contingency_km2": 1.2265546860466754
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 900.0,
+      "area_o2_only_km2": 18.641542952530116,
+      "area_safe_km2": 10.543538604025661,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 8.098004348504457,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 1000.0,
+      "area_o2_only_km2": 18.641542952530116,
+      "area_safe_km2": 13.915182043711802,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 4.7263609088183145,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 1100.0,
+      "area_o2_only_km2": 18.64164531897028,
+      "area_safe_km2": 17.75474248138821,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.8869028375820727,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 1200.0,
+      "area_o2_only_km2": 18.641747685410444,
+      "area_safe_km2": 18.641747685410444,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 1300.0,
+      "area_o2_only_km2": 18.64133821964979,
+      "area_safe_km2": 18.64133821964979,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 1400.0,
+      "area_o2_only_km2": 18.64133821964979,
+      "area_safe_km2": 18.64133821964979,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 1500.0,
+      "area_o2_only_km2": 18.64133821964979,
+      "area_safe_km2": 18.64133821964979,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    },
+    {
+      "q_extra_w": 100.0,
+      "water_left_g": 1600.0,
+      "area_o2_only_km2": 18.64133821964979,
+      "area_safe_km2": 18.64133821964979,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0
+    }
+  ]
+}

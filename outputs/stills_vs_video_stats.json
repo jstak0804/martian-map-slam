@@ -1,0 +1,28 @@
+{
+  "stills_25frame": {
+    "n_frames": 25,
+    "gt_distance_m": 7.031870089000538,
+    "vo_distance_m": 6.872488074322611,
+    "error_pct": 2.2665665414842824,
+    "vo_step_stats": {
+      "total": 24,
+      "ok": 24,
+      "fail_features": 0,
+      "fail_depth_pts": 0,
+      "fail_pnp": 0
+    }
+  },
+  "video_full_segment": {
+    "n_frames": 432,
+    "gt_distance_m": 123.54879698204522,
+    "vo_distance_m": 85.43325496254833,
+    "error_pct": 30.850597456676198,
+    "vo_step_stats": {
+      "total": 431,
+      "ok": 428,
+      "fail_features": 0,
+      "fail_depth_pts": 0,
+      "fail_pnp": 3
+    }
+  }
+}

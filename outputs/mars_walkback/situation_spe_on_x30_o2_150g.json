@@ -1,0 +1,18 @@
+{
+  "spe_on": true,
+  "multiplier": 30.0,
+  "multiplier_basis": "hypothetical",
+  "remaining_o2_g": 150,
+  "o2_budget_g": 111.43804443510447,
+  "dose_budget_msv": 1.0,
+  "remaining_water_g": 3600.0,
+  "water_reserve_g": 218.97617828017766,
+  "q_extra_w": 0.0,
+  "area_o2_only_km2": 17.53997768992385,
+  "area_safe_km2": 16.02966323174219,
+  "area_dose_limited_km2": 1.5103144581816599,
+  "area_water_limited_km2": 0.0,
+  "area_water_contingency_km2": 0.0,
+  "max_dose_in_o2_area_msv": 1.1097717260490443,
+  "area_lost_vs_off_km2": 2.6051235357370923
+}

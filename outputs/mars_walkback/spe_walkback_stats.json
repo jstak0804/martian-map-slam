@@ -1,0 +1,181 @@
+{
+  "assumptions": {
+    "O2_BUDGET_G": 111.43804443510447,
+    "REF_REMAINING_O2_G": 150,
+    "DOSE_BUDGET_MSV": 1.0,
+    "D_BACKGROUND_MSV_DAY": 0.655,
+    "SHIELDING_MAX_REDUCTION": 0.5,
+    "route_cost": "O2/O2_BUDGET + dose/DOSE_BUDGET"
+  },
+  "scenarios": [
+    {
+      "name": "SPE off",
+      "multiplier": 1.0,
+      "area_o2_only_km2": 18.634786767479284,
+      "area_safe_km2": 18.634786767479284,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.03714233631200302
+    },
+    {
+      "name": "SPE observed x2.9",
+      "multiplier": 2.9,
+      "area_o2_only_km2": 18.616258441809574,
+      "area_safe_km2": 18.616258441809574,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.10751526869137576
+    },
+    {
+      "name": "SPE x10 (hypothetical)",
+      "multiplier": 10.0,
+      "area_o2_only_km2": 18.28715033668188,
+      "area_safe_km2": 18.28715033668188,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.3707123607391216
+    },
+    {
+      "name": "SPE x30 (hypothetical)",
+      "multiplier": 30.0,
+      "area_o2_only_km2": 17.53997768992385,
+      "area_safe_km2": 16.02966323174219,
+      "area_dose_limited_km2": 1.5103144581816599,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 1.1097717260490443
+    }
+  ],
+  "sweep": [
+    {
+      "multiplier": 1,
+      "area_o2_only_km2": 18.634786767479284,
+      "area_safe_km2": 18.634786767479284,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.03714233631200302
+    },
+    {
+      "multiplier": 2,
+      "area_o2_only_km2": 18.624652489903035,
+      "area_safe_km2": 18.624652489903035,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.07428467262400604
+    },
+    {
+      "multiplier": 2.9,
+      "area_o2_only_km2": 18.616258441809574,
+      "area_safe_km2": 18.616258441809574,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.10751526869137576
+    },
+    {
+      "multiplier": 5,
+      "area_o2_only_km2": 18.58442247891853,
+      "area_safe_km2": 18.58442247891853,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.18535974860364426
+    },
+    {
+      "multiplier": 10,
+      "area_o2_only_km2": 18.28715033668188,
+      "area_safe_km2": 18.28715033668188,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.3707123607391216
+    },
+    {
+      "multiplier": 15,
+      "area_o2_only_km2": 17.99458705069278,
+      "area_safe_km2": 17.99458705069278,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.5560685411086834
+    },
+    {
+      "multiplier": 20,
+      "area_o2_only_km2": 17.820257003093253,
+      "area_safe_km2": 17.820257003093253,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.741415112840545
+    },
+    {
+      "multiplier": 22,
+      "area_o2_only_km2": 17.703149795545485,
+      "area_safe_km2": 17.703149795545485,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.8155566241246035
+    },
+    {
+      "multiplier": 24,
+      "area_o2_only_km2": 17.653092606305222,
+      "area_safe_km2": 17.653092606305222,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.888810316917453
+    },
+    {
+      "multiplier": 26,
+      "area_o2_only_km2": 17.61613832140597,
+      "area_safe_km2": 17.61613832140597,
+      "area_dose_limited_km2": 0.0,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 0.9620429439838727
+    },
+    {
+      "multiplier": 28,
+      "area_o2_only_km2": 17.564545635563245,
+      "area_safe_km2": 17.187120570678076,
+      "area_dose_limited_km2": 0.37742506488516875,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 1.0360462473672551
+    },
+    {
+      "multiplier": 30,
+      "area_o2_only_km2": 17.53997768992385,
+      "area_safe_km2": 16.02966323174219,
+      "area_dose_limited_km2": 1.5103144581816599,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 1.1097717260490443
+    },
+    {
+      "multiplier": 40,
+      "area_o2_only_km2": 17.446312397173667,
+      "area_safe_km2": 11.472514048515194,
+      "area_dose_limited_km2": 5.973798348658474,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 1.47847249189882
+    },
+    {
+      "multiplier": 50,
+      "area_o2_only_km2": 17.32439396693818,
+      "area_safe_km2": 8.315942499613902,
+      "area_dose_limited_km2": 9.00845146732428,
+      "area_water_limited_km2": 0.0,
+      "area_water_contingency_km2": 0.0,
+      "max_dose_in_o2_area_msv": 1.8387124100454446
+    }
+  ],
+  "breakeven_multiplier": 28
+}

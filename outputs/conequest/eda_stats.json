@@ -1,0 +1,25 @@
+{
+  "global_csv": {
+    "total_rows": 13686,
+    "region_counts": {
+      "Acidalia Planitia": 288,
+      "Hypanis": 13254,
+      "Isidis Planitia": 144
+    },
+    "split_counts_bm1": {
+      "train": 2236,
+      "val": 319,
+      "test": 643,
+      "(미배정)": 10488
+    },
+    "positive_rows": 1658,
+    "positive_frac": 0.12114569633201812
+  },
+  "local_sample_E084_N12": {
+    "n_samples": 144,
+    "n_positive_samples": 131,
+    "positive_sample_frac": 0.9097222222222222,
+    "mean_pixel_pos_frac_over_positive_samples": 0.08749311024906072,
+    "mean_pixel_pos_frac_overall": 0.0795944266849094
+  }
+}

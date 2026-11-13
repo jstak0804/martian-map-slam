@@ -1,0 +1,32 @@
+{
+  "samples": [
+    {
+      "precision": 0.9469955527976006,
+      "recall": 0.10364656143349539,
+      "iou": 0.10304875303862429,
+      "gt_rock_pct": 38.49918398385835,
+      "detected_pct": 4.213650239575366,
+      "name": "NLB_486372898EDR_F0481570NCAM00322M1"
+    },
+    {
+      "precision": 0.0,
+      "recall": NaN,
+      "iou": 0.0,
+      "gt_rock_pct": 0.0,
+      "detected_pct": 0.24155344314117705,
+      "name": "NLB_542921313EDR_F0612232NCAM00320M1"
+    },
+    {
+      "precision": NaN,
+      "recall": NaN,
+      "iou": NaN,
+      "gt_rock_pct": 0.0,
+      "detected_pct": 0.0,
+      "name": "NLB_461147286EDR_F0401240NCAM00385M1"
+    }
+  ],
+  "mean_precision": 0.4734977763988003,
+  "mean_recall": 0.10364656143349539,
+  "mean_iou": 0.051524376519312146,
+  "classical_cv_baseline_iou": 0.12
+}

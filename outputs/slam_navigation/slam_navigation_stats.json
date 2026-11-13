@@ -1,0 +1,59 @@
+{
+  "exploration": {
+    "n_steps": 47,
+    "coverage_oracle_pct": 32.11363636363636,
+    "coverage_vo_pct": 30.989669421487605,
+    "final_vo_drift_m": 0.9039707522203669
+  },
+  "scenario_A_map_fidelity_vs_navigation": {
+    "hour": 2.0,
+    "start": [
+      110,
+      110
+    ],
+    "dest": [
+      203,
+      108
+    ],
+    "ground_truth": {
+      "recommendation": "SAFE_ZONE_REDIRECT",
+      "direct_max_risk": 0.40314719849291347,
+      "direct_dist_m": 18.765685424949204,
+      "safe_zone_max_risk": 0.39025370500856477
+    },
+    "oracle_slam_map": {
+      "recommendation": "SAFE_ZONE_REDIRECT",
+      "direct_max_risk": 0.44261025066274495,
+      "direct_dist_m": 18.765685424949204,
+      "safe_zone_max_risk": 0.412705987848429
+    },
+    "vo_slam_map": {
+      "recommendation": "SAFE_ZONE_REDIRECT",
+      "direct_max_risk": 0.44805638249140367,
+      "direct_dist_m": 18.765685424949204,
+      "safe_zone_max_risk": 0.4161780996643528
+    }
+  },
+  "scenario_B_timeofday_on_slam_map": {
+    "start": [
+      110,
+      110
+    ],
+    "dest": [
+      185,
+      147
+    ],
+    "daytime_14h": {
+      "recommendation": "DESTINATION_OK",
+      "direct_max_risk": 0.15112238497595548,
+      "direct_dist_m": 18.06518036156088
+    },
+    "night_spe_2h": {
+      "recommendation": "SAFE_ZONE_REDIRECT",
+      "direct_max_risk": 0.4287953284051679,
+      "direct_dist_m": 18.06518036156088,
+      "safe_zone_max_risk": 0.412705987848429
+    }
+  },
+  "scope_note": "탐사 종료 시점의 스냅샷 비교만 수행함 -- 실주행 중 위치추정 오차가 누적되는 폐루프 거동이나 실시간 재위치추정은 시뮬레이션하지 않음."
+}

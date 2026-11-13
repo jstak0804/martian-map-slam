@@ -1,0 +1,364 @@
+<title>NASA 수치 재검증</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout: single reading column (~760px) with full-width tables; mission-console labels in mono */
+  :root {
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --ink: #1b2230;
+    --ink-soft: #5a6478;
+    --rule: #dde1e8;
+    --accent: #c4552b;        /* oxide, used sparingly */
+    --accent-soft: #f6e4dc;
+    --ok: #2f7d55;  --ok-bg: #e2f2e9;
+    --warn: #9a6a0c; --warn-bg: #f7eed6;
+    --muted: #6b7280; --muted-bg: #eceef2;
+    --bar-a: #9aa5b8;
+    --bar-b: #c4552b;
+    --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151c; --surface: #191d26; --ink: #e6e9ef; --ink-soft: #9aa3b5; --rule: #2a303c;
+      --accent: #e57a51; --accent-soft: #3a2219;
+      --ok: #6cc596; --ok-bg: #1a3328; --warn: #e2b450; --warn-bg: #3a2f14; --muted: #a0a7b4; --muted-bg: #262b35;
+      --bar-a: #5d6779; --bar-b: #e57a51;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12151c; --surface: #191d26; --ink: #e6e9ef; --ink-soft: #9aa3b5; --rule: #2a303c;
+    --accent: #e57a51; --accent-soft: #3a2219;
+    --ok: #6cc596; --ok-bg: #1a3328; --warn: #e2b450; --warn-bg: #3a2f14; --muted: #a0a7b4; --muted-bg: #262b35;
+    --bar-a: #5d6779; --bar-b: #e57a51;
+    color-scheme: dark;
+  }
+
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15.5px; line-height: 1.7; }
+  .page { max-width: 820px; margin: 0 auto; padding-block: 40px 72px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: grid; gap: 44px; }
+  header { display: grid; gap: 10px; }
+  .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(26px, 4.4vw, 36px); line-height: 1.25; margin: 0; font-weight: 700; text-wrap: balance; }
+  .lede { color: var(--ink-soft); margin: 0; max-width: 64ch; }
+  .meta { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); }
+
+  section { display: grid; gap: 14px; min-width: 0; }
+  h2 { font-size: 20px; margin: 0; font-weight: 600; text-wrap: balance; display: flex; gap: 10px; align-items: baseline; }
+  h2 .n { font-family: var(--font-mono); font-size: 13px; color: var(--accent); font-weight: 500; }
+  p { margin: 0; max-width: 68ch; }
+  .soft { color: var(--ink-soft); }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+  code, .mono { font-family: var(--font-mono); font-size: .9em; }
+  code { background: var(--muted-bg); padding: 1px 5px; border-radius: 4px; }
+
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .sum.alert { border-color: var(--warn); }
+  .sum.alert .v { color: var(--warn); }
+
+  figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
+  figure img, figure video { width: 100%; max-width: 100%; height: auto; display: block; border-radius: 6px; background: #0b0e15; border: 1px solid var(--rule); }
+  figcaption { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; }
+  figcaption strong { color: var(--ink); font-weight: 600; }
+  .flow { display: grid; gap: 28px; }
+  .step { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; }
+  .step .idx { font-family: var(--font-mono); font-size: 13px; color: var(--accent); border: 1px solid var(--accent); border-radius: 50%; width: 28px; height: 28px; display: grid; place-items: center; }
+  .step .body { display: grid; gap: 10px; min-width: 0; }
+  .step h3 { margin: 0; font-size: 16px; font-weight: 600; text-wrap: balance; }
+  .pair2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 640px) { .pair2 { grid-template-columns: 1fr; } .step { grid-template-columns: 1fr; } }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; background: var(--accent-soft); border-radius: 8px; padding: 14px 16px; }
+  .cta a { font-weight: 600; }
+  .sum { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
+  .sum .k { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-soft); }
+  .sum .v { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .sum .d { font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; }
+  .sum.changed { border-color: var(--accent); }
+  .sum.changed .v { color: var(--accent); }
+  @media (max-width: 640px) { .summary { grid-template-columns: 1fr; } }
+
+  .tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 560px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 11.5px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-soft); background: var(--bg); }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: var(--font-mono); font-size: 13.5px; }
+
+  .chip { display: inline-block; font-size: 12px; font-weight: 500; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+  .chip.ok { color: var(--ok); background: var(--ok-bg); }
+  .chip.warn { color: var(--warn); background: var(--warn-bg); }
+  .chip.muted { color: var(--muted); background: var(--muted-bg); }
+  .chip.accent { color: var(--accent); background: var(--accent-soft); }
+
+  .callout { border-left: 3px solid var(--warn); background: var(--warn-bg); padding: 12px 16px; border-radius: 0 6px 6px 0; font-size: 14.5px; }
+  .callout p { max-width: none; }
+
+  /* dose scale */
+  .scale { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 18px 18px 14px; display: grid; gap: 12px; }
+  .row { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr) 84px; gap: 12px; align-items: center; font-size: 13.5px; }
+  .row .lbl { color: var(--ink-soft); line-height: 1.35; }
+  .track { height: 14px; background: var(--muted-bg); border-radius: 3px; position: relative; overflow: hidden; }
+  .fill { height: 100%; border-radius: 3px; background: var(--bar-a); }
+  .fill.hot { background: var(--bar-b); }
+  .fill.line { background: transparent; border-right: 2px dashed var(--ink); border-radius: 0; }
+  .row .val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+  .scale .axis { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-soft); }
+  @media (max-width: 560px) { .row { grid-template-columns: minmax(0, 1fr) 70px; } .row .lbl { grid-column: 1 / -1; } }
+
+  /* ETA bars */
+  .eta { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 18px; display: grid; gap: 16px; }
+  .eta-item { display: grid; gap: 6px; }
+  .eta-item .t { font-size: 13.5px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .eta-item .t span:last-child { font-family: var(--font-mono); color: var(--ink-soft); }
+  .pair { display: grid; gap: 4px; }
+  .bar { display: grid; grid-template-columns: 64px minmax(0, 1fr) 56px; gap: 10px; align-items: center; font-family: var(--font-mono); font-size: 12px; }
+  .bar .val { text-align: right; font-variant-numeric: tabular-nums; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-soft); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+  ol.next { margin: 0; padding-left: 1.3em; display: grid; gap: 8px; max-width: 68ch; }
+  ul.files { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; font-size: 14.5px; }
+  footer { font-size: 13px; color: var(--ink-soft); border-top: 1px solid var(--rule); padding-top: 16px; }
+</style>
+
+<div class="page">
+  <header>
+    <div class="eyebrow">Mars Map SLAM · Report 13</div>
+    <h1>NASA 공개 자료로 설계 가정 재검증</h1>
+    <p class="lede">유인 미션 위험도·내비게이션 모델에 "가정"으로 표시해 둔 상수들을 NASA 공식 수치와 비교했습니다. 보행속도 하나는 문헌값으로 바꿨고, 방사선 기준은 단위가 맞지 않아 근거만 붙였습니다.</p>
+    <div class="meta">2026-10-31 · 출발 자료: 2025 Space Apps Challenge "NASA 공개 데이터 활용 참고자료"</div>
+  </header>
+
+  <section aria-label="요약">
+    <div class="summary">
+      <div class="sum changed">
+        <div class="k">EVA 보행속도</div>
+        <div class="v">0.5 → 0.92 m/s</div>
+        <div class="d">Apollo 달 EVA 계획값(3.3 km/h)으로 교체. ETA와 영상 표시만 바뀜</div>
+      </div>
+      <div class="sum">
+        <div class="k">방사선 경보 기준</div>
+        <div class="v">1.0 mSv/day 유지</div>
+        <div class="d">공식 한도는 누적치라 단위가 다름. 각주로 근거만 추가</div>
+      </div>
+      <div class="sum">
+        <div class="k">경로 계산</div>
+        <div class="v">변경 없음</div>
+        <div class="d">대피 지점, 스텝 수, 최대 위험도 모두 이전과 같음</div>
+      </div>
+      <div class="sum alert">
+        <div class="k">REMS 실측 기온</div>
+        <div class="v">경보 3회 → 0회</div>
+        <div class="d">실측 밤 최저 -68~-82°C. 가정한 -95°C보다 따뜻해 SPE에도 경고선 미달</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">0</span>지금까지의 작업 한눈에 보기</h2>
+    <p>위험도 공식을 만들고, 그 위에서 경로를 찾고, SLAM으로 직접 만든 지도 위에서 같은 판단을 하는 순서로 진행했습니다.</p>
+    <div class="flow">
+      <div class="step"><div class="idx">1</div><div class="body">
+        <h3>시간에 따라 변하는 유인 미션 위험도</h3>
+        <figure>
+          <img src="img/human_mission_risk.png" alt="지형 위험, 02시·08시·14시 결합 위험 지도와 24시간 위험 타임라인" loading="lazy">
+          <figcaption>지형(경사·거칠기)에 기온과 방사선을 더한 결합 위험도. 지형은 그대로인데 <strong>02시(극저온과 SPE가 겹침)</strong>에만 평균 위험이 경고선 0.37을 넘습니다. 이 기온 곡선은 가정이었고, 5절에서 실측으로 다시 검증했습니다.</figcaption>
+        </figure>
+      </div></div>
+      <div class="step"><div class="idx">2</div><div class="body">
+        <h3>위험도 기반 경로 탐색과 안전지대 대피</h3>
+        <figure>
+          <img src="img/evacuation_to_safe_zone.png" alt="02시 세 출발점에서 가장 가까운 안전지대로 가는 대피 경로" loading="lazy">
+          <figcaption>02시, 세 출발점에서 가장 가까운 안전지대로 대피하는 경로. 이동 중 지나는 <strong>최대 위험도</strong>를 최소화하는 방식(병목 다익스트라)이라, 대피 도중 더 위험한 곳을 지나지 않습니다.</figcaption>
+        </figure>
+        <div class="pair2">
+          <figure><img src="img/destination_calm_terrain_daytime.png" alt="낮 14시, 목적지까지 직행" loading="lazy"><figcaption><strong>14시:</strong> 같은 목적지로 그대로 이동 (최대 위험 0.14)</figcaption></figure>
+          <figure><img src="img/destination_calm_terrain_night_spe.png" alt="야간 02시, 안전지대로 우회" loading="lazy"><figcaption><strong>02시:</strong> 같은 목적지가 경고선을 넘어 안전지대로 우회</figcaption></figure>
+        </div>
+      </div></div>
+      <div class="step"><div class="idx">3</div><div class="body">
+        <h3>SLAM으로 만든 지도 위에서 내비게이션</h3>
+        <figure>
+          <img src="img/slam_navigation_three_way.png" alt="정답 지도, 오라클 SLAM 지도, VO SLAM 지도 위 같은 경로 비교" loading="lazy">
+          <figcaption>같은 출발점과 목적지, 세 가지 지도. 정답 지도(최대 위험 0.40)와 비교해 SLAM 지도는 <strong>0.44, 0.45</strong>로 조금 더 위험하게 봅니다. 탐사하지 않은 영역(검은 부분)은 경로에서 제외합니다.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/slam_navigation_timeofday.png" alt="SLAM 지도 위에서 14시와 02시 내비게이션 결정 비교" loading="lazy">
+          <figcaption>SLAM 지도 위에서도 시간대가 결정을 바꿉니다. 14시에는 목적지로, 02시에는 왼쪽 안전지대(별)로 우회합니다.</figcaption>
+        </figure>
+      </div></div>
+      <div class="step"><div class="idx">4</div><div class="body">
+        <h3>시나리오 영상</h3>
+        <div class="pair2">
+          <figure>
+            <video src="media/slam_evac_double_journey.mp4" poster="img/slam_evac_double_journey_poster.png" controls muted playsinline preload="none"></video>
+            <figcaption><strong>SLAM → 이동 → 대피, 두 번 (23초).</strong> 22시 출발 → 01시 경보, 22스텝 대피 → 04시까지 대기 → 재출발 → 다음 01시 경보, 4스텝 대피.</figcaption>
+          </figure>
+          <figure>
+            <video src="media/first_person_evac_walk.mp4" poster="img/first_person_evac_walk_poster.png" controls muted playsinline preload="none"></video>
+            <figcaption><strong>1인칭 대피 보행 (9.5초).</strong> 눈높이 1.6m, 22.6m 대피 경로. 지형 기복은 10배 과장해 보이게 했습니다.</figcaption>
+          </figure>
+        </div>
+      </div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">1</span>출발점: 2025 챌린지 데이터 참고자료</h2>
+    <p>참고자료에 정리된 2025년 챌린지 17개 가운데 화성 SLAM, 위험도 기반 내비게이션, 방사선·온도 결합 위험과 직접 연결되는 것은 4개였습니다. 식생, 농업, 해양, 외계행성 주제 13개는 제외했습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>2025 챌린지</th><th>공식 원출처</th><th>이 프로젝트와의 연결</th><th>수상 사례</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Stellar Stories</strong><br><span class="soft">우주기상</span></td><td>NASA Space Weather, Solar Storms and Flares</td><td>SPE 방사선 위험 항의 근거</td><td>HerCode Space</td></tr>
+          <tr><td><strong>Your Home in Space</strong><br><span class="soft">우주 거주지</span></td><td>NASA-STD-3001 Volume 2, NTRS</td><td>EVA 보행속도, 피폭 한도 등 인간 시스템 표준</td><td>PureFlow</td></tr>
+          <tr><td><strong>Through the Radar Looking Glass</strong><br><span class="soft">SAR 분석</span></td><td>NASA ASF SAR DAAC, Vertex</td><td>시간에 따른 지형 변화 탐지 (방법론 참고)</td><td>—</td></tr>
+          <tr><td><strong>SpaceTrash Hack</strong><br><span class="soft">화성 재활용</span></td><td>NASA NTRS</td><td>화성 미션 기술문헌 저장소</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="soft">참고자료는 올해 제출 시 2026년 챌린지의 요구사항과 Resources를 먼저 확인하라고 안내합니다. 이 보고서는 그 확인을 대신하지 않습니다.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>찾은 공식 수치</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>항목</th><th>수치</th><th>출처</th><th>확인 수준</th></tr></thead>
+        <tbody>
+          <tr><td>커리어 유효선량 한도</td><td class="num">600 mSv</td><td>NASA-STD-3001 (OCHMO 2021 개정), <a href="https://www.nasa.gov/wp-content/uploads/2023/03/radiation-protection-technical-brief-ochmo.pdf" target="_blank" rel="noopener">OCHMO 기술 브리프</a></td><td><span class="chip ok">여러 출처 일치</span></td></tr>
+          <tr><td>SPE 1회 유효선량 한도</td><td class="num">250 mSv</td><td>NASA 표준, 참조 사건 1989년 10월</td><td><span class="chip warn">원문 미확인</span></td></tr>
+          <tr><td>조혈장기 30일 한도</td><td class="num">250 mSv</td><td><a href="https://mail.windows2universe.org/spaceweather/astronaut_dose.html" target="_blank" rel="noopener">windows2universe 선량 한도 표</a> (2차 자료)</td><td><span class="chip warn">현행 유지 미확인</span></td></tr>
+          <tr><td>Orion 대피실 설계 목표</td><td class="num">≤150 mSv</td><td>대형 SPE 1회 기준, 검색 요약</td><td><span class="chip warn">원문 미확인</span></td></tr>
+          <tr><td>Apollo 달 EVA 계획 보행속도</td><td class="num">3.3 km/h<br>≈0.92 m/s</td><td><a href="https://www.nasa.gov/wp-content/uploads/static/history/alsj/19790073512_1979073512.pdf" target="_blank" rel="noopener">NASA 1979 달 표면 운용 문서</a>, 대사율 1200 BTU/hr</td><td><span class="chip warn">검색 요약 기준</span></td></tr>
+          <tr><td>장기 임무 피폭 한도</td><td>NASA가 권고할 만큼 지식이 충분하지 않다고 명시</td><td><a href="https://www.nasa.gov/humans-in-space/space-radiation/" target="_blank" rel="noopener">nasa.gov Space Radiation</a></td><td><span class="chip ok">직접 확인</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><p>NTRS 검색 페이지는 자동 조회가 되지 않아 대부분의 수치를 웹 검색 요약에서 얻었습니다. PDF 원문을 직접 열어 확인한 것은 아닙니다. NASA-STD-3001 Volume 2 본문에서 EVA 보행속도 요구치는 찾지 못했고, 0.92 m/s는 이 표준이 아닌 Apollo 시대 운용 계획값입니다.</p></div>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>방사선 기준을 바꾸지 않은 이유</h2>
+    <p>공식 한도는 사건당, 30일당, 경력 전체의 누적치입니다. 모델의 <code>D_BUDGET_MSV_DAY</code>는 하루 단위 경보 기준선이라 그대로 비교할 수 없습니다. 30일 한도를 30으로 나눠 하루 값으로 만들 수는 있지만, 그러면 아래처럼 척도가 크게 달라집니다.</p>
+    <div class="scale" role="img" aria-label="하루 선량 비교. 화성 표면 배경 0.655, 데모 경보 기준 1.0, SPE 중 1.90, 30일 한도 환산 8.33 mSv/day">
+      <div class="row"><div class="lbl">화성 표면 배경 (Curiosity RAD 실측)</div><div class="track"><div class="fill" style="width:7.86%"></div></div><div class="val">0.655</div></div>
+      <div class="row"><div class="lbl">데모 경보 기준 (현재 값)</div><div class="track"><div class="fill line" style="width:12.0%"></div></div><div class="val">1.00</div></div>
+      <div class="row"><div class="lbl">SPE 중 선량 (배경 × 2.9)</div><div class="track"><div class="fill hot" style="width:22.8%"></div></div><div class="val">1.90</div></div>
+      <div class="row"><div class="lbl">30일 한도 250 mSv ÷ 30일</div><div class="track"><div class="fill line" style="width:100%"></div></div><div class="val">8.33</div></div>
+      <div class="axis">단위 mSv/day · 막대 길이는 8.33을 기준으로 한 같은 척도</div>
+    </div>
+    <p>현재 기준(1.0)에서는 SPE 중 방사선 위험 항이 1.0으로 포화되어 경보가 납니다. 기준을 8.33으로 바꾸면 같은 상황에서 위험 항이 약 0.23으로 떨어집니다. 그러면 02:00 경보와 SLAM 이후 1차·2차 대피 트리거가 모두 달라져서 영상, PPT, 보고서 숫자를 전부 다시 계산해야 합니다. 그래서 현재 값을 "공식 누적 한도보다 훨씬 보수적인 데모용 조기경보 기준"으로 명시하는 쪽을 택했습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>상수</th><th>이전</th><th>결정</th><th>근거</th></tr></thead>
+        <tbody>
+          <tr><td><code>EVA_WALK_SPEED_M_S</code></td><td class="num">0.5</td><td><span class="chip accent">0.92로 교체</span></td><td>문헌 근거가 있고 ETA와 HUD 표시에만 쓰임</td></tr>
+          <tr><td><code>D_BUDGET_MSV_DAY</code></td><td class="num">1.0</td><td><span class="chip muted">유지, 각주</span></td><td>공식 한도와 단위 체계가 다름</td></tr>
+          <tr><td><code>WARNING_THRESHOLD</code></td><td class="num">0.37</td><td><span class="chip muted">유지, 각주</span></td><td>0~1 복합 지표라 mSv로 환산되지 않음</td></tr>
+          <tr><td><code>D_BACKGROUND_MSV_DAY</code></td><td class="num">0.655</td><td><span class="chip ok">이미 실측</span></td><td>Curiosity RAD (Hassler et al. 2014)</td></tr>
+          <tr><td><code>SPE_DOSE_MULTIPLIER</code></td><td class="num">2.9</td><td><span class="chip ok">이미 실측</span></td><td>RAD sol 242 관측</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span>보행속도 변경의 영향</h2>
+    <p>02:00(SPE와 극저온이 겹치는 시간) 대피 시나리오를 다시 실행했습니다. 어느 안전지대로 가는지와 경로 길이는 그대로이고, 도착 예상 시간만 줄었습니다.</p>
+    <div class="eta" role="img" aria-label="대피 경로 3개의 도착 예상 시간 비교">
+      <div class="legend"><span><i style="background:var(--bar-a)"></i>0.5 m/s (이전)</span><span><i style="background:var(--bar-b)"></i>0.92 m/s (현재)</span></div>
+      <div class="eta-item">
+        <div class="t"><span>(20, 20) → 안전지대 (95, 29)</span><span>22.6 m</span></div>
+        <div class="pair">
+          <div class="bar"><span>이전</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="val">0.75분</span></div>
+          <div class="bar"><span>현재</span><div class="track"><div class="fill hot" style="width:54.7%"></div></div><span class="val">0.41분</span></div>
+        </div>
+      </div>
+      <div class="eta-item">
+        <div class="t"><span>(110, 25) → 안전지대 (96, 29)</span><span>4.2 m</span></div>
+        <div class="pair">
+          <div class="bar"><span>이전</span><div class="track"><div class="fill" style="width:18.7%"></div></div><span class="val">0.14분</span></div>
+          <div class="bar"><span>현재</span><div class="track"><div class="fill hot" style="width:10.2%"></div></div><span class="val">0.08분</span></div>
+        </div>
+      </div>
+      <div class="eta-item">
+        <div class="t"><span>(190, 180) → 안전지대 (177, 184)</span><span>2.9 m</span></div>
+        <div class="pair">
+          <div class="bar"><span>이전</span><div class="track"><div class="fill" style="width:13.0%"></div></div><span class="val">0.10분</span></div>
+          <div class="bar"><span>현재</span><div class="track"><div class="fill hot" style="width:7.1%"></div></div><span class="val">0.05분</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="soft">탐사 패치가 44m×44m라 어느 쪽이든 1분 안에 도착하므로 결론은 같습니다. Apollo 값은 달 중력(1/6 g)과 Apollo 우주복 기준이라, 화성(약 0.38 g)과 차세대 우주복에서는 다를 수 있습니다.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span>Curiosity REMS 실측 기온으로 다시 계산</h2>
+    <p>PDS Atmospheres 노드에서 Curiosity REMS 환경 자료(<code>mslrem_1001</code>, Gale 분화구) 7개 sol을 받아, 위험도 공식의 기온 항만 실측값으로 바꿨습니다. 지형, 방사선, 경고선은 그대로입니다. 기존 데모와 산출물은 바꾸지 않고 비교 시나리오로 추가했습니다.</p>
+    <figure>
+      <img src="img/rems_vs_cosine.png" alt="왼쪽: REMS 실측 기온 곡선과 코사인 가정 비교. 오른쪽: 각 기온 출처별 24시간 평균 결합 위험" loading="lazy">
+      <figcaption>왼쪽: 실측 기온(실선)과 코사인 가정(주황 점선). 오른쪽: 같은 SPE(01~04시) 조건의 평균 결합 위험. 점은 경보입니다.</figcaption>
+    </figure>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>기온 출처</th><th>밤 최저</th><th>최대 온도 위험</th><th>최고 평균 위험</th><th>최소 안전지대</th><th>경보 시각</th></tr></thead>
+        <tbody>
+          <tr><td>코사인 가정</td><td class="num">-95.0°C @02h</td><td class="num">1.00</td><td class="num">0.408</td><td class="num">5.6%</td><td><span class="chip warn">01, 02, 03시</span></td></tr>
+          <tr><td>REMS sol 242 <span class="soft">(RAD SPE 관측일)</span></td><td class="num">-68.2°C @05h</td><td class="num">0.00</td><td class="num">0.208</td><td class="num">97.2%</td><td><span class="chip ok">없음</span></td></tr>
+          <tr><td>REMS sol 510 <span class="soft">(받은 것 중 가장 추움)</span></td><td class="num">-81.6°C @04h</td><td class="num">0.44</td><td class="num">0.281</td><td class="num">94.4%</td><td><span class="chip ok">없음</span></td></tr>
+          <tr><td>REMS sol 540~660 (5개)</td><td class="num">-74 ~ -81°C</td><td class="num">0.14 ~ 0.43</td><td class="num">0.22 ~ 0.28</td><td class="num">94.5 ~ 96.7%</td><td><span class="chip ok">없음</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>실측 밤 최저는 -68~-82°C로 가정(-95°C)보다 13~27°C 따뜻하고, 가장 추운 시각도 02시가 아니라 03~05시입니다. 온도 위험이 0.44를 넘지 않아서, 받은 어느 sol에서도 SPE까지 겹친 시간에 평균 위험이 경고선에 닿지 않았습니다. 지금까지 데모의 경보는 사실상 가정한 극저온이 만든 것입니다. 다만 경보 기준(-70°C에서 위험 시작, -95°C에서 최대)도 가정이라, 이 결과만으로 "실제로는 안전하다"고 말할 수는 없습니다. 기준 자체를 우주복·배터리 사양으로 다시 잡아야 결론을 낼 수 있습니다.</p>
+    <div class="callout"><p>Boom2 기온 센서는 전자부가 -50°C 아래일 때 Boom1보다 50K 이상 낮은 값을 내는 구간이 있어(예: sol 570 02시, 195K 대 139K) Boom1을 썼습니다. 받은 sol은 242와 510~660뿐이라 화성 1년 전체를 덮지는 않습니다.</p></div>
+    <div class="cta"><span>시간과 기온 출처를 바꿔 가며 위험 지도를 직접 볼 수 있습니다.</span><a href="https://claude.ai/artifact/BXddsXEgpmsWYcBq7Zesfy" target="_blank" rel="noopener">REMS 기온 데모 열기 →</a></div>
+  </section>
+
+  <section>
+    <h2><span class="n">6</span>추가로 접목할 수 있는 데이터</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>데이터</th><th>바꿀 수 있는 것</th><th>난이도</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Curiosity REMS 기온 시계열</strong><br><span class="soft">PDS Atmospheres 노드</span></td><td>코사인 일교차 근사를 실측 곡선으로</td><td><span class="chip accent">반영함</span></td><td>5절. 남은 sol(270~500 등)을 더 받으면 계절 전체를 덮을 수 있음</td></tr>
+          <tr><td><strong>Curiosity RAD 선량률 시계열</strong><br><span class="soft">PDS</span></td><td>SPE 배율과 지속시간</td><td><span class="chip warn">중간</span></td><td>화성 표면에서 실제 SPE(예: 2017년 9월)를 측정한 구간으로 보정</td></tr>
+          <tr><td><strong>NASA DONKI SEP 이벤트 목록</strong></td><td>SPE 발생 시각과 빈도 (현재 01~04시 고정)</td><td><span class="chip warn">중간</span></td><td>Stellar Stories 원출처 계열. 이 환경에선 api.nasa.gov 접속이 안 돼 파일로 받아야 함</td></tr>
+          <tr><td><strong>HiRISE DTM</strong><br><span class="soft">화성 고해상도 지형</span></td><td>실제 지형 위험도 데모의 지형</td><td><span class="chip warn">중간~높음</span></td><td>지금은 달 LOLA(남극 20m) 지형 사용. 화성 지형으로 바꾸면 서사가 일관됨</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>REMS 결과를 보면 다음으로 중요한 것은 데이터보다 <strong>온도 위험 기준</strong>입니다. -70°C와 -95°C를 우주복이나 배터리 사양에 근거한 값으로 바꿔야 실측 기온이 의미 있는 판단으로 이어집니다.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">7</span>변경 파일</h2>
+    <ul class="files">
+      <li><code>code/human_mission_navigation.py</code> · 보행속도 0.92, 출처 주석</li>
+      <li><code>code/human_mission_risk.py</code> · NASA-STD-3001 피폭 한도와 단위 각주</li>
+      <li><code>code/first_person_walk.py</code> · HUD 라벨을 Apollo 출처로 변경</li>
+      <li><code>reports/11-human-mission-navigation.html</code>, <code>.md</code> · JS 상수, 다시 만든 1인칭 영상, 설계 가정 섹션</li>
+      <li>다시 생성: <code>navigation_stats.json</code>, 시나리오 PNG 4장, <code>first_person_evac_walk.mp4</code></li>
+      <li><code>code/human_mission_risk.py</code> · <code>temperature_c</code> 인자 추가 (주지 않으면 기존과 동일, 경보 01~03시 그대로 확인)</li>
+      <li>신규: <code>code/rems_temperature_scenario.py</code>, <code>data/rems/</code> (원본 7개 sol, <code>rems_hourly.json</code>), <code>outputs/rems_temperature/</code>, <code>reports/14-rems-temperature-demo.html</code></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">8</span>남은 일</h2>
+    <ol class="next">
+      <li>NASA-STD-3001 Volume 2 Rev F 원문을 직접 열어 EVA 이동, 대사율, 피폭 조항을 확인하고 2절의 확인 수준을 갱신합니다.</li>
+      <li>온도 위험 기준(-70°C, -95°C)을 우주복·배터리 사양 근거로 다시 잡고, REMS 남은 계절 sol을 더 받습니다.</li>
+      <li>RAD와 DONKI 자료로 SPE 지속시간(현재 시연용 3시간)의 근거를 보강합니다.</li>
+      <li>2026년 챌린지 요구사항과 Resources를 확인하고 맞는 챌린지를 다시 매핑합니다.</li>
+    </ol>
+  </section>
+
+  <footer>Martian Map SLAM 프로젝트 · 원본 문서 <span class="mono">reports/13-nasa-data-grounding.md</span></footer>
+</div>

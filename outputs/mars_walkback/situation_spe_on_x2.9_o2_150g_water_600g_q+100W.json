@@ -1,0 +1,18 @@
+{
+  "spe_on": true,
+  "multiplier": 2.9,
+  "multiplier_basis": "observed (RAD sol 242)",
+  "remaining_o2_g": 150,
+  "o2_budget_g": 111.43804443510447,
+  "dose_budget_msv": 1.0,
+  "remaining_water_g": 600.0,
+  "water_reserve_g": 291.64472894630603,
+  "q_extra_w": 100.0,
+  "area_o2_only_km2": 18.639086157966176,
+  "area_safe_km2": 3.216251183516983,
+  "area_dose_limited_km2": 0.0,
+  "area_water_limited_km2": 15.422834974449195,
+  "area_water_contingency_km2": 4.83763322927673,
+  "max_dose_in_o2_area_msv": 0.10771277530480858,
+  "area_lost_vs_off_km2": 0.00010236644016413581
+}

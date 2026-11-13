@@ -1,0 +1,49 @@
+{
+  "assumptions": {
+    "STEP_M": 0.5,
+    "STEEP_1M_DEG": 20.0,
+    "HIGH_FRAC": 0.25,
+    "MED_FRAC": 0.05,
+    "MED_PENALTY": 1.0,
+    "dtm_vertical_precision": "tens of cm (~0.2-0.25 m at 1 m post spacing)"
+  },
+  "classes": {
+    "valid_km2": 42.709837997481564,
+    "low_km2": 33.98545340161276,
+    "med_km2": 3.751218199814757,
+    "high_km2": 4.973166396054046,
+    "hidden_high_km2": 4.662484250155894,
+    "hidden_high_pct_of_high": 93.7528302663538,
+    "step_pixel_pct": 8.477396965026855,
+    "steep_pixel_pct": 1.489928126335144,
+    "slope1m_p90_median_deg": 6.670270919799805
+  },
+  "routes": {
+    "o2_only": {
+      "dist_km": 7.263977388259453,
+      "o2_g": 196.17064187995396,
+      "med_m": 610.3551638865667,
+      "high_m": 352.80234750445067,
+      "max_slope10_deg": 14.035516387549844
+    },
+    "avoid_high": {
+      "dist_km": 7.426455141354093,
+      "o2_g": 197.31245830957354,
+      "med_m": 477.38789606191824,
+      "high_m": 0.0,
+      "max_slope10_deg": 7.6868437803664245
+    },
+    "avoid_high_and_medium": {
+      "dist_km": 7.466925662015758,
+      "o2_g": 199.04668655707914,
+      "med_m": 0.0,
+      "high_m": 0.0,
+      "max_slope10_deg": 8.475766262003122
+    }
+  },
+  "walkback": {
+    "plain_km2": 18.64318081557274,
+    "safe_km2": 17.27484860989874,
+    "lost_km2": 1.3683322056740035
+  }
+}
