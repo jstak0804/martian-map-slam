@@ -1,0 +1,9 @@
+[{"name":"base","preset":"base","set":{"mode":"inspect"}},
+ {"name":"base_sand","preset":"base","set":{"mode":"inspect","sand":true}},
+ {"name":"simhr_on","preset":"simhr"},
+ {"name":"simhr_off","preset":"simhr","set":{"simAuto":false}},
+ {"name":"simhr_k1","preset":"simhr","set":{"simScenario":"model"}},
+ {"name":"simhr_leak10","preset":"simhr","set":{"simLeak":10}},
+ {"name":"simpress","preset":"simpress"},
+ {"name":"simpress_notcomp","preset":"simpress","set":{"simTcomp":false}},
+ {"name":"rescue","preset":"rescue","read":["pt-where","pt-verdict","pt-meters","supply"]}]

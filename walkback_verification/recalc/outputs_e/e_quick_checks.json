@@ -1,0 +1,103 @@
+{
+  "model": {
+    "model": "ist_b",
+    "flat_speed_m_s": 0.92,
+    "level_mr_w": 444.4,
+    "level_o2_g_per_h": 113.74,
+    "o2_reserve_g": 45.01,
+    "reserve_mr_w": 351.7
+  },
+  "e5_astar": {
+    "neighbors_used_by_astar": 8,
+    "window_cells": 61,
+    "pairs": [
+      {
+        "goal": [
+          0,
+          40
+        ],
+        "astar_cost_g": 12.0194,
+        "dijkstra_opt_g": 12.0194,
+        "rel_diff": 0.0
+      },
+      {
+        "goal": [
+          22,
+          17
+        ],
+        "astar_cost_g": 5.85175,
+        "dijkstra_opt_g": 5.85175,
+        "rel_diff": 0.0
+      },
+      {
+        "goal": [
+          0,
+          56
+        ],
+        "astar_cost_g": 14.40012,
+        "dijkstra_opt_g": 14.40012,
+        "rel_diff": 0.0
+      },
+      {
+        "goal": [
+          21,
+          11
+        ],
+        "astar_cost_g": 8.01857,
+        "dijkstra_opt_g": 8.01857,
+        "rel_diff": 0.0
+      },
+      {
+        "goal": [
+          3,
+          1
+        ],
+        "astar_cost_g": 14.15605,
+        "dijkstra_opt_g": 14.15605,
+        "rel_diff": 0.0
+      },
+      {
+        "goal": [
+          2,
+          5
+        ],
+        "astar_cost_g": 13.53232,
+        "dijkstra_opt_g": 13.53232,
+        "rel_diff": 0.0
+      }
+    ],
+    "max_rel_diff": 0.0,
+    "pass": true,
+    "heuristic_floor_g_per_m": {
+      "floor_used(-50..50%)": 0.032399337761793025,
+      "min_over_-100..100%": 0.032399337761793025
+    }
+  },
+  "e6_viewshed": {
+    "note": "viewshed는 셀 크기를 mars_walkback.CELL_M(10.1 m)로 가정하므로 합성 격자도 그 셀 크기로 해석",
+    "max_visible_cells": 810,
+    "max_visible_km_at_CELL_M": 8.195,
+    "theory_km": 8.2
+  },
+  "e10_georef": {
+    "n": 318,
+    "median_m": 7.69,
+    "std_m": 5.101,
+    "abs_p90_m": 11.626,
+    "best_shift_px_1m": {
+      "dx": 146,
+      "dy": 72,
+      "std_m": 1.589,
+      "median_m": 10.462,
+      "n": 329,
+      "shift_m": 164.7,
+      "std_at_plus_minus_50px": {
+        "+50,+0": 2.924,
+        "-50,+0": 2.726,
+        "+0,+50": 3.848,
+        "+0,-50": 3.011
+      }
+    },
+    "report15": "318개, 중앙값 +7.7 m, 표준편차 5.1 m"
+  }
+}

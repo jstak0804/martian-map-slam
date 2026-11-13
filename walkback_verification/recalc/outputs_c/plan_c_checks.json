@@ -1,0 +1,277 @@
+{
+  "results": {
+    "legacy_pandolf_8": {
+      "scene": {
+        "model": {
+          "model": "pandolf_legacy",
+          "flat_speed_m_s": 0.92,
+          "level_mr_w": 301.3,
+          "level_o2_g_per_h": 77.12,
+          "o2_reserve_g": 38.56,
+          "reserve_mr_w": 301.3
+        },
+        "neighbors": 8,
+        "o2_reserve_g": 38.56,
+        "water_reserve_g": 219.0,
+        "area_100": 6.312,
+        "area_150": 18.643,
+        "area_200": 34.605,
+        "area_150_water600": 7.383,
+        "n_edges": 3282064,
+        "max_edge_grade_pct": 55.3,
+        "n_edges_over_36_4pct": 1448,
+        "route_out": [
+          7.264,
+          196.2,
+          2.193
+        ],
+        "route_back": [
+          7.264,
+          184.2,
+          2.193
+        ]
+      },
+      "flat": {
+        "neighbors": 8,
+        "area_km2": 2.0867,
+        "circle_km2": 2.3175,
+        "ratio_to_circle": 0.9004,
+        "wall_cross_cost": 14.53,
+        "wall_detour_lower_bound": 13.66,
+        "wall_ok": true
+      }
+    },
+    "ist_8": {
+      "scene": {
+        "model": {
+          "model": "ist_b",
+          "flat_speed_m_s": 0.92,
+          "level_mr_w": 444.4,
+          "level_o2_g_per_h": 113.74,
+          "o2_reserve_g": 45.01,
+          "reserve_mr_w": 351.7
+        },
+        "neighbors": 8,
+        "o2_reserve_g": 45.01,
+        "water_reserve_g": 255.6,
+        "area_100": 2.993,
+        "area_150": 9.154,
+        "area_200": 18.611,
+        "area_150_water600": 3.532,
+        "n_edges": 3282064,
+        "max_edge_grade_pct": 55.3,
+        "n_edges_over_36_4pct": 1448,
+        "route_out": [
+          7.228,
+          257.3,
+          2.264
+        ],
+        "route_back": [
+          7.228,
+          251.5,
+          2.228
+        ]
+      },
+      "flat": {
+        "neighbors": 8,
+        "area_km2": 0.9595,
+        "circle_km2": 1.0655,
+        "ratio_to_circle": 0.9005,
+        "wall_cross_cost": 21.42,
+        "wall_detour_lower_bound": 20.15,
+        "wall_ok": true
+      }
+    },
+    "ist_16": {
+      "scene": {
+        "model": {
+          "model": "ist_b",
+          "flat_speed_m_s": 0.92,
+          "level_mr_w": 444.4,
+          "level_o2_g_per_h": 113.74,
+          "o2_reserve_g": 45.01,
+          "reserve_mr_w": 351.7
+        },
+        "neighbors": 16,
+        "o2_reserve_g": 45.01,
+        "water_reserve_g": 255.6,
+        "area_100": 3.181,
+        "area_150": 9.721,
+        "area_200": 19.809,
+        "area_150_water600": 3.753,
+        "n_edges": 6544324,
+        "max_edge_grade_pct": 55.3,
+        "n_edges_over_36_4pct": 1454,
+        "route_out": [
+          7.14,
+          254.1,
+          2.231
+        ],
+        "route_back": [
+          7.138,
+          248.2,
+          2.197
+        ]
+      },
+      "flat": {
+        "neighbors": 16,
+        "area_km2": 1.0356,
+        "circle_km2": 1.0655,
+        "ratio_to_circle": 0.9719,
+        "wall_cross_cost": 21.3,
+        "wall_detour_lower_bound": 20.15,
+        "wall_ok": true
+      }
+    },
+    "legacy_pandolf_16": {
+      "scene": {
+        "model": {
+          "model": "pandolf_legacy",
+          "flat_speed_m_s": 0.92,
+          "level_mr_w": 301.3,
+          "level_o2_g_per_h": 77.12,
+          "o2_reserve_g": 38.56,
+          "reserve_mr_w": 301.3
+        },
+        "neighbors": 16,
+        "o2_reserve_g": 38.56,
+        "water_reserve_g": 219.0,
+        "area_100": 6.722,
+        "area_150": 19.948,
+        "area_200": 36.057,
+        "area_150_water600": 7.857,
+        "n_edges": 6544324,
+        "max_edge_grade_pct": 55.3,
+        "n_edges_over_36_4pct": 1454,
+        "route_out": [
+          7.3,
+          190.8,
+          2.204
+        ],
+        "route_back": [
+          7.305,
+          178.8,
+          2.206
+        ]
+      },
+      "flat": {
+        "neighbors": 16,
+        "area_km2": 2.253,
+        "circle_km2": 2.3175,
+        "ratio_to_circle": 0.9722,
+        "wall_cross_cost": 14.44,
+        "wall_detour_lower_bound": 13.66,
+        "wall_ok": true
+      }
+    },
+    "ist_16_cap": {
+      "scene": {
+        "model": {
+          "model": "ist_b",
+          "flat_speed_m_s": 0.92,
+          "level_mr_w": 444.4,
+          "level_o2_g_per_h": 113.74,
+          "o2_reserve_g": 45.01,
+          "reserve_mr_w": 351.7
+        },
+        "neighbors": 16,
+        "o2_reserve_g": 45.01,
+        "water_reserve_g": 255.6,
+        "area_100": 3.181,
+        "area_150": 9.721,
+        "area_200": 19.809,
+        "area_150_water600": 3.753,
+        "n_edges": 6542870,
+        "max_edge_grade_pct": 36.4,
+        "n_edges_over_36_4pct": 0,
+        "route_out": [
+          7.14,
+          254.1,
+          2.231
+        ],
+        "route_back": [
+          7.138,
+          248.2,
+          2.197
+        ]
+      },
+      "flat": {
+        "neighbors": 16,
+        "area_km2": 1.0356,
+        "circle_km2": 1.0655,
+        "ratio_to_circle": 0.9719,
+        "wall_cross_cost": 21.3,
+        "wall_detour_lower_bound": 20.15,
+        "wall_ok": true
+      }
+    }
+  },
+  "checks": {
+    "legacy_reproduces_original": {
+      "area_150": [
+        18.643,
+        18.643
+      ],
+      "route_back_km": [
+        7.264,
+        7.26
+      ],
+      "o2_out_back": [
+        196.2,
+        184.2,
+        196,
+        184
+      ],
+      "water600": [
+        7.383,
+        7.383
+      ],
+      "pass": true
+    },
+    "flat_legacy_pandolf_8": {
+      "neighbors": 8,
+      "area_km2": 2.0867,
+      "circle_km2": 2.3175,
+      "ratio_to_circle": 0.9004,
+      "wall_cross_cost": 14.53,
+      "wall_detour_lower_bound": 13.66,
+      "wall_ok": true
+    },
+    "flat_ist_8": {
+      "neighbors": 8,
+      "area_km2": 0.9595,
+      "circle_km2": 1.0655,
+      "ratio_to_circle": 0.9005,
+      "wall_cross_cost": 21.42,
+      "wall_detour_lower_bound": 20.15,
+      "wall_ok": true
+    },
+    "flat_ist_16": {
+      "neighbors": 16,
+      "area_km2": 1.0356,
+      "circle_km2": 1.0655,
+      "ratio_to_circle": 0.9719,
+      "wall_cross_cost": 21.3,
+      "wall_detour_lower_bound": 20.15,
+      "wall_ok": true
+    },
+    "flat_legacy_pandolf_16": {
+      "neighbors": 16,
+      "area_km2": 2.253,
+      "circle_km2": 2.3175,
+      "ratio_to_circle": 0.9722,
+      "wall_cross_cost": 14.44,
+      "wall_detour_lower_bound": 13.66,
+      "wall_ok": true
+    },
+    "flat_ist_16_cap": {
+      "neighbors": 16,
+      "area_km2": 1.0356,
+      "circle_km2": 1.0655,
+      "ratio_to_circle": 0.9719,
+      "wall_cross_cost": 21.3,
+      "wall_detour_lower_bound": 20.15,
+      "wall_ok": true
+    }
+  }
+}

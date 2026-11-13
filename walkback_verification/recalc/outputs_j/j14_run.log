@@ -1,0 +1,5 @@
+water0.6 {'area_o2_tree_km2': 3.753, 'area_water_tree_km2': 3.753, 'area_dose_tree_km2': 3.487, 'area_mixed_tree_km2': 3.753, 'area_union_km2': 3.753, 'missed_by_o2_tree_km2': 0.0, 'missed_share_pct': 0.0}
+water0.6_q100 {'area_o2_tree_km2': 1.808, 'area_water_tree_km2': 1.809, 'area_dose_tree_km2': 1.675, 'area_mixed_tree_km2': 1.808, 'area_union_km2': 1.809, 'missed_by_o2_tree_km2': 0.0, 'missed_share_pct': 0.01}
+water1.0_q50 {'area_o2_tree_km2': 10.934, 'area_water_tree_km2': 10.935, 'area_dose_tree_km2': 9.978, 'area_mixed_tree_km2': 10.932, 'area_union_km2': 10.935, 'missed_by_o2_tree_km2': 0.0, 'missed_share_pct': 0.0}
+spe_x30 {'area_o2_tree_km2': 9.721, 'area_water_tree_km2': 9.721, 'area_dose_tree_km2': 8.879, 'area_mixed_tree_km2': 9.563, 'area_union_km2': 9.721, 'missed_by_o2_tree_km2': 0.0, 'missed_share_pct': 0.0}
+spe_x50 {'area_o2_tree_km2': 6.753, 'area_water_tree_km2': 6.753, 'area_dose_tree_km2': 7.16, 'area_mixed_tree_km2': 7.259, 'area_union_km2': 7.331, 'missed_by_o2_tree_km2': 0.578, 'missed_share_pct': 7.88}

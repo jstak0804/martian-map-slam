@@ -1,0 +1,41 @@
+{
+  "model": {
+    "model": "ist_b",
+    "flat_speed_m_s": 0.92,
+    "level_mr_w": 444.4,
+    "level_o2_g_per_h": 113.74,
+    "o2_reserve_g": 45.01,
+    "reserve_mr_w": 351.7
+  },
+  "eta_stats": {
+    "p50": 1.046,
+    "p90": 1.091,
+    "share_at_max": 0.0001
+  },
+  "cases": {
+    "1": {
+      "level_mr_at_eta_max_w": 484.0,
+      "level_increase_at_eta_max_pct": 8.9,
+      "area_km2_100g": 3.181,
+      "area_km2_150g": 9.721,
+      "area_km2_200g": 19.809,
+      "sol1282_return_o2_g": 248.2
+    },
+    "2": {
+      "level_mr_at_eta_max_w": 523.6,
+      "level_increase_at_eta_max_pct": 17.8,
+      "area_km2_100g": 3.141,
+      "area_km2_150g": 9.589,
+      "area_km2_200g": 19.522,
+      "sol1282_return_o2_g": 250.4
+    },
+    "3": {
+      "level_mr_at_eta_max_w": 563.2,
+      "level_increase_at_eta_max_pct": 26.7,
+      "area_km2_100g": 3.103,
+      "area_km2_150g": 9.466,
+      "area_km2_200g": 19.253,
+      "sol1282_return_o2_g": 252.5
+    }
+  }
+}

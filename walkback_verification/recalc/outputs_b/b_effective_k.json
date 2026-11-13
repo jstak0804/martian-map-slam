@@ -1,0 +1,37 @@
+{
+  "pandolf": {
+    "area_km2_fixed_reserve": 18.643,
+    "effective_k_vs_plan_A": 1.0,
+    "level_o2_ratio_vs_pandolf": 1.0
+  },
+  "suit90_A_all092": {
+    "area_km2_fixed_reserve": 10.058,
+    "effective_k_vs_plan_A": 1.398,
+    "level_o2_ratio_vs_pandolf": 1.475
+  },
+  "suit90_B_all077": {
+    "area_km2_fixed_reserve": 9.497,
+    "effective_k_vs_plan_A": 1.443,
+    "level_o2_ratio_vs_pandolf": 1.526
+  },
+  "suit90_C_slope": {
+    "area_km2_fixed_reserve": 10.011,
+    "effective_k_vs_plan_A": 1.401,
+    "level_o2_ratio_vs_pandolf": 1.475
+  },
+  "suit121_A_all092": {
+    "area_km2_fixed_reserve": 9.145,
+    "effective_k_vs_plan_A": 1.474,
+    "level_o2_ratio_vs_pandolf": 1.55
+  },
+  "suit121_B_all077": {
+    "area_km2_fixed_reserve": 9.181,
+    "effective_k_vs_plan_A": 1.471,
+    "level_o2_ratio_vs_pandolf": 1.549
+  },
+  "suit121_C_slope": {
+    "area_km2_fixed_reserve": 9.147,
+    "effective_k_vs_plan_A": 1.474,
+    "level_o2_ratio_vs_pandolf": 1.55
+  }
+}
