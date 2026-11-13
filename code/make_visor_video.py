@@ -32,6 +32,9 @@ def caption_frame(img, top, bottom, lang="en"):
     canvas.paste(im, ((T.W - im.width) // 2, 110 + (box[1] - im.height) // 2))
     d = ImageDraw.Draw(canvas)
     fb, f = (ImageFont.truetype(KO_FONTB, 40), ImageFont.truetype(KO_FONT, 32)) if lang == "ko" else (ImageFont.truetype(T.FONTB, 40), ImageFont.truetype(T.FONT, 32))
+    sz = 40
+    while d.textlength(top, font=fb) > T.W - 100 and sz > 24:      # 제목이 넘치면 글자를 줄임
+        sz -= 2; fb = ImageFont.truetype(KO_FONTB if lang == "ko" else T.FONTB, sz)
     d.text((50, 36), top, font=fb, fill=(231, 234, 240))
     d.rectangle([0, T.H - 100, T.W, T.H], fill=(21, 26, 35)); d.rectangle([0, T.H - 100, 8, T.H], fill=(226, 121, 77))
     w = d.textlength(bottom, font=f); d.text(((T.W - w) / 2, T.H - 70), bottom, font=f, fill=(231, 234, 240))
@@ -58,8 +61,8 @@ def run(lang):
             continue
         a2 = acts + [(16000, simjs(n)), (20000, pin)]
         if n == 0:
-            vx, vy, vw, vh = T.rects("", a2, (1480, 900))["visor"]
-        p = T.page(f"v_{lang}_{n:03d}", "", a2, (1480, 900))
+            vx, vy, vw, vh = T.rects("", a2, (1480, 2400))["visor"]
+        p = T.page(f"v_{lang}_{n:03d}", "", a2, (1480, 2400))
         vis = p.crop((int(vx) - 6, int(vy) - 6, int(vx + vw) + 6, int(vy + vh) + 6))
         if lang == "ko":
             bottom = f"{n}분 · " + ("심박이 오르면 산소 소모가 빨라지고 귀환 여유가 줄어듭니다" if n < 100 else

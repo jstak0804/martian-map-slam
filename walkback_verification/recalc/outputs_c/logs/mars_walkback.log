@@ -1,0 +1,21 @@
+walkback_verification/code/mars_walkback.py:125: RuntimeWarning: Mean of empty slice
+  h = np.nanmean(blocks, axis=(1, 3))
+walkback_verification/recalc/.venv/lib/python3.10/site-packages/numpy/lib/_nanfunctions_impl.py:2035: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+walkback_verification/code/mars_walkback.py:276: RuntimeWarning: invalid value encountered in divide
+  return_o2 / np.maximum(out_o2, 1e-9), np.nan)
+DTM crop 804x657 @ 10.1 m (6.6 x 8.1 km), valid 79.0%, slope>20deg 0.9%
+웨이포인트 318개 고도 차(DTM - rover): median +7.69 m, |err| p90 11.63 m, std 5.10 m (일정한 오프셋이면 경사에는 무관)
+남은 O2 100 g (예비 45 g 제외 55 g): 안전영역 3.18 km2 | 평지 원(반경 1.60 km) 3.37 km2 중 실제로는 못 돌아오는 면적 0.19 km2
+남은 O2 150 g (예비 45 g 제외 105 g): 안전영역 9.72 km2 | 평지 원(반경 3.06 km) 10.25 km2 중 실제로는 못 돌아오는 면적 0.53 km2
+남은 O2 200 g (예비 45 g 제외 155 g): 안전영역 19.81 km2 | 평지 원(반경 4.51 km) 20.70 km2 중 실제로는 못 돌아오는 면적 0.89 km2
+
+착륙지 -> sol 1282 지점:
+  shortest_capped              {"dist_km": 7.13, "o2_g": 256.33, "climb_m": 189.23, "max_slope_deg": 14.39}
+  o2_optimal_out               {"dist_km": 7.14, "o2_g": 254.15, "climb_m": 154.56, "max_slope_deg": 16.53}
+  o2_optimal_back              {"dist_km": 7.14, "o2_g": 248.23, "climb_m": 81.5, "max_slope_deg": 16.53}
+  curiosity_waypoints_as_walk  {"dist_km": 11.32, "o2_g": 459.6, "note": "웨이포인트 직선 연결 — 실제 주행거리보다 짧게 잡힘"}
+saved ../outputs/mars_walkback/walkback_radius.png
+saved ../outputs/mars_walkback/walkback_asymmetry.png
+saved ../outputs/mars_walkback/route_landing_to_sol1282.png
+saved ../outputs/mars_walkback/walkback_stats.json

@@ -1,0 +1,26 @@
+check 9.721433723067486
+a 0.5 2.9 {'area_safe_km2': 9.682, 'area_o2_only_km2': 9.682, 'area_dose_limited_km2': 0.0}
+a 0.5 30 {'area_safe_km2': 5.731, 'area_o2_only_km2': 9.371, 'area_dose_limited_km2': 3.64}
+a 0.5 50 {'area_safe_km2': 2.584, 'area_o2_only_km2': 9.208, 'area_dose_limited_km2': 6.624}
+a 1.0 2.9 {'area_safe_km2': 9.712, 'area_o2_only_km2': 9.712, 'area_dose_limited_km2': 0.0}
+a 1.0 30 {'area_safe_km2': 9.545, 'area_o2_only_km2': 9.545, 'area_dose_limited_km2': 0.0}
+a 1.0 50 {'area_safe_km2': 7.268, 'area_o2_only_km2': 9.416, 'area_dose_limited_km2': 2.147}
+a 2.0 2.9 {'area_safe_km2': 9.718, 'area_o2_only_km2': 9.718, 'area_dose_limited_km2': 0.0}
+a 2.0 30 {'area_safe_km2': 9.604, 'area_o2_only_km2': 9.604, 'area_dose_limited_km2': 0.0}
+a 2.0 50 {'area_safe_km2': 9.565, 'area_o2_only_km2': 9.565, 'area_dose_limited_km2': 0.0}
+  return fnb._ureduce(a,
+b 0.3 0.15 {'area150_nofall': 5.637, 'loss_km2': 4.085, 'high_share_valid_pct': 45.34}
+b 0.3 0.25 {'area150_nofall': 6.716, 'loss_km2': 3.006, 'high_share_valid_pct': 37.86}
+b 0.3 0.35 {'area150_nofall': 7.388, 'loss_km2': 2.333, 'high_share_valid_pct': 32.06}
+b 0.5 0.15 {'area150_nofall': 8.824, 'loss_km2': 0.898, 'high_share_valid_pct': 14.73}
+b 0.5 0.25 {'area150_nofall': 9.082, 'loss_km2': 0.639, 'high_share_valid_pct': 11.64}
+b 0.5 0.35 {'area150_nofall': 9.254, 'loss_km2': 0.467, 'high_share_valid_pct': 9.5}
+b 0.7 0.15 {'area150_nofall': 9.438, 'loss_km2': 0.283, 'high_share_valid_pct': 6.3}
+b 0.7 0.25 {'area150_nofall': 9.532, 'loss_km2': 0.189, 'high_share_valid_pct': 4.92}
+b 0.7 0.35 {'area150_nofall': 9.588, 'loss_km2': 0.133, 'high_share_valid_pct': 3.95}
+c 3.0 2.0 {'dark_km2': 4.992, 'dark_share_pct': 51.3}
+c 10.0 2.0 {'dark_km2': 3.041, 'dark_share_pct': 31.3}
+c 3.0 1.5 {'dark_km2': 5.657, 'dark_share_pct': 58.2}
+d current {'area150': 9.721, 'sol1282_return_o2_g': 248.2, 'speed_at_minus20pct': 0.648, 'cost_ratio_at_minus20pct': 0.946}
+d no_suit_scaling {'area150': 10.922, 'sol1282_return_o2_g': 229.1, 'speed_at_minus20pct': 0.648, 'cost_ratio_at_minus20pct': 0.822}
+d flat_cost {'area150': 9.562, 'sol1282_return_o2_g': 251.7, 'speed_at_minus20pct': 0.648, 'cost_ratio_at_minus20pct': 1.0}

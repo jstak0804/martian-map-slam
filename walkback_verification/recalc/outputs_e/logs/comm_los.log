@@ -1,0 +1,15 @@
+walkback_verification/code/mars_walkback.py:133: RuntimeWarning: Mean of empty slice
+  h = np.nanmean(blocks, axis=(1, 3))
+walkback_verification/recalc/.venv/lib/python3.10/site-packages/numpy/lib/_nanfunctions_impl.py:2035: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+매끈한 화성 구면에서 3 m 마스트 - 2 m 우주복 최대 가시거리 8.2 km
+거점 가시권 24.75 km2 / 지도 42.71 km2
+귀환 가능(150 g) 9.72 km2 중 무전이 거점에 안 닿는 곳 4.99 km2 (51%)
+중계기 1대(후보 281곳 중 최적, 거점에서 6.73 km): 4.79 km2 메움, 남은 음영 0.20 km2
+
+2인 EVA: A는 산소 최적 경로 7.14 km를 끝까지, B는 경로 위 한 지점에서 대기
+  [fixed_stop] B 2.50 km 지점: 135분 중 직접 72 / 중계 0 / 두절 63, 최장 연속 두절 13분, 첫 두절 8분(A 0.43 km)
+  [comm_aware_stop] B 3.86 km 지점: 135분 중 직접 72 / 중계 11 / 두절 52, 최장 연속 두절 11분, 첫 두절 8분(A 0.43 km)
+saved ../outputs/comm_los/comm_coverage.png
+saved ../outputs/comm_los/buddy_timeline.png
+saved ../outputs/comm_los/comm_stats.json

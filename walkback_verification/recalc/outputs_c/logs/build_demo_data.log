@@ -1,0 +1,10 @@
+walkback_verification/code/mars_walkback.py:125: RuntimeWarning: Mean of empty slice
+  h = np.nanmean(blocks, axis=(1, 3))
+walkback_verification/recalc/.venv/lib/python3.10/site-packages/numpy/lib/_nanfunctions_impl.py:2035: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+walkback_verification/recalc/.venv/lib/python3.10/site-packages/numpy/lib/_nanfunctions_impl.py:1634: RuntimeWarning: All-NaN slice encountered
+  return fnb._ureduce(a,
+[plain] 산소 150 g 귀환 가능 9.72 km2, 최대 귀환 산소 298 g, 최대 시간 2.7 h, 최대 선량(x1) 71.8 uSv
+[nofall] 산소 150 g 귀환 가능 9.08 km2, 최대 귀환 산소 300 g, 최대 시간 2.7 h, 최대 선량(x1) 72.1 uSv
+격자 804x657, 원본 10.56 MB -> gzip 4.85 MB
+saved ../outputs/demo/demo_data.bin.gz, demo_meta.json, hillshade.png

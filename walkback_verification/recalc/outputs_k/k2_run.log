@@ -1,0 +1,11 @@
+K2a {'kim_obst_per_time_pct': 9.8, 'kim_obst_per_dist_pct': 14.6, 'kim_mixed_per_time_pct': 58.0, 'kim_mixed_per_dist_pct': 69.1, 'ours_pct_per_unit_eta': 17.8, 'ours_pct_at_eta': {'1.10': 1.8, '1.20': 3.6, '1.30': 5.3, '1.50': 8.9}, 'eta_reproducing_kim_obst_per_time': 1.548, 'eta_percentiles_passable': {'p50': 1.046, 'p90': 1.091, 'p95': 1.115, 'p99': 1.195}, 'share_cells_eta_ge_1.3_pct': 0.19}
+K2b current as_is {'area150': 9.721, 'ret_sol708_g': 191.1, 'ret_sol746_g': 196.6, 'ret_sol1282_g': 248.2}
+K2b current richmond_basis {'area150': 9.657, 'ret_sol708_g': 191.9, 'ret_sol746_g': 197.4, 'ret_sol1282_g': 249.3}
+K2b floor1.2 as_is {'area150': 9.152, 'ret_sol708_g': 197.7, 'ret_sol746_g': 203.5, 'ret_sol1282_g': 256.8}
+K2b floor1.2 richmond_basis {'area150': 8.84, 'ret_sol708_g': 201.7, 'ret_sol746_g': 207.5, 'ret_sol1282_g': 261.9}
+K2b sand as_is {'area150': 9.721, 'ret_sol708_g': 192.9, 'ret_sol746_g': 196.6, 'ret_sol1282_g': 248.2}
+K2b sand richmond_basis {'area150': 9.657, 'ret_sol708_g': 194.5, 'ret_sol746_g': 197.4, 'ret_sol1282_g': 249.3}
+K2c current {'area150': 9.721, 'ret_sol708_g': 191.1, 'ret_sol746_g': 196.6, 'ret_sol1282_g': 248.2, 'ratio_at_-10': 0.943, 'ratio_at_-20': 0.946}
+K2c no_suit_scaling {'area150': 10.922, 'ret_sol708_g': 176.9, 'ret_sol746_g': 182.7, 'ret_sol1282_g': 229.1, 'ratio_at_-10': 0.736, 'ratio_at_-20': 0.822}
+K2c flat_cost {'area150': 9.562, 'ret_sol708_g': 193.5, 'ret_sol746_g': 199.1, 'ret_sol1282_g': 251.7, 'ratio_at_-10': 1.0, 'ratio_at_-20': 1.0}
+K2c minetti_raw {'area150': 12.525, 'ret_sol708_g': 162.6, 'ret_sol746_g': 168.9, 'ret_sol1282_g': 208.7, 'ratio_at_-10': 0.451, 'ratio_at_-20': 0.435}

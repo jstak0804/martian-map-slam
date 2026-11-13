@@ -1,0 +1,77 @@
+{
+ "type": "FeatureCollection",
+ "properties": {
+  "name": "Hidden Valley sand ripples (estimated zone)",
+  "status": "ESTIMATE - circle of radius_m around each rover waypoint; real boundary not mapped",
+  "evidence": "Curiosity entered Hidden Valley ripples sol 706-709 (Aug 2014) and backed out due to high wheel slip (JPL news 'Curiosity Mars rover prepares for fourth rock drilling'; Planetary Society; JGR Planets 2021 2021JGRE..12606904B abstract)",
+  "waypoints": "NASA MMGIS MSL_waypoints.json, sol 706-710, site 40",
+  "eta_rule": "eta = max(eta, 1.5 + 1.3/V^2) at flat speed (Richmond et al. 2015 Table 11, sand)",
+  "plan": "recalc/PLAN_H.md H3 (decision B, 2026-11-12)"
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.3826673,
+     -4.66007507
+    ]
+   },
+   "properties": {
+    "sol": 706,
+    "site": 40,
+    "drive": 200,
+    "radius_m": 150.0
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.3826757,
+     -4.66009362
+    ]
+   },
+   "properties": {
+    "sol": 708,
+    "site": 40,
+    "drive": 224,
+    "radius_m": 150.0
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.3827051,
+     -4.66028425
+    ]
+   },
+   "properties": {
+    "sol": 709,
+    "site": 40,
+    "drive": 366,
+    "radius_m": 150.0
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.3826681,
+     -4.66015741
+    ]
+   },
+   "properties": {
+    "sol": 710,
+    "site": 40,
+    "drive": 480,
+    "radius_m": 150.0
+   }
+  }
+ ]
+}

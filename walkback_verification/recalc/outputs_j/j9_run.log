@@ -1,0 +1,9 @@
+N1 {'n': 400, 'breach': 144, 'dead': 18, 'over_alarm': 2, 'turned': 257, 'breach_pct': 36.0, 'breach_max_g': 33.7, 'turn_frac_median': 0.861}
+N2 {'n': 400, 'breach': 145, 'dead': 1, 'over_alarm': 3, 'turned': 258, 'breach_pct': 36.2, 'breach_max_g': 44.1, 'turn_frac_median': 0.85}
+N3 {'n': 400, 'breach': 108, 'dead': 1, 'over_alarm': 4, 'turned': 260, 'breach_pct': 27.0, 'breach_max_g': 44.0, 'turn_frac_median': 0.841}
+N5 {'n': 400, 'breach': 90, 'dead': 1, 'over_alarm': 5, 'turned': 263, 'breach_pct': 22.5, 'breach_max_g': 32.9, 'turn_frac_median': 0.824}
+N7 {'n': 400, 'breach': 37, 'dead': 1, 'over_alarm': 5, 'turned': 263, 'breach_pct': 9.2, 'breach_max_g': 27.0, 'turn_frac_median': 0.805}
+N10 {'n': 400, 'breach': 28, 'dead': 1, 'over_alarm': 7, 'turned': 265, 'breach_pct': 7.0, 'breach_max_g': 27.0, 'turn_frac_median': 0.776}
+M1.1 {'n': 400, 'breach': 73, 'dead': 0, 'over_alarm': 20, 'turned': 285, 'breach_pct': 18.2, 'breach_max_g': 27.2, 'turn_frac_median': 0.825}
+M1.2 {'n': 400, 'breach': 19, 'dead': 0, 'over_alarm': 32, 'turned': 302, 'breach_pct': 4.8, 'breach_max_g': 5.0, 'turn_frac_median': 0.794}
+trend {'n': 400, 'breach': 73, 'dead': 0, 'over_alarm': 37, 'turned': 304, 'breach_pct': 18.2, 'breach_max_g': 44.1, 'turn_frac_median': 0.784}

@@ -1,0 +1,47 @@
+{
+  "shift_cells": [
+    14.6,
+    7.2
+  ],
+  "model": {
+    "model": "ist_b",
+    "flat_speed_m_s": 0.92,
+    "level_mr_w": 444.4,
+    "level_o2_g_per_h": 113.74,
+    "o2_reserve_g": 45.01,
+    "reserve_mr_w": 351.7
+  },
+  "cases": {
+    "as_is": {
+      "base_cell": [
+        568,
+        71
+      ],
+      "base_passable": true,
+      "base_moved_to_nearest_passable_m": 0.0,
+      "area_km2_100g": 3.181,
+      "area_km2_150g": 9.721,
+      "area_km2_200g": 19.809,
+      "sol1282_return_o2_g": 248.23
+    },
+    "shifted": {
+      "base_cell": [
+        573,
+        80
+      ],
+      "base_passable": false,
+      "base_moved_to_nearest_passable_m": 93.3,
+      "area_km2_100g": 3.207,
+      "area_km2_150g": 9.825,
+      "area_km2_200g": 19.992,
+      "sol1282_return_o2_g": 245.49
+    }
+  },
+  "common_subset_check": {
+    "n_common": 308,
+    "std_as_is_m": 5.165,
+    "std_shifted_m": 1.52,
+    "median_as_is_m": 7.592,
+    "median_shifted_m": 10.303
+  }
+}

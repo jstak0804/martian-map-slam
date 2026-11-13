@@ -1,0 +1,281 @@
+{
+  "models": {
+    "pandolf": {
+      "name": "pandolf",
+      "mode": null,
+      "suit_kg": 90.0,
+      "w_n": 612.3149999999999,
+      "level_w": 301.335552,
+      "level_v": 0.92,
+      "level_o2_g_h": 77.12391112979105,
+      "extrapolated": false
+    },
+    "suit90_A_all092": {
+      "name": "suit90_A_all092",
+      "mode": "A_all092",
+      "suit_kg": 90.0,
+      "w_n": 612.3149999999999,
+      "level_w": 444.3962696888408,
+      "level_v": 0.92,
+      "level_o2_g_h": 113.73891391976481,
+      "extrapolated": false
+    },
+    "suit90_B_all077": {
+      "name": "suit90_B_all077",
+      "mode": "B_all077",
+      "suit_kg": 90.0,
+      "w_n": 612.3149999999999,
+      "level_w": 384.82397535385803,
+      "level_v": 0.77,
+      "level_o2_g_h": 98.4919631248949,
+      "extrapolated": false
+    },
+    "suit90_C_slope": {
+      "name": "suit90_C_slope",
+      "mode": "C_slope",
+      "suit_kg": 90.0,
+      "w_n": 612.3149999999999,
+      "level_w": 444.3962696888408,
+      "level_v": 0.92,
+      "level_o2_g_h": 113.73891391976481,
+      "extrapolated": false
+    },
+    "suit121_A_all092": {
+      "name": "suit121_A_all092",
+      "mode": "A_all092",
+      "suit_kg": 121.0,
+      "w_n": 727.356,
+      "level_w": 467.0449587052298,
+      "level_v": 0.92,
+      "level_o2_g_h": 119.53562614742211,
+      "extrapolated": true
+    },
+    "suit121_B_all077": {
+      "name": "suit121_B_all077",
+      "mode": "B_all077",
+      "suit_kg": 121.0,
+      "w_n": 727.356,
+      "level_w": 390.59733587595326,
+      "level_v": 0.77,
+      "level_o2_g_h": 99.96959874031114,
+      "extrapolated": true
+    },
+    "suit121_C_slope": {
+      "name": "suit121_C_slope",
+      "mode": "C_slope",
+      "suit_kg": 121.0,
+      "w_n": 727.356,
+      "level_w": 467.0449587052298,
+      "level_v": 0.92,
+      "level_o2_g_h": 119.53562614742211,
+      "extrapolated": true
+    }
+  },
+  "speed_modes": {
+    "A_all092": "ㄱ 모두 0.92 m/s (오르막 증가분 × 0.92/0.77)",
+    "B_all077": "ㄴ 모두 0.77 m/s (실측 그대로)",
+    "C_slope": "ㄷ 평지·내리막 0.92, 10% 이상 0.77, 사이 직선"
+  },
+  "regression_quality": {
+    "level_v0.77": {
+      "vo2_by_g": [
+        14.0,
+        15.54,
+        15.0,
+        14.97,
+        15.26
+      ],
+      "r2": 0.28065734038783086
+    },
+    "level_v0.92": {
+      "vo2_by_g": [
+        14.53,
+        16.02,
+        15.92,
+        17.02,
+        17.86
+      ],
+      "r2": 0.9309004168674222
+    },
+    "level_v1.25": {
+      "vo2_by_g": [
+        15.96,
+        17.4,
+        18.41,
+        21.35,
+        23.47
+      ],
+      "r2": 0.9690780303083923
+    },
+    "grade_inc_10pct": {
+      "inc_by_g": [
+        -0.3,
+        1.19,
+        1.53,
+        1.73,
+        2.46
+      ],
+      "r2": 0.8838230107484876
+    },
+    "grade_inc_20pct": {
+      "inc_by_g": [
+        0.7,
+        3.03,
+        4.43,
+        5.92,
+        7.72
+      ],
+      "r2": 0.9922067228608897
+    },
+    "grade_inc_30pct": {
+      "inc_by_g": [
+        2.98,
+        5.5,
+        8.69,
+        12.56,
+        15.79
+      ],
+      "r2": 0.9952064236247958
+    }
+  },
+  "checks": {
+    "pandolf_area_150": {
+      "got": 18.643,
+      "want": 18.643
+    },
+    "pandolf_route": {
+      "out": {
+        "model": "pandolf",
+        "direction": "out",
+        "km": 7.264,
+        "o2_g": 196.2,
+        "ascent_m": 150.4,
+        "max_slope_deg": 14.0,
+        "hours": 2.193,
+        "shared_with_pandolf": 1.0
+      },
+      "back": {
+        "model": "pandolf",
+        "direction": "back",
+        "km": 7.264,
+        "o2_g": 184.2,
+        "ascent_m": 77.0,
+        "max_slope_deg": 14.0,
+        "hours": 2.193,
+        "shared_with_pandolf": 1.0
+      },
+      "report15": "7.26 km, 갈 때 196 g, 올 때 184 g"
+    },
+    "pandolf_water_0p6": {
+      "got": 7.383,
+      "k_scenarios": 7.383
+    },
+    "grade_inc_monotonic_suit90": true,
+    "grade_inc_monotonic_suit121": true,
+    "flat_grid": {
+      "pandolf": {
+        "area_km2": 2.087,
+        "octagon_km2": 2.086,
+        "rel_err": 0.0001
+      },
+      "suit90_A_all092": {
+        "area_km2": 0.959,
+        "octagon_km2": 0.959,
+        "rel_err": 0.0002
+      },
+      "suit90_B_all077": {
+        "area_km2": 0.896,
+        "octagon_km2": 0.896,
+        "rel_err": -0.0002
+      }
+    },
+    "level_vo2_092_suit90": {
+      "vo2": 17.69,
+      "scatter_range_ist1": [
+        13,
+        19
+      ]
+    },
+    "eyeball_vs_vector": {
+      "level_0.92_0.32g": {
+        "vector": 17.86,
+        "eyeball": 17.0
+      },
+      "grade_0.32g": {
+        "0": {
+          "vector": 16.14,
+          "eyeball": 16.2
+        },
+        "10": {
+          "vector": 18.6,
+          "eyeball": 18.4
+        },
+        "20": {
+          "vector": 23.86,
+          "eyeball": 23.6
+        },
+        "30": {
+          "vector": 31.93,
+          "eyeball": 31.5
+        }
+      }
+    }
+  },
+  "cross": {
+    "ist1_level_0.77_vs_ist2_0pct_0.32g": [
+      15.26,
+      16.14
+    ],
+    "ewt_3_8g_vs_model": {
+      "v1.25": {
+        "ewt": 27.6,
+        "model_at_ewt_weight_extrap": 25.33
+      },
+      "v1.38": {
+        "ewt": 32.5,
+        "model_at_ewt_weight_extrap": 27.85
+      },
+      "v1.52": {
+        "ewt": 35.7,
+        "model_at_ewt_weight_extrap": 30.51
+      }
+    },
+    "ewt_weight_n": 741.2,
+    "grade_edges_beyond_30pct_fraction": 0.0075
+  },
+  "reserve_fixed444": {
+    "level_w": 444.3962696888408,
+    "o2_g": 56.869456959882406,
+    "water_g": 322.9363283972198
+  },
+  "level_lin_coefs(per TGAW N: [slope, intercept] for a,b,c)": [
+    [
+      -0.008064923487398483,
+      4.468922785484057
+    ],
+    [
+      0.052552357866220395,
+      -15.578483484777284
+    ],
+    [
+      -0.033686199820527736,
+      23.43913327247808
+    ]
+  ],
+  "grade_lin_coefs(per TGAW N: [slope, intercept] for a,b)": [
+    [
+      2.4781518730926986e-05,
+      -0.002131028398369114
+    ],
+    [
+      0.0003716770925161927,
+      -0.11363586617919631
+    ]
+  ],
+  "env": {
+    "python": "3.10.12",
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "matplotlib": "3.9.4"
+  }
+}
