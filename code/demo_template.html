@@ -49,6 +49,12 @@
   .presets { display: flex; flex-wrap: wrap; gap: 6px; }
   .presets button { font: inherit; font-size: 12.5px; color: var(--ink); background: var(--panel-2); border: 1px solid var(--rule);
     border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+  details.adv { border: 1px solid var(--rule); border-radius: 8px; padding: 6px 10px; display: grid; gap: 10px; }
+  details.adv > summary { cursor: pointer; font-size: 13px; color: var(--ink-soft); }
+  details.adv[open] > summary { margin-bottom: 4px; }
+  details.adv.more { flex-basis: 100%; padding: 4px 8px; }
+  details.supwrap > summary { cursor: pointer; font-size: 13px; color: var(--ink-soft); }
+  details.supwrap:has(#supply[hidden]) { display: none; }
   .presets button:hover { border-color: var(--accent); }
   .presets button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 
@@ -72,6 +78,7 @@
   .mapwrap canvas.cells { image-rendering: pixelated; opacity: var(--cells-alpha); }
   .mapwrap canvas.vec { cursor: crosshair; }
   .loading[hidden], .mapwrap img[hidden] { display: none; }
+  [hidden] { display: none !important; }      /* display를 준 요소(.rv, .visor-wrap, .ctl, .sw)도 hidden이면 숨김 */
   #shade { filter: brightness(1.12) contrast(1.05); }
   .seg { display: flex; gap: 0; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
   .seg label { flex: 1; text-align: center; font-size: 13px; padding: 6px 8px; cursor: pointer; background: var(--panel-2); color: var(--ink-soft); }
@@ -255,6 +262,7 @@
         <input type="range" id="o2" min="40" max="800" step="5" value="150">
         <div class="hint" id="o2-hint"></div>
       </div>
+      <details class="adv"><summary>고급 설정: 냉각수 · 대사 · 열 · 왕복 여유</summary>
       <div class="ctl">
         <div class="row"><label for="water">남은 냉각수</label><output id="water-out" for="water"></output></div>
         <input type="range" id="water" min="0.2" max="3.6" step="0.05" value="3.6">
@@ -275,6 +283,7 @@
         <input type="range" id="pm" min="0" max="50" step="5" value="20">
         <div class="hint">과학 EVA 계획과 EVA 시뮬레이션의 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 산소·냉각수의 이만큼을 더 남깁니다. 지도 색(절대 한계)은 그대로입니다.</div>
       </div>
+      </details>
 
       <div class="group" id="eva-ctl" hidden>
         <h2>과학 EVA 계획</h2>
@@ -312,7 +321,7 @@
       <div class="group" id="sim-ctl" hidden>
         <h2>EVA 시뮬레이션</h2>
         <div class="hint">대원이 거점에서 출발해 지도에서 찍은 목적지(★가 아닌 주황 깃발)까지 갔다가 돌아옵니다. 출발할 때 산소·냉각수는 위 슬라이더 값이고, k는 아래에서 고른 방법으로 매분 추정합니다.</div>
-        <div class="ctl">
+        <div class="ctl" hidden>
           <label for="sim-src">k 추정 근거</label>
           <select id="sim-src">
             <option value="hr">심박 (Hoffmann 회귀식으로 대사량 추정)</option>
@@ -358,6 +367,7 @@
         <label class="sw"><input type="checkbox" id="sim-auto" checked><span>귀환 경보가 뜨면 바로 돌아서기<small>끄면 목적지까지 간 뒤에야 돌아섭니다</small></span></label>
       </div>
 
+      <details class="adv"><summary>고급 설정: 선량(SPE) · 안전 운용 · 문헌 보정</summary>
       <div class="group speblock" id="speblock" data-off="true">
         <label class="sw"><input type="checkbox" id="spe"><span>태양입자사건(SPE)<small>배경 대비 선량률 배율. 화성 표면 관측값은 ×2~3</small></span></label>
         <div class="ctl">
@@ -381,6 +391,7 @@
         <label class="sw"><input type="checkbox" id="m-sand"><span id="m-sand-t">모래언덕 지형계수 1.5 + 1.3/V²<small id="m-sand-d">Bagnold 사구 후보 8.6 km²(위성 사진 밝기로 추정)에 적용. 0.92 m/s에서 약 3.0, 식의 자료 범위 밖인 0.85 m/s 미만은 0.85 값(3.3)</small></span></label>
         <div class="hint" id="m-hint"></div>
       </div>
+      </details>
 
       <div class="group">
         <h2>지도 표시</h2>
@@ -388,18 +399,20 @@
           <label><input type="radio" name="basemap" id="bm-ortho" value="ortho" checked>위성 사진 (HiRISE)</label>
           <label><input type="radio" name="basemap" id="bm-shade" value="shade">음영 기복도 (DTM)</label>
         </div>
+        <label class="sw"><input type="checkbox" id="showcomm" checked><span>통신 음영 (빗금)</span></label>
+        <label class="sw" id="showtrav-l"><input type="checkbox" id="showtrav" checked><span id="showtrav-t">Curiosity 실제 주행 경로</span></label>
+        <label class="sw" id="showtargets-l"><input type="checkbox" id="showtargets" checked><span>과학 목표 지점<small>로버가 오래 머물며 조사한 곳(Gale·Jezero), 열관성 높은 노출 암반 후보(Aram)</small></span></label>
+        <label class="sw" id="showphoto-l"><input type="checkbox" id="showphoto" checked><span>로버 1인칭 사진 위치<small>지도를 누르면 250 m 안의 가장 가까운 로버 사진이 오른쪽에 뜹니다 (NASA 원본 사진)</small></span></label>
+        <details class="adv"><summary>더 많은 레이어</summary>
         <div class="ctl">
           <div class="row"><label for="alpha">판정 색 진하기</label><output id="alpha-out" for="alpha"></output></div>
           <input type="range" id="alpha" min="0" max="100" step="5" value="80">
         </div>
         <label class="sw"><input type="checkbox" id="showmr"><span>칸별 대사량 지도<small>각 칸을 가장 가파른 방향으로 오를 때의 대사량. 파랑 낮음 → 노랑 높음, 흰색은 20° 넘는 금지 구역 (NASA Kim 2025 방식)</small></span></label>
-        <label class="sw" id="showtir-l"><input type="checkbox" id="showtir"><span>열관성 지도 (THEMIS 야간 적외선)<small>JPL Mars Trek 모자이크(약 80 m). 밤에 밝을수록 열을 오래 품는 암반·굳은 지반, 어두울수록 먼지·고운 모래. 지역 안 상대값</small></span></label>
+        <label class="sw" id="showtir-l" hidden><input type="checkbox" id="showtir"><span>열관성 지도 (THEMIS 야간 적외선)<small>JPL Mars Trek 모자이크(약 80 m). 밤에 밝을수록 열을 오래 품는 암반·굳은 지반, 어두울수록 먼지·고운 모래. 지역 안 상대값</small></span></label>
         <label class="sw"><input type="checkbox" id="showsand"><span>모래언덕 후보 영역</span></label>
         <label class="sw"><input type="checkbox" id="showfall"><span>넘어짐 위험 등급</span></label>
-        <label class="sw"><input type="checkbox" id="showcomm" checked><span>통신 음영 (빗금)</span></label>
-        <label class="sw" id="showtrav-l"><input type="checkbox" id="showtrav" checked><span id="showtrav-t">Curiosity 실제 주행 경로</span></label>
-        <label class="sw" id="showtargets-l"><input type="checkbox" id="showtargets" checked><span>과학 목표 지점<small>로버가 오래 머물며 조사한 곳(Gale·Jezero), 열관성 높은 노출 암반 후보(Aram)</small></span></label>
-        <label class="sw" id="showphoto-l"><input type="checkbox" id="showphoto" checked><span>로버 1인칭 사진 위치<small>지도를 누르면 250 m 안의 가장 가까운 로버 사진이 오른쪽에 뜹니다 (NASA 원본 사진)</small></span></label>
+        </details>
       </div>
     </section>
 
@@ -473,7 +486,7 @@
         <dl class="facts" id="pt-facts"></dl>
         <div class="evabox" id="eva-order" hidden></div>
         <figure class="pov" id="pov" hidden><img id="pov-img" alt=""><figcaption id="pov-cap"></figcaption></figure>
-        <div class="supply" id="supply" hidden></div>
+        <details class="supwrap"><summary>보급 계산 자세히</summary><div class="supply" id="supply" hidden></div></details>
         <ol class="simlog" id="sim-log" hidden></ol>
       </section>
     </div>
@@ -579,7 +592,7 @@
     { id: "spe30", label: "대형 SPE ×30 (가정)", s: { spe: true, mult: 30 } },
     { id: "tired", label: "지친 대원 k 1.2", s: { k: 1.2 } },
     { id: "leak", label: "냉각수 누수 0.6 kg", s: { water: 0.6 } },
-    { id: "hot", label: "누수 + 더운 오후", s: { water: 0.6, q: 100 } },
+    { id: "hot", label: "위기: 누수 + 더운 오후", s: { water: 0.6, q: 100 } },
     { id: "safe", label: "안전 우선 운용", s: { nofall: true, relay: true, showfall: true } },
     { id: "simhr", label: "심박 시뮬레이션 예시", s: { mode: "sim", o2: 450, water: 3.6, simScenario: "surge", simAuto: true, simTarget: GOAL, simSrc: "hr", simLeak: 0 } },
     { id: "simpress", label: "압력 측정 예시 (누설 10 g/h)", s: { mode: "sim", o2: 450, water: 3.6, simScenario: "surge", simAuto: true, simTarget: GOAL, simSrc: "press", simLeak: 10, simPNoise: 10, simTcomp: true, simLeakSub: false } },
@@ -588,6 +601,12 @@
     { id: "rescue", label: `구조 예시: ${goalShort()}`, s: { mode: "rescue", victim: GOAL, here: -1, o2: 650, vo2: 150, vwater: 1, vcarry: "walk" } },
   ];
   PRESETS = makePresets();
+  const MAIN_PRESETS = ["base", "hot", "simhr", "eva"], HIDDEN_PRESETS = ["simpress"];   // 간소화판: 기본 4개, 나머지는 접기
+  const presetsHtml = () => {
+    const b = (p) => `<button type="button" data-id="${p.id}">${p.label}</button>`;
+    return PRESETS.filter((p) => MAIN_PRESETS.includes(p.id)).map(b).join("")
+      + `<details class="adv more"><summary>다른 상황</summary><div class="presets">${PRESETS.filter((p) => !MAIN_PRESETS.includes(p.id) && !HIDDEN_PRESETS.includes(p.id)).map(b).join("")}</div></details>`;
+  };
   const DEFAULTS = { o2: 150, water: 3.6, k: 1, q: 0, spe: false, mult: C.spe_observed, nofall: false, relay: false, showfall: false,
                      mSpeed: false, mEta: false, mDown: false, mSand: false };
 
@@ -1587,7 +1606,7 @@
     box.hidden = false;
   }
   function groundFact(i) {                 // THEMIS 야간 적외선으로 본 지반 (지역 안 상대 순위)
-    if (!TIR || i < 0) return "";
+    if (true || !TIR || i < 0) return "";   // 간소화판: THEMIS 지반 행 숨김
     const v = TIR[i], kind = v <= TIR_Q[0] ? "먼지·고운 모래 쪽 (열관성 낮음, 발이 빠질 수 있음)" : v >= TIR_Q[1] ? "암반·굳은 지반 쪽 (열관성 높음)" : "중간";
     return `<dt>지반 (THEMIS 밤 적외선)</dt><dd>${kind}</dd>`;
   }
@@ -2210,7 +2229,7 @@
   $("alpha").addEventListener("input", (e) => setAlpha(Number(e.target.value)));
   setAlpha(80);
 
-  $("presets").innerHTML = PRESETS.map((p) => `<button type="button" data-id="${p.id}">${p.label}</button>`).join("");
+  $("presets").innerHTML = presetsHtml();
   $("presets").addEventListener("click", (e) => {
     const bt = e.target.closest("button"); if (!bt) return;
     const p = PRESETS.find((q) => q.id === bt.dataset.id);
@@ -2241,7 +2260,7 @@
     if (state.evaSel.length !== TG.length) state.evaSel = TG.map(() => true);
     $("eva-targets").innerHTML = TG.length ? TG.map((t, i) => `<label><input type="checkbox" data-ti="${i}"${state.evaSel[i] ? " checked" : ""}><b>${t.name}</b><small>${t.why}</small></label>`).join("")
       : '<div class="hint">이 지형에는 과학 목표 자료가 없습니다.</div>';
-    $("showtir-l").hidden = !META.tir;
+    $("showtir-l").hidden = true;            // 간소화판: THEMIS 레이어 숨김 (계산에 안 쓰임)
     $("rv-btn").hidden = !(META.roadview && META.roadview.length);
     state.rv = -1; state.rvMode = false; $("rv-btn").setAttribute("aria-pressed", "false"); renderRv();
     const sandOk = st.dune_km2 > 0.01;
@@ -2277,7 +2296,7 @@
     $("shade").src = site.shade; $("ortho").src = site.ortho;
     Object.assign(state, { base: BASE0, sel: GOAL, here: -1, victim: -1, simTarget: GOAL, evaSel: (site.meta.targets || []).map(() => true) });
     PRESETS = makePresets();
-    $("presets").innerHTML = PRESETS.map((p) => `<button type="button" data-id="${p.id}">${p.label}</button>`).join("");
+    $("presets").innerHTML = presetsHtml();
     if (before) before();
     siteTexts();
     $("loading").hidden = true;
