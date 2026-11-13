@@ -31,6 +31,10 @@ Interplanetary Survival Guide: Martian Map 챌린지로 진행한 SLAM(점진적
 - **실제 지형 SLAM 탐사:** `code/slam_site_exploration.py <id>`
   - 탐사형 SLAM 모델(정지-스캔, 지형 가림, 프런티어 탐사, VO 드리프트)을 HiRISE 지형 전체로 키우고, 루프 클로저를 더했습니다.
   - 결과 영상: `outputs/slam_sites/<id>/slam_<id>.mp4`
+- **챌린지 공식 자료 반영 (2026-11-13 공개된 Resources):**
+  - **Perseverance·Curiosity 원본 사진:** 실제 주행 경로 위 지점마다 Navcam 1인칭 사진을 붙였습니다. 지도를 누르면 250 m 안의 사진이 뜹니다(`code/build_rover_photos.py`).
+  - **JPL Mars Trek THEMIS 야간 적외선 모자이크:** 열관성 지도와 지점별 지반 성격으로 넣었습니다(`code/build_trek_layers.py`).
+  - 이로써 광학·지형·방사선에 열 자료가 더해졌습니다.
 - **원격 진행:** 해커톤 중 원격 Claude Code로 자료를 받는 방법은 [`code/hackathon/REMOTE.md`](code/hackathon/REMOTE.md)에 있습니다.
   - 챌린지 자료 탭 감시: `challenge_watch`
   - 링크로 받기: `fetch`

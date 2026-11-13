@@ -39,16 +39,45 @@ def gale_site(meta):
             "base_name": GALE["base_name"], "goal_name": GALE["goal_name"], "stats": stats}
 
 
+def tir(site):
+    """build_trek_layers.py 결과(THEMIS 야간 적외선, 데모 격자)를 8비트 PNG data URI로."""
+    p = f"../outputs/demo/trek/{site}/themis_night.npy"
+    if not os.path.exists(p):
+        return None
+    import io
+    from PIL import Image
+    buf = io.BytesIO(); Image.fromarray(np.load(p)).save(buf, format="PNG", optimize=True)
+    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
+
+
+def photos(site):
+    """build_rover_photos.py 결과를 data URI로 (없으면 빈 목록)."""
+    d = f"../outputs/demo/photos/{site}"
+    if not os.path.exists(f"{d}/photos.json"):
+        return []
+    out = []
+    for p in json.load(open(f"{d}/photos.json", encoding="utf-8")):
+        q = {k: p[k] for k in ("x", "y", "sol", "rover", "date", "camera", "credit", "url")}
+        q["img"] = "data:image/jpeg;base64," + b64(f"{d}/{p['file']}")
+        out.append(q)
+    return out
+
+
 def main():
     html = open("demo_template.html", encoding="utf-8").read()
     meta = json.load(open("../outputs/demo/demo_meta.json", encoding="utf-8"))
     meta["site"] = gale_site(meta)
+    meta["photos"] = photos("gale")
+    meta["tir"] = tir("gale")
     sites = []
     for sid in DEMO_SITES:
         d = f"../outputs/demo/sites/{sid}"
         if not os.path.exists(f"{d}/meta.json"):
             print(f"  {sid}: 자료 없음 (python build_site_data.py {sid}) -> 건너뜀"); continue
-        sites.append({"meta": json.load(open(f"{d}/meta.json", encoding="utf-8")), "data": b64(f"{d}/data.bin.gz"),
+        sm = json.load(open(f"{d}/meta.json", encoding="utf-8"))
+        sm["photos"] = photos(sid)
+        sm["tir"] = tir(sid)
+        sites.append({"meta": sm, "data": b64(f"{d}/data.bin.gz"),
                       "shade": "data:image/png;base64," + b64(f"{d}/hillshade.png"),
                       "ortho": "data:image/jpeg;base64," + b64(f"{d}/basemap.jpg")})
     rep = {"__META__": json.dumps(meta, ensure_ascii=False).replace("</", "<\\/"),

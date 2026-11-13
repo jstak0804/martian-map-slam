@@ -166,6 +166,10 @@
   .busy { font-family: var(--font-mono); font-size: 12.5px; color: var(--accent); }
   .busy[hidden], .group[hidden] { display: none; }
   .legend i.late { background: repeating-linear-gradient(45deg, #ef6b5e 0 2px, transparent 2px 4px); border: 1px solid #ef6b5e; }
+  .pov { margin: 0; display: grid; gap: 6px; border-top: 1px solid var(--rule); padding-top: 12px; }
+  .pov img { width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--rule); display: block; }
+  .pov figcaption { font-size: 12px; color: var(--ink-soft); line-height: 1.45; }
+  .pov figcaption b { color: var(--ink); }
   .supply { display: grid; gap: 8px; border-top: 1px solid var(--rule); padding-top: 12px; }
   .supply[hidden] { display: none; }
   .supply h3 { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink-soft); }
@@ -330,10 +334,12 @@
           <input type="range" id="alpha" min="0" max="100" step="5" value="80">
         </div>
         <label class="sw"><input type="checkbox" id="showmr"><span>칸별 대사량 지도<small>각 칸을 가장 가파른 방향으로 오를 때의 대사량. 파랑 낮음 → 노랑 높음, 흰색은 20° 넘는 금지 구역 (NASA Kim 2025 방식)</small></span></label>
+        <label class="sw" id="showtir-l"><input type="checkbox" id="showtir"><span>열관성 지도 (THEMIS 야간 적외선)<small>JPL Mars Trek 모자이크(약 80 m). 밤에 밝을수록 열을 오래 품는 암반·굳은 지반, 어두울수록 먼지·고운 모래. 지역 안 상대값</small></span></label>
         <label class="sw"><input type="checkbox" id="showsand"><span>모래언덕 후보 영역</span></label>
         <label class="sw"><input type="checkbox" id="showfall"><span>넘어짐 위험 등급</span></label>
         <label class="sw"><input type="checkbox" id="showcomm" checked><span>통신 음영 (빗금)</span></label>
         <label class="sw" id="showtrav-l"><input type="checkbox" id="showtrav" checked><span id="showtrav-t">Curiosity 실제 주행 경로</span></label>
+        <label class="sw" id="showphoto-l"><input type="checkbox" id="showphoto" checked><span>로버 1인칭 사진 위치<small>지도를 누르면 250 m 안의 가장 가까운 로버 사진이 오른쪽에 뜹니다 (NASA 원본 사진)</small></span></label>
       </div>
     </section>
 
@@ -392,6 +398,7 @@
         <div class="pt-head"><span class="where" id="pt-where">–</span><span class="verdict" id="pt-verdict">–</span></div>
         <div class="meters" id="pt-meters"></div>
         <dl class="facts" id="pt-facts"></dl>
+        <figure class="pov" id="pov" hidden><img id="pov-img" alt=""><figcaption id="pov-cap"></figcaption></figure>
         <div class="supply" id="supply" hidden></div>
         <ol class="simlog" id="sim-log" hidden></ol>
       </section>
@@ -465,7 +472,7 @@
                   mode: "inspect", sel: GOAL, here: -1, victim: -1, vo2: 150, vwater: 1, vcarry: "walk", base: BASE0,
                   simTarget: GOAL, simScenario: "surge", simNoise: 8, simAuto: true, simCustom: "",
                   simSrc: "hr", simLeak: 0, simPNoise: 10, simTcomp: true, simLeakSub: false,
-                  mSpeed: false, mEta: false, mDown: false, mSand: false, showmr: false, showsand: false };
+                  mSpeed: false, mEta: false, mDown: false, mSand: false, showmr: false, showsand: false, showphoto: true, showtir: false };
 
   let PRESETS;
   const makePresets = () => [
@@ -1020,6 +1027,7 @@
 
   // 칸별 대사량(W): 그 칸에서 가장 가파른 방향으로 오를 때. NASA Kim 2025 "local metabolic rate" 지도와 같은 발상
   let LMR = null, LMR_KEY = "";
+  let TIR = null, TIR_LO = 0, TIR_HI = 255, TIR_Q = [85, 170];
   const MR_LO = 250, MR_HI = 900;       // NASA Kim 2025 지도 색 범위(최대 약 3000 BTU/h ≈ 880 W)와 비슷하게
   function localMR() {
     const key = modelKey();
@@ -1042,6 +1050,14 @@
   }
   function paintCells() {
     const comm = state.showcomm, fall = state.showfall, sand = state.showsand;
+    if (state.showtir && TIR) {              // 열관성(THEMIS 야간 적외선): 파랑 낮음(먼지·모래) -> 노랑 높음(암반)
+      for (let i = 0; i < N; i++) {
+        if (!(FLAGS[i] & 1)) { px[i] = 0; continue; }
+        px[i] = mrColor(MR_LO + (TIR[i] - TIR_LO) / Math.max(1, TIR_HI - TIR_LO) * (MR_HI - MR_LO));
+        if (sand && (FLAGS[i] & 16) && ((i % W) + ((i / W) | 0)) % 6 === 0) px[i] = COL.sand;
+      }
+      cctx.putImageData(img, 0, 0); return;
+    }
     if (state.showmr) {
       const L = localMR(), white = rgba("#ffffff", 0.78);
       for (let i = 0; i < N; i++) {
@@ -1172,6 +1188,7 @@
       html = `<span><i style="width:90px;background:linear-gradient(90deg,rgb(44,123,217),rgb(63,193,160),rgb(242,208,59))"></i>칸별 대사량 ${MR_LO} W 이하 → ${MR_HI} W 이상 (가장 가파른 방향으로 오를 때)</span>`
         + item("background:#ffffff", "경사 20° 초과: 걸어서 못 감");
     }
+    if (state.showtir && TIR) html = `<span><i style="width:90px;background:linear-gradient(90deg,rgb(44,123,217),rgb(63,193,160),rgb(242,208,59))"></i>THEMIS 야간 적외선 (열관성): 어두움 = 먼지·고운 모래 → 밝음 = 암반·굳은 지반 (지역 안 상대값, JPL Mars Trek)</span>`;
     if (state.showsand) html += `<span><i class="hatch" style="background:repeating-linear-gradient(45deg,#ffb347 0 2px,transparent 2px 5px)"></i>모래언덕 후보 (위성 사진 밝기로 추정)</span>`;
     if (state.showfall) html += `<span><i style="background:var(--fall-high)"></i>넘어짐 높음 <i style="background:var(--fall-med);margin-left:8px"></i>중간</span>`;
     $("legend").innerHTML = html;
@@ -1270,16 +1287,40 @@
   };
   const VERD = { 3: ["ok", "돌아올 수 있음"], 1: ["bad", "산소 부족"], 2: ["bad", "선량 초과"], 4: ["warn", "냉각수 바닥, 체온 비상한계로 겨우"], 5: ["bad", "냉각수 부족"] };
 
+  // 로버 1인칭 사진: 고른 지점에서 POV_M 안의 가장 가까운 사진 (챌린지 공식 자료 Perseverance Raw Images와 같은 원본 사진 API)
+  const POV_M = 250;
+  let POV = null;
+  function showPov(i) {
+    const P = META.photos || [];
+    POV = null;
+    if (!state.showphoto || i < 0 || !P.length) { $("pov").hidden = true; return; }
+    const x = i % W + 0.5, y = ((i / W) | 0) + 0.5;
+    let best = null, bd = Infinity;
+    for (const p of P) { const d = Math.hypot(p.x - x, p.y - y) * CELL; if (d < bd) { bd = d; best = p; } }
+    if (!best || bd > POV_M) { $("pov").hidden = true; return; }
+    POV = best;
+    $("pov-img").src = best.img;
+    $("pov-img").alt = `${best.rover} Navcam 사진, sol ${best.sol}`;
+    $("pov-cap").innerHTML = `<b>이 근처에서 ${best.rover}가 본 풍경</b> · 고른 지점에서 ${fmt(bd, 0)} m · sol ${best.sol} (${best.date}) · ${best.camera} · ${best.credit}`;
+    $("pov").hidden = false;
+  }
+  function groundFact(i) {                 // THEMIS 야간 적외선으로 본 지반 (지역 안 상대 순위)
+    if (!TIR || i < 0) return "";
+    const v = TIR[i], kind = v <= TIR_Q[0] ? "먼지·고운 모래 쪽 (열관성 낮음, 발이 빠질 수 있음)" : v >= TIR_Q[1] ? "암반·굳은 지반 쪽 (열관성 높음)" : "중간";
+    return `<dt>지반 (THEMIS 밤 적외선)</dt><dd>${kind}</dd>`;
+  }
   function paintPoint() {
     const title = { inspect: "선택한 지점에서 돌아오기", here: "현재 위치에서 돌아오기", rescue: "구조 계획", base: "거점", sim: "EVA 시뮬레이션" }[state.mode];
     $("h-pt").textContent = title;
     $("sim-log").hidden = state.mode !== "sim";
+    $("pov").hidden = true; POV = null;
     if (state.mode === "rescue") return paintRescue();
     $("supply").hidden = true;
     if (state.mode === "sim") return paintSim();
     if (state.mode === "base") return paintBase();
     const i = state.mode === "here" ? state.here : state.sel;
     const v = $("pt-verdict");
+    showPov(i);
     if (i < 0) {
       $("pt-where").textContent = "지도를 눌러 현재 위치를 찍으세요";
       v.className = "verdict"; v.textContent = "";
@@ -1308,7 +1349,8 @@
       <dt>통신 안 닿는 구간</dt><dd>${fmt(ps.dark / 1000, 2)} km (${fmt(ps.dist > 0 ? ps.dark / ps.dist * 100 : 0, 0)}%)</dd>
       <dt>가장 긴 두절</dt><dd>${fmt(ps.maxRun / 1000, 2)} km ≈ ${fmt(mins(ps.maxRun), 0)}분</dd>
       <dt>넘어짐 높음 · 중간 칸</dt><dd>${fmt(ps.high, 0)} m · ${fmt(ps.med, 0)} m</dd>
-      <dt>탱크가 빈 뒤 버틸 시간</dt><dd>평지 보행 약 ${fmt(C.heat_storage_water_eq_g / 1000 * C.latent_j_kg / Math.max(1, state.k * C.level_mr_w + state.q) / 60, 0)}분</dd>`;
+      <dt>탱크가 빈 뒤 버틸 시간</dt><dd>평지 보행 약 ${fmt(C.heat_storage_water_eq_g / 1000 * C.latent_j_kg / Math.max(1, state.k * C.level_mr_w + state.q) / 60, 0)}분</dd>
+      ${groundFact(i)}`;
     drawVec({ path, color: "#ffffff" });
   }
 
@@ -1545,6 +1587,14 @@
       g.strokeStyle = "rgba(233,235,242,0.55)"; g.lineWidth = 1.1 * lw;
       for (const seg of META.traverse) { g.beginPath(); seg.forEach(([x, y], n) => (n ? g.lineTo(x, y) : g.moveTo(x, y))); g.stroke(); }
     }
+    if (state.showphoto && META.photos) {     // 로버 사진 위치: 카메라 표시
+      for (const p of META.photos) {
+        const on = POV === p, r = (on ? 6.5 : 4.5) * lw;
+        g.fillStyle = on ? "#ffd23f" : "#e7eaf0"; g.strokeStyle = "#0d1016"; g.lineWidth = 1.4 * lw;
+        g.beginPath(); g.roundRect ? g.roundRect(p.x - r, p.y - r * 0.75, 2 * r, 1.5 * r, 1.5 * lw) : g.rect(p.x - r, p.y - r * 0.75, 2 * r, 1.5 * r); g.fill(); g.stroke();
+        g.fillStyle = "#0d1016"; g.beginPath(); g.arc(p.x, p.y, r * 0.38, 0, 7); g.fill();
+      }
+    }
     const drawPath = (path, color) => {
       if (!path || path.length < 2 || !FLAGS || !VIS) return;
       for (let n = 1; n < path.length; n++) {
@@ -1737,7 +1787,9 @@
   for (const id of ["spe", "nofall", "relay"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; activePreset = ""; update(); });
   for (const [id, key] of [["m-speed", "mSpeed"], ["m-eta", "mEta"], ["m-down", "mDown"], ["m-sand", "mSand"]])
     $(id).addEventListener("change", (e) => { state[key] = e.target.checked; activePreset = ""; LMR_KEY = ""; stopSim(); update(); });
+  $("showtir").addEventListener("change", (e) => { state.showtir = e.target.checked; update(false); });
   for (const id of ["showmr", "showsand"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
+  $("showphoto").addEventListener("change", (e) => { state.showphoto = e.target.checked; update(false); });
   for (const id of ["showfall", "showcomm"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
   $("showtrav").addEventListener("change", (e) => { state.showtrav = e.target.checked; drawVec(); });
   $("modes").addEventListener("change", (e) => { state.mode = e.target.value; stopSim(); update(); });
@@ -1832,6 +1884,9 @@
     $("relay-d").textContent = gale ? "거점에서 6.7 km, 거점과 가시선이 닿는 자리 (보고서 15)"
       : `거점에서 ${fmt(st.relay_km_from_base, 1)} km, 거점과 가시선이 닿는 곳 중 귀환 영역을 가장 많이 덮는 자리 (자동 선택)`;
     $("showtrav-l").hidden = !META.traverse.length;
+    $("showtrav-t").textContent = SITE().id === "jezero" ? "Perseverance 실제 주행 경로" : "Curiosity 실제 주행 경로";
+    $("showphoto-l").hidden = !(META.photos && META.photos.length);
+    $("showtir-l").hidden = !META.tir;
     const sandOk = st.dune_km2 > 0.01;
     $("m-sand").disabled = !sandOk; $("showsand").disabled = !sandOk;
     if (!sandOk) { state.mSand = false; state.showsand = false; $("m-sand-d").textContent = "이 지형에는 모래언덕 후보를 넣지 않았습니다 (위성 사진 밝기로 뽑으면 급사면 그늘이 잡혀서)."; }
@@ -1847,6 +1902,19 @@
     H = null; TREES.clear(); FWD = null; REV = null; FWDB = null; VIS = null; VIS_BASE = -1; RELAY_OK = true;
     SIM = null; SIMSIG = ""; SIMTARGET = -1; LMR = null; LMR_KEY = "";
     await decode(site);
+    TIR = null; TIR_LO = 0; TIR_HI = 255;
+    if (META.tir) {                         // Mars Trek THEMIS 야간 적외선 (데모 격자에 맞춘 8비트 PNG)
+      const im = new Image(); im.src = META.tir;
+      await im.decode();
+      const cv = document.createElement("canvas"); cv.width = W; cv.height = R;
+      const cx = cv.getContext("2d"); cx.drawImage(im, 0, 0);
+      const d = cx.getImageData(0, 0, W, R).data;
+      TIR = new Uint8Array(N); for (let i = 0; i < N; i++) TIR[i] = d[4 * i];
+      const vals = []; for (let i = 0; i < N; i += 7) if (FLAGS[i] & 1) vals.push(TIR[i]);
+      vals.sort((a, b) => a - b);
+      TIR_LO = vals[Math.floor(vals.length * 0.02)]; TIR_HI = vals[Math.floor(vals.length * 0.98)];
+      TIR_Q = [vals[Math.floor(vals.length * 0.25)], vals[Math.floor(vals.length * 0.75)]];
+    }
     wrap.style.aspectRatio = `${W} / ${R}`;
     wrap.style.maxWidth = `min(100%, calc(88vh * ${(W / R).toFixed(4)}))`;
     $("shade").src = site.shade; $("ortho").src = site.ortho;

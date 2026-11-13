@@ -1,0 +1,32 @@
+{
+ "time": "20261113-2024",
+ "title": "Interplanetary Survival Guide: Martian Map",
+ "resources_text": "NASA does not endorse any non-U.S. Government entity and is not responsible for information contained on non-U.S. Government websites. For non-U.S. Government websites, participants must comply with any data use parameters of that specific website. NASA Data & Resources Jet Propulsion Laboratory’s (JPL) Mars Trek : NASA web-based portal for exploration of Mars, showcases data collected by NASA at various landing sites. USGS-NASA Planetary Geologic Mapping Program : High-quality standardized geologic map of Mars Example of a route map visual for the Curiosity example mentioned above : This animation shows a proposed route for NASA's Curiosity rover, which is climbing lower Mount Sharp on Mars. The annotated version of the map labels different regions that scientists working with the rover would like to explore in coming years. A flyover video explains them in more detail. NASA Worldview : Visually explore the past and the present of this dynamic planet from a satellite's perspective. Select from an array of stories below to learn more about Worldview (a part of NASA Earthdata), the satellite imagery we provide and events occurring around the world. Mars Perseverance Raw Images Gallery : Over 1 million images captured by the rover on its journey across the Mars surface.",
+ "links": [
+  {
+   "url": "https://trek.nasa.gov/mars/",
+   "label": "Jet Propulsion Laboratory’s (JPL) Mars Trek",
+   "kind": "data"
+  },
+  {
+   "url": "https://astrogeology-usgs.hub.arcgis.com/pages/interactive-maps-mars",
+   "label": "USGS-NASA Planetary Geologic Mapping Program",
+   "kind": "page"
+  },
+  {
+   "url": "https://science.nasa.gov/resource/curiositys-proposed-path-up-mount-sharp/",
+   "label": "Example of a route map visual for the Curiosity example mentioned above",
+   "kind": "page"
+  },
+  {
+   "url": "https://worldview.earthdata.nasa.gov/",
+   "label": "NASA Worldview",
+   "kind": "data"
+  },
+  {
+   "url": "https://mars.nasa.gov/mars2020/multimedia/raw-images/",
+   "label": "Mars Perseverance Raw Images Gallery",
+   "kind": "data"
+  }
+ ]
+}
