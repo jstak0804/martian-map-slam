@@ -127,6 +127,10 @@
   .gc .pill { font-size: 11px; font-weight: 700; color: #0d1016; background: var(--st); border-radius: 99px; padding: 0 7px; white-space: nowrap; }
   .gc .gv { font-size: 17px; font-weight: 700; word-break: keep-all; font-variant-numeric: tabular-nums; line-height: 1.25; }
   .gc .gv small { font-size: 12px; font-weight: 500; color: var(--ink-soft); }
+  .gc .gv { display: grid; gap: 2px; }
+  .gc .gauge { display: inline-flex; align-items: center; gap: 7px; color: var(--st); }
+  .gc .gauge b { color: var(--ink); }
+  .gc .gauge svg.batt { width: 40px; height: 18px; } .gc .gauge svg.sig { width: 26px; height: 20px; }
   .gc .gd { grid-column: 1 / -1; font-size: 11.5px; color: var(--ink-soft); line-height: 1.4; }
   .gnote { margin: 0 0 12px; font-size: 11.5px; line-height: 1.45; color: var(--ink-faint); }
   @media (max-width: 380px) { .glance { grid-template-columns: 1fr; } }
@@ -256,6 +260,10 @@
   .visor .hud .tl { top: 8%; left: 4%; } .visor .hud .tr { top: 8%; right: 4%; } .visor .hud .bl { bottom: 22%; left: 4%; } .visor .hud .br { bottom: 22%; right: 4%; }
   .visor .hud .alert { top: 7%; font-size: clamp(10px, 2.8cqw, 15px); } .visor .hud .compass { bottom: 4%; left: 18%; right: 18%; height: 3.2em; font-size: clamp(8px, 2cqw, 12px); }
   .visor .hud .compass span { font-size: 1em; } .visor .hud .compass .mk { font-size: 1.15em; top: 1.3em; }
+  .hud .gauge { display: inline-flex; align-items: center; gap: .35em; }
+  .hud .gauge svg { width: 2.1em; height: 1em; flex: none; }
+  .hud .gauge .sig { width: 1.5em; height: 1.1em; }
+  .hud .gauge.sm svg { width: 1.6em; height: .8em; }
   .visor .hud .lang { bottom: 5%; right: 3%; font-size: clamp(8px, 1.8cqw, 11px); }
   /* 로드뷰 */
   .rv { display: grid; gap: 8px; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; }
@@ -309,6 +317,16 @@
         <h2>과학 EVA 계획</h2>
         <div class="hint">들를 과학 목표를 고르세요. 거점에서 출발해 들렀다 돌아오는, 산소가 가장 덜 드는 순서를 찾습니다. 경로의 모든 지점에서 "지금 돌아서도 거점까지 갈 수 있는가"(귀환 반경)를 확인하고, 다 못 들르면 들를 수 있는 가장 많은 조합을 고릅니다.</div>
         <div class="evalist" id="eva-targets"></div>
+        <div class="ctl">
+          <label for="eva-scn">실시간 시뮬레이션 상황</label>
+          <select id="eva-scn">
+            <option value="model">계획대로 (k = 1.0)</option>
+            <option value="high">처음부터 20% 더 씀 (k = 1.2)</option>
+            <option value="surge">60분부터 25% 급증</option>
+            <option value="fatigue">점점 지침 (3시간에 k 1.0 → 1.4)</option>
+          </select>
+          <div class="hint">계획을 세운 뒤 지도 아래 ▶로 재생합니다. 대원이 계획 경로를 따라 목표마다 작업하고, 매분 "지금 돌아서도 거점까지 갈 수 있는가"를 확인해 모자라면 남은 목표를 건너뛰고 돌아섭니다. 헬멧 HUD도 재생 시각을 따라갑니다.</div>
+        </div>
         <div class="ctl">
           <div class="row"><label for="eva-dwell">목표마다 작업 시간</label><output id="eva-dwell-out" for="eva-dwell"></output></div>
           <input type="range" id="eva-dwell" min="10" max="120" step="5" value="45">
@@ -393,7 +411,7 @@
 
       <div class="ctl">
         <div class="row"><label for="o2">남은 산소</label><output id="o2-out" for="o2"></output></div>
-        <input type="range" id="o2" min="40" max="800" step="5" value="150">
+        <input type="range" id="o2" min="40" max="540" step="5" value="150">
         <div class="hint" id="o2-hint"></div>
       </div>
       <div class="ctl">
@@ -434,6 +452,9 @@
         <label class="sw"><input type="checkbox" id="relay"><span id="relay-t">Mt. Sharp 비탈에 중계기 설치<small id="relay-d">거점에서 6.7 km, 거점과 가시선이 닿는 자리</small></span></label>
       </div>
 
+      <div class="group" id="legacy-ctl">
+        <label class="sw"><input type="checkbox" id="legacy"><span>비교: 이전 대사 모델 (Pandolf × 화성 중력비)<small>기본 모델은 NASA IST-1·2 감중 우주복 보행 실측 회귀(평지 0.92 m/s에서 444 W). 이 스위치를 켜면 Pandolf 식 전체에 중력비를 곱한 이전 모델(301 W)로 다시 계산해, 모델 선택이 귀환 가능 면적을 얼마나 바꾸는지 비교합니다. 아래의 경사별 속도·내리막 보정은 이전 모델에서만 쓰입니다(IST 모델에는 같은 노력 속도·Looney 내리막이 이미 들어 있음).</small></span></label>
+      </div>
       <div class="group" id="model-ctl">
         <h2>대사량 모델 보정 (문헌 반영)</h2>
         <div class="hint">켜면 귀환 경로를 브라우저에서 다시 계산합니다(1초 안팎). 기본은 모두 끔 = 기준 모델(Pandolf, 화성 중력 보정).</div>
@@ -480,7 +501,7 @@
           <label class="sub"><input type="radio" name="mode" value="base">거점 옮기기</label>
         </div>
         <div class="modeline"><p class="modehint" id="mode-hint"></p><button type="button" class="reset" id="base-reset" hidden>거점을 원래 자리로 되돌리기</button>
-          <button type="button" class="reset feat" id="hud-btn" aria-pressed="false">🥽 헬멧 HUD 보기</button><button type="button" class="reset feat" id="rv-btn" aria-pressed="false">📷 1인칭 로드뷰</button></div>
+          <button type="button" class="reset feat" id="hud-btn" aria-pressed="false">🥽 헬멧 HUD (팝업)</button><button type="button" class="reset feat" id="rv-btn" aria-pressed="false">📷 1인칭 로드뷰</button></div>
       </div>
       <div class="mapwrap" id="mapwrap">
         <div class="map-stage" id="stage">
@@ -499,7 +520,7 @@
           <p class="rv-cap" id="rv-cap"></p>
         </section>
         <section class="visor-wrap pip pos-br" id="visor-wrap" hidden aria-label="헬멧 바이저 HUD">
-          <div class="pip-head"><b>🥽 헬멧 바이저 HUD</b><span class="rv-nav"><button type="button" class="pipbtn" id="visor-move" aria-label="다른 모서리로">⇱</button><button type="button" class="pipbtn" id="visor-big" aria-label="크게 보기">⤢</button><button type="button" class="pipbtn" id="visor-close" aria-label="닫기">✕</button></span></div>
+          <div class="pip-head"><b>🥽 헬멧 바이저 HUD</b><span class="rv-nav"><button type="button" class="pipbtn" id="visor-pop" aria-label="팝업 창으로 열기">⧉</button><button type="button" class="pipbtn" id="visor-move" aria-label="다른 모서리로">⇱</button><button type="button" class="pipbtn" id="visor-big" aria-label="크게 보기">⤢</button><button type="button" class="pipbtn" id="visor-close" aria-label="닫기">✕</button></span></div>
           <div class="visor" id="visor">
             <svg class="brackets" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1 12V1H9M91 1H99V12M99 88V99H91M9 99H1V88" fill="none" stroke="#7dffb0" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>
             <div class="hud" id="hud"></div>
@@ -576,7 +597,9 @@
       <li>계산 워커: 귀환 트리·다목적 트리·가시선은 단일 HTML 안의 인라인 Web Worker에서 계산해 조작 중 화면이 멈추지 않게 했다(메인 스레드와 같은 식, Jezero 기준 면적 24.57 km²로 일치 확인). 워커를 만들 수 없는 브라우저에서는 예전처럼 메인 스레드에서 계산한다.</li>
       <li>지형 위험 지표의 뜻: "넘어짐 위험"은 1 m DTM의 3×3 고도차(최대−최소) 0.5 m·경사 20° 화소 비율로 만든 미세 기복 후보다. 연속 경사면도 잡히므로 턱 전용 검출이 아니고, 실제 낙상 확률이 아니다. 20° 보행 한도도 화성 우주인 안전 임계값으로 검증된 값이 아니다.</li>
       <li>로버 사진·로드뷰: 경로 정지 지점(sol)의 Navcam 원본 사진을 붙인 "인근 로버 관측"이다. 같은 sol·다음 sol 사진이 같은 좌표에 붙을 수 있고, 250 m 안의 사진도 그 칸의 정밀 지상 관측은 아니다.</li>
-      <li>대사 모델의 한계: 기본 모델은 Pandolf 식 전체에 화성 중력비를 곱한 값(평지 301 W)이다. 감중 우주복 보행 실측(NASA IST-1·2)을 쓴 팀 검증본은 같은 조건 평지 444 W로, 귀환 가능 면적이 약 절반(Gale 산소 150 g: 18.64 → 9.72 km²)이 된다. 이 데모의 면적은 낙관 쪽 값으로 읽어야 한다.</li>
+      <li>대사 모델(2026-11-14부터 기본): NASA IST-1·IST-2 감중 우주복 보행 실측 회귀(팀 검증본 walkback_verification, CHANGELOG 2~20절). 평지 0.92 m/s 444 W, 오르막은 평지와 같은 노력이 되는 속도, 내리막은 Looney 2019 비용 비율을 우주복 경사 민감도로 줄이고 Tobler 감속, 하한은 서 있는 대사량 222 W. 16방향 격자(나이트 이동의 중간 칸 검사)와 간선 경사 상한을 쓴다. 예비분은 NASA 설계 평균 352 W × 30분(산소 45 g). Gale 산소 150 g 귀환 면적 9.72 km²(팀 검증본과 일치). "비교: 이전 대사 모델"을 켜면 Pandolf × 중력비(301 W, 16방향) 19.95 km²로 다시 계산한다. IST는 0.12~0.32 g 지상 감중 실험이라 화성 0.378 g·90 kg 우주복으로 검증된 값은 아니다. 속도·VO₂는 경사 0.01% 간격 표로 미리 계산해 보간한다.</li>
+      <li>잔량 표시: 산소는 EMU 1차 탱크 수준 540 g(가정)을, 냉각수는 만충 3.6 kg을 100%로 둔 비율과, 예비분을 빼고 평지 보행으로 버티는 시간. 통신 신호 단계는 지형 가시선과 거리로 나눈 것(강함 ≤2 km, 양호 ≤5 km, 약함 그 이상·중계기 경유, "50 m 안 연결" = 음영이지만 50 m 안에 가시선)으로, 송신 출력·주파수·안테나 방향을 넣은 링크 예산이 아니다.</li>
+      <li>과학 EVA 실시간 시뮬레이션: 계획 경로를 따라 1분 단위로 걷고 목표마다 작업(작업 대사량 = 평지 보행)하며, 심박 시나리오로 실제 대사량을 바꾼다. 매분 이동·작업을 1분 더 했을 때 왕복 여유(+20%)를 지킬 수 있는지 보고, 못 지키면 남은 목표를 건너뛰고 귀환 트리로 돌아선다. 계획 단계는 각 칸 귀환 냉각수 여유를 따로 검사하지 않으므로 재생 중 경보가 계획보다 조금 일찍 울릴 수 있다.</li>
     </ul>
   </details>
 </div>
@@ -601,19 +624,23 @@
   for (const s of JSON.parse(document.getElementById("sites").textContent.trim() || "[]"))
     SITE_LIST.push({ meta: s.meta, b64: () => s.data, shade: s.shade, ortho: s.ortho });
   // 지형마다 바뀌는 값 (loadSite에서 다시 채움)
-  let META, R, W, N, CELL, KM2, OFF, BASE0, GOAL, RELAY, STEP_M, SITE_I = 0;
+  let META, R, W, N, CELL, KM2, OFF, BASE0, GOAL, RELAY, STEP_M, MID, SITE_I = 0;
   function setGeom(meta) {
     META = meta; R = meta.rows; W = meta.cols; N = R * W; CELL = meta.cell_m; KM2 = (CELL / 1000) ** 2; OFF = meta.offsets;
     BASE0 = meta.base[1] * W + meta.base[0];          // 원래 거점 (Gale: Curiosity 착륙지)
     GOAL = meta.goal[1] * W + meta.goal[0];           // 예시 목적지
     RELAY = meta.relay[1] * W + meta.relay[0];
     STEP_M = OFF.map(([dx, dy]) => Math.hypot(dx, dy) * CELL);
+    // 나이트 이동(16방향)이 걸쳐 지나가는 두 칸 (팀 검증본 mars_walkback.mid_offsets와 같음)
+    MID = OFF.map(([dx, dy]) => (Math.abs(dy) === 2 ? [[0, Math.sign(dy)], [dx, Math.sign(dy)]]
+      : Math.abs(dx) === 2 ? [[Math.sign(dx), 0], [Math.sign(dx), dy]] : []));
   }
   setGeom(META0);
   const SITE = () => META.site;
   // ---------- 영어 전환: 정적 문구는 사전, 숫자가 든 문구는 패턴 (긴 설명 문단은 한국어로 둠) ----------
   /*__I18N__*/
-  let LANG = "ko";
+  // 처음 언어: 주소에 #...-en / -ko가 있으면 그것, 아니면 브라우저 언어(한국어가 아니면 영어. 대회 제출물은 영어가 원칙)
+  let LANG = /(^|[-#])en\b/.test(location.hash) ? "en" : /(^|[-#])ko\b/.test(location.hash) ? "ko" : /^ko/i.test(navigator.language || "") ? "ko" : "en";
   const TRN = new WeakMap();                 // 텍스트 노드 -> {ko, en}
   function trText(raw) {
     const t = raw.trim();
@@ -647,7 +674,7 @@
                   simTarget: GOAL, simScenario: "surge", simNoise: 8, simAuto: true, simCustom: "",
                   simSrc: "hr", simLeak: 0, simPNoise: 10, simTcomp: true, simLeakSub: false,
                   mSpeed: false, mEta: false, mDown: false, mSand: false, showmr: false, showsand: false, showphoto: true, showtir: false,
-                  showtargets: true, evaSel: [], evaDwell: 45, hud: false, hudLang: "ko", rv: -1, rvMode: false, planMargin: 20 };
+                  showtargets: true, evaSel: [], evaDwell: 45, evaScn: "model", legacy: false, hud: false, hudLang: LANG, rv: -1, rvMode: false, planMargin: 20 };
 
   let PRESETS;
   const makePresets = () => [
@@ -660,9 +687,10 @@
     { id: "safe", label: "안전 우선 운용", s: { nofall: true, relay: true, showfall: true } },
     { id: "simhr", label: "심박 시뮬레이션 예시", s: { mode: "sim", o2: 450, water: 3.6, simScenario: "surge", simAuto: true, simTarget: GOAL, simSrc: "hr", simLeak: 0 } },
     { id: "simpress", label: "압력 측정 예시 (누설 10 g/h)", s: { mode: "sim", o2: 450, water: 3.6, simScenario: "surge", simAuto: true, simTarget: GOAL, simSrc: "press", simLeak: 10, simPNoise: 10, simTcomp: true, simLeakSub: false } },
-    { id: "eva", label: "과학 EVA 예시 (산소 600 g)", s: { mode: "eva", o2: 600 } },
-    { id: "lit", label: "문헌 보정 모두 켬", s: { mSpeed: true, mEta: true, mDown: true, mSand: true } },
-    { id: "rescue", label: `구조 예시: ${goalShort()}`, s: { mode: "rescue", victim: GOAL, here: -1, o2: 650, vo2: 150, vwater: 1, vcarry: "walk" } },
+    { id: "eva", label: "과학 EVA 예시 (산소 만충 540 g)", s: { mode: "eva", o2: 540 } },
+    { id: "lit", label: "이전 모델 + 문헌 보정 모두", s: { legacy: true, mSpeed: true, mEta: true, mDown: true, mSand: true } },
+    { id: "legacy", label: "비교: 이전 대사 모델", s: { legacy: true } },
+    { id: "rescue", label: `구조 예시: ${goalShort()}`, s: { mode: "rescue", victim: GOAL, here: -1, o2: 540, vo2: 150, vwater: 1, vcarry: "walk" } },
   ];
   PRESETS = makePresets();
   const MAIN_PRESETS = ["base", "hot", "simhr", "eva"], HIDDEN_PRESETS = ["simpress"];   // 간소화판: 기본 4개, 나머지는 접기
@@ -672,7 +700,7 @@
       + `<details class="adv more"><summary>다른 상황</summary><div class="presets">${PRESETS.filter((p) => !MAIN_PRESETS.includes(p.id) && !HIDDEN_PRESETS.includes(p.id)).map(b).join("")}</div></details>`;
   };
   const DEFAULTS = { o2: 150, water: 3.6, k: 1, q: 0, spe: false, mult: C.spe_observed, nofall: false, relay: false, showfall: false,
-                     mSpeed: false, mEta: false, mDown: false, mSand: false };
+                     legacy: false, mSpeed: false, mEta: false, mDown: false, mSand: false };
 
   // ---------- data ----------
   let SETS = null, CLS = null, FLAGS = null, H = null, ETA = null, RATE1 = null;
@@ -701,9 +729,9 @@
       return { o2, t, dose, next };
     };
     SETS = META.layout.plain_o2 ? { plain: mk("plain"), nofall: mk("nofall") } : null;
-    if (SETS) {                                   // 미리 계산한 트리는 기본 모델(모두 끔). 없는 지형은 ensureTrees가 계산
-      TREES.set(treeKey(BASE0, false, "0000"), SETS.plain);
-      TREES.set(treeKey(BASE0, true, "0000"), SETS.nofall);
+    if (SETS && !C.ist) {                         // 미리 계산한 트리는 옛 모델(8방향 Pandolf)용. IST 모델이면 워커가 새로 계산
+      TREES.set(treeKey(BASE0, false, "00000"), SETS.plain);
+      TREES.set(treeKey(BASE0, true, "00000"), SETS.nofall);
     }
     CLS = view("cls"); FLAGS = view("flags");
     const hq = view("h"), eq = view("eta"), sq = view("shield");
@@ -716,7 +744,7 @@
   }
 
   // ---------- model ----------
-  const waterReserve = (q) => Math.max(0, C.level_mr_w + q) / C.latent_j_kg * 1000 * 1800;
+  const waterReserve = (q) => Math.max(0, md().reserveMr + q) / C.latent_j_kg * 1000 * 1800;
   const waterOf = (o2, t, k, q) => Math.max(0, k * o2 / C.o2_g_per_j + q * t) / C.latent_j_kg * 1000;
   const multNow = () => (state.spe ? state.mult : 1);
   // 거점 가시권(VIS)과 중계기-거점 가시선(RELAY_OK)은 거점을 옮기면 다시 계산
@@ -724,28 +752,28 @@
   const linked = (i) => VIS[i] || (state.relay && RELAY_OK && (FLAGS[i] & 4));
   // 귀환 트리: o2(-1 = 못 감), t, dose, next(거점 쪽 다음 칸). 착륙지 거점 2벌은 미리 계산한 것
   const TREES = new Map();
-  const modelKey = () => `${+state.mSpeed}${+state.mEta}${+state.mDown}${+state.mSand}`;
+  const modelKey = () => `${+!!state.legacy}${+state.mSpeed}${+state.mEta}${+state.mDown}${+state.mSand}`;
   const treeKey = (base, nofall, mk = modelKey()) => `${base}|${nofall ? 1 : 0}|${mk}`;
   const setNow = () => TREES.get(treeKey(state.base, state.nofall));
   const plainNow = () => TREES.get(treeKey(state.base, false));
 
   // 심박 시뮬레이션 중에는 그 시각의 남은 산소·냉각수와 심박으로 추정한 k로 지도를 그림
-  const simFrame = () => (state.mode === "sim" && SIM && SIM.ok ? SIM.frames[SIM.idx] : null);
+  const simFrame = () => ((state.mode === "sim" || state.mode === "eva") && SIM && SIM.ok && SIM.kind === state.mode ? SIM.frames[SIM.idx] : null);
   const EK = () => { const f = simFrame(); return f ? f.k : state.k; };
   const EO2 = () => { const f = simFrame(); return f ? f.o2 : state.o2; };
   const EW = () => { const f = simFrame(); return f ? f.w / 1000 : state.water; };
-  function budgets() {
-    return { o2: EO2() - C.o2_reserve_g, water: EW() * 1000 - waterReserve(state.q),
-             dry: EW() * 1000 + C.heat_storage_water_eq_g };
+  function budgets(plan = false) {        // plan = true: 시뮬레이션 재생 시각이 아니라 계획할 때(슬라이더) 값
+    const o2 = plan ? state.o2 : EO2(), w = plan ? state.water : EW();
+    return { o2: o2 - O2RES(), water: w * 1000 - waterReserve(state.q),
+             dry: w * 1000 + C.heat_storage_water_eq_g, full: w * 1000 };
   }
   // 산소·시간·선량(배율 1) 합계 -> 1 산소 부족, 2 선량 초과, 3 OK, 4 탱크 비고 체온 한계로 겨우, 5 냉각수 부족
-  function classifyTot(o2, t, dose1, b) {
-    const k = EK();
+  function classifyTot(o2, t, dose1, b, k = EK()) {
     if (k * o2 > b.o2) return 1;
     if (multNow() * dose1 > C.dose_budget_msv) return 2;
     const w = waterOf(o2, t, k, state.q);
     if (w <= b.water) return 3;
-    if (w > EW() * 1000 && w <= b.dry) return 4;
+    if (w > b.full && w <= b.dry) return 4;
     return 5;
   }
   function classify(S, i, b) { return S.o2[i] < 0 ? 1 : classifyTot(S.o2[i], S.t[i], S.dose[i], b); }
@@ -768,7 +796,7 @@
     return { o2: REST_O2_GS() * S.t[X], w: REST_W_GS() * S.t[X], t: S.t[X] };
   }
   function victimSupply(tGo, ret) {
-    const needO2 = REST_O2_GS() * tGo + ret.o2 + C.o2_reserve_g;
+    const needO2 = REST_O2_GS() * tGo + ret.o2 + O2RES();
     const needW = REST_W_GS() * tGo + ret.w + waterReserve(state.q);
     return { needO2, needW, o2: Math.max(0, needO2 - state.vo2), w: Math.max(0, needW - state.vwater * 1000) };
   }
@@ -785,26 +813,85 @@
   const slowBy = (grade) => (SP.c_m_s_per_deg != null ? SP.c_m_s_per_deg * Math.atan(grade / 100) * 180 / Math.PI : SP.c_m_s_per_pct * grade);
   const ETA_ADD = (CAL.eta_surface_add || { value: 0.2 }).value;
   const SAND = CAL.eta_sand || { a: 1.5, b: 1.3, v_floor_m_s: 0.85 };
-  const speedAt = (grade) => (state.mSpeed ? Math.min(SP.v0_m_s, Math.max(SP.v_min_m_s, SP.v0_m_s - slowBy(Math.max(grade, 0)))) : V0);
-  function etaCell(i, v) {                // Richmond 2015 표 11: 자갈·비포장 1.2, 모래 1.5 + 1.3/V²
-    let e = ETA[i] + (state.mEta ? ETA_ADD : 0);
-    const vs = Math.max(v, SAND.v_floor_m_s);   // 식의 자료 범위 밖으로 늘리지 않음
-    if (state.mSand && (FLAGS[i] & 16)) e = Math.max(e, SAND.a + SAND.b / (vs * vs));
-    return e;
+
+  const MF = () => ({ legacy: !!state.legacy, mSpeed: state.mSpeed, mEta: state.mEta, mDown: state.mDown, mSand: state.mSand });
+  // ---------- 보행 대사 모델 (메인 스레드와 계산 워커가 같은 함수를 씀) ----------
+  // 기본: NASA IST-1·IST-2 감중 우주복 보행 실측 회귀(팀 검증본 walkback_verification/code/metabolic_model.py와 같은 식)
+  //   VO2 = L(v) + ΔG(G)·v/0.77 (오르막), L(v)·Looney 2019 내리막 비율(우주복 경사 민감도로 축소) (내리막)
+  //   속도 = 평지 0.92 m/s, 오르막 "같은 노력", 내리막 min(같은 노력, Tobler 감속). 하한 = 서 있는 대사량
+  // 비교용(legacy): Pandolf 식 전체 × 화성 중력비(평지 301 W) + 선택형 문헌 보정
+  function MAKE_MODEL(G, M) {
+    const { C, SP, SAND, ETA_ADD, ETA, FLAGS, H } = G, IST = C.ist;
+    const legacy = !!M.legacy || !IST;
+    const MW = C.body_kg * C.g_ratio, ML = C.suit_kg * C.g_ratio, VL = C.walk_speed_m_s;
+    const PA = 1.5 * MW + 2 * (MW + ML) * (ML / MW) ** 2, PB = MW + ML, TERR = (C.body_kg + C.suit_kg) * C.g_ratio * 1.5;
+    const slowBy = (g) => (SP.c_m_s_per_deg != null ? SP.c_m_s_per_deg * Math.atan(g / 100) * 180 / Math.PI : SP.c_m_s_per_pct * g);
+    const legSpeed = (g) => (M.mSpeed ? Math.min(SP.v0_m_s, Math.max(SP.v_min_m_s, SP.v0_m_s - slowBy(Math.max(g, 0)))) : VL);
+    const legMr = (g, e, v) => {
+      if (!M.mDown || g >= 0) return PA + e * PB * (1.5 * v * v + 0.35 * v * Math.max(g, 0));
+      const mp = PA + e * PB * (1.5 * v * v + 0.35 * v * g);
+      return mp - e * (g * PB * v / 3.5 - PB * (g + 6) ** 2 / C.body_kg + (25 - v * v));
+    };
+    const lv = (v) => IST.la * v * v + IST.lb * v + IST.lc;
+    const gi = (g) => (g > 0 ? IST.ga * g * g + IST.gb * g : 0);
+    const lcda = (S, g) => 1.44 + 1.94 * S ** 0.43 + 0.24 * S ** 4 + 0.34 * S * g * (1 - 1.05 ** (1 - 1.1 ** (g + 32)));
+    const TARGET = legacy ? 0 : lv(IST.v_flat), LV77 = legacy ? 1 : lv(IST.v_ist2);
+    const gradeScale = (ag) => { const g = Math.max(ag, 1); return (gi(g) / LV77) / (lcda(IST.v_ist2, g) / lcda(IST.v_ist2, 0) - 1); };
+    const downRatio = (g, v) => (g < 0 ? 1 + gradeScale(-g) * (lcda(v, g) / lcda(v, 0) - 1) : 1);
+    const tobler = (g) => Math.exp(-3.5 * Math.abs(g / 100 + 0.05)) / Math.exp(-3.5 * 0.05);
+    const istSpeed = (g) => {
+      if (g > 0) {
+        const bq = IST.lb + gi(g) / IST.v_ist2, cq = IST.lc - TARGET, disc = Math.max(bq * bq - 4 * IST.la * cq, 0);
+        return Math.min(IST.v_flat, Math.max(IST.v_min, -2 * cq / (bq + Math.sqrt(disc))));
+      }
+      const r = downRatio(g, IST.v_flat);
+      let vce = IST.v_flat;
+      if (r > 1) { const cq = IST.lc - TARGET / r, disc = Math.max(IST.lb * IST.lb - 4 * IST.la * cq, 0); vce = -2 * cq / (IST.lb + Math.sqrt(disc)); }
+      return Math.min(IST.v_flat, Math.max(IST.v_min, Math.min(vce, IST.v_flat * Math.min(1, tobler(g)))));
+    };
+    const istMr = (g, e, v) => {
+      const vo2 = g > 0 ? lv(v) + gi(g) * v / IST.v_ist2 : lv(v) * downRatio(g, v);
+      return Math.max(vo2 * C.body_kg * IST.kj_per_l / 60 + (e - 1) * TERR * v * v, C.rest_mr_w);
+    };
+    // IST: 속도·VO2는 경사만의 함수 -> 0.01% 간격 표로 미리 계산해 선형 보간 (간선 수백만 개를 빠르게; 상대 오차 1e-8 수준)
+    let speed = legacy ? legSpeed : istSpeed, mr = legacy ? legMr : istMr;
+    if (!legacy) {
+      const G0 = -100, STEP = 0.01, NT = 20001, SPD = new Float64Array(NT), VO2 = new Float64Array(NT);
+      for (let j = 0; j < NT; j++) { const g = G0 + j * STEP, v = istSpeed(g); SPD[j] = v; VO2[j] = g > 0 ? lv(v) + gi(g) * v / IST.v_ist2 : lv(v) * downRatio(g, v); }
+      const at = (A, g) => { const x = (Math.min(100, Math.max(-100, g)) - G0) / STEP, j = Math.min(NT - 2, Math.floor(x)), f = x - j; return A[j] + f * (A[j + 1] - A[j]); };
+      speed = (g) => at(SPD, g);
+      mr = (g, e, v) => Math.max(at(VO2, g) * C.body_kg * IST.kj_per_l / 60 + (e - 1) * TERR * v * v, C.rest_mr_w);
+    }
+    const eta = (i, v) => {
+      let e = ETA[i] + (M.mEta ? ETA_ADD : 0);
+      const vs = Math.max(v, SAND.v_floor_m_s);
+      if (M.mSand && (FLAGS[i] & 16)) e = Math.max(e, SAND.a + SAND.b / (vs * vs));
+      return e;
+    };
+    const out = { o2: 0, t: 0 };
+    const level = () => mr(0, 1 + (M.mEta ? ETA_ADD : 0), speed(0));
+    const legLevel = PA + PB * 1.5 * VL * VL;
+    return {
+      legacy, speed, mr, eta, out, level,
+      edge(a, b, d) { const g = (H[b] - H[a]) / d * 100, v = speed(g), e = 0.5 * (eta(a, v) + eta(b, v)); out.t = d / v; out.o2 = mr(g, e, v) * C.o2_g_per_j * out.t; return out.o2; },
+      reserveO2: legacy ? legLevel * C.o2_g_per_j * 1800 : C.o2_reserve_g,       // IST: NASA 설계 평균 352 W × 30분
+      reserveMr: legacy ? legLevel : C.reserve_mr_w,
+    };
   }
-  function mrOf(grade, e, v) {            // W. 내리막: Santee 2003 보정(CF)을 질량 항마다 중력비로 스케일해 적용
-    if (!state.mDown || grade >= 0) return PA + e * PB * (1.5 * v * v + 0.35 * v * Math.max(grade, 0));
-    const mp = PA + e * PB * (1.5 * v * v + 0.35 * v * grade);
-    const cf = e * (grade * PB * v / 3.5 - PB * (grade + 6) ** 2 / C.body_kg + (25 - v * v));
-    return mp - cf;
-  }
-  function edgeO2(a, b, d) {
-    const grade = (H[b] - H[a]) / d * 100, v = speedAt(grade);
-    const e = 0.5 * (etaCell(a, v) + etaCell(b, v));
-    return mrOf(grade, e, v) * C.o2_g_per_j * d / v;
-  }
-  const edgeT = (a, b, d) => d / speedAt((H[b] - H[a]) / d * 100);
-  const levelMR = () => mrOf(0, 1 + (state.mEta ? ETA_ADD : 0), speedAt(0));
+  let MD = null, MD_KEY = "";
+  const md = () => {
+    const k = modelKey();
+    if (!MD || MD_KEY !== k || MD.H !== H) { MD = MAKE_MODEL({ C, SP, SAND, ETA_ADD, ETA, FLAGS, H }, MF()); MD.H = H; MD_KEY = k; }
+    return MD;
+  };
+  const speedAt = (grade) => md().speed(grade);
+  const etaCell = (i, v) => md().eta(i, v);
+  const mrOf = (grade, e, v) => md().mr(grade, e, v);
+  const edgeO2 = (a, b, d) => md().edge(a, b, d);
+  const edgeT = (a, b, d) => { const m = md(); m.edge(a, b, d); return m.out.t; };
+  const levelMR = () => md().level();
+  const O2RES = () => md().reserveO2;
+  const TANK_G = C.o2_tank_g || 540, WATER_FULL_G = 3600;     // 잔량 % 기준: 산소 탱크(EMU 1차 탱크 수준, 가정)·냉각수 만충
   const levelO2gh = () => levelMR() * C.o2_g_per_j * 3600;
   function passMask(src, nofall) {
     const p = new Uint8Array(N);
@@ -840,12 +927,16 @@
       const k0 = hk[0], u = pop();
       if (k0 > dist[u]) continue;
       const ux = u % W, uy = (u / W) | 0;
-      for (let o = 0; o < 8; o++) {
+      for (let o = 0; o < OFF.length; o++) {
         const x = ux + OFF[o][0], y = uy + OFF[o][1];
         if (x < 0 || y < 0 || x >= W || y >= R) continue;
         const v = y * W + x;
         if (!pass[v]) continue;
+        let midOk = true;
+        for (const [mx, my] of MID[o]) if (!pass[(uy + my) * W + ux + mx]) { midOk = false; break; }
+        if (!midOk) continue;
         const d = STEP_M[o];
+        if (C.edge_slope_cap && Math.abs(H[v] - H[u]) / d * 100 > C.max_edge_grade_pct) continue;
         const a = reverse ? v : u, b = reverse ? u : v;
         const nd = dist[u] + edgeO2(a, b, d);
         if (nd < dist[v]) {
@@ -931,31 +1022,11 @@
         },
       };
     }
-    function model(M) {
-      const { C, SP, SAND, ETA, FLAGS, H, PA, PB, V0, ETA_ADD } = G;
-      const slowBy = (g) => (SP.c_m_s_per_deg != null ? SP.c_m_s_per_deg * Math.atan(g / 100) * 180 / Math.PI : SP.c_m_s_per_pct * g);
-      const speedAt = (g) => (M.mSpeed ? Math.min(SP.v0_m_s, Math.max(SP.v_min_m_s, SP.v0_m_s - slowBy(Math.max(g, 0)))) : V0);
-      const etaCell = (i, v) => {
-        let e = ETA[i] + (M.mEta ? ETA_ADD : 0);
-        const vs = Math.max(v, SAND.v_floor_m_s);
-        if (M.mSand && (FLAGS[i] & 16)) e = Math.max(e, SAND.a + SAND.b / (vs * vs));
-        return e;
-      };
-      const mrOf = (g, e, v) => {
-        if (!M.mDown || g >= 0) return PA + e * PB * (1.5 * v * v + 0.35 * v * Math.max(g, 0));
-        const mp = PA + e * PB * (1.5 * v * v + 0.35 * v * g);
-        const cf = e * (g * PB * v / 3.5 - PB * (g + 6) ** 2 / C.body_kg + (25 - v * v));
-        return mp - cf;
-      };
-      return (a, b, d) => {                 // 간선 하나: EO = 산소(g, k = 1), ET = 시간(s)
-        const g = (H[b] - H[a]) / d * 100, v = speedAt(g), e = 0.5 * (etaCell(a, v) + etaCell(b, v));
-        EO = mrOf(g, e, v) * C.o2_g_per_j * d / v; ET = d / v;
-      };
-    }
     // q.mo가 있으면 다목적 비용: 각 자원을 남은 예산으로 나눈 몫의 합 (가장 빠듯한 자원이 저절로 무거워짐)
     //   C_edge = k·ΔO2/B_O2 + ΔH2O/B_H2O + SPE배율·ΔDose/B_Dose
     function dijkstra(q) {
-      const { W, R, N, OFF, STEP_M, FLAGS, CLS, RATE1, C } = G, edge = model(q.M), mo = q.mo;
+      const { W, R, N, OFF, STEP_M, FLAGS, CLS, RATE1, C, H } = G, md = MAKE_MODEL(G, q.M), mo = q.mo;
+      const edge = (a, b, d) => { md.edge(a, b, d); EO = md.out.o2; ET = md.out.t; };
       const pass = new Uint8Array(N);
       for (let i = 0; i < N; i++) pass[i] = (FLAGS[i] & 8) && !(q.nofall && CLS[i] === 2) ? 1 : 0;
       pass[q.base] = 1; if (q.src >= 0) pass[q.src] = 1;
@@ -967,12 +1038,16 @@
         const k0 = h.top(), u = h.pop();
         if (k0 > dist[u]) continue;
         const ux = u % W, uy = (u / W) | 0;
-        for (let o = 0; o < 8; o++) {
+        for (let o = 0; o < OFF.length; o++) {
           const x = ux + OFF[o][0], y = uy + OFF[o][1];
           if (x < 0 || y < 0 || x >= W || y >= R) continue;
           const v = y * W + x;
           if (!pass[v]) continue;
+          let midOk = true;                   // 나이트 이동(16방향)은 걸쳐 지나가는 두 칸도 통행 가능해야 함
+          for (const [mx, my] of G.MID[o]) if (!pass[(uy + my) * W + ux + mx]) { midOk = false; break; }
+          if (!midOk) continue;
           const d = STEP_M[o], a = q.reverse ? v : u, b = q.reverse ? u : v;
+          if (C.edge_slope_cap && Math.abs(H[v] - H[u]) / d * 100 > C.max_edge_grade_pct) continue;   // 간선 경사 상한
           edge(a, b, d);
           const de = 0.5 * (RATE1[a] + RATE1[b]) * ET / 3600;
           const c = mo ? mo.k * EO / mo.bo2 + Math.max(0, mo.k * EO / C.o2_g_per_j + mo.q * ET) / C.latent_j_kg * 1000 / mo.bw + mo.mult * de / mo.bd : EO;
@@ -1054,11 +1129,11 @@
     WK = null; WK_CB.clear();
     if (/noworker/.test(location.hash)) return;   // 헤드리스 가상 시간 녹화용: 워커 없이 메인 스레드에서 계산
     try {
-      const url = URL.createObjectURL(new Blob([`(${WORKER_MAIN.toString()})()`], { type: "text/javascript" }));
+      const url = URL.createObjectURL(new Blob([`const MAKE_MODEL = ${MAKE_MODEL.toString()};\n(${WORKER_MAIN.toString()})()`], { type: "text/javascript" }));
       const w = new Worker(url);
       w.onmessage = (e) => { const j = WK_CB.get(e.data.id); if (!j) return; WK_CB.delete(e.data.id); if (e.data.err) { console.warn("worker:", e.data.err); j.local(); } else j.ok(e.data.r); };
       w.onerror = (e) => { console.warn("worker error:", e.message); w.terminate(); if (WK === w) WK = null; for (const [, j] of WK_CB) j.local(); WK_CB.clear(); };
-      w.postMessage({ type: "init", G: { W, R, N, OFF, STEP_M, CELL, H, ETA, FLAGS, CLS, RATE1, C, SP, SAND, ETA_ADD, PA, PB, V0 } });
+      w.postMessage({ type: "init", G: { W, R, N, OFF, STEP_M, MID, CELL, H, ETA, FLAGS, CLS, RATE1, C, SP, SAND, ETA_ADD } });
       WK = w;
     } catch (err) { console.warn("worker unavailable, computing on main thread:", err); WK = null; }
   }
@@ -1070,7 +1145,6 @@
       WK.postMessage({ id, type, ...msg });
     });
   }
-  const MF = () => ({ mSpeed: state.mSpeed, mEta: state.mEta, mDown: state.mDown, mSand: state.mSand });
   function wkDijkstra(src, reverse, nofall, asTree = false) {
     const tag = { src, nofall, base: state.base, model: modelKey() };
     const q = { src, reverse, nofall, base: state.base, M: MF(), asTree };
@@ -1101,6 +1175,13 @@
       });
     }, 120);
   }
+  // 기준 면적(원래 거점, 산소 150 g, 기본 모델)을 지금 모델로 다시 셈: 지형 칩·"기준 대비 %"에 씀
+  function baselineFrom(key, T) {
+    if (key !== treeKey(BASE0, false, "00000")) return;
+    const lim = 150 - MAKE_MODEL({ C, SP, SAND, ETA_ADD, ETA, FLAGS, H }, {}).reserveO2;
+    let n = 0; for (let i = 0; i < N; i++) if (T.o2[i] >= 0 && T.o2[i] <= lim) n++;
+    SITE().stats.baseline_km2 = n * KM2; siteTexts();
+  }
   let FWD = null, REV = null, ETGEN = 0;
   function ensureTrees(cb) {
     const same = (T, src) => T && T.src === src && T.nofall === state.nofall && T.base === state.base && T.model === modelKey();
@@ -1117,11 +1198,12 @@
     if (needS || needP) {
       for (const key of [...TREES.keys()]) {       // 착륙지 2벌과 지금 거점 것만 남김
         const [b, , mk] = key.split("|");
-        if ((Number(b) !== BASE0 && Number(b) !== state.base) || (mk !== "0000" && mk !== modelKey())) TREES.delete(key);
+        if ((Number(b) !== BASE0 && Number(b) !== state.base) || mk !== modelKey()) TREES.delete(key);
       }
       const kS = treeKey(state.base, state.nofall), kP = treeKey(state.base, false);
-      if (needS) jobs.push(once("T" + kS, () => wkDijkstra(state.base, true, state.nofall, true)).then((T) => { TREES.set(kS, T); }));
-      if (needP) jobs.push(once("T" + kP, () => wkDijkstra(state.base, true, false, true)).then((T) => { TREES.set(kP, T); }));
+      const setT = (key) => (T) => { TREES.set(key, T); baselineFrom(key, T); };
+      if (needS) jobs.push(once("T" + kS, () => wkDijkstra(state.base, true, state.nofall, true)).then(setT(kS)));
+      if (needP) jobs.push(once("T" + kP, () => wkDijkstra(state.base, true, false, true)).then(setT(kP)));
     }
     if (needV) {
       const base = state.base;
@@ -1197,7 +1279,7 @@
     if (S.o2[pos] < 0) return { ok: false, need: Infinity, needW: Infinity, tRet: Infinity };
     const need = k * S.o2[pos] + extraGs * S.t[pos], needW = waterOf(S.o2[pos], S.t[pos], k, state.q);
     const f = 1 + state.planMargin / 100;       // 왕복 계획 여유: 귀환 필요량에 여유를 얹어 판단
-    const ok = need * f <= o2 - C.o2_reserve_g && needW * f <= w - waterReserve(state.q) && multNow() * S.dose[pos] <= C.dose_budget_msv;
+    const ok = need * f <= o2 - O2RES() && needW * f <= w - waterReserve(state.q) && multNow() * S.dose[pos] <= C.dose_budget_msv;
     return { ok, need, needW, tRet: S.t[pos] };
   }
   // 탱크 압력 -> 남은 산소: m = P V M / (Z R T). Z = 1(이상기체)로 둠. 6.2 MPa·21 °C에서 540 g이 되도록 V를 잡음(EMU 1차 탱크 수준, 가정)
@@ -1212,15 +1294,31 @@
     const b = (n * sxy - sx * sy) / (n * sxx - sx * sx), a = (sy - b * sx) / n;
     return { v: a + b * (n - 1), b };
   }
+  // 과학 EVA 계획을 시뮬레이션 경로로: 거점 -> 목표들(작업 정지) -> 마지막 목표 뒤에는 귀환 트리로 거점까지
+  function evaRunPlan() {
+    if (!EVA || !EVA.ok) return null;
+    const T = META.targets, cells = EVA.marks.map((mk) => tCell(T[mk.ti]));
+    const last = cells[cells.length - 1];
+    let end = EVA.path.indexOf(last);
+    for (let n = 0, from = 0; n < cells.length; n++) { const j = EVA.path.indexOf(cells[n], from); if (j >= 0) { from = j; end = j; } }
+    return { path: EVA.path.slice(0, end + 1), cells, names: EVA.marks.map((mk) => T[mk.ti].name) };
+  }
   function buildSim() {
-    const target = state.simTarget;
-    if (!isFinite(FWDB.o2[target])) return { ok: false, msg: "거점에서 그 목적지까지 걸어갈 길이 없습니다. 다른 곳을 찍어 주세요." };
-    const out = [target];
-    for (let cur = target; FWDB.pred[cur] >= 0;) { cur = FWDB.pred[cur]; out.push(cur); }
-    out.reverse();
-    const custom = state.simScenario === "custom" ? parseCustom(state.simCustom) : null;
-    if (custom && !custom.length) return { ok: false, msg: "직접 입력한 심박이 없습니다. 분당 bpm을 한 줄에 하나씩 넣고 '적용'을 누르세요." };
-    const kTrue = SIM_K[state.simScenario];
+    const plan = state.mode === "eva" ? evaRunPlan() : null;
+    if (state.mode === "eva" && !plan) return { ok: false, kind: "eva", msg: "과학 EVA 계획이 서야 시뮬레이션할 수 있습니다." };
+    let out;
+    if (plan) out = plan.path;
+    else {
+      const target = state.simTarget;
+      if (!isFinite(FWDB.o2[target])) return { ok: false, kind: "sim", msg: "거점에서 그 목적지까지 걸어갈 길이 없습니다. 다른 곳을 찍어 주세요." };
+      out = [target];
+      for (let cur = target; FWDB.pred[cur] >= 0;) { cur = FWDB.pred[cur]; out.push(cur); }
+      out.reverse();
+    }
+    const scn = plan ? state.evaScn : state.simScenario;
+    const custom = scn === "custom" ? parseCustom(state.simCustom) : null;
+    if (custom && !custom.length) return { ok: false, kind: "sim", msg: "직접 입력한 심박이 없습니다. 분당 bpm을 한 줄에 하나씩 넣고 '적용'을 누르세요." };
+    const kTrue = SIM_K[scn], autoTurn = plan ? true : state.simAuto;
     const rnd = mulberry(7); let spare = null;
     const gauss = () => {
       if (spare !== null) { const v = spare; spare = null; return v; }
@@ -1229,8 +1327,13 @@
       spare = r * Math.sin(2 * Math.PI * v); return r * Math.cos(2 * Math.PI * v);
     };
     const outTr = pathTrack(out);
-    const press = state.simSrc === "press";
-    const leakGs = state.simLeak / 3600;                                  // 실제 누설 (g/s)
+    const press = !plan && state.simSrc === "press";
+    const leakGs = (plan ? 0 : state.simLeak) / 3600;                     // 실제 누설 (g/s)
+    // 목표 정지: 경로 위 목표 칸에 닿는 시각(s)과 작업 시간
+    const stops = [];
+    if (plan) { let from = 0; plan.cells.forEach((c, n) => { const j = out.indexOf(c, from); if (j >= 0) { from = j; stops.push({ s: outTr.cd[j], min: state.evaDwell, name: plan.names[n], cell: c }); } }); }
+    const workO2PerMin = levelMR() * C.o2_g_per_j * 60;                  // 작업 대사량 = 평지 보행 기준치 (계획과 같은 가정)
+    let stopI = 0, dwellLeft = 0, stopName = "";
     const knownGs = press && state.simLeakSub ? leakGs : 0;               // 대원이 알고 귀환 계산에 넣는 누설
     const prnd = mulberry(11); let pspare = null;
     const pgauss = () => {
@@ -1243,8 +1346,9 @@
     let infeasLogged = false, kLogged = false, dryLogged = false, naiveLogged = false;
     const win = [], frames = [], log = [], meas = [], modelPM = [];
     const restO2perMin = C.rest_mr_w * C.o2_g_per_j * 60;
-    log.push({ m: 0, cls: "", text: `거점 출발 → 목적지 ${fmt(outTr.lenM / 1000, 2)} km (산소 ${fmt(o2, 0)} g, 냉각수 ${fmt(w, 0)} g)` +
-      (press ? ` · 탱크 ${fmt(pFromG(o2, TK.T0) / 1e6, 2)} MPa` : "") });
+    log.push({ m: 0, cls: "", text: plan
+      ? `과학 EVA 출발: 목표 ${stops.length}곳(${stops.map((x) => x.name).join(" → ")}), 작업 ${state.evaDwell}분씩 (산소 ${fmt(o2, 0)} g, 냉각수 ${fmt(w, 0)} g)`
+      : `거점 출발 → 목적지 ${fmt(outTr.lenM / 1000, 2)} km (산소 ${fmt(o2, 0)} g, 냉각수 ${fmt(w, 0)} g)` + (press ? ` · 탱크 ${fmt(pFromG(o2, TK.T0) / 1e6, 2)} MPa` : "") });
     if (state.simLeak > 0 && !press) log.push({ m: 0, cls: "warn", text: `누설 ${state.simLeak} g/h가 있지만 심박으로는 보이지 않음 → 남은 산소를 실제보다 많게 봄` });
     for (let m = 0; m <= MAX_MIN; m++) {
       const here = trackAt(tr, s).cell;
@@ -1264,31 +1368,60 @@
       const fz = simFeasible(here, o2c, w, k, knownGs);
       const naive = press && isFinite(rate) && meas.length >= 4 && isFinite(fz.tRet) ? rate * fz.tRet / 60 : NaN;
       const frame = { m, pos: here, o2: o2c, o2True: o2, w, k, phase, need: fz.need, needW: fz.needW, ok: fz.ok,
-                      hr: NaN, hrExp: NaN, kTrue: NaN, P, T, naive };
+                      hr: NaN, hrExp: NaN, kTrue: NaN, P, T, naive,
+                      dest: phase === "out" || phase === "work" ? (plan ? (stops[phase === "work" ? stopI - 1 : stopI] || {}).cell ?? state.base : state.simTarget) : state.base,
+                      stopName: phase === "work" ? stopName : "" };
       frames.push(frame);
       if (phase === "home" || phase === "dead") break;
       if (phase === "out" && !fz.ok && !infeasLogged && m > 0) {
         infeasLogged = true;
-        log.push({ m, cls: "bad", text: `여기부터는 지금 k(${fmt(k, 2)})로 귀환 불가: 필요 산소 ${fmt(fz.need, 0)} g${state.planMargin ? ` (+왕복 여유 ${state.planMargin}% = ${fmt(fz.need * (1 + state.planMargin / 100), 0)} g)` : ""} > 쓸 수 있는 ${fmt(o2c - C.o2_reserve_g, 0)} g` });
+        log.push({ m, cls: "bad", text: `여기부터는 지금 k(${fmt(k, 2)})로 귀환 불가: 필요 산소 ${fmt(fz.need, 0)} g${state.planMargin ? ` (+왕복 여유 ${state.planMargin}% = ${fmt(fz.need * (1 + state.planMargin / 100), 0)} g)` : ""} > 쓸 수 있는 ${fmt(o2c - O2RES(), 0)} g` });
       }
       if (press && !naiveLogged && isFinite(naive) && m >= K_WIN && Math.abs(naive / fz.need - 1) >= 0.25) {
         naiveLogged = true;
         const lo = naive < fz.need;
         log.push({ m, cls: lo ? "bad" : "warn", text: `단순 외삽(지금 소모율 × 귀환 시간) ${fmt(naive, 0)} g vs 지형 모델 ${fmt(fz.need, 0)} g: ${lo ? "귀환길을 너무 적게 잡음" : "귀환길을 너무 많이 잡음 (지금 오르막, 귀환은 내리막)"}` });
       }
-      if (phase === "out" && state.simAuto) {   // 경보: 1분 더 가면 돌아올 수 없는가
+      if (phase === "work" && autoTurn) {     // 작업 중 경보: 1분 더 머물면 돌아올 수 없는가
+        const fn = simFeasible(here, o2c - k * workO2PerMin - knownGs * 60, w - waterOf(workO2PerMin, 60, k, state.q), k, knownGs);
+        if (!fn.ok) {
+          phase = "back"; turnMin = m; frame.turn = true; dwellLeft = 0;
+          const skip = stops.slice(stopI).map((x) => x.name);
+          log.push({ m, cls: "warn", text: `귀환 경보 → ${stopName} 작업을 줄이고 돌아섬${skip.length ? ` (못 들른 목표: ${skip.join(", ")})` : ""}` });
+          tr = pathTrack(pathToBase(here)); s = 0;
+        }
+      }
+      if (phase === "out" && autoTurn) {   // 경보: 1분 더 가면 돌아올 수 없는가
         const now = trackAt(tr, s), nxt = trackAt(tr, s + STEP_PER_MIN), dO2 = nxt.o2 - now.o2;
         const fn = simFeasible(nxt.cell, o2c - k * dO2 - knownGs * 60, w - waterOf(dO2, 60, k, state.q), k, knownGs);
         if (!fn.ok && s < tr.len) {
           phase = "back"; turnMin = m; frame.turn = true;
-          log.push({ m, cls: "warn", text: `귀환 경보 → 돌아섬. 1분 더 가면 ${state.planMargin ? `왕복 여유(+${state.planMargin}%)를 지킬 수 없음` : "귀환 불가"} (남은 산소 ${press ? "측정 " : ""}${fmt(o2c, 0)} g, 지금 귀환에 ${fmt(fz.need, 0)} g + 예비 ${fmt(C.o2_reserve_g, 0)} g)` });
+          if (plan && stopI < stops.length) log.push({ m, cls: "warn", text: `못 들른 목표: ${stops.slice(stopI).map((x) => x.name).join(", ")}` });
+          log.push({ m, cls: "warn", text: `귀환 경보 → 돌아섬. 1분 더 가면 ${state.planMargin ? `왕복 여유(+${state.planMargin}%)를 지킬 수 없음` : "귀환 불가"} (남은 산소 ${press ? "측정 " : ""}${fmt(o2c, 0)} g, 지금 귀환에 ${fmt(fz.need, 0)} g + 예비 ${fmt(O2RES(), 0)} g)` });
           tr = pathTrack(pathToBase(here)); s = 0;
         }
       }
       let left = STEP_PER_MIN, modelO2 = 0;      // 1분 동안 걸은 거리의 모델 산소, 남는 시간은 서 있음
-      while (left > 1e-6 && (phase === "out" || phase === "back")) {
-        const a = trackAt(tr, s), step = Math.min(left, tr.len - s), b = trackAt(tr, s + step);
+      while (left > 1e-6 && (phase === "out" || phase === "back" || phase === "work")) {
+        if (phase === "work") {                 // 목표에서 작업: 제자리, 작업 대사량
+          const st = Math.min(left, dwellLeft);
+          modelO2 += workO2PerMin * st / 60; dwellLeft -= st; left -= st;
+          if (dwellLeft <= 1e-6) {
+            if (stopI >= stops.length) {        // 마지막 목표 끝: 귀환 트리로 거점까지
+              phase = "back"; log.push({ m: m + 1, cls: "", text: `${stopName} 작업 끝 → 마지막 목표, 귀환 시작` });
+              tr = pathTrack(pathToBase(trackAt(tr, s).cell)); s = 0;
+            } else { phase = "out"; log.push({ m: m + 1, cls: "", text: `${stopName} 작업 끝 → 다음 목표 ${stops[stopI].name}` }); }
+          }
+          continue;
+        }
+        const lim = phase === "out" && stopI < stops.length ? Math.max(0, stops[stopI].s - s) : tr.len - s;
+        const a = trackAt(tr, s), step = Math.min(left, lim), b = trackAt(tr, s + step);
         modelO2 += b.o2 - a.o2; s += step; left -= step;
+        if (phase === "out" && stopI < stops.length && s >= stops[stopI].s - 1e-6) {
+          stopName = stops[stopI].name; dwellLeft = stops[stopI].min * 60; stopI++; phase = "work";
+          log.push({ m: m + 1, cls: "", text: `${stopName} 도착 → 작업 ${stops[stopI - 1].min}분` });
+          continue;
+        }
         if (s >= tr.len - 1e-6) {
           if (phase === "out") { phase = "back"; log.push({ m: m + 1, cls: "", text: "목적지 도착 → 귀환 시작" }); tr = pathTrack(pathToBase(tr.cells[tr.cells.length - 1])); s = 0; }
           else phase = "home";
@@ -1315,15 +1448,15 @@
       if (!dryLogged && w <= 0) { dryLogged = true; log.push({ m: m + 1, cls: "bad", text: "냉각수 바닥: 이제부터 체온이 오름" }); }
       if (o2 <= 0) { phase = "dead"; log.push({ m: m + 1, cls: "bad", text: `산소 소진: 거점까지 ${fmt(Math.max(0, tr.lenM - trackAt(tr, s).m) / 1000, 2)} km 남음` }); }
       else if (w < -C.heat_storage_water_eq_g) { phase = "dead"; log.push({ m: m + 1, cls: "bad", text: "체온 비상한계 초과 (냉각수 141 g어치를 넘김)" }); }
-      else if (phase === "home") log.push({ m: m + 1, cls: o2 >= C.o2_reserve_g ? "ok" : "warn", text: `거점 도착: 산소 ${fmt(o2, 0)} g, 냉각수 ${fmt(Math.max(0, w), 0)} g 남음${o2 >= C.o2_reserve_g ? "" : " (예비분까지 씀)"}` });
+      else if (phase === "home") log.push({ m: m + 1, cls: o2 >= O2RES() ? "ok" : "warn", text: `거점 도착: 산소 ${fmt(o2, 0)} g, 냉각수 ${fmt(Math.max(0, w), 0)} g 남음${o2 >= O2RES() ? "" : " (예비분까지 씀)"}` });
     }
-    return { ok: true, frames, log, out, outLen: outTr.lenM, turnMin, idx: 0 };
+    return { ok: true, kind: plan ? "eva" : "sim", frames, log, out, outLen: outTr.lenM, turnMin, idx: 0, stops };
   }
   function ensureSim() {
-    const sig = JSON.stringify([state.simTarget, state.simScenario, state.simNoise, state.simAuto, state.simCustom, state.simSrc, state.simLeak, state.simPNoise, state.simTcomp, state.simLeakSub, modelKey(), state.o2, state.water,
+    const sig = JSON.stringify([state.mode, state.mode === "eva" ? [EVASIG, EVA && EVA.ok ? EVA.path.length : 0, state.evaScn] : 0, state.simTarget, state.simScenario, state.simNoise, state.simAuto, state.simCustom, state.simSrc, state.simLeak, state.simPNoise, state.simTcomp, state.simLeakSub, modelKey(), state.o2, state.water,
       state.q, state.spe, state.mult, state.nofall, state.base, state.planMargin]);
     if (sig === SIMSIG) return;
-    const keep = SIM && SIM.ok && SIMTARGET === state.simTarget ? SIM.idx : 0;
+    const keep = SIM && SIM.ok && SIM.kind === state.mode && SIMTARGET === state.simTarget ? SIM.idx : 0;
     SIMSIG = sig; SIMTARGET = state.simTarget;
     SIM = buildSim();
     if (SIM.ok) {
@@ -1540,7 +1673,7 @@
     // 한눈에 보기: 아이콘 + 평지로 걸을 때 쓸 수 있는 시간(예비분 제외) + 신호등 색
     const darkPct = s.safe > 0 ? s.dark / s.safe * 100 : 0;
     const o2Rate = levelO2gh() * EK();                                      // g/h
-    const o2h = Math.max(0, EO2() - C.o2_reserve_g) / o2Rate;
+    const o2h = Math.max(0, EO2() - O2RES()) / o2Rate;
     const wRate = waterOf(levelO2gh() / 3600, 1, EK(), state.q) * 3600;     // g/h
     const wh = wRate > 0 ? Math.max(0, EW() * 1000 - waterReserve(state.q)) / wRate : Infinity;
     const doseRate = RATE1[state.base] * multNow();                           // 거점 칸의 mSv/h
@@ -1555,11 +1688,13 @@
     };
     const who = s.mode === "rescue" ? "구조대원 · " : "";
     const hmS = (h) => { if (!isFinite(h) || h < 0) return "–"; const m = Math.round(h * 60); return m < 60 ? `${m}분` : `${Math.floor(m / 60)}시간 ${m % 60}분`; };
+    const o2pct = EO2() / TANK_G * 100, wpct = EW() * 1000 / WATER_FULL_G * 100;
+    const sg = signalAt(focusPos());
     const cards = [
-      { id: "o2", nm: "산소", st: st(o2h * 60, 60, 20), gv: hmS(o2h), gd: `${who}평지 보행 · 시간당 ${fmt(o2Rate, 0)} g` },
-      { id: "water", nm: "냉각수", st: st(wh * 60, 60, 20), gv: isFinite(wh) ? hmS(wh) : "제한 없음", gd: `${who}시간당 ${fmt(wRate, 0)} g${wh < o2h ? " · 산소보다 먼저 바닥" : ""}` },
+      { id: "o2", nm: "산소", st: st(o2h * 60, 60, 20), gv: `<span class="gauge">${batterySvg(o2pct)}<b>${fmt(o2pct, 0)}%</b></span><small>${hmS(o2h)} 남음</small>`, gd: `${who}탱크 ${fmt(TANK_G, 0)} g 중 ${fmt(EO2(), 0)} g · 예비분 ${fmt(O2RES(), 0)} g 빼고 평지 보행(시간당 ${fmt(o2Rate, 0)} g)으로 버티는 시간` },
+      { id: "water", nm: "냉각수", st: st(wh * 60, 60, 20), gv: `<span class="gauge">${batterySvg(wpct)}<b>${fmt(Math.max(0, wpct), 0)}%</b></span><small>${isFinite(wh) ? hmS(wh) + " 남음" : "제한 없음"}</small>`, gd: `${who}만충 3.6 kg 중 ${fmt(EW() * 1000, 0)} g · 시간당 ${fmt(wRate, 0)} g${wh < o2h ? " · 산소보다 먼저 바닥" : ""}` },
       { id: "dose", nm: "선량", st: st(doseH, 8, 2), gv: doseH > 99 ? "99시간+" : hmS(doseH), gd: `예산 ${fmt(C.dose_budget_msv, 1)} mSv까지 · ${state.spe ? `SPE ×${fmt(state.mult, 1)}` : "배경"}` },
-      { id: "comm", nm: "통신", st: st(darkPct, 15, 40, false), gv: `${fmt(darkPct, 0)}<small>% 음영</small>`, gd: `귀환 영역 중 ${fmt(s.dark, 1)} km²${state.relay ? (RELAY_OK ? " · 중계기 포함" : " · 중계기 안 닿음") : ""}` },
+      { id: "comm", nm: "통신", st: sg.lv >= 3 ? "ok" : sg.lv === 2 ? "warn" : "bad", gv: `<span class="gauge">${signalSvg(sg.lv)}<b>${SIG.ko[sg.lv]}</b></span><small>${sg.via === "relay" ? "중계기 경유" : isFinite(sg.d) ? `거점까지 ${fmt(sg.d, 1)} km` : ""} · 귀환 영역 음영 ${fmt(darkPct, 0)}%</small>`, gd: `신호 단계는 지형 가시선과 거리로 나눈 것(강함 ≤2 km, 양호 ≤5 km, 약함 5 km 넘게·중계기 경유, "50 m 안 연결" = 음영이지만 50 m 안에 가시선이 닿는 곳). 송신 출력·주파수를 넣은 링크 예산은 아님` },
     ];
     $("glance").innerHTML = cards.map((c) => `<div class="gc" role="listitem" data-st="${c.st}" title="${c.gd}"><div class="nm">${ICON[c.id]}<span>${c.nm}</span><span class="pill">${PILL[c.st]}</span></div><div class="gv">${c.gv}</div></div>`).join("");
 
@@ -1727,7 +1862,7 @@
     if (!sel.length) return { msg: "왼쪽에서 들를 목표를 하나 이상 고르세요." };
     const nodes = evaNodes(), L = nodes.map((c) => LEGS.get(legKey(c)));
     if (L.some((x) => !x)) return { msg: "경로 계산 중…" };
-    const k = EK(), b = budgets(), S = setNow();
+    const k = state.k, b = budgets(true), S = setNow();
     const dwellModel = levelMR() * C.o2_g_per_j * 60 * state.evaDwell, dwellT = state.evaDwell * 60;
     const m = nodes.length, cost = (a, c) => L[a].o2[nodes[c]];
     const PMf = 1 + state.planMargin / 100;  // 왕복 계획 여유
@@ -1766,7 +1901,7 @@
           marks.push({ ti: sel[c - 1], arrive: Tm - dwellT, o2: U });
         }
       }
-      return { path, marks, o2: U, t: Tm, dose: D, minM, minAt, cls: classifyTot(U, Tm, D, b) };
+      return { path, marks, o2: U, t: Tm, dose: D, minM, minAt, cls: classifyTot(U, Tm, D, b, k) };
     };
     let tried = 0;
     for (const cd of cands) {
@@ -1785,7 +1920,7 @@
       if (EVA.msg.startsWith("왼쪽") || EVA.msg.startsWith("경로")) v.className = "verdict";
       $("pt-meters").innerHTML = ""; $("pt-facts").innerHTML = ""; drawVec({ path: null }); return;
     }
-    const b = budgets(), k = EK(), ps = pathStats(EVA.path);
+    const b = budgets(true), k = state.k, ps = pathStats(EVA.path);
     const all = EVA.dropped.length === 0;
     v.className = "verdict " + (all ? "ok" : "warn"); v.textContent = all ? "고른 목표 모두 다녀올 수 있음" : `${EVA.order.length}곳만 가능`;
     $("pt-where").textContent = `목표 ${EVA.order.length + EVA.dropped.length}곳 중 ${EVA.order.length}곳 · ${fmt(ps.dist / 1000, 2)} km · ${hm(EVA.t / 3600)}`;
@@ -1797,7 +1932,19 @@
       + EVA.dropped.map((ti) => `<li class="drop">${T[ti].name}<small>넣으면 어느 순간 귀환 반경을 벗어남</small></li>`).join("");
     $("eva-order").innerHTML = `<h3>들르는 순서 (지도의 번호)</h3><ol class="evaorder">${items}</ol>`;
     $("eva-order").hidden = false;
-    $("pt-facts").innerHTML = `
+    ensureSim();
+    let live = "";
+    if (SIM && SIM.ok && SIM.kind === "eva") {
+      $("simbar").hidden = false;
+      const f = SIM.frames[SIM.idx], PH = { out: "이동 중", work: "작업 중", back: "돌아오는 중", home: "거점 도착", dead: "귀환 실패" };
+      live = `<dt>실시간 시뮬레이션</dt><dd>${f.m}분 · ${PH[f.phase]}${f.stopName ? " · " + f.stopName : ""}</dd>
+      <dt>남은 산소 · 지금 귀환에 필요</dt><dd>${fmt(f.o2, 0)} g (${fmt(f.o2 / TANK_G * 100, 0)}%) · ${isFinite(f.need) ? fmt(f.need, 0) : "–"} g</dd>
+      <dt>귀환 경보</dt><dd>${SIM.turnMin >= 0 ? SIM.turnMin + "분에 돌아섬" : "울리지 않음"}</dd>`;
+      $("sim-log").hidden = false;
+      $("sim-log").innerHTML = SIM.log.map((e) => `<li class="${e.m <= f.m ? "on " : ""}${e.cls}"><b>${e.m}분</b> ${e.text}</li>`).join("");
+      simLabel(); drawSimChart();
+    }
+    $("pt-facts").innerHTML = live + `
       <dt>가장 빠듯한 순간의 귀환 여유</dt><dd>산소 ${fmt(EVA.minM, 0)} g (지도의 빨간 고리)</dd>
       <dt>통신 안 닿는 구간</dt><dd>${fmt(ps.dark / 1000, 2)} km (${fmt(ps.dist > 0 ? ps.dark / ps.dist * 100 : 0, 0)}%), 가장 긴 두절 ${fmt(mins(ps.maxRun), 0)}분</dd>
       <dt>넘어짐 높음 · 중간 칸</dt><dd>${fmt(ps.high, 0)} m · ${fmt(ps.med, 0)} m</dd>
@@ -1806,13 +1953,42 @@
     drawVec({ path: EVA.path, color: "#ffffff", eva: true });
   }
   // ---------- 헬멧 HUD ----------
+  // ---------- 잔량 배터리·통신 신호 막대 ----------
+  const pctCls = (p) => (p >= 50 ? "ok" : p >= 20 ? "warn" : "bad");
+  const batterySvg = (pct) => `<svg class="batt" viewBox="0 0 46 20" aria-hidden="true"><rect x="1" y="2" width="39" height="16" rx="3.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="41.5" y="7" width="3.5" height="6" rx="1" fill="currentColor"/><rect x="4" y="5" width="${(Math.max(0, Math.min(100, pct)) / 100 * 33).toFixed(1)}" height="10" rx="1.5" fill="currentColor"/></svg>`;
+  const signalSvg = (lv) => `<svg class="sig" viewBox="0 0 30 22" aria-hidden="true">${[0, 1, 2, 3].map((j) => `<rect x="${j * 7 + 1}" y="${16 - j * 5}" width="5" height="${5 + j * 5}" rx="1" fill="currentColor" opacity="${j < lv ? 1 : 0.2}"/>`).join("")}${lv === 0 ? '<path d="M19 2l9 9M28 2l-9 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>' : ""}</svg>`;
+  // 통신 신호 단계 0~4: 지형 가시선(거점·중계기)과 거리로 나눈 단계. 송신 출력·주파수·안테나 방향을 넣은 링크 예산은 아님
+  let NEAR = null, NEAR_KEY = "";
+  function nearLink() {                   // 50 m(5칸) 안에 연결되는 칸이 있는가: "조금만 움직이면 연결"
+    const key = `${VIS_BASE}|${state.relay}|${RELAY_OK}|${SITE_I}`;
+    if (NEAR && NEAR_KEY === key) return NEAR;
+    const r = 5, a = new Uint8Array(N), h = new Uint8Array(N), out = new Uint8Array(N);
+    for (let i = 0; i < N; i++) a[i] = linked(i) ? 1 : 0;
+    for (let y = 0; y < R; y++) { let last = -1e9; for (let x = 0; x < W; x++) { if (a[y * W + x]) last = x; h[y * W + x] = x - last <= r ? 1 : 0; }
+      last = 1e9; for (let x = W - 1; x >= 0; x--) { if (a[y * W + x]) last = x; if (last - x <= r) h[y * W + x] = 1; } }
+    for (let x = 0; x < W; x++) { let last = -1e9; for (let y = 0; y < R; y++) { if (h[y * W + x]) last = y; out[y * W + x] = y - last <= r ? 1 : 0; }
+      last = 1e9; for (let y = R - 1; y >= 0; y--) { if (h[y * W + x]) last = y; if (last - y <= r) out[y * W + x] = 1; } }
+    NEAR = out; NEAR_KEY = key; return out;
+  }
+  const SIG = { ko: ["두절", "50 m 안 연결", "약함", "양호", "강함"], en: ["NO LINK", "LINK ≤50 m", "WEAK", "GOOD", "STRONG"] };
+  function signalAt(i) {
+    if (!VIS || i < 0) return { lv: 0, via: "none", d: NaN };
+    const dB = distKm(i, state.base);
+    if (VIS[i]) return { lv: dB <= 2 ? 4 : dB <= 5 ? 3 : 2, via: "base", d: dB };
+    if (state.relay && RELAY_OK && (FLAGS[i] & 4)) return { lv: 2, via: "relay", d: distKm(i, RELAY) };
+    return { lv: nearLink()[i] ? 1 : 0, via: "none", d: dB };
+  }
+  const sigCls = (lv) => (lv >= 3 ? "ok" : lv === 2 ? "warn" : "bad");
+  // 지금 따지는 위치: 시뮬레이션 재생 위치 > 현재 위치 > 고른 지점
+  const focusPos = () => { const f = simFrame(); return f ? f.pos : state.mode === "here" && state.here >= 0 ? state.here : state.sel; };
+
   const HL = {
     ko: { o2: "산소", h2o: "냉각수", margin: "귀환 여유", comm: "통신", link: "연결", nolink: "두절", dose: "선량률", base: "거점", dest: "목표",
           slope: "경사", fall: "넘어짐", lo: "낮음", mid: "중간", hi: "높음", turn: "⚠ 지금 돌아서세요", tight: "귀환 여유 적음", steep: "급경사 주의",
-          dark: "통신 음영", fallhi: "넘어짐 위험 높음", noroute: "⚠ 귀환 경로 없음", left: "남음", need: "귀환 필요", min: "분", lang: "EN" },
+          dark: "통신 음영", fallhi: "넘어짐 위험 높음", noroute: "⚠ 귀환 경로 없음", left: "남음", need: "귀환 필요", min: "분", lang: "EN", work: "작업 중", tank: "탱크" },
     en: { o2: "O2", h2o: "H2O", margin: "RETURN MARGIN", comm: "COMM", link: "LINK", nolink: "NO LINK", dose: "DOSE", base: "BASE", dest: "TGT",
           slope: "SLOPE", fall: "FALL", lo: "LOW", mid: "MED", hi: "HIGH", turn: "⚠ TURN BACK NOW", tight: "LOW RETURN MARGIN", steep: "STEEP GROUND",
-          dark: "COMM SHADOW", fallhi: "HIGH FALL RISK", noroute: "⚠ NO RETURN ROUTE", left: "left", need: "need", min: "min", lang: "KO" },
+          dark: "COMM SHADOW", fallhi: "HIGH FALL RISK", noroute: "⚠ NO RETURN ROUTE", left: "left", need: "need", min: "min", lang: "KO", work: "WORKING", tank: "TANK" },
   };
   const bearingTo = (a, b) => (Math.atan2((b % W) - (a % W), -(((b / W) | 0) - ((a / W) | 0))) * 180 / Math.PI + 360) % 360;
   const distKm = (a, b) => Math.hypot((b % W) - (a % W), ((b / W) | 0) - ((a / W) | 0)) * CELL / 1000;
@@ -1821,32 +1997,58 @@
     if (x < 1 || y < 1 || x >= W - 1 || y >= R - 1) return 0;
     return Math.atan(Math.hypot((H[i + 1] - H[i - 1]) / (2 * CELL), (H[i + W] - H[i - W]) / (2 * CELL))) * 180 / Math.PI;
   }
+  // HUD는 팝업 창(두 번째 화면·헬멧 화면 시연용)에 띄우고, 팝업이 막히면 지도 위 PIP 창에 띄운다. 둘 다 같은 내용으로 실시간 갱신
+  let HUDWIN = null;
+  const hudPopupOpen = () => !!(HUDWIN && !HUDWIN.closed);
+  function openHudPopup() {
+    try { HUDWIN = window.open("", "eva_helmet_hud", "popup=yes,width=1040,height=620"); } catch (e) { HUDWIN = null; }
+    if (!HUDWIN) return false;
+    const css = [...document.querySelectorAll("style")].map((x) => x.textContent).join("\n");
+    const br = $("visor").querySelector(".brackets").outerHTML;
+    HUDWIN.document.open();
+    HUDWIN.document.write(`<!doctype html><html lang="${LANG}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EVA Helmet HUD</title><style>${css}
+      html,body{margin:0;height:100%;background:#020305;overflow:hidden}
+      .pop{position:absolute;inset:0;display:grid;place-items:center}
+      .pop .visor{width:min(100vw, calc(100vh * 16 / 9));aspect-ratio:16/9;border-radius:0}
+      .pop .pip-cap{position:absolute;left:10px;bottom:6px;margin:0}
+      .pop .live{position:absolute;right:12px;top:8px;font:600 11px/1 system-ui;color:#7dffb0;letter-spacing:.06em}
+    </style></head><body><div class="pop"><div class="visor" id="visor">${br}<div class="hud" id="hud"></div></div><span class="live">● LIVE</span><p class="pip-cap" id="visor-cap"></p></div></body></html>`);
+    HUDWIN.document.close();
+    const w = HUDWIN;
+    const watch = setInterval(() => { if (w.closed) { clearInterval(watch); if (HUDWIN === w) { HUDWIN = null; state.hud = false; $("hud-btn").setAttribute("aria-pressed", "false"); renderHud(); } } }, 500);
+    return true;
+  }
   function renderHud() {
-    const el = $("hud");
-    $("visor-wrap").hidden = !state.hud;
+    const popup = hudPopupOpen();
+    $("visor-wrap").hidden = !state.hud || popup;
     if (!state.hud || !H) return;
+    const doc = popup ? HUDWIN.document : document;
+    const el = doc.getElementById("hud"), visorEl = doc.getElementById("visor"), capEl = doc.getElementById("visor-cap");
+    if (!el) return;
     const L = HL[state.hudLang], S = setNow();
-    const simF = state.mode === "sim" && SIM && SIM.ok ? SIM.frames[SIM.idx] : null;
-    const pos = simF ? simF.pos : state.mode === "here" ? state.here : state.sel;
+    const simF = simFrame();
+    const pos = focusPos();
     if (pos < 0 || !S) { el.innerHTML = ""; return; }
     // 바이저 배경: 이 위치에서 가장 가까운 로버 사진
     const P = META.photos || [];
     let bp = null, bd = Infinity;
     for (const p of P) { const d = Math.hypot(p.x - (pos % W + 0.5), p.y - (((pos / W) | 0) + 0.5)) * CELL; if (d < bd) { bd = d; bp = p; } }
-    $("visor").style.backgroundImage = bp ? `url("${bp.img}")` : "none";
-    $("visor-cap").textContent = bp ? `배경 사진: ${bp.rover} Navcam sol ${bp.sol} (이 위치에서 ${fmt(bd / 1000, 2)} km 떨어진 곳, NASA/JPL-Caltech)` : "이 지형에는 로버 사진이 없어 배경을 비웠습니다.";
+    visorEl.style.backgroundImage = bp ? `url("${bp.img}")` : "none";
+    capEl.textContent = bp ? `배경 사진: ${bp.rover} Navcam sol ${bp.sol} (이 위치에서 ${fmt(bd / 1000, 2)} km 떨어진 곳, NASA/JPL-Caltech)` : "이 지형에는 로버 사진이 없어 배경을 비웠습니다.";
     const k = EK(), o2 = EO2(), w = EW() * 1000;
     const need = S.o2[pos] >= 0 ? k * S.o2[pos] : NaN;
-    const margin = o2 - C.o2_reserve_g - need;
+    const margin = o2 - O2RES() - need;
     const o2rate = levelO2gh() * k, wrate = waterOf(levelO2gh() / 3600, 1, k, state.q) * 3600;
-    const o2min = Math.max(0, o2 - C.o2_reserve_g) / o2rate * 60, wmin = Math.max(0, w - waterReserve(state.q)) / wrate * 60;
-    const comm = VIS ? linked(pos) : true, dose = RATE1[pos] * multNow() * 1000;
+    const o2min = Math.max(0, o2 - O2RES()) / o2rate * 60, wmin = Math.max(0, w - waterReserve(state.q)) / wrate * 60;
+    const o2pct = o2 / TANK_G * 100, wpct = w / WATER_FULL_G * 100;
+    const sg = signalAt(pos), dose = RATE1[pos] * multNow() * 1000;
     const sl = slopeAt(pos), fc = CLS[pos];
     const cls = (v, a, b) => (v >= a ? "ok" : v >= b ? "warn" : "bad");
+    const tmin = (m) => (m >= 60 ? `${Math.floor(m / 60)}:${String(Math.round(m % 60)).padStart(2, "0")}` : `${Math.round(m)} ${L.min}`);
     let heading = 0;                        // 진행 방향 (시뮬레이션 재생 중), 아니면 북쪽 위
     if (simF && SIM.idx > 0) { const pv = SIM.frames[Math.max(0, SIM.idx - 1)].pos; if (pv !== pos) heading = bearingTo(pv, pos); }
     const marks = [{ b: bearingTo(pos, state.base), t: "★" + L.base, c: "ok", d: distKm(pos, state.base) }];
-    const dest = state.mode === "sim" ? state.simTarget : state.mode === "eva" && EVA && EVA.ok && EVA.order.length ? tCell(META.targets[EVA.order[0]]) : -1;
+    const dest = simF && simF.dest >= 0 ? simF.dest : state.mode === "sim" ? state.simTarget : state.mode === "eva" && EVA && EVA.ok && EVA.order.length ? tCell(META.targets[EVA.order[0]]) : -1;
     if (dest >= 0 && dest !== pos) marks.push({ b: bearingTo(pos, dest), t: "◆" + L.dest, c: "warn", d: distKm(pos, dest) });
     const ticks = [["N", 0], ["E", 90], ["S", 180], ["W", 270], ["NE", 45], ["SE", 135], ["SW", 225], ["NW", 315]];
     const rel = (b) => ((b - heading + 540) % 360) - 180;
@@ -1857,18 +2059,20 @@
     if (!isFinite(need)) alert = `<div class="alert">${L.noroute}</div>`;
     else if (margin < 0) alert = `<div class="alert">${L.turn}</div>`;
     else if (margin < 40) alert = `<div class="alert warn">${L.tight}</div>`;
+    else if (simF && simF.phase === "work") alert = `<div class="alert warn">${L.work}${simF.stopName ? " · " + simF.stopName : ""}</div>`;
     else if (fc === 2) alert = `<div class="alert warn">${L.fallhi}</div>`;
     else if (sl > 15) alert = `<div class="alert warn">${L.steep}</div>`;
-    else if (!comm) alert = `<div class="alert warn">${L.dark}</div>`;
+    else if (sg.lv <= 1) alert = `<div class="alert warn">${L.dark}</div>`;
     el.innerHTML = `${alert}
-      <div class="c tl"><span>${L.o2}</span><span class="v ${cls(o2min, 60, 20)}">${fmt(o2, 0)} g</span><span>${fmt(o2min, 0)} ${L.min} ${L.left}</span>
-        <span>${L.h2o} <b class="${cls(wmin, 60, 20)}">${fmt(Math.max(0, w), 0)} g</b></span></div>
-      <div class="c tr"><span>${L.comm}</span><span class="v ${comm ? "ok" : "bad"}">${comm ? L.link : L.nolink}</span><span>${L.dose} ${fmt(dose, 1)} µSv/h</span></div>
+      <div class="c tl"><span>${L.o2}</span><span class="v gauge ${pctCls(o2pct)}">${batterySvg(o2pct)}${fmt(o2pct, 0)}%</span><span>${tmin(o2min)} ${L.left} · ${fmt(o2, 0)} g</span>
+        <span class="gauge sm ${pctCls(wpct)}">${L.h2o} ${batterySvg(wpct)}<b>${fmt(Math.max(0, wpct), 0)}%</b> · ${tmin(wmin)}</span></div>
+      <div class="c tr"><span>${L.comm}</span><span class="v gauge ${sigCls(sg.lv)}">${signalSvg(sg.lv)}${SIG[state.hudLang][sg.lv]}</span><span>${L.dose} ${fmt(dose, 1)} µSv/h</span></div>
       <div class="c bl"><span>${L.margin}</span><span class="v ${isFinite(margin) ? cls(margin, 80, 0) : "bad"}">${isFinite(margin) ? fmt(margin, 0) + " g" : "—"}</span><span>${L.need} ${isFinite(need) ? fmt(need, 0) : "—"} g</span></div>
       <div class="c br"><span>${L.slope} <b class="${sl > 15 ? "warn" : "ok"}">${fmt(sl, 0)}°</b></span><span>${L.fall} <b class="${fc === 2 ? "bad" : fc === 1 ? "warn" : "ok"}">${[L.lo, L.mid, L.hi][fc]}</b></span></div>
       <div class="compass">${comp}</div><button type="button" class="lang" id="hud-lang">${L.lang}</button>`;
     el.hidden = false;
-    $("hud-lang").onclick = () => { state.hudLang = state.hudLang === "ko" ? "en" : "ko"; renderHud(); };
+    doc.getElementById("hud-lang").onclick = () => { state.hudLang = state.hudLang === "ko" ? "en" : "ko"; renderHud(); };
+    if (popup && HUDWIN.document.title !== "EVA Helmet HUD") HUDWIN.document.title = "EVA Helmet HUD";
   }
 
   // ---------- 로드뷰: 로버가 멈춘 지점의 사진을 경로 순서로 ----------
@@ -1945,7 +2149,7 @@
       <dt>통신 안 닿는 구간</dt><dd>${fmt(ps.dark / 1000, 2)} km (${fmt(ps.dist > 0 ? ps.dark / ps.dist * 100 : 0, 0)}%)</dd>
       <dt>가장 긴 두절</dt><dd>${fmt(ps.maxRun / 1000, 2)} km ≈ ${fmt(mins(ps.maxRun), 0)}분</dd>
       <dt>넘어짐 높음 · 중간 칸</dt><dd>${fmt(ps.high, 0)} m · ${fmt(ps.med, 0)} m</dd>
-      <dt>탱크가 빈 뒤 버틸 시간</dt><dd>평지 보행 약 ${fmt(C.heat_storage_water_eq_g / 1000 * C.latent_j_kg / Math.max(1, state.k * C.level_mr_w + state.q) / 60, 0)}분</dd>
+      <dt>탱크가 빈 뒤 버틸 시간</dt><dd>평지 보행 약 ${fmt(C.heat_storage_water_eq_g / 1000 * C.latent_j_kg / Math.max(1, state.k * levelMR() + state.q) / 60, 0)}분</dd>
       ${moRow}${groundFact(i)}`;
     drawVec(useMO ? { path, color: "#ffd23f", path2: altDiff ? alt : null, color2: "rgba(255,255,255,0.55)" }
                   : { path, color: "#ffffff", path2: altDiff ? alt : null, color2: "#ffd23f" });
@@ -1995,7 +2199,7 @@
     else { v.className = "verdict bad"; v.textContent = "이 위치에서는 귀환 불가"; }
     const wres = waterReserve(state.q);
     $("pt-meters").innerHTML = f.phase === "home" || f.phase === "dead" ? "" :
-      meter("귀환에 필요한 산소 / 쓸 수 있는 산소", f.need, f.o2 - C.o2_reserve_g, "g", 0) +
+      meter("귀환에 필요한 산소 / 쓸 수 있는 산소", f.need, f.o2 - O2RES(), "g", 0) +
       meter("귀환에 필요한 냉각수 / 쓸 수 있는 냉각수", f.needW, f.w - wres, "g", 0);
     const press = state.simSrc === "press";
     $("pt-facts").innerHTML = (press
@@ -2036,8 +2240,8 @@
       { title: press ? "k (측정 소모율 ÷ 모델 산소)" : "k (심박 ÷ 모델 대사량)", y0: 104, h: 70, ref: 1, series: [
           { v: (f) => f.k, c: "#7fd0ff", w: 1.8 }, { v: (f) => f.kTrue, c: "#a6e07a", w: 1.2, dash: [4, 3] }] },
       { title: "산소 (g): 쓸 수 있는 양 vs 귀환에 필요한 양", y0: 190, h: 86, zero: true, series: [
-          { v: (f) => f.o2True - C.o2_reserve_g, c: "#9aa3b5", w: 1, dash: [2, 3] },
-          { v: (f) => f.o2 - C.o2_reserve_g, c: "#3fc1cc", w: 1.8 }, { v: (f) => (isFinite(f.need) ? f.need : NaN), c: "#ef6b5e", w: 1.8 },
+          { v: (f) => f.o2True - O2RES(), c: "#9aa3b5", w: 1, dash: [2, 3] },
+          { v: (f) => f.o2 - O2RES(), c: "#3fc1cc", w: 1.8 }, { v: (f) => (isFinite(f.need) ? f.need : NaN), c: "#ef6b5e", w: 1.8 },
           ...(press ? [{ v: (f) => f.naive, c: "#ffb74d", w: 1.2, dash: [5, 3] }] : [])] },
     ];
     g.font = '11px "IBM Plex Sans KR", system-ui, sans-serif';
@@ -2123,7 +2327,7 @@
     const inTime = go.t <= vSec;
     // 구조대원이 출발할 때 있어야 할 최소량 = 자기 왕복 + 구조 대상 보급 + 자기 예비분
     const own = tot ? { o2: state.k * tot.o2, w: waterOf(tot.o2, tot.t, state.k, state.q) } : null;
-    const minStart = own && sup ? { o2: own.o2 + sup.o2 + C.o2_reserve_g, w: own.w + sup.w + waterReserve(state.q) } : null;
+    const minStart = own && sup ? { o2: own.o2 + sup.o2 + O2RES(), w: own.w + sup.w + waterReserve(state.q) } : null;
     const canSupply = minStart && minStart.o2 <= state.o2 && minStart.w <= state.water * 1000;
     let verdict;
     if (!okGo) verdict = ["bad", "구조대원 소모품으로 도달 불가"];
@@ -2161,7 +2365,7 @@
           <dt>구조 대상 필요량 (산소 · 냉각수)</dt><dd>${fmt(sup.needO2, 0)} g · ${fmt(sup.needW, 0)} g</dd>
           <dt>└ 구조대원 기다리는 동안 (${fmt(go.t / 60, 0)}분, 정지)</dt><dd>${fmt(REST_O2_GS() * go.t, 0)} g · ${fmt(REST_W_GS() * go.t, 0)} g</dd>
           <dt>└ 거점까지 귀환 (${fmt(vRet.t / 60, 0)}분, ${state.vcarry === "walk" ? "부축 보행" : "이송, 정지"})</dt><dd>${fmt(vRet.o2, 0)} g · ${fmt(vRet.w, 0)} g</dd>
-          <dt>└ 예비분 30분</dt><dd>${fmt(C.o2_reserve_g, 0)} g · ${fmt(waterReserve(state.q), 0)} g</dd>
+          <dt>└ 예비분 30분</dt><dd>${fmt(O2RES(), 0)} g · ${fmt(waterReserve(state.q), 0)} g</dd>
           <dt>구조 대상이 가진 양</dt><dd>${fmt(state.vo2, 0)} g · ${fmt(state.vwater * 1000, 0)} g</dd>
           ${minStart ? `<dt>구조대원 출발 시 최소량</dt><dd>${fmt(minStart.o2, 0)} g · ${fmt(minStart.w, 0)} g</dd>
           <dt>└ 지금 설정과 비교</dt><dd>${canSupply ? "충분" : `산소 ${fmt(lack(state.o2, minStart.o2), 0)} g · 냉각수 ${fmt(lack(state.water * 1000, minStart.w), 0)} g 부족`}</dd>` : ""}
@@ -2230,7 +2434,7 @@
         g.beginPath(); g.moveTo((a % W) + 0.5, ((a / W) | 0) + 0.5); g.lineTo((c % W) + 0.5, ((c / W) | 0) + 0.5); g.stroke();
       }
     };
-    if (state.mode === "sim" && SIM && SIM.ok) {
+    if (simFrame()) {
       const xy0 = (i) => [(i % W) + 0.5, ((i / W) | 0) + 0.5];
       g.strokeStyle = "rgba(255,255,255,0.7)"; g.lineWidth = 1.6 * lw; g.setLineDash([5 * lw, 4 * lw]); g.beginPath();
       SIM.out.forEach((c, n) => { const [x, y] = xy0(c); n ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); g.setLineDash([]);
@@ -2238,8 +2442,8 @@
       for (let n = 0; n <= SIM.idx; n++) { const [x, y] = xy0(SIM.frames[n].pos); n ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
       g.strokeStyle = "#ffd23f"; g.lineWidth = 2.6 * lw; g.stroke();
       const [tx, ty] = xy0(state.simTarget);
-      g.strokeStyle = "#0d1016"; g.lineWidth = 2 * lw; g.beginPath(); g.moveTo(tx, ty); g.lineTo(tx, ty - 16 * lw); g.stroke();
-      g.fillStyle = "#ff8a3d"; g.beginPath(); g.moveTo(tx, ty - 16 * lw); g.lineTo(tx + 11 * lw, ty - 12 * lw); g.lineTo(tx, ty - 8 * lw); g.closePath(); g.fill(); g.stroke();
+      if (state.mode === "sim") { g.strokeStyle = "#0d1016"; g.lineWidth = 2 * lw; g.beginPath(); g.moveTo(tx, ty); g.lineTo(tx, ty - 16 * lw); g.stroke(); }
+      if (state.mode === "sim") { g.fillStyle = "#ff8a3d"; g.beginPath(); g.moveTo(tx, ty - 16 * lw); g.lineTo(tx + 11 * lw, ty - 12 * lw); g.lineTo(tx, ty - 8 * lw); g.closePath(); g.fill(); g.stroke(); }
       if (SIM.turnMin >= 0 && SIM.idx >= SIM.turnMin) ring(g, ...xy0(SIM.frames[SIM.turnMin].pos), 6 * lw, "#ffd23f", lw);
       person(g, ...xy0(SIM.frames[SIM.idx].pos), 8 * lw, "#7fd0ff", lw);
     }
@@ -2381,6 +2585,8 @@
     $("spe").checked = state.spe; $("mult").value = sliderFromMult(state.mult);
     $("nofall").checked = state.nofall; $("relay").checked = state.relay; $("showfall").checked = state.showfall;
     $("m-speed").checked = state.mSpeed; $("m-eta").checked = state.mEta; $("m-down").checked = state.mDown; $("m-sand").checked = state.mSand;
+    $("legacy").checked = !!state.legacy;
+    for (const id of ["m-speed", "m-down"]) { $(id).disabled = !state.legacy; $(id).closest("label").style.opacity = state.legacy ? "" : ".45"; }
     $("showmr").checked = state.showmr; $("showsand").checked = state.showsand;
     $("vo2").value = state.vo2; $("vwater").value = state.vwater;
     $("sim-scn").value = state.simScenario; $("sim-noise").value = state.simNoise; $("sim-auto").checked = state.simAuto;
@@ -2392,7 +2598,7 @@
   }
   function labels() {
     $("o2-out").textContent = `${state.o2} g`;
-    $("o2-hint").textContent = `예비분 ${fmt(C.o2_reserve_g, 0)} g(평지 30분)을 빼고 ${fmt(Math.max(0, state.o2 - C.o2_reserve_g), 0)} g으로 다녀야 함`;
+    $("o2-hint").textContent = `예비분 ${fmt(O2RES(), 0)} g(${md().legacy ? "평지 보행" : "설계 평균 352 W"} 30분)을 빼고 ${fmt(Math.max(0, state.o2 - O2RES()), 0)} g으로 다녀야 함 · 탱크 ${fmt(TANK_G, 0)} g 기준 ${fmt(state.o2 / TANK_G * 100, 0)}%`;
     $("water-out").textContent = `${fmt(state.water, 2)} kg`;
     $("water-hint").textContent = `만충 3.6 kg · 예비분 ${fmt(waterReserve(state.q), 0)} g을 빼고 ${fmt(Math.max(0, state.water * 1000 - waterReserve(state.q)), 0)} g`;
     $("k-out").textContent = `${fmt(state.k, 2)}`;
@@ -2408,7 +2614,7 @@
     $("sim-ctl").hidden = state.mode !== "sim";
     $("eva-ctl").hidden = state.mode !== "eva";
     $("eva-dwell-out").textContent = `${state.evaDwell}분`;
-    $("simbar").hidden = state.mode !== "sim";
+    $("simbar").hidden = !(state.mode === "sim" || (state.mode === "eva" && EVA && EVA.ok));
     $("k-ctl").dataset.off = String(state.mode === "sim");
     $("sim-custom-ctl").hidden = state.simScenario !== "custom";
     $("sim-noise-ctl").dataset.off = String(state.simScenario === "custom");
@@ -2454,7 +2660,7 @@
   bindRange("vo2", "vo2", Number); bindRange("pm", "planMargin", Number); bindRange("vwater", "vwater", Number);
   $("mult").addEventListener("input", (e) => { state.mult = multFromSlider(Number(e.target.value)); if (!state.spe) state.spe = true; $("spe").checked = true; activePreset = ""; update(); });
   for (const id of ["spe", "nofall", "relay"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; activePreset = ""; update(); });
-  for (const [id, key] of [["m-speed", "mSpeed"], ["m-eta", "mEta"], ["m-down", "mDown"], ["m-sand", "mSand"]])
+  for (const [id, key] of [["legacy", "legacy"], ["m-speed", "mSpeed"], ["m-eta", "mEta"], ["m-down", "mDown"], ["m-sand", "mSand"]])
     $(id).addEventListener("change", (e) => { state[key] = e.target.checked; activePreset = ""; LMR_KEY = ""; stopSim(); update(); });
   $("showtir").addEventListener("change", (e) => { state.showtir = e.target.checked; update(false); });
   for (const id of ["showmr", "showsand"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
@@ -2463,14 +2669,20 @@
     $("lang-btn").textContent = LANG === "ko" ? "EN" : "한국어";
     siteTexts(); renderHud(); applyLang();
   });
-  $("hud-btn").addEventListener("click", () => { state.hud = !state.hud; $("hud-btn").setAttribute("aria-pressed", String(state.hud)); renderHud(); });
+  $("hud-btn").addEventListener("click", () => {        // 켜면 팝업 창으로(막히면 지도 위 PIP), 다시 누르면 닫음
+    state.hud = !state.hud;
+    if (state.hud) openHudPopup();
+    else if (hudPopupOpen()) { HUDWIN.close(); HUDWIN = null; }
+    $("hud-btn").setAttribute("aria-pressed", String(state.hud)); renderHud();
+  });
+  $("visor-pop").addEventListener("click", () => { if (openHudPopup()) renderHud(); });
   const PIP_POS = ["pos-br", "pos-bl", "pos-tl", "pos-tr"];
   $("visor-move").addEventListener("click", () => {          // 지도에서 가리는 곳을 피해 다른 모서리로
     const el = $("visor-wrap"), cur = PIP_POS.findIndex((c) => el.classList.contains(c));
     el.classList.remove(...PIP_POS); el.classList.add(PIP_POS[(Math.max(0, cur) + 1) % PIP_POS.length]);
   });
   $("visor-big").addEventListener("click", () => $("visor-wrap").classList.toggle("big"));
-  $("visor-close").addEventListener("click", () => { state.hud = false; $("hud-btn").setAttribute("aria-pressed", "false"); renderHud(); });
+  $("visor-close").addEventListener("click", () => { state.hud = false; if (hudPopupOpen()) { HUDWIN.close(); HUDWIN = null; } $("hud-btn").setAttribute("aria-pressed", "false"); renderHud(); });
   $("rv-btn").addEventListener("click", () => {           // 로드뷰 모드 켜기/끄기: 켜면 지도에 카메라 아이콘, 아이콘을 누르면 사진
     state.rvMode = !state.rvMode; state.rv = -1;
     $("rv-btn").setAttribute("aria-pressed", String(state.rvMode));
@@ -2494,6 +2706,7 @@
   $("showphoto").addEventListener("change", (e) => { state.showphoto = e.target.checked; update(false); });
   $("showtargets").addEventListener("change", (e) => { state.showtargets = e.target.checked; update(false); });
   $("eva-targets").addEventListener("change", (e) => { const ti = e.target.dataset.ti; if (ti === undefined) return; state.evaSel[Number(ti)] = e.target.checked; activePreset = ""; update(); });
+  $("eva-scn").addEventListener("change", (e) => { state.evaScn = e.target.value; stopSim(); update(); });
   $("eva-dwell").addEventListener("input", (e) => { state.evaDwell = Number(e.target.value); activePreset = ""; update(); });
   for (const id of ["showfall", "showcomm"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
   $("showtrav").addEventListener("change", (e) => { state.showtrav = e.target.checked; drawVec(); });
@@ -2557,7 +2770,7 @@
     };
     rd.readAsText(file);
   });
-  new ResizeObserver(() => { if (state.mode === "sim") drawSimChart(); }).observe($("simbar"));
+  new ResizeObserver(() => requestAnimationFrame(() => { if (state.mode === "sim" || state.mode === "eva") drawSimChart(); })).observe($("simbar"));
   $("base-reset").addEventListener("click", () => { state.base = BASE0; activePreset = ""; update(); });
   $("vcarry").addEventListener("change", (e) => { state.vcarry = e.target.value; activePreset = ""; update(); });
   const setBasemap = (v) => { $("ortho").hidden = v !== "ortho"; $("shade").hidden = v !== "shade"; };
@@ -2703,8 +2916,9 @@
     const gn = document.querySelector(".gnote"); if (gn) $("h-sum").appendChild(mk([gn]));
   }
   infoize();
+  $("lang-btn").textContent = LANG === "ko" ? "EN" : "한국어";
   // 자동 화면 점검용 손잡이 (헤드리스 테스트에서 상태를 읽고 지점을 고를 때만 씀)
-  window.EVA_DEBUG = { state, update, setNow, get MO() { return MO; }, get ALT() { return ALT; }, get N() { return N; }, get W() { return W; }, get R() { return R; }, get META() { return META; } };
+  window.EVA_DEBUG = { state, update, setNow, get md() { return md(); }, get C() { return C; }, get TREES() { return TREES; }, get HUDWIN() { return HUDWIN; }, get SIM() { return SIM; }, get OFF() { return OFF; }, get MO() { return MO; }, get ALT() { return ALT; }, get N() { return N; }, get W() { return W; }, get R() { return R; }, get META() { return META; } };
   document.addEventListener("click", (e) => { if (e.target.closest(".info")) e.preventDefault(); }, true);   // ⓘ를 눌러도 체크박스가 바뀌지 않게
   loadSite(START, devHash).then(() => { if (HASH === "#selftest" && SETS) selfTest(); })
     .catch((err) => { $("loading").hidden = false; $("loading").textContent = "데이터를 풀지 못했습니다. 최신 Chrome, Edge, Safari, Firefox에서 열어 주세요. (" + err.message + ")"; });

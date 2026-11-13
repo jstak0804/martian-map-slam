@@ -90,6 +90,15 @@ def main():
     CAL = load_active()
     cal = {k: v for k, v in CAL.items() if not k.startswith("_")}
     meta["const"]["cal"] = cal; meta["const"]["cal_status"] = CAL["_status"]
+    # 대사 모델: 팀 검증본(walkback_verification)의 IST 모델 상수와 16방향 격자를 씀 (CHANGELOG 2~20절)
+    vm = json.load(open("../walkback_verification/outputs/demo/demo_meta.json", encoding="utf-8"))
+    for k in ("model", "ist", "o2_reserve_g", "level_o2_g_h", "level_mr_w", "reserve_mr_w", "rest_mr_w",
+              "edge_slope_cap", "max_edge_grade_pct", "heat_storage_water_eq_g", "walk_speed_m_s"):
+        meta["const"][k] = vm["const"][k]
+    meta["const"]["o2_tank_g"] = 540.0          # 산소 잔량 % 기준: EMU 1차 탱크 수준(약 0.54 kg, 가정)
+    OFF16 = vm["offsets"]
+    assert OFF16[:8] == meta["offsets"], "앞 8방향 순서가 같아야 미리 계산한 자료를 그대로 읽을 수 있음"
+    meta["offsets"] = OFF16
     meta["site"] = gale_site(meta)
     meta["photos"] = photos("gale")
     meta["tir"] = tir("gale")
@@ -104,6 +113,7 @@ def main():
         from sites import SITES
         sm["site"]["description_en"] = SITES[sid].get("description_en", "")
         if "const" in sm: sm["const"]["cal"] = cal; sm["const"]["cal_status"] = CAL["_status"]
+        assert OFF16[:8] == sm["offsets"]; sm["offsets"] = OFF16
         sm["photos"] = photos(sid)
         sm["tir"] = tir(sid)
         sm["targets"] = targets(sid)
