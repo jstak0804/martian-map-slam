@@ -180,6 +180,31 @@
   .evaorder { margin: 0; padding-left: 1.4em; display: grid; gap: 6px; font-size: 13px; line-height: 1.45; }
   .evaorder small { display: block; color: var(--ink-soft); font-size: 12px; }
   .evaorder .drop { color: var(--ink-faint); text-decoration: line-through; }
+  /* 헬멧 HUD: 바이저에 겹쳐 보이는 단순 화면 */
+  .hud { position: absolute; inset: 0; pointer-events: none; font-family: var(--font-mono); color: #b8ffcf;
+    text-shadow: 0 0 4px rgba(0,0,0,.95), 0 0 1px #000; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 50%, rgba(0,16,10,.6) 100%); }
+  .hud .c { position: absolute; display: grid; gap: 2px; font-size: 12px; line-height: 1.3; background: rgba(5,12,10,.55); padding: 6px 9px; border: 1px solid rgba(120,255,180,.35); border-radius: 6px; }
+  .hud .tl { top: 10px; left: 10px; } .hud .tr { top: 10px; right: 10px; text-align: right; } .hud .bl { bottom: 56px; left: 10px; } .hud .br { bottom: 56px; right: 10px; text-align: right; }
+  .hud .v { font-size: 19px; font-weight: 600; }
+  .hud .ok { color: #9dffbf; } .hud .warn { color: #ffd23f; } .hud .bad { color: #ff6b5e; }
+  .hud .alert { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-size: 15px; font-weight: 700; padding: 4px 12px; border-radius: 6px; background: rgba(60,0,0,.6); border: 1px solid #ff6b5e; color: #ffb3ab; animation: hudblink 1s steps(2) infinite; white-space: nowrap; }
+  .hud .alert.warn { background: rgba(60,45,0,.6); border-color: #ffd23f; color: #ffe58a; animation: none; }
+  @keyframes hudblink { 50% { opacity: .35; } }
+  .hud .compass { position: absolute; bottom: 12px; left: 15%; right: 15%; height: 34px; border-top: 1px solid rgba(120,255,180,.6); overflow: hidden; }
+  .hud .compass span { position: absolute; top: 2px; transform: translateX(-50%); font-size: 11px; }
+  .hud .compass .mk { top: 14px; font-size: 13px; font-weight: 700; }
+  .hud .compass::after { content: ""; position: absolute; left: 50%; top: 0; width: 1px; height: 10px; background: #b8ffcf; }
+  .hud .lang { position: absolute; bottom: 12px; right: 10px; pointer-events: auto; font: inherit; font-size: 11px; color: #b8ffcf; background: rgba(5,12,10,.7); border: 1px solid rgba(120,255,180,.5); border-radius: 4px; padding: 2px 6px; cursor: pointer; }
+  /* 로드뷰 */
+  .rv { display: grid; gap: 8px; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; }
+  .rv-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; font-size: 13px; }
+  .rv-nav { display: flex; gap: 6px; }
+  .rv-view { display: flex; gap: 4px; overflow-x: auto; scroll-snap-type: x proximity; }
+  .rv-view figure { margin: 0; flex: none; scroll-snap-align: start; display: grid; gap: 2px; }
+  .rv-view img { height: 210px; width: auto; max-width: none; border-radius: 4px; display: block; }
+  .rv-view img.strip { height: 150px; }
+  .rv-view figcaption { font-size: 11px; color: var(--ink-soft); }
+  .rv-cap { margin: 0; font-size: 12px; color: var(--ink-soft); }
   .supply { display: grid; gap: 8px; border-top: 1px solid var(--rule); padding-top: 12px; }
   .supply[hidden] { display: none; }
   .supply h3 { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink-soft); }
@@ -376,7 +401,8 @@
           <label><input type="radio" name="mode" value="sim">EVA 시뮬레이션</label>
           <label><input type="radio" name="mode" value="eva">과학 EVA 계획</label>
         </div>
-        <div class="modeline"><p class="modehint" id="mode-hint"></p><button type="button" class="reset" id="base-reset" hidden>거점을 원래 자리로 되돌리기</button></div>
+        <div class="modeline"><p class="modehint" id="mode-hint"></p><button type="button" class="reset" id="base-reset" hidden>거점을 원래 자리로 되돌리기</button>
+          <button type="button" class="reset" id="hud-btn" aria-pressed="false">헬멧 HUD</button><button type="button" class="reset" id="rv-btn" aria-pressed="false">로드뷰</button></div>
       </div>
       <div class="mapwrap" id="mapwrap">
         <img id="ortho" alt="HiRISE 정사영상: Gale 크레이터 착륙지(오른쪽 위)에서 Mt. Sharp 기슭의 Bagnold 모래언덕(아래)까지">
@@ -384,7 +410,13 @@
         <canvas class="cells" id="cells"></canvas>
         <canvas class="vec" id="vec" aria-label="지도를 누르면 그 지점에서 거점까지의 귀환 경로를 보여 줍니다"></canvas>
         <div class="loading" id="loading">지형 격자를 푸는 중…</div>
+        <div class="hud" id="hud" hidden></div>
       </div>
+      <section class="rv" id="rv" hidden aria-label="로드뷰">
+        <div class="rv-head"><b id="rv-title"></b><span class="rv-nav"><button type="button" class="reset" id="rv-prev">◀ 이전</button><button type="button" class="reset" id="rv-next">다음 ▶</button><button type="button" class="reset" id="rv-close">닫기</button></span></div>
+        <div class="rv-view" id="rv-view"></div>
+        <p class="rv-cap" id="rv-cap"></p>
+      </section>
       <div class="simbar" id="simbar" hidden>
         <div class="simrow">
           <button type="button" class="play" id="sim-play" aria-label="재생">▶</button>
@@ -497,7 +529,7 @@
                   simTarget: GOAL, simScenario: "surge", simNoise: 8, simAuto: true, simCustom: "",
                   simSrc: "hr", simLeak: 0, simPNoise: 10, simTcomp: true, simLeakSub: false,
                   mSpeed: false, mEta: false, mDown: false, mSand: false, showmr: false, showsand: false, showphoto: true, showtir: false,
-                  showtargets: true, evaSel: [], evaDwell: 45 };
+                  showtargets: true, evaSel: [], evaDwell: 45, hud: false, hudLang: "ko", rv: -1 };
 
   let PRESETS;
   const makePresets = () => [
@@ -1424,6 +1456,85 @@
       <dt>목표마다 작업</dt><dd>${state.evaDwell}분 (평지 보행 수준 대사량 가정)</dd>`;
     drawVec({ path: EVA.path, color: "#ffffff", eva: true });
   }
+  // ---------- 헬멧 HUD ----------
+  const HL = {
+    ko: { o2: "산소", h2o: "냉각수", margin: "귀환 여유", comm: "통신", link: "연결", nolink: "두절", dose: "선량률", base: "거점", dest: "목표",
+          slope: "경사", fall: "넘어짐", lo: "낮음", mid: "중간", hi: "높음", turn: "⚠ 지금 돌아서세요", tight: "귀환 여유 적음", steep: "급경사 주의",
+          dark: "통신 음영", fallhi: "넘어짐 위험 높음", noroute: "⚠ 귀환 경로 없음", left: "남음", need: "귀환 필요", min: "분", lang: "EN" },
+    en: { o2: "O2", h2o: "H2O", margin: "RETURN MARGIN", comm: "COMM", link: "LINK", nolink: "NO LINK", dose: "DOSE", base: "BASE", dest: "TGT",
+          slope: "SLOPE", fall: "FALL", lo: "LOW", mid: "MED", hi: "HIGH", turn: "⚠ TURN BACK NOW", tight: "LOW RETURN MARGIN", steep: "STEEP GROUND",
+          dark: "COMM SHADOW", fallhi: "HIGH FALL RISK", noroute: "⚠ NO RETURN ROUTE", left: "left", need: "need", min: "min", lang: "KO" },
+  };
+  const bearingTo = (a, b) => (Math.atan2((b % W) - (a % W), -(((b / W) | 0) - ((a / W) | 0))) * 180 / Math.PI + 360) % 360;
+  const distKm = (a, b) => Math.hypot((b % W) - (a % W), ((b / W) | 0) - ((a / W) | 0)) * CELL / 1000;
+  function slopeAt(i) {
+    const x = i % W, y = (i / W) | 0;
+    if (x < 1 || y < 1 || x >= W - 1 || y >= R - 1) return 0;
+    return Math.atan(Math.hypot((H[i + 1] - H[i - 1]) / (2 * CELL), (H[i + W] - H[i - W]) / (2 * CELL))) * 180 / Math.PI;
+  }
+  function renderHud() {
+    const el = $("hud");
+    if (!state.hud || !H) { el.hidden = true; return; }
+    const L = HL[state.hudLang], S = setNow();
+    const simF = state.mode === "sim" && SIM && SIM.ok ? SIM.frames[SIM.idx] : null;
+    const pos = simF ? simF.pos : state.mode === "here" ? state.here : state.sel;
+    if (pos < 0 || !S) { el.hidden = true; return; }
+    const k = EK(), o2 = EO2(), w = EW() * 1000;
+    const need = S.o2[pos] >= 0 ? k * S.o2[pos] : NaN;
+    const margin = o2 - C.o2_reserve_g - need;
+    const o2rate = levelO2gh() * k, wrate = waterOf(levelO2gh() / 3600, 1, k, state.q) * 3600;
+    const o2min = Math.max(0, o2 - C.o2_reserve_g) / o2rate * 60, wmin = Math.max(0, w - waterReserve(state.q)) / wrate * 60;
+    const comm = VIS ? linked(pos) : true, dose = RATE1[pos] * multNow() * 1000;
+    const sl = slopeAt(pos), fc = CLS[pos];
+    const cls = (v, a, b) => (v >= a ? "ok" : v >= b ? "warn" : "bad");
+    let heading = 0;                        // 진행 방향 (시뮬레이션 재생 중), 아니면 북쪽 위
+    if (simF && SIM.idx > 0) { const pv = SIM.frames[Math.max(0, SIM.idx - 1)].pos; if (pv !== pos) heading = bearingTo(pv, pos); }
+    const marks = [{ b: bearingTo(pos, state.base), t: "★" + L.base, c: "ok", d: distKm(pos, state.base) }];
+    const dest = state.mode === "sim" ? state.simTarget : state.mode === "eva" && EVA && EVA.ok && EVA.order.length ? tCell(META.targets[EVA.order[0]]) : -1;
+    if (dest >= 0 && dest !== pos) marks.push({ b: bearingTo(pos, dest), t: "◆" + L.dest, c: "warn", d: distKm(pos, dest) });
+    const ticks = [["N", 0], ["E", 90], ["S", 180], ["W", 270], ["NE", 45], ["SE", 135], ["SW", 225], ["NW", 315]];
+    const rel = (b) => ((b - heading + 540) % 360) - 180;
+    const pos100 = (r) => 50 + r / 120 * 50;
+    const comp = ticks.map(([t, b]) => { const r = rel(b); return Math.abs(r) <= 120 ? `<span style="left:${pos100(r)}%">${t}</span>` : ""; }).join("")
+      + marks.map((m) => { const r = Math.max(-118, Math.min(118, rel(m.b))); return `<span class="mk ${m.c}" style="left:${pos100(r)}%">${m.t} ${fmt(m.d, 1)}km</span>`; }).join("");
+    let alert = "";
+    if (!isFinite(need)) alert = `<div class="alert">${L.noroute}</div>`;
+    else if (margin < 0) alert = `<div class="alert">${L.turn}</div>`;
+    else if (margin < 40) alert = `<div class="alert warn">${L.tight}</div>`;
+    else if (fc === 2) alert = `<div class="alert warn">${L.fallhi}</div>`;
+    else if (sl > 15) alert = `<div class="alert warn">${L.steep}</div>`;
+    else if (!comm) alert = `<div class="alert warn">${L.dark}</div>`;
+    el.innerHTML = `${alert}
+      <div class="c tl"><span>${L.o2}</span><span class="v ${cls(o2min, 60, 20)}">${fmt(o2, 0)} g</span><span>${fmt(o2min, 0)} ${L.min} ${L.left}</span>
+        <span>${L.h2o} <b class="${cls(wmin, 60, 20)}">${fmt(Math.max(0, w), 0)} g</b></span></div>
+      <div class="c tr"><span>${L.comm}</span><span class="v ${comm ? "ok" : "bad"}">${comm ? L.link : L.nolink}</span><span>${L.dose} ${fmt(dose, 1)} µSv/h</span></div>
+      <div class="c bl"><span>${L.margin}</span><span class="v ${isFinite(margin) ? cls(margin, 80, 0) : "bad"}">${isFinite(margin) ? fmt(margin, 0) + " g" : "—"}</span><span>${L.need} ${isFinite(need) ? fmt(need, 0) : "—"} g</span></div>
+      <div class="c br"><span>${L.slope} <b class="${sl > 15 ? "warn" : "ok"}">${fmt(sl, 0)}°</b></span><span>${L.fall} <b class="${fc === 2 ? "bad" : fc === 1 ? "warn" : "ok"}">${[L.lo, L.mid, L.hi][fc]}</b></span></div>
+      <div class="compass">${comp}</div><button type="button" class="lang" id="hud-lang">${L.lang}</button>`;
+    el.hidden = false;
+    $("hud-lang").onclick = () => { state.hudLang = state.hudLang === "ko" ? "en" : "ko"; renderHud(); };
+  }
+
+  // ---------- 로드뷰: 로버가 멈춘 지점의 사진을 경로 순서로 ----------
+  function nearestRv(i) {
+    const RV = META.roadview || [];
+    let best = 0, bd = Infinity;
+    RV.forEach((s, n) => { const d = Math.hypot(s.x - (i % W + 0.5), s.y - (((i / W) | 0) + 0.5)); if (d < bd) { bd = d; best = n; } });
+    return best;
+  }
+  function renderRv() {
+    const RV = META.roadview || [], box = $("rv");
+    if (state.rv < 0 || !RV.length) { box.hidden = true; $("rv-btn").setAttribute("aria-pressed", "false"); return; }
+    const st = RV[state.rv], cell = Math.floor(st.y) * W + Math.floor(st.x);
+    $("rv-title").textContent = `${st.rover} · sol ${st.sol} · 지점 ${state.rv + 1}/${RV.length}`;
+    const imgOf = (f) => f.img || ((META.photos || []).find((p) => p.sol === f.photo_sol) || {}).img || "";
+    $("rv-view").innerHTML = st.frames.map((f) => `<figure><img class="${f.az !== null ? "strip" : ""}" src="${imgOf(f)}" alt="${st.rover} Navcam sol ${st.sol}${f.az !== null ? ", 카메라 방위각 " + Math.round(f.az) + "°" : ""}">`
+      + `${f.az !== null ? `<figcaption>카메라 방위각 ${Math.round(f.az)}° (자료값)</figcaption>` : ""}</figure>`).join("");
+    $("rv-cap").textContent = `거점까지 ${fmt(distKm(cell, state.base), 2)} km, 방위 ${Math.round(bearingTo(cell, state.base))}° · `
+      + (st.frames.length > 1 ? "같은 자리에서 여러 방향으로 찍은 수평선 사진을 방위각 순서로 이어 놓았습니다. 옆으로 밀어 둘러보세요. " : "")
+      + "NASA/JPL-Caltech 원본 사진. 지도의 노란 고리가 이 지점입니다.";
+    box.hidden = false; $("rv-btn").setAttribute("aria-pressed", "true");
+  }
   function groundFact(i) {                 // THEMIS 야간 적외선으로 본 지반 (지역 안 상대 순위)
     if (!TIR || i < 0) return "";
     const v = TIR[i], kind = v <= TIR_Q[0] ? "먼지·고운 모래 쪽 (열관성 낮음, 발이 빠질 수 있음)" : v >= TIR_Q[1] ? "암반·굳은 지반 쪽 (열관성 높음)" : "중간";
@@ -1697,6 +1808,7 @@
   // ---------- vector overlay ----------
   let lastVec = { path: null };
   function drawVec(v) {
+    queueMicrotask(renderHud);
     if (v) lastVec = v;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const cw = wrap.clientWidth, ch = wrap.clientHeight;
@@ -1719,6 +1831,11 @@
         if (n >= 0) { g.fillStyle = "#0d1016"; g.font = `bold ${12 * lw}px system-ui`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(String(n + 1), t.x, t.y + 0.5 * lw); }
       });
       if (state.mode === "eva" && EVA && EVA.ok) ring(g, (EVA.minAt % W) + 0.5, ((EVA.minAt / W) | 0) + 0.5, 9 * lw, "#ef6b5e", lw);
+    }
+    if (state.rv >= 0 && META.roadview && META.roadview[state.rv]) {
+      const st = META.roadview[state.rv];
+      g.strokeStyle = "#0d1016"; g.lineWidth = 5 * lw; g.beginPath(); g.arc(st.x, st.y, 11 * lw, 0, 7); g.stroke();
+      g.strokeStyle = "#ffd23f"; g.lineWidth = 2.6 * lw; g.stroke();
     }
     if (state.showphoto && META.photos) {     // 로버 사진 위치: 카메라 표시
       for (const p of META.photos) {
@@ -1925,6 +2042,17 @@
     $(id).addEventListener("change", (e) => { state[key] = e.target.checked; activePreset = ""; LMR_KEY = ""; stopSim(); update(); });
   $("showtir").addEventListener("change", (e) => { state.showtir = e.target.checked; update(false); });
   for (const id of ["showmr", "showsand"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
+  $("hud-btn").addEventListener("click", () => { state.hud = !state.hud; $("hud-btn").setAttribute("aria-pressed", String(state.hud)); renderHud(); });
+  $("rv-btn").addEventListener("click", () => {
+    if (state.rv >= 0) state.rv = -1;
+    else { const i = state.mode === "sim" && SIM && SIM.ok ? SIM.frames[SIM.idx].pos : state.mode === "here" ? state.here : state.sel; state.rv = nearestRv(Math.max(0, i)); }
+    renderRv(); drawVec();
+  });
+  const rvStep = (d) => { const n = (META.roadview || []).length; if (!n || state.rv < 0) return; state.rv = (state.rv + d + n) % n; renderRv(); drawVec(); };
+  $("rv-prev").addEventListener("click", () => rvStep(-1));
+  $("rv-next").addEventListener("click", () => rvStep(1));
+  $("rv-close").addEventListener("click", () => { state.rv = -1; renderRv(); drawVec(); });
+  document.addEventListener("keydown", (e) => { if (state.rv >= 0 && (e.key === "ArrowRight" || e.key === "ArrowLeft") && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) { rvStep(e.key === "ArrowRight" ? 1 : -1); e.preventDefault(); } });
   $("showphoto").addEventListener("change", (e) => { state.showphoto = e.target.checked; update(false); });
   $("showtargets").addEventListener("change", (e) => { state.showtargets = e.target.checked; update(false); });
   $("eva-targets").addEventListener("change", (e) => { const ti = e.target.dataset.ti; if (ti === undefined) return; state.evaSel[Number(ti)] = e.target.checked; activePreset = ""; update(); });
@@ -2031,6 +2159,8 @@
     $("eva-targets").innerHTML = TG.length ? TG.map((t, i) => `<label><input type="checkbox" data-ti="${i}"${state.evaSel[i] ? " checked" : ""}><b>${t.name}</b><small>${t.why}</small></label>`).join("")
       : '<div class="hint">이 지형에는 과학 목표 자료가 없습니다.</div>';
     $("showtir-l").hidden = !META.tir;
+    $("rv-btn").hidden = !(META.roadview && META.roadview.length);
+    state.rv = -1; renderRv();
     const sandOk = st.dune_km2 > 0.01;
     $("m-sand").disabled = !sandOk; $("showsand").disabled = !sandOk;
     if (!sandOk) { state.mSand = false; state.showsand = false; $("m-sand-d").textContent = "이 지형에는 모래언덕 후보를 넣지 않았습니다 (위성 사진 밝기로 뽑으면 급사면 그늘이 잡혀서)."; }

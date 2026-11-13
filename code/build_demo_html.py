@@ -39,6 +39,21 @@ def gale_site(meta):
             "base_name": GALE["base_name"], "goal_name": GALE["goal_name"], "stats": stats}
 
 
+def roadview(site):
+    d = f"../outputs/demo/roadview/{site}"
+    if not os.path.exists(f"{d}/roadview.json"):
+        return []
+    out = json.load(open(f"{d}/roadview.json", encoding="utf-8"))
+    for st in out:
+        for f in st["frames"]:
+            fn = f.pop("file")
+            if f["az"] is None:                   # 한 장짜리는 로버 사진(photos)과 같은 사진: sol로 다시 씀
+                f["photo_sol"] = st["sol"]
+            else:
+                f["img"] = "data:image/jpeg;base64," + b64(f"{d}/{fn}")
+    return out
+
+
 def targets(site):
     p = f"../outputs/demo/targets/{site}.json"
     return json.load(open(p, encoding="utf-8")) if os.path.exists(p) else []
@@ -75,6 +90,7 @@ def main():
     meta["photos"] = photos("gale")
     meta["tir"] = tir("gale")
     meta["targets"] = targets("gale")
+    meta["roadview"] = roadview("gale")
     sites = []
     for sid in DEMO_SITES:
         d = f"../outputs/demo/sites/{sid}"
@@ -84,6 +100,7 @@ def main():
         sm["photos"] = photos(sid)
         sm["tir"] = tir(sid)
         sm["targets"] = targets(sid)
+        sm["roadview"] = roadview(sid)
         sites.append({"meta": sm, "data": b64(f"{d}/data.bin.gz"),
                       "shade": "data:image/png;base64," + b64(f"{d}/hillshade.png"),
                       "ortho": "data:image/jpeg;base64," + b64(f"{d}/basemap.jpg")})

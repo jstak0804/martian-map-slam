@@ -1,0 +1,324 @@
+[
+ {
+  "x": 609.1,
+  "y": 73.8,
+  "sol": 102,
+  "date": "2012-11-19",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0102_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 557.4,
+  "y": 111.1,
+  "sol": 349,
+  "date": "2013-07-30",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0349_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 521.5,
+  "y": 132.1,
+  "sol": 369,
+  "date": "2013-08-20",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0369_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 487.3,
+  "y": 155.7,
+  "sol": 383,
+  "date": "2013-09-03",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0383_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 463.9,
+  "y": 188.6,
+  "sol": 406,
+  "date": "2013-09-27",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0406_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 443.4,
+  "y": 228.2,
+  "sol": 422,
+  "date": "2013-10-13",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0422_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 417.6,
+  "y": 258.9,
+  "sol": 437,
+  "date": "2013-10-29",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0437_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 384.0,
+  "y": 280.7,
+  "sol": 494,
+  "date": "2013-12-26",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0494_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 340.2,
+  "y": 296.0,
+  "sol": 547,
+  "date": "2014-02-19",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0547_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 320.4,
+  "y": 334.0,
+  "sol": 568,
+  "date": "2014-03-12",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0568_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 296.7,
+  "y": 372.2,
+  "sol": 644,
+  "date": "2014-05-29",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0644_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 234.0,
+  "y": 421.9,
+  "sol": 668,
+  "date": "2014-06-23",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0668_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 231.4,
+  "y": 462.6,
+  "sol": 685,
+  "date": "2014-07-11",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0685_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 195.9,
+  "y": 480.4,
+  "sol": 743,
+  "date": "2014-09-08",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0743_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 176.3,
+  "y": 519.4,
+  "sol": 956,
+  "date": "2015-04-15",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol0956_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 143.1,
+  "y": 543.9,
+  "sol": 1078,
+  "date": "2015-08-18",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol1078_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 124.9,
+  "y": 579.8,
+  "sol": 1162,
+  "date": "2015-11-13",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol1162_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 86.0,
+  "y": 591.5,
+  "sol": 1298,
+  "date": "2016-03-31",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol1298_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 67.6,
+  "y": 628.2,
+  "sol": 1399,
+  "date": "2016-07-13",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol1399_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 47.5,
+  "y": 666.3,
+  "sol": 1435,
+  "date": "2016-08-19",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol1435_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 57.9,
+  "y": 705.6,
+  "sol": 1478,
+  "date": "2016-10-02",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol1478_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 64.6,
+  "y": 746.5,
+  "sol": 1512,
+  "date": "2016-11-06",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol1512_single.jpg"
+   }
+  ]
+ },
+ {
+  "x": 80.8,
+  "y": 784.7,
+  "sol": 1612,
+  "date": "2017-02-17",
+  "rover": "Curiosity",
+  "frames": [
+   {
+    "az": null,
+    "el": null,
+    "file": "sol1612_single.jpg"
+   }
+  ]
+ }
+]

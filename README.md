@@ -40,6 +40,12 @@ Interplanetary Survival Guide: Martian Map 챌린지로 진행한 SLAM(점진적
     - Gale·Jezero: 로버가 오래 머문 곳. Gale은 Curiosity 드릴 지점 이름(Windjana, Pahrump Hills의 Confidence Hills·Mojave·Telegraph Peak, Buckskin)을 붙였습니다.
     - Aram: THEMIS 열관성이 높은 노출 암반 후보
   - **계획:** 고른 목표를 거점에서 출발해 돌아오는 가장 산소가 적게 드는 순서로 엮습니다. 경로의 모든 칸에서 귀환 반경을 확인하고, 다 못 들르면 들를 수 있는 최대 조합을 고릅니다.
+- **헬멧 HUD:** 지도 위 "헬멧 HUD" 버튼을 누르면 바이저에 띄울 단순 화면이 겹쳐 나옵니다.
+  - 보여 주는 것: 산소·냉각수, 귀환 여유, 통신, 선량률, 경사·넘어짐, 거점·목표 방향 나침반, 경보
+  - 한국어/영어를 바꿀 수 있고, EVA 시뮬레이션 재생과 함께 매분 바뀝니다.
+- **로드뷰:** "로드뷰" 버튼을 누르면 로버가 멈춘 지점의 Navcam 사진을 주행 경로 순서로 넘겨 봅니다(`code/build_roadview.py`).
+  - Jezero 2곳은 수평선 360° 띠 사진입니다.
+  - MMGIS 360° 파노라마 모자이크는 서버가 외부 요청을 막아(403) 쓰지 못했습니다.
 - **원격 진행:** 해커톤 중 원격 Claude Code로 자료를 받는 방법은 [`code/hackathon/REMOTE.md`](code/hackathon/REMOTE.md)에 있습니다.
   - 챌린지 자료 탭 감시: `challenge_watch`
   - 링크로 받기: `fetch`
