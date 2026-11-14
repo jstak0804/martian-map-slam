@@ -1,3 +1,4 @@
+
 function uiBaseIcon(){
   const pin=$('map-base-pin');if(!pin)return;
   const active=(simFrame()?.m??0)>0;

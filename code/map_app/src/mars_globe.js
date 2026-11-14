@@ -1,3 +1,4 @@
+
 // Offline orthographic sphere with equirectangular MOLA texture.
 function uiWorld(){
   stopSim();let d=document.getElementById('mars-globe');

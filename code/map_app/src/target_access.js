@@ -1,3 +1,4 @@
+
 async function uiCanSelectTarget(cell){
   const reject=(ko,en)=>{uiToast(uiText(ko,en));return false;};
   if(!H||cell<0||cell>=N||!(FLAGS[cell]&1))return reject('선택 불가: 지형 자료가 없는 위치입니다','Cannot select: no terrain data');

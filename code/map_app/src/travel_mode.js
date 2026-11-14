@@ -1,3 +1,4 @@
+
 // Demo assumptions copied from upstream ROVER_V / RIDE_W; not validated Mars vehicle specifications.
 const UI_ROVER={speed:2.2,metabolicW:147};
 const uiRoverTrees=new WeakMap();

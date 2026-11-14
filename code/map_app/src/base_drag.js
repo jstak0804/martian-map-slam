@@ -1,3 +1,4 @@
+
 // Delegation survives marker recreation when switching regions.
 (() => {
   let moving = null;

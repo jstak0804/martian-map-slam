@@ -1,3 +1,4 @@
+
 (() => {
   const words = {
     'Compare routes':'경로 비교','Fit return area':'전체 영역 보기','Delete destination':'목표 삭제',

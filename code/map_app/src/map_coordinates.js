@@ -1,3 +1,6 @@
+
+const UI_GEOREFERENCE=@@JSON:georeference@@;
+
 function uiGridToLonLat(x,y,g){
   const line=g.cropLine+(y+.5)*g.block-.5,sample=g.cropSample+(x+.5)*g.block-.5;
   const lat=(g.lineOffset-line)*g.scale/g.radius*180/Math.PI;

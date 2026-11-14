@@ -1,3 +1,6 @@
+
+const UI_CONTEXT_MAPS=@@JSON:context_maps@@;
+
 // Derived from upstream paintOuter: terrain-edge costs extended over assumed flat ground.
 // This display never changes the terrain graph or destination eligibility.
 let uiOuterCache=null,uiContextFitted=null,uiRadiusLast=null;

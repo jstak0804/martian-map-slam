@@ -14,9 +14,9 @@ Updated 2026-11-15. This plan describes the integrated map-first application. Ea
 - `code/map_app/template.html`: HTML shell and shared styles.
 - `code/map_app/modules.json`: concatenation order. Modules share a closure; preserve the order and boundary fragments.
 - `code/map_app/src/planner-core.js`: core routing, simulation, terrain and resource model.
-- `code/map_app/src/bridge-00.js`: map UI controller and integration with the planner.
+- `code/map_app/src/map_ui.js`: map UI controller and integration with the planner.
 - Named modules: `language_switch.js`, `map_coordinates.js`, `planning_targets.js`, `target_access.js`, `radius_overlay.js`, `travel_mode.js`, `visor_navigation.js`, `compact_navigation.js`, `base_drag.js`, `base_icon.js`, `mars_globe.js`, `settings_sections.js`, `separate_site_pins.js`.
-- `bridge-01.js` through `bridge-12.js`: integration statements and embedded JSON references. They are source fragments, not independently executable modules.
+- `map_orientation.js`: middle-button rotation and target-up control. Geographic/context JSON declarations live beside their consuming modules. Empty bridge fragments have been removed; concatenated JavaScript is unchanged.
 - `code/map_app/assets/`: gzip-compressed JSON/data/image payloads, expanded during build. Changing `docs/map-app/georeference/georeference.json` alone does not update the embedded `assets/georeference.json.gz`.
 - `startup.js`: startup and QA debug interface. Tests use the same application state through `EVA_DEBUG`.
 
@@ -39,6 +39,7 @@ Python 3 and Node 22; browser checks require installed Chrome/Edge on Windows. R
 
 ```text
 python tests/map_app/test_build.py
+python tests/map_app/test_builder_validation.py
 node tests/map_app/test_coordinates.cjs
 node tests/map_app/test_time_units.cjs
 node tests/map_app/test_travel_core.cjs
@@ -54,11 +55,13 @@ node tests/map_app/check_missions_mobile.mjs
 
 Run browser checks sequentially. Evidence outputs go to `reports/map-app-validation/`. See `docs/map-app/VALIDATION.md` for measured results and coverage limits. Add a failing behavioral test before subsequent fixes, then rerun relevant checks and apply the code-reviewer checklist. Do not claim 80% coverage without measuring it.
 
+Refactoring follow-up: see `docs/map-app/REFACTOR_REVIEW.md` for module consolidation, build-input safeguards, security review scope and RED/GREEN evidence.
+
 ## Remaining experiments and implementation
 
 1. **Physical-device validation:** Android Chrome and iOS Safari, touch pinch/rotate, narrow-screen keyboard with dwell inputs, popup permissions and 30+ minutes continuous playback. Current mobile checks use desktop Chrome touch emulation, not physical hardware.
 2. **DTM coverage (deferred by user):** inventory adjacent HiRISE/HRSC elevation products and their projection, vertical datum, resolution and nodata mask. Register/validate seams against known control points before extending routing. Keep CTX image coverage distinct from elevation coverage; never turn flat extrapolation into measured-terrain claims.
 3. **Georeference validation:** compare independent landmark/control points in all three regions, quantify error and record projection conventions. Five displayed decimals are formatting, not accuracy. Current tests verify math and inverse consistency, not independent absolute accuracy.
 4. **Model validation:** rover speed/consumption and vehicle traversability need separate evidence; Apollo pressure alone is not oxygen mass without volume/temperature/calibration. Maintain current assumptions explicitly. External radius, comms, fall risk, radiation shielding and synthetic telemetry are demonstrations, not operational safety guarantees.
-5. **Maintainability/coverage:** progressively replace closure bridge fragments with explicit interfaces; preserve deterministic build and behavior tests. Add instrumentation and measured branch coverage, especially async region/base changes and resource-boundary cases. Full repository scientific/SLAM tests were not rerun for this UI integration.
+5. **Maintainability/coverage:** progressively replace shared closure state with explicit interfaces; preserve deterministic build and behavior tests. Add instrumentation and measured branch coverage, especially async region/base changes and resource-boundary cases. Full repository scientific/SLAM tests were not rerun for this UI integration.
 6. **H4/H5 research:** prior matching failures are not resolved by coordinates in the UI. Keep observation-derived map corrections disabled until new independent correspondence evidence meets the recorded experiment acceptance criteria.
