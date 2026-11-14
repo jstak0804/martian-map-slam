@@ -3715,7 +3715,10 @@ const I18N_RE = [
       const sv = $("xsvg"); sv.setAttribute("viewBox", `0 0 ${W} ${R}`);
       sv.innerHTML = state.mode !== "explore" ? "" : state.xT.map((x, n) => { if (!x.virt) return "";
         const ex = (x.cell % W) + 0.5, ey = ((x.cell / W) | 0) + 0.5, r = 10 * lw;
-        return `<line x1="${ex}" y1="${ey}" x2="${x.virt.x}" y2="${x.virt.y}" stroke="#0d1016" stroke-width="${5 * lw}"/><line x1="${ex}" y1="${ey}" x2="${x.virt.x}" y2="${x.virt.y}" stroke="#ffb347" stroke-width="${2.5 * lw}" stroke-dasharray="${6 * lw} ${4 * lw}"/>`
+        const onPlan = XS[state.xScn] && XS[state.xScn].ok && XS[state.xScn].ord.includes(n + 1);   // 고른 계획에 들어 있으면 경로와 같은 모양으로 이어 그림
+        return `<line x1="${ex}" y1="${ey}" x2="${x.virt.x}" y2="${x.virt.y}" stroke="#0d1016" stroke-width="${5.5 * lw}" stroke-linecap="round"/>`
+          + (onPlan ? `<line x1="${ex}" y1="${ey}" x2="${x.virt.x}" y2="${x.virt.y}" stroke="#ffffff" stroke-width="${2.2 * lw}" stroke-linecap="round"/>`
+                    : `<line x1="${ex}" y1="${ey}" x2="${x.virt.x}" y2="${x.virt.y}" stroke="#9aa3b5" stroke-width="${2 * lw}" stroke-dasharray="${5 * lw} ${4 * lw}"/>`)
           + `<circle cx="${x.virt.x}" cy="${x.virt.y}" r="${r}" fill="#e2794d" stroke="#0d1016" stroke-width="${2 * lw}"/><text x="${x.virt.x}" y="${x.virt.y + 4 * lw}" font-size="${12 * lw}" font-weight="700" text-anchor="middle" fill="#0d1016" font-family="system-ui">${"ABC"[n]}</text>`
           + `<circle cx="${x.virt.x + r * 1.15}" cy="${x.virt.y - r * 1.15}" r="${r * 0.62}" fill="#0d1016" stroke="#ffb347" stroke-width="${1.5 * lw}"/><text x="${x.virt.x + r * 1.15}" y="${x.virt.y - r * 1.15 + 3.6 * lw}" font-size="${10 * lw}" font-weight="700" text-anchor="middle" fill="#ffb347" font-family="system-ui">×</text>`;
       }).join("");
