@@ -3156,9 +3156,8 @@ const I18N_RE = [
     g.setLineDash([]); g.globalAlpha = .9; g.restore();
     g.save(); g.strokeStyle = "rgba(150,245,255,.85)"; g.lineWidth = 1.4; g.shadowColor = glow; g.shadowBlur = 6;
     const rr = W2 * 0.035, ccy = hz;
-    g.beginPath(); g.arc(cx, ccy, rr, 0, Math.PI * 2); g.stroke();
-    for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2; g.beginPath(); g.moveTo(cx + Math.cos(a) * rr * 0.6, ccy + Math.sin(a) * rr * 0.6); g.lineTo(cx + Math.cos(a) * rr * 1.5, ccy + Math.sin(a) * rr * 1.5); g.stroke(); }
-    g.beginPath(); g.arc(cx, ccy, 2, 0, Math.PI * 2); g.fillStyle = "rgba(150,245,255,.9)"; g.fill();
+    // 가운데 십자선(조준원)은 그리지 않음
+    g.fillStyle = "rgba(150,245,255,.9)";
     // 기울기 호 (위쪽): ±30°, 지금 기울기 표시
     const ar = H2 * 0.36, ay = ccy + ar * 0.15;
     g.globalAlpha = .6; g.beginPath(); g.arc(cx, ay, ar, -Math.PI / 2 - 0.52, -Math.PI / 2 + 0.52); g.stroke();
