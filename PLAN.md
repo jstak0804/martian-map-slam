@@ -65,3 +65,5 @@ Refactoring follow-up: see `docs/map-app/REFACTOR_REVIEW.md` for module consolid
 4. **Model validation:** rover speed/consumption and vehicle traversability need separate evidence; Apollo pressure alone is not oxygen mass without volume/temperature/calibration. Maintain current assumptions explicitly. External radius, comms, fall risk, radiation shielding and synthetic telemetry are demonstrations, not operational safety guarantees.
 5. **Maintainability/coverage:** progressively replace shared closure state with explicit interfaces; preserve deterministic build and behavior tests. Add instrumentation and measured branch coverage, especially async region/base changes and resource-boundary cases. Full repository scientific/SLAM tests were not rerun for this UI integration.
 6. **H4/H5 research:** prior matching failures are not resolved by coordinates in the UI. Keep observation-derived map corrections disabled until new independent correspondence evidence meets the recorded experiment acceptance criteria.
+
+Final demo filename: `reports/Martian-Map-Final.html`. The standalone and legacy wide-UI alternatives retain their existing filenames.

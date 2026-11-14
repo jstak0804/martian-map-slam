@@ -53,9 +53,9 @@ def render(app):
 
 def build():
     html = render(APP)  # Validate every input before replacing either output.
-    for name in ('18-eva-walkback-demo.html', '18-eva-walkback-demo.standalone.html'):
+    for name in ('Martian-Map-Final.html', '18-eva-walkback-demo.standalone.html'):
         (ROOT / 'reports' / name).write_text(html, encoding='utf-8', newline='\n')
-    print(ROOT / 'reports/18-eva-walkback-demo.html')
+    print(ROOT / 'reports/Martian-Map-Final.html')
 
 if __name__ == '__main__':
     build()

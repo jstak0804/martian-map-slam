@@ -4,7 +4,7 @@ NASA Space Apps 2026 ? Interplanetary Survival Guide: Martian Map
 
 A map-first exploration planning demo for Gale, Jezero and Aram Chaos. Routes, consumables and return areas are model estimates, not an operational EVA safety system.
 
-**Open the [integrated demo](reports/18-eva-walkback-demo.html)** after downloading the repository/file. The HTML is self-contained; double-click to open in a modern browser. GitHub's file viewer displays source rather than running the application. The [standalone copy](reports/18-eva-walkback-demo.standalone.html) has identical content. The previous [wide UI](reports/18-eva-walkback-demo.wide-ui.html) is preserved separately.
+**Open the [integrated demo](reports/Martian-Map-Final.html)** after downloading the repository/file. The HTML is self-contained; double-click to open in a modern browser. GitHub's file viewer displays source rather than running the application. The [standalone copy](reports/18-eva-walkback-demo.standalone.html) has identical content. The previous [wide UI](reports/18-eva-walkback-demo.wide-ui.html) is preserved separately.
 
 ## Controls
 
