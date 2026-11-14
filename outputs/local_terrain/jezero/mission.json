@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "site_id": "jezero",
+  "model_id": "ist_existing_16dir_strict_eva",
+  "base_cell": 405918,
+  "selected_poi_ids": [
+    "target-1",
+    "target-2"
+  ],
+  "visit_order": [
+    2,
+    1
+  ],
+  "dwell_policy": {
+    "mode": "max_feasible",
+    "allocation": "weighted",
+    "weights": [
+      0.5,
+      0.5
+    ]
+  },
+  "oxygen_profile_id": "apollo_j_demo_v1",
+  "initial_pressure_psia": 1430,
+  "initial_o2_g": 816.466266,
+  "min_return_fraction": 0.2,
+  "water_g": 3600,
+  "water_reserve_policy": "legacy_30min",
+  "k": 1,
+  "extra_heat_w": 0,
+  "known_leak_g_s": 0,
+  "profile_status": "historical_reference_with_assumptions",
+  "unknown_policy": "warn",
+  "event": {
+    "id": "blocked_patch_1",
+    "kind": "synthetic",
+    "cells": [
+      398559
+    ],
+    "label": "Synthetic blocked cell"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "extracted_from": "reports/18-eva-walkback-demo.html",
+  "extracted_from_sha256": "659717e570f7f949e93919180739b68f6b9ce69c9f230cf0b121d807ded5ac19",
+  "extracted_at": "2026-11-14T11:11:48.401Z",
+  "stripped": {
+    "photos": [
+      "full_img",
+      "full_width",
+      "full_height",
+      "full_source_url"
+    ],
+    "meta": [
+      "world"
+    ],
+    "sites": [
+      "targets[source_kind=places_station]",
+      "localTerrain",
+      "evidenceMission"
+    ]
+  },
+  "sites": [
+    {
+      "id": "jezero",
+      "rows": 700,
+      "cols": 667,
+      "data_sha256": "238cdf849ddc2a4873b61634ede18f19b7d67fcfcc4158d66f280ee8b3ddee67"
+    },
+    {
+      "id": "aram",
+      "rows": 700,
+      "cols": 580,
+      "data_sha256": "4e9a9bb66cab6f851dff59a4e42c927a805f72b50e60e2f0f7fa538219395465"
+    }
+  ],
+  "main_site": "gale",
+  "files": {
+    "meta.json": {
+      "bytes": 1093951,
+      "sha256": "755aa0768eaae6261d98a4a6c88a8da24f32d55af75ea2e6bed6ca6be6a5a22d"
+    },
+    "sites.json": {
+      "bytes": 5393268,
+      "sha256": "78ad34974cccf5ce1ce1580aa6499b15c37cdd464a648f627a4fb657cb78875c"
+    },
+    "blob.b64": {
+      "bytes": 5725672,
+      "sha256": "ff9f089e44f6e2dca1a1751cc470c08d3048ebdf08b0663f402095fe232b063a"
+    },
+    "shade.txt": {
+      "bytes": 511182,
+      "sha256": "159be5a1b2621faefd07e52f4c55ab9c591822e10123e4a86d387fbc956ec96e"
+    },
+    "ortho.txt": {
+      "bytes": 961035,
+      "sha256": "09a134d0ff0ee4ce356e35f811e459e9e1346571e0614661bbddebf649143f89"
+    }
+  },
+  "note": "Read-only build input. Do not edit by hand; regenerate only with extractSeed({force:true}) and record why."
+}

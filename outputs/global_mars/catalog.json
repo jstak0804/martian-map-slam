@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "basemap": {
+    "product_id": "Mars_MGS_MOLA_ClrShade_merge_global_463m",
+    "capabilities_url": "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/WMTSCapabilities.xml",
+    "resource_url_template": "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0//{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
+    "matrix_set": "default028mm",
+    "crs": "urn:ogc:def:crs:EPSG::104905",
+    "axis_order": "longitude,latitude",
+    "longitude_domain": [
+      -180,
+      180
+    ],
+    "tile_matrices": [
+      {
+        "id": "2",
+        "width": 8,
+        "height": 4,
+        "tile_width": 256,
+        "tile_height": 256,
+        "top_left": [
+          -180,
+          90
+        ]
+      }
+    ],
+    "credit": "NASA/JPL Mars Trek · MGS MOLA color shaded relief",
+    "offline_bounds": [
+      -180,
+      -90,
+      180,
+      90
+    ],
+    "offline_image": "../../code/global_map.json",
+    "online_tiles": "deferred; packaged overview always used"
+  },
+  "regions": [
+    {
+      "id": "gale",
+      "name": "Gale",
+      "center_lonlat": [
+        137.44054224104744,
+        -4.588020315472059
+      ],
+      "footprint": null,
+      "detail_available": true,
+      "data": {
+        "orbital_image": {
+          "status": "packaged"
+        },
+        "elevation": {
+          "status": "packaged"
+        },
+        "ground_images": {
+          "status": "packaged"
+        },
+        "local_reconstruction": {
+          "status": "not_checked"
+        }
+      },
+      "analysis": {
+        "model_id": "existing_demo",
+        "verification_status": "legacy_demo",
+        "evidence_ref": null
+      }
+    },
+    {
+      "id": "jezero",
+      "name": "Jezero",
+      "center_lonlat": [
+        77.4508,
+        18.4447
+      ],
+      "footprint": null,
+      "detail_available": true,
+      "data": {
+        "orbital_image": {
+          "status": "packaged"
+        },
+        "elevation": {
+          "status": "packaged"
+        },
+        "ground_images": {
+          "status": "packaged"
+        },
+        "local_reconstruction": {
+          "status": "packaged"
+        }
+      },
+      "analysis": {
+        "model_id": "ist_existing_16dir_strict_eva",
+        "verification_status": "prototype_checked",
+        "evidence_ref": "reports/packaged-grid-validation.json"
+      }
+    },
+    {
+      "id": "aram",
+      "name": "Aram Chaos",
+      "center_lonlat": null,
+      "footprint": null,
+      "detail_available": true,
+      "data": {
+        "orbital_image": {
+          "status": "packaged"
+        },
+        "elevation": {
+          "status": "packaged"
+        },
+        "ground_images": {
+          "status": "not_checked"
+        },
+        "local_reconstruction": {
+          "status": "not_checked"
+        }
+      },
+      "analysis": {
+        "model_id": "existing_demo",
+        "verification_status": "legacy_demo",
+        "evidence_ref": null
+      }
+    }
+  ]
+}

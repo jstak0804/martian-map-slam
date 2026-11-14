@@ -1,0 +1,72 @@
+{
+  "o2_reserve_g": 45.00505397014925,
+  "level_o2_g_h": 113.73891391976481,
+  "level_mr_w": 444.3962696888408,
+  "o2_g_per_j": 0.00007109452736318408,
+  "latent_j_kg": 2477000,
+  "feedwater_full_g": 3600,
+  "heat_storage_water_eq_g": 140.85587404117885,
+  "dose_budget_msv": 1,
+  "spe_observed": 2.9,
+  "walk_speed_m_s": 0.92,
+  "body_kg": 75,
+  "suit_kg": 90,
+  "g_ratio": 0.378,
+  "d_bg_msv_day": 0.655,
+  "shield_max": 0.5,
+  "rest_mr_w": 222.15060000000003,
+  "base_ant_m": 3,
+  "suit_ant_m": 2,
+  "relay_ant_m": 3,
+  "mars_radius_m": 3396190,
+  "los_step": 0.5,
+  "cal": {
+    "hr_to_mr": {
+      "a_btu_h": 284.55,
+      "b_btu_h_per_bpm": 5.984,
+      "source": "Hoffmann et al. 2021 (NASA, Shuttle/ISS EVA 132회) 표 5.1"
+    },
+    "speed_model": {
+      "v0_m_s": 0.75,
+      "c_m_s_per_deg": 0.01,
+      "v_min_m_s": 0.3,
+      "source": "Peña-Asensio et al. 2024 달 보행 속도식 (Kim et al. 2025 ICES-2025-129 식 (2), θ는 도 단위)"
+    },
+    "eta_surface_add": {
+      "value": 0.2,
+      "source": "Richmond, Potter & Santee 2015 표 11: 자갈·비포장길 η 1.2 (트레드밀 1.0 대비 +0.2)"
+    },
+    "eta_sand": {
+      "a": 1.5,
+      "b": 1.3,
+      "v_floor_m_s": 0.85,
+      "source": "Richmond 2015 식 16: η = a + b/V² (자료 범위 V ≥ 0.85 m/s)"
+    },
+    "k_prior": {
+      "value": 1,
+      "source": "모델 그대로 (개인 보정 없음)"
+    },
+    "dose": {
+      "bg_msv_day": 0.655,
+      "spe_observed": 2.9,
+      "source": "Curiosity RAD 평균 0.64~0.67 mSv/day, RAD sol 242 사건 배율 x2.9"
+    }
+  },
+  "cal_status": "문헌값",
+  "model": "ist_b",
+  "ist": {
+    "la": -0.4693508397023436,
+    "lb": 16.600113522077454,
+    "lc": 2.812567829371641,
+    "ga": 0.013043067243358441,
+    "gb": 0.11394759272485618,
+    "v_flat": 0.92,
+    "v_ist2": 0.77,
+    "v_min": 0.2,
+    "kj_per_l": 20.1
+  },
+  "reserve_mr_w": 351.68399999999997,
+  "edge_slope_cap": true,
+  "max_edge_grade_pct": 36.39702342662024,
+  "o2_tank_g": 540
+}

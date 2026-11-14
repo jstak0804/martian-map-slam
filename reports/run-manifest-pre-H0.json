@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "label": "pre-H0 baseline 2026-11-14",
+  "generated_at": "2026-11-14T11:07:37+00:00",
+  "root": ".",
+  "files": {
+    "html": {
+      "reports/18-eva-walkback-demo.html": {
+        "bytes": 40489064,
+        "sha256": "659717e570f7f949e93919180739b68f6b9ce69c9f230cf0b121d807ded5ac19"
+      },
+      "reports/18-eva-walkback-demo.standalone.html": {
+        "bytes": 40489064,
+        "sha256": "659717e570f7f949e93919180739b68f6b9ce69c9f230cf0b121d807ded5ac19"
+      }
+    },
+    "source": {
+      "code/demo_template.html": {
+        "bytes": 241694,
+        "sha256": "8c3161002d04322071d3ada1a5d5b822cac6f5541ef247801f9a3a1292f3ef73"
+      },
+      "code/map_ui.js": {
+        "bytes": 39760,
+        "sha256": "eba92fdd84f15585681cccf485f678a0708bfa5948bda70618ce4addd765655a"
+      },
+      "code/map_ui.css": {
+        "bytes": 11499,
+        "sha256": "51a1c4fbbc3e25e81818ce7862ecef9c69009a875c1aeb845cf7ffbc8244acac"
+      },
+      "code/map_ui_policy.js": {
+        "bytes": 2321,
+        "sha256": "b4eee3b21339e1e2907de6bbdc22869569460c7e2e33ef52191ff2f472dfe34d"
+      },
+      "code/i18n_en.js": {
+        "bytes": 44734,
+        "sha256": "426edf9edf2f1b47346461fbd65f3fa37b80f48100e5867e301b50fb7ea59942"
+      },
+      "code/global_map.json": {
+        "bytes": 3605604,
+        "sha256": "73a7eebe3786ad0cda750bd5362260587b69c432e4df05fb78c079232e756f71"
+      },
+      "code/build_ui_preview.mjs": {
+        "bytes": 4197,
+        "sha256": "1de0c8e4fa189cda9c31a72c859b4c899f768786f908011fcba2ce0d2a5374d2"
+      },
+      "code/build_observation_evidence.mjs": {
+        "bytes": 10529,
+        "sha256": "522dbee30bb9ffb6c6fc9be36d0bdb1fc1ea3f2007165a46940640e52615e99a"
+      },
+      "code/package_review.mjs": {
+        "bytes": 4961,
+        "sha256": "af7ac13d9c117caad78c97c7eda740d940320f8dd39be3635311fca2c5f3e734"
+      },
+      "code/build_demo_html.py": {
+        "bytes": 8966,
+        "sha256": "a597a2adce9447832c38194bd67fc008c193930e439e2bafa46d8b091ef6a7d0"
+      }
+    },
+    "local_terrain": {
+      "outputs/local_terrain/jezero/common-frame-points.json": {
+        "bytes": 257562,
+        "sha256": "bccf4e4ef78d2f06817643dc13c72a12a511054ece33d22ee61911396fd77495"
+      },
+      "outputs/local_terrain/jezero/common-frame-preview.svg": {
+        "bytes": 327609,
+        "sha256": "97ae9c39e8118f547884b7e80b91e5abab486f114349611bedb75f432b415109"
+      },
+      "outputs/local_terrain/jezero/manifest.json": {
+        "bytes": 5675,
+        "sha256": "dbd60af371cb2674dd986fcb134979d21ebc0e591626183a6d42920345e8c926"
+      },
+      "outputs/local_terrain/jezero/mission.json": {
+        "bytes": 827,
+        "sha256": "e42b9ad650c900a2cef9eb008634229a4eb5d2d4646fa3ae0d92c8091c203b75"
+      },
+      "outputs/local_terrain/jezero/stations.json": {
+        "bytes": 2010,
+        "sha256": "216e261d1c68d4f20514165c88b45d89c6e3aa6a99b32503345af67044d988b7"
+      }
+    },
+    "tests": {
+      "tests/export_model_reference.py": {
+        "bytes": 1961,
+        "sha256": "1a4136dcc9004e4df141be9af67b6437f910b163499ccd626fc7289733668453"
+      },
+      "tests/fixtures/jezero_model_reference.json": {
+        "bytes": 28804,
+        "sha256": "a9b2d2faa577baf82e5ce7876001f3d66d5668f88da5b517fbbbff916b6fb8d3"
+      },
+      "tests/fixtures/packaged_model_constants.json": {
+        "bytes": 1995,
+        "sha256": "09281bbd467042b3a58b9bb4d63c6d0394a2d0e3e7658df78ea1629096aaf4c6"
+      },
+      "tests/make_run_manifest.py": {
+        "bytes": 2665,
+        "sha256": "3db1cb5f445819bf64818e6fa5916e54c9bdeeee8638505b097fd1b3f98786bd"
+      },
+      "tests/test_map_ui.mjs": {
+        "bytes": 10305,
+        "sha256": "5e2b237d3d7088d938a5c7febea41ee22671510714f23bd45cc248382aa72bd8"
+      },
+      "tests/test_packaged_grid.mjs": {
+        "bytes": 6700,
+        "sha256": "094cb6e237387b5fb579a1c099ed74863a76d0b928c4b0660c98df1fcb200806"
+      },
+      "tests/test_python_reference.mjs": {
+        "bytes": 1604,
+        "sha256": "5f674c89e45574c94c8fb041810230bc8735f4e985546d20196b08ff8e2a2484"
+      },
+      "tests/test_remaining_plan.mjs": {
+        "bytes": 6011,
+        "sha256": "831c8121d267b7df608ea644101a491e83d14dd0d9343c74b42f40c127625073"
+      }
+    },
+    "evidence": {
+      "reports/automated-validation.json": {
+        "bytes": 769,
+        "sha256": "411af778d0a14dcd0a9c7aa8c5a85940e3a1c259ae5f2f914daf3039f8d7bde5"
+      },
+      "reports/python-js-model-validation.json": {
+        "bytes": 313,
+        "sha256": "2b8260ab4745109d039bcab12ce434c73b5c1b4e6fb26c562c3e2281975e1e53"
+      },
+      "reports/packaged-grid-validation.json": {
+        "bytes": 1607,
+        "sha256": "81ce6403216ec5f6f4967204161bd01c8df3f129163642121f09db5e6bb290ba"
+      },
+      "reports/jezero-validation.md": {
+        "bytes": 7429,
+        "sha256": "60ef2e8388469972c8dd19c896ffe0ddb4c4d088fc9f75d281424389ae5aa5d4"
+      },
+      "reports/jezero-sources.csv": {
+        "bytes": 152458,
+        "sha256": "2e50cbae9ed423aee7c0deb6c72ff51f480c7bb9eb12ce65f18d4a8eea1ec1cf"
+      },
+      "reports/jezero-demo-script.md": {
+        "bytes": 1568,
+        "sha256": "df1c43849963cc951c764489dac73411684b57c6140da17fa420b0ee96ee4be2"
+      }
+    },
+    "global": {
+      "outputs/global_mars/catalog.json": {
+        "bytes": 3009,
+        "sha256": "814366b48ee13e5d5716241b941c52ce04cd07f2ef8db02bed8257dbee6809e6"
+      }
+    },
+    "dist": {
+      "dist/jezero-demo/automated-validation.json": {
+        "bytes": 769,
+        "sha256": "411af778d0a14dcd0a9c7aa8c5a85940e3a1c259ae5f2f914daf3039f8d7bde5"
+      },
+      "dist/jezero-demo/demo-script.md": {
+        "bytes": 1568,
+        "sha256": "df1c43849963cc951c764489dac73411684b57c6140da17fa420b0ee96ee4be2"
+      },
+      "dist/jezero-demo/global-catalog.json": {
+        "bytes": 3009,
+        "sha256": "814366b48ee13e5d5716241b941c52ce04cd07f2ef8db02bed8257dbee6809e6"
+      },
+      "dist/jezero-demo/hashes.json": {
+        "bytes": 2689,
+        "sha256": "72d282dc3c30263e545430725fceb700600ab1402cbab2a0590724a0c32acdb6"
+      },
+      "dist/jezero-demo/index.html": {
+        "bytes": 40489064,
+        "sha256": "659717e570f7f949e93919180739b68f6b9ce69c9f230cf0b121d807ded5ac19"
+      },
+      "dist/jezero-demo/local/common-frame-points.json": {
+        "bytes": 257562,
+        "sha256": "bccf4e4ef78d2f06817643dc13c72a12a511054ece33d22ee61911396fd77495"
+      },
+      "dist/jezero-demo/local/common-frame-preview.svg": {
+        "bytes": 327609,
+        "sha256": "97ae9c39e8118f547884b7e80b91e5abab486f114349611bedb75f432b415109"
+      },
+      "dist/jezero-demo/local/manifest.json": {
+        "bytes": 5675,
+        "sha256": "dbd60af371cb2674dd986fcb134979d21ebc0e591626183a6d42920345e8c926"
+      },
+      "dist/jezero-demo/local/mission.json": {
+        "bytes": 827,
+        "sha256": "e42b9ad650c900a2cef9eb008634229a4eb5d2d4646fa3ae0d92c8091c203b75"
+      },
+      "dist/jezero-demo/local/stations.json": {
+        "bytes": 2010,
+        "sha256": "216e261d1c68d4f20514165c88b45d89c6e3aa6a99b32503345af67044d988b7"
+      },
+      "dist/jezero-demo/observation-catalog.json": {
+        "bytes": 512635,
+        "sha256": "4f70d75940c7867b62a60e87ca1e811a8c32e95c5c965ec1bed7025826ec09ec"
+      },
+      "dist/jezero-demo/packaged-grid-validation.json": {
+        "bytes": 1607,
+        "sha256": "81ce6403216ec5f6f4967204161bd01c8df3f129163642121f09db5e6bb290ba"
+      },
+      "dist/jezero-demo/python-js-model-validation.json": {
+        "bytes": 313,
+        "sha256": "2b8260ab4745109d039bcab12ce434c73b5c1b4e6fb26c562c3e2281975e1e53"
+      },
+      "dist/jezero-demo/python-reference.json": {
+        "bytes": 28804,
+        "sha256": "a9b2d2faa577baf82e5ce7876001f3d66d5668f88da5b517fbbbff916b6fb8d3"
+      },
+      "dist/jezero-demo/README.md": {
+        "bytes": 971,
+        "sha256": "fa7402a974a2bb3344451a93b14c79ae0f4f4d3caadd121f3abc2f3ecb30cff7"
+      },
+      "dist/jezero-demo/sources.csv": {
+        "bytes": 152458,
+        "sha256": "2e50cbae9ed423aee7c0deb6c72ff51f480c7bb9eb12ce65f18d4a8eea1ec1cf"
+      },
+      "dist/jezero-demo/validation.md": {
+        "bytes": 7429,
+        "sha256": "60ef2e8388469972c8dd19c896ffe0ddb4c4d088fc9f75d281424389ae5aa5d4"
+      }
+    }
+  },
+  "missing": []
+}

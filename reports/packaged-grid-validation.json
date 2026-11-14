@@ -1,0 +1,81 @@
+{
+  "provenance": {
+    "grid_payload_sha256": "238cdf849ddc2a4873b61634ede18f19b7d67fcfcc4158d66f280ee8b3ddee67",
+    "model_source_sha256": "28fcf0c369eeb90e7bb4631e32a09538d02a91fbe946be14a389750d3b57aefd",
+    "seed_manifest_sha256": "e32b9f7dd9b4359828ff27921052492185d7f22cebb3dd89e515a45e17a7b64d",
+    "stations_sha256": "8a9f5a985dae749b6893e09ee7f6d773485453b54cce69d76d46e9cf4a0db21c",
+    "base": 405918,
+    "strict": true,
+    "overlay_revision": 0
+  },
+  "cells": 466900,
+  "directions": 16,
+  "flat_metabolic_w": 444.3962696888408,
+  "base": 405918,
+  "reachable_targets": [
+    {
+      "index": 0,
+      "id": "target-0",
+      "name": "Skinner Ridge · Wildcat Ridge 시료 채취 지점",
+      "cell": 352306,
+      "o2": 303.3991580317997,
+      "reachable": true
+    },
+    {
+      "index": 1,
+      "id": "target-1",
+      "name": "Brac 시료 채취 지점",
+      "cell": 448559,
+      "o2": 28.559649472496393,
+      "reachable": true
+    },
+    {
+      "index": 2,
+      "id": "target-2",
+      "name": "Amalik 시료 채취 지점",
+      "cell": 381627,
+      "o2": 105.32746723671325,
+      "reachable": true
+    },
+    {
+      "index": 3,
+      "id": "navcam-25-94",
+      "name": "Navcam station 25/94",
+      "cell": 355650,
+      "o2": null,
+      "reachable": false
+    },
+    {
+      "index": 4,
+      "id": "navcam-25-214",
+      "name": "Navcam station 25/214",
+      "cell": 355647,
+      "o2": null,
+      "reachable": false
+    }
+  ],
+  "checked_path_edges": 663,
+  "oxygen_integral_g": 303.3991580317997,
+  "time_integral_s": 9633.262538871817,
+  "synthetic_event": {
+    "cell": 398559,
+    "before": {
+      "ok": true,
+      "outbound_s": 6197.963741395319,
+      "return_s": 905.1864002562336,
+      "dwell_s": 11520,
+      "o2_g": 587.8917410391745,
+      "status": "needs_observation"
+    },
+    "after": {
+      "ok": true,
+      "outbound_s": 3866.8900100160436,
+      "return_s": 3243.0286025922233,
+      "dwell_s": 11520,
+      "o2_g": 587.893015552067,
+      "status": "needs_observation"
+    }
+  },
+  "elapsed_s": 95.4456831,
+  "scope": "Actual packaged Jezero grid and actual worker, executed in Node VM; not browser rendering or device timing"
+}

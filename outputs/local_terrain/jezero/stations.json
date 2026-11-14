@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "projection_label": "DTEEC_045994_1985_046060_1985_U01.IMG",
+  "source_places": "places/best_interp.csv",
+  "targets": [
+    {
+      "id": "navcam-25-94",
+      "name": "Navcam station 25/94",
+      "name_en": "Navcam station 25/94",
+      "source_kind": "places_station",
+      "x": 139.5,
+      "y": 533.5,
+      "sols": [
+        443
+      ],
+      "samples": [],
+      "station": {
+        "site": 25,
+        "drive": 94,
+        "observation_lon": 77.408100553,
+        "observation_lat": 18.457588545,
+        "observation_grid": {
+          "x": 140.22977524306867,
+          "y": 532.9466248961864
+        },
+        "approach_offset_m": 9.247082543775512,
+        "grid_method": "HiRISE DTM label equirectangular inverse; 10-pixel block; crop origin 0,0",
+        "image_registration": null
+      },
+      "why_en": "PLACES rover localization; approach cell is distinct from camera position. Image-to-orbit registration is unverified.",
+      "source": "PDS PLACES best_interp.csv + HiRISE DTEEC_045994_1985_046060_1985_U01 label"
+    },
+    {
+      "id": "navcam-25-214",
+      "name": "Navcam station 25/214",
+      "name_en": "Navcam station 25/214",
+      "source_kind": "places_station",
+      "x": 136.5,
+      "y": 533.5,
+      "sols": [
+        443
+      ],
+      "samples": [],
+      "station": {
+        "site": 25,
+        "drive": 214,
+        "observation_lon": 77.407469563,
+        "observation_lat": 18.457527169,
+        "observation_grid": {
+          "x": 136.65304384651273,
+          "y": 533.306804116373
+        },
+        "approach_offset_m": 2.4885091624727664,
+        "grid_method": "HiRISE DTM label equirectangular inverse; 10-pixel block; crop origin 0,0",
+        "image_registration": null
+      },
+      "why_en": "PLACES rover localization; approach cell is distinct from camera position. Image-to-orbit registration is unverified.",
+      "source": "PDS PLACES best_interp.csv + HiRISE DTEEC_045994_1985_046060_1985_U01 label"
+    }
+  ]
+}

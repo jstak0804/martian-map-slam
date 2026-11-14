@@ -1,0 +1,1527 @@
+{
+  "schema_version": 1,
+  "env": {
+    "browser": "Chrome/157.0.8103.51",
+    "html": "reports/18-eva-walkback-demo.html",
+    "html_sha256": "9ad2b2e268fc966db6d4c7df91cb0b185bca89858b9811f27c3dcc3875f57667",
+    "url_scheme": "file",
+    "date": "2026-11-14T11:26:14.328Z"
+  },
+  "summary": {
+    "pass": 7,
+    "fail": 9,
+    "checks": 130,
+    "failedChecks": 15
+  },
+  "results": [
+    {
+      "id": "S1",
+      "scenario": "Entry hashes",
+      "env": "Chrome headless, 1440×900, file://",
+      "status": "pass",
+      "checks": [
+        {
+          "label": "(none) opens global map",
+          "ok": true,
+          "detail": {
+            "site": "jezero",
+            "world": true,
+            "loading": true,
+            "sel": []
+          }
+        },
+        {
+          "label": "(none) no page errors",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "label": "#mars opens global map",
+          "ok": true,
+          "detail": {
+            "site": "gale",
+            "world": true,
+            "loading": true,
+            "sel": []
+          }
+        },
+        {
+          "label": "#mars no page errors",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "label": "#jezero opens jezero detail",
+          "ok": true,
+          "detail": {
+            "site": "jezero",
+            "world": false,
+            "loading": true,
+            "sel": []
+          }
+        },
+        {
+          "label": "#jezero no page errors",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "label": "#jezero-evidence-demo selects two mission sites",
+          "ok": true,
+          "detail": {
+            "site": "jezero",
+            "world": false,
+            "loading": true,
+            "sel": [
+              1,
+              2
+            ]
+          }
+        },
+        {
+          "label": "#jezero-evidence-demo shows a plan",
+          "ok": true,
+          "detail": {
+            "t": {
+              "out": "103 min",
+              "back": "15 min",
+              "dwell": "192 min",
+              "split": "B 96 min  ·  A 96 min",
+              "status": "Ground coverage unverified"
+            },
+            "planMs": 1086
+          }
+        },
+        {
+          "label": "#jezero-evidence-demo no page errors",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "label": "#gale opens gale detail",
+          "ok": true,
+          "detail": {
+            "site": "gale",
+            "world": false,
+            "loading": true,
+            "sel": []
+          }
+        },
+        {
+          "label": "#gale no page errors",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "label": "#aram opens aram detail",
+          "ok": true,
+          "detail": {
+            "site": "aram",
+            "world": false,
+            "loading": true,
+            "sel": []
+          }
+        },
+        {
+          "label": "#aram no page errors",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [
+        "(none) load 1061 ms",
+        "#mars load 827 ms",
+        "#jezero load 522 ms",
+        "evidence demo: load 505 ms, first plan 1086 ms after load (worker=true)",
+        "#jezero-evidence-demo load 505 ms",
+        "#gale load 626 ms",
+        "#aram load 511 ms"
+      ],
+      "screenshots": [
+        "reports/browser-qa/S1-entry-world-1440.png",
+        "reports/browser-qa/S1-evidence-demo-1440.png"
+      ],
+      "errors": [],
+      "seconds": 8.34
+    },
+    {
+      "id": "S2",
+      "scenario": "Targets: A only / B only / A+B / max two / observation-only",
+      "env": "Chrome headless, 1440×900, file://",
+      "status": "pass",
+      "checks": [
+        {
+          "label": "A only plans",
+          "ok": true,
+          "detail": {
+            "t": {
+              "out": "15 min",
+              "back": "15 min",
+              "dwell": "280 min",
+              "split": "20% oxygen on return · assumed profile",
+              "status": "Ground coverage unverified"
+            },
+            "e": {
+              "ok": true,
+              "o": 906.7997014514046,
+              "r": 905.1864002562336,
+              "d": 16800
+            }
+          }
+        },
+        {
+          "label": "card time = floor(seconds/60)",
+          "ok": true,
+          "detail": {
+            "t": {
+              "out": "15 min",
+              "back": "15 min",
+              "dwell": "280 min",
+              "split": "20% oxygen on return · assumed profile",
+              "status": "Ground coverage unverified"
+            },
+            "e": {
+              "ok": true,
+              "o": 906.7997014514046,
+              "r": 905.1864002562336,
+              "d": 16800
+            }
+          }
+        },
+        {
+          "label": "deselect via chip clears plan",
+          "ok": true
+        },
+        {
+          "label": "Start disabled with no selection",
+          "ok": true
+        },
+        {
+          "label": "B only plans",
+          "ok": true,
+          "detail": {
+            "t": {
+              "out": "55 min",
+              "back": "54 min",
+              "dwell": "201 min",
+              "split": "20% oxygen on return · assumed profile",
+              "status": "Ground coverage unverified"
+            },
+            "ok": true
+          }
+        },
+        {
+          "label": "A+B plans with both chips and split control",
+          "ok": true,
+          "detail": {
+            "t": {
+              "out": "103 min",
+              "back": "15 min",
+              "dwell": "192 min",
+              "split": "B 96 min  ·  A 96 min",
+              "status": "Ground coverage unverified"
+            },
+            "ok": true,
+            "order": [
+              2,
+              1
+            ],
+            "chips": [
+              "A · Brac ×",
+              "B · Amalik ×"
+            ],
+            "split": true
+          }
+        },
+        {
+          "label": "third selection refused, selection kept",
+          "ok": true,
+          "detail": {
+            "sel": [
+              1,
+              2
+            ],
+            "toast": "Select up to two sites",
+            "toastVisible": true
+          }
+        },
+        {
+          "label": "disconnected Navcam station is observation-only",
+          "ok": true,
+          "detail": {
+            "disabled": true,
+            "label": "No route from this base",
+            "caption": "Nearby observation · sol 464 · 135m away · Observation only",
+            "reach": false
+          }
+        },
+        {
+          "label": "no page errors",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [
+        "targets: Skinner Ridge · Wildcat Ridge sample site | Brac sample site | Amalik sample site | Navcam station 25/94 | Navcam station 25/214"
+      ],
+      "screenshots": [
+        "reports/browser-qa/S2-two-sites-1440.png",
+        "reports/browser-qa/S2-observation-only-1440.png"
+      ],
+      "errors": [],
+      "seconds": 3.814
+    },
+    {
+      "id": "S3",
+      "scenario": "Stay split 25/50/75 and order reversal",
+      "env": "Chrome headless, 1440×900, file://",
+      "status": "pass",
+      "checks": [
+        {
+          "label": "25% auto: A+B = total and A share kept",
+          "ok": true,
+          "detail": {
+            "ok": true,
+            "order": [
+              2,
+              1
+            ],
+            "total": 11520,
+            "A": 2880,
+            "B": 8640,
+            "split": "B 144 min  ·  A 48 min",
+            "dwellCard": "192 min",
+            "fracA": 0.25
+          }
+        },
+        {
+          "label": "25% auto: split text matches",
+          "ok": true,
+          "detail": "B 144 min  ·  A 48 min"
+        },
+        {
+          "label": "25% flip: A+B = total and A share kept",
+          "ok": true,
+          "detail": {
+            "ok": true,
+            "order": [
+              1,
+              2
+            ],
+            "total": 11520,
+            "A": 2880,
+            "B": 8640,
+            "split": "A 48 min  ·  B 144 min",
+            "dwellCard": "192 min",
+            "fracA": 0.25
+          }
+        },
+        {
+          "label": "25% flip: split text matches",
+          "ok": true,
+          "detail": "A 48 min  ·  B 144 min"
+        },
+        {
+          "label": "50% auto: A+B = total and A share kept",
+          "ok": true,
+          "detail": {
+            "ok": true,
+            "order": [
+              1,
+              2
+            ],
+            "total": 11520,
+            "A": 5760,
+            "B": 5760,
+            "split": "A 96 min  ·  B 96 min",
+            "dwellCard": "192 min",
+            "fracA": 0.5
+          }
+        },
+        {
+          "label": "50% auto: split text matches",
+          "ok": true,
+          "detail": "A 96 min  ·  B 96 min"
+        },
+        {
+          "label": "50% flip: A+B = total and A share kept",
+          "ok": true,
+          "detail": {
+            "ok": true,
+            "order": [
+              2,
+              1
+            ],
+            "total": 11520,
+            "A": 5760,
+            "B": 5760,
+            "split": "B 96 min  ·  A 96 min",
+            "dwellCard": "192 min",
+            "fracA": 0.5
+          }
+        },
+        {
+          "label": "50% flip: split text matches",
+          "ok": true,
+          "detail": "B 96 min  ·  A 96 min"
+        },
+        {
+          "label": "75% auto: A+B = total and A share kept",
+          "ok": true,
+          "detail": {
+            "ok": true,
+            "order": [
+              2,
+              1
+            ],
+            "total": 11520,
+            "A": 8640,
+            "B": 2880,
+            "split": "B 48 min  ·  A 144 min",
+            "dwellCard": "192 min",
+            "fracA": 0.75
+          }
+        },
+        {
+          "label": "75% auto: split text matches",
+          "ok": true,
+          "detail": "B 48 min  ·  A 144 min"
+        },
+        {
+          "label": "75% flip: A+B = total and A share kept",
+          "ok": true,
+          "detail": {
+            "ok": true,
+            "order": [
+              1,
+              2
+            ],
+            "total": 11520,
+            "A": 8640,
+            "B": 2880,
+            "split": "A 144 min  ·  B 48 min",
+            "dwellCard": "192 min",
+            "fracA": 0.75
+          }
+        },
+        {
+          "label": "75% flip: split text matches",
+          "ok": true,
+          "detail": "A 144 min  ·  B 48 min"
+        },
+        {
+          "label": "no page errors",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [
+        "25% auto: order 2→1 A 48 min B 144 min",
+        "25% flip: order 1→2 A 48 min B 144 min",
+        "50% auto: order 1→2 A 96 min B 96 min",
+        "50% flip: order 2→1 A 96 min B 96 min",
+        "75% auto: order 2→1 A 144 min B 48 min",
+        "75% flip: order 1→2 A 144 min B 48 min"
+      ],
+      "screenshots": [],
+      "errors": [],
+      "seconds": 3.138
+    },
+    {
+      "id": "S4",
+      "scenario": "Rotate / zoom / N / scale / hit-test after rotation",
+      "env": "Chrome headless, 1440×900, file://",
+      "status": "fail",
+      "checks": [
+        {
+          "label": "+ zooms in and scale label updates",
+          "ok": true,
+          "detail": {
+            "s0": "200 m",
+            "s1": "100 m",
+            "k": [
+              1,
+              2.5600000000000005
+            ]
+          }
+        },
+        {
+          "label": "↷ rotates 15° steps",
+          "ok": true
+        },
+        {
+          "label": "Shift-drag rotates",
+          "ok": true,
+          "detail": 70
+        },
+        {
+          "label": "wheel zooms",
+          "ok": true,
+          "detail": [
+            2.5600000000000005,
+            4.014879194854833
+          ]
+        },
+        {
+          "label": "N: north up, zoom kept",
+          "ok": true,
+          "detail": {
+            "angle": 0,
+            "k": [
+              4.014879194854833,
+              4.014879194854833
+            ]
+          }
+        },
+        {
+          "label": "N: base centered",
+          "ok": false,
+          "detail": {
+            "base": {
+              "x": 745,
+              "y": 419.5
+            },
+            "ctr": {
+              "x": 720,
+              "y": 450
+            }
+          }
+        },
+        {
+          "label": "N repeated: no mode toggle",
+          "ok": true,
+          "detail": 0
+        },
+        {
+          "label": "click on rotated (-45°) pins opens the same site",
+          "ok": false,
+          "detail": {
+            "hits": 0,
+            "tries": 0
+          }
+        },
+        {
+          "label": "labels upright while rotated",
+          "ok": true
+        },
+        {
+          "label": "no page errors",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [],
+      "screenshots": [
+        "reports/browser-qa/S4-rotated-1440.png"
+      ],
+      "errors": [],
+      "seconds": 2.605
+    },
+    {
+      "id": "S5",
+      "scenario": "Site photos: real image and source",
+      "env": "Chrome headless, 1440×900, file://",
+      "status": "pass",
+      "checks": [
+        {
+          "label": "site 0 photo decodes",
+          "ok": true,
+          "detail": {
+            "img": true,
+            "w": 1280,
+            "h": 960,
+            "alt": "Perseverance Navcam sol 464",
+            "cap": "Nearby observation · sol 464 · 32m away"
+          }
+        },
+        {
+          "label": "site 0 caption cites sol of shown photo",
+          "ok": true,
+          "detail": {
+            "img": true,
+            "w": 1280,
+            "h": 960,
+            "alt": "Perseverance Navcam sol 464",
+            "cap": "Nearby observation · sol 464 · 32m away"
+          }
+        },
+        {
+          "label": "site 1 photo decodes",
+          "ok": true,
+          "detail": {
+            "img": true,
+            "w": 1280,
+            "h": 960,
+            "alt": "Perseverance Navcam sol 178",
+            "cap": "Nearby observation · sol 178 · 204m away"
+          }
+        },
+        {
+          "label": "site 1 caption cites sol of shown photo",
+          "ok": true,
+          "detail": {
+            "img": true,
+            "w": 1280,
+            "h": 960,
+            "alt": "Perseverance Navcam sol 178",
+            "cap": "Nearby observation · sol 178 · 204m away"
+          }
+        },
+        {
+          "label": "site 2 empty state explicit",
+          "ok": true,
+          "detail": {
+            "img": false,
+            "text": "No nearby observation",
+            "cap": "Science target · ground-image registration pending"
+          }
+        },
+        {
+          "label": "site 3 photo decodes",
+          "ok": true,
+          "detail": {
+            "img": true,
+            "w": 1280,
+            "h": 960,
+            "alt": "Perseverance Navcam sol 464",
+            "cap": "Nearby observation · sol 464 · 135m away · Observation only"
+          }
+        },
+        {
+          "label": "site 3 caption cites sol of shown photo",
+          "ok": true,
+          "detail": {
+            "img": true,
+            "w": 1280,
+            "h": 960,
+            "alt": "Perseverance Navcam sol 464",
+            "cap": "Nearby observation · sol 464 · 135m away · Observation only"
+          }
+        },
+        {
+          "label": "site 4 photo decodes",
+          "ok": true,
+          "detail": {
+            "img": true,
+            "w": 1280,
+            "h": 960,
+            "alt": "Perseverance Navcam sol 464",
+            "cap": "Nearby observation · sol 464 · 111m away · Observation only"
+          }
+        },
+        {
+          "label": "site 4 caption cites sol of shown photo",
+          "ok": true,
+          "detail": {
+            "img": true,
+            "w": 1280,
+            "h": 960,
+            "alt": "Perseverance Navcam sol 464",
+            "cap": "Nearby observation · sol 464 · 111m away · Observation only"
+          }
+        },
+        {
+          "label": "visor cache key sol:az unique for Jezero photos/roadview frames",
+          "ok": true,
+          "detail": {
+            "photoDup": [],
+            "roadviewDup": 0
+          }
+        },
+        {
+          "label": "no page errors",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [
+        "site 0: 1280×960 Nearby observation · sol 464 · 32m away",
+        "site 1: 1280×960 Nearby observation · sol 178 · 204m away",
+        "site 2: No nearby observation",
+        "site 3: 1280×960 Nearby observation · sol 464 · 135m away · Observation only",
+        "site 4: 1280×960 Nearby observation · sol 464 · 111m away · Observation only",
+        "4/5 sites show a nearby photo"
+      ],
+      "screenshots": [],
+      "errors": [],
+      "seconds": 1.779
+    },
+    {
+      "id": "S6",
+      "scenario": "Visor window: same frame as map, close / reopen",
+      "env": "Chrome headless, 1440×900, file://",
+      "status": "fail",
+      "checks": [
+        {
+          "label": "Visor opens a window from a user click",
+          "ok": false,
+          "detail": {
+            "hud": true,
+            "popup": false
+          }
+        }
+      ],
+      "notes": [],
+      "screenshots": [],
+      "errors": [
+        "Error: eval failed: TypeError: Cannot read properties of null (reading 'document') |     at <anonymous>:1:42 |     at <anonymous>:1:285"
+      ],
+      "seconds": 3.226
+    },
+    {
+      "id": "S7",
+      "scenario": "Return now during travel / at site / partial minute; Restart",
+      "env": "Chrome headless, 1440×900, file://",
+      "status": "pass",
+      "checks": [
+        {
+          "label": "out: Return now enabled",
+          "ok": true
+        },
+        {
+          "label": "out: elapsed time and consumption preserved",
+          "ok": true,
+          "detail": {
+            "before": {
+              "m": 52,
+              "pos": 386973,
+              "o2": 717.5608459547946,
+              "w": 3038.360151205324,
+              "dose": 0.022943402830883718,
+              "phase": "out"
+            },
+            "after": {
+              "m": 52,
+              "pos": 386973,
+              "o2": 717.5608459547946,
+              "w": 3038.360151205324,
+              "dose": 0.022943402830883718,
+              "phase": "back",
+              "manual": true,
+              "toast": "Return route ready · press Start"
+            }
+          }
+        },
+        {
+          "label": "out: remaining frames return to base with no more site work",
+          "ok": true,
+          "detail": {
+            "phases": [
+              "back",
+              "home"
+            ],
+            "last": "home",
+            "lastPos": 405918,
+            "base": 405918,
+            "work": 0
+          }
+        },
+        {
+          "label": "out: stay left is 0 after return",
+          "ok": true,
+          "detail": {
+            "stay": "0 min",
+            "status": "At base",
+            "phase": "home"
+          }
+        },
+        {
+          "label": "work: Return now enabled",
+          "ok": true
+        },
+        {
+          "label": "work: elapsed time and consumption preserved",
+          "ok": true,
+          "detail": {
+            "before": {
+              "m": 200,
+              "pos": 448559,
+              "o2": 437.676091587123,
+              "w": 1449.0192328699857,
+              "dose": 0.0896117809772507,
+              "phase": "work"
+            },
+            "after": {
+              "m": 200,
+              "pos": 448559,
+              "o2": 437.676091587123,
+              "w": 1449.0192328699857,
+              "dose": 0.0896117809772507,
+              "phase": "back",
+              "manual": true,
+              "toast": "Return route ready · press Start"
+            }
+          }
+        },
+        {
+          "label": "work: remaining frames return to base with no more site work",
+          "ok": true,
+          "detail": {
+            "phases": [
+              "back",
+              "home"
+            ],
+            "last": "home",
+            "lastPos": 405918,
+            "base": 405918,
+            "work": 0
+          }
+        },
+        {
+          "label": "work: stay left is 0 after return",
+          "ok": true,
+          "detail": {
+            "stay": "0 min",
+            "status": "At base",
+            "phase": "home"
+          }
+        },
+        {
+          "label": "Restart restores the original trip",
+          "ok": true,
+          "detail": {
+            "manual": false,
+            "m": 0,
+            "work": 192
+          }
+        },
+        {
+          "label": "no page errors",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [
+        "{\"frames\":312,\"phases\":[\"out\",\"work\",\"back\",\"home\"]}",
+        "partial-minute frames present: false"
+      ],
+      "screenshots": [],
+      "errors": [],
+      "seconds": 4.371
+    },
+    {
+      "id": "S8",
+      "scenario": "Block test / Clear block repeated; worker pending settles",
+      "env": "Chrome headless, 1440×900, file://",
+      "status": "pass",
+      "checks": [
+        {
+          "label": "round 1: synthetic block applied and route avoids it",
+          "ok": true,
+          "detail": {
+            "blocked": 9,
+            "rev": 1,
+            "ok": true,
+            "label": "Clear block",
+            "onPath": 0,
+            "len": 444
+          }
+        },
+        {
+          "label": "round 1: Clear block restores original flags",
+          "ok": true,
+          "detail": {
+            "blocked": 0,
+            "label": "Block test",
+            "len": 445
+          }
+        },
+        {
+          "label": "round 1: original route length restored",
+          "ok": true,
+          "detail": {
+            "c": 445,
+            "path0": 445
+          }
+        },
+        {
+          "label": "round 2: synthetic block applied and route avoids it",
+          "ok": true,
+          "detail": {
+            "blocked": 9,
+            "rev": 3,
+            "ok": true,
+            "label": "Clear block",
+            "onPath": 0,
+            "len": 444
+          }
+        },
+        {
+          "label": "round 2: Clear block restores original flags",
+          "ok": true,
+          "detail": {
+            "blocked": 0,
+            "label": "Block test",
+            "len": 445
+          }
+        },
+        {
+          "label": "round 2: original route length restored",
+          "ok": true,
+          "detail": {
+            "c": 445,
+            "path0": 445
+          }
+        },
+        {
+          "label": "pending zone/worker jobs settle after worker restart",
+          "ok": true,
+          "detail": {
+            "zonePending": false,
+            "workerPending": 0,
+            "livePending": null
+          }
+        },
+        {
+          "label": "no page errors",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [
+        "race probe state: {\"zonePending\":false,\"workerPending\":0,\"livePending\":null}"
+      ],
+      "screenshots": [
+        "reports/browser-qa/S8-block-test-1440.png"
+      ],
+      "errors": [],
+      "seconds": 13.306
+    },
+    {
+      "id": "S9",
+      "scenario": "Region switch Jezero→Gale→Jezero fast and during loading/planning",
+      "env": "Chrome headless, 1440×900, file://",
+      "status": "fail",
+      "checks": [
+        {
+          "label": "final region is the last requested",
+          "ok": true,
+          "detail": {
+            "site": "jezero",
+            "gen": 3,
+            "sel": [],
+            "blocked": 0,
+            "rev": 0,
+            "eva": {
+              "msg": "Select a site"
+            },
+            "loading": true,
+            "workerPending": 0
+          }
+        },
+        {
+          "label": "selection and overlays reset on region change",
+          "ok": true,
+          "detail": {
+            "site": "jezero",
+            "gen": 3,
+            "sel": [],
+            "blocked": 0,
+            "rev": 0,
+            "eva": {
+              "msg": "Select a site"
+            },
+            "loading": true,
+            "workerPending": 0
+          }
+        },
+        {
+          "label": "planning works after rapid switching",
+          "ok": true
+        },
+        {
+          "label": "Gale still loads with its own policy (not strict Jezero EVA)",
+          "ok": true,
+          "detail": {
+            "site": "jezero",
+            "mode": "eva"
+          }
+        },
+        {
+          "label": "Gale hides Jezero-only Observations/Block test",
+          "ok": false,
+          "detail": {
+            "site": "gale",
+            "evidence": true,
+            "block": true,
+            "legacy": true
+          }
+        },
+        {
+          "label": "no page errors",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [
+        "{\"Gale (Curiosity)\":0,\"Jezero (Perseverance)\":1,\"Aram Chaos (virtual base)\":2}",
+        "after 4 awaited switches: {\"site\":\"jezero\",\"mode\":\"eva\"}"
+      ],
+      "screenshots": [],
+      "errors": [],
+      "seconds": 3.88
+    },
+    {
+      "id": "S10",
+      "scenario": "Global map: open/close, pan/zoom, click coordinates, region entry",
+      "env": "Chrome headless, 1440×900, file://",
+      "status": "fail",
+      "checks": [
+        {
+          "label": "click shows lat/lon matching the equirectangular inverse",
+          "ok": true,
+          "detail": {
+            "label": "0.000° N, 0.000° E · Detail data not checked",
+            "lat": 0,
+            "lon": 0
+          }
+        },
+        {
+          "label": "unregistered location says detail not checked, no route computed",
+          "ok": true,
+          "detail": "0.000° N, 0.000° E · Detail data not checked"
+        },
+        {
+          "label": "drag pans the global map",
+          "ok": false,
+          "detail": {
+            "r": {
+              "x": -380,
+              "y": -134.84375,
+              "w": 2200,
+              "h": 1100
+            },
+            "r2": {
+              "x": -365,
+              "y": -129.84375
+            }
+          }
+        },
+        {
+          "label": "region data status readable without hover (touch)",
+          "ok": false,
+          "detail": [
+            {
+              "text": "Gale (Curiosity)",
+              "title": "Elevation + orbital map · ground photos: packaged · local geometry: not_checked"
+            },
+            {
+              "text": "Jezero (Perseverance)",
+              "title": "Elevation + orbital map · ground photos: packaged · local geometry: packaged"
+            },
+            {
+              "text": "Aram Chaos (virtual base)",
+              "title": "Elevation + orbital map · ground photos: not_checked · local geometry: not_checked"
+            }
+          ]
+        },
+        {
+          "label": "region button enters detail and closes dialog",
+          "ok": true
+        },
+        {
+          "label": "Mars button reopens global map",
+          "ok": true
+        },
+        {
+          "label": "Escape closes global map",
+          "ok": true
+        },
+        {
+          "label": "no page errors",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [
+        "region buttons: [{\"text\":\"Gale (Curiosity)\",\"title\":\"Elevation + orbital map · ground photos: packaged · local geometry: not_checked\"},{\"text\":\"Jezero (Perseverance)\",\"title\":\"Elevation + orbital map · ground photos: packaged · local geometry: packaged\"},{\"text\":\"Aram Chaos (virtual base)\",\"title\":\"Elevation + orbital map · ground photos: not_checked · local geometry: not_checked\"}]"
+      ],
+      "screenshots": [
+        "reports/browser-qa/S10-global-1440.png"
+      ],
+      "errors": [],
+      "seconds": 2.476
+    },
+    {
+      "id": "S11",
+      "scenario": "Offline (network disabled) file:// open",
+      "env": "Chrome headless 1440×900, network emulated offline",
+      "status": "fail",
+      "checks": [
+        {
+          "label": "plan works offline",
+          "ok": true,
+          "detail": {
+            "ok": true,
+            "worker": true,
+            "t": {
+              "out": "103 min",
+              "back": "15 min",
+              "dwell": "192 min",
+              "split": "B 96 min  ·  A 96 min",
+              "status": "Ground coverage unverified"
+            }
+          }
+        },
+        {
+          "label": "global map image renders offline",
+          "ok": true
+        },
+        {
+          "label": "site photo renders offline",
+          "ok": true
+        },
+        {
+          "label": "no external request needed for core features",
+          "ok": false,
+          "detail": [
+            "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNOwtW_Wg.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.119.woff2",
+            "https://fonts.gstatic.com/s/ibmplexmono/v23/-F6qfjptAgt5VM-kVkqdyU8n3twJwlBFgg.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.115.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOym6aT7HmqQ.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.119.woff2",
+            "https://fonts.gstatic.com/s/ibmplexmono/v23/-F63fjptAgt5VM-kVkqdyU8n1i8q1w.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbT7HmqQ.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.118.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.117.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.115.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacT7HmqQ.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.118.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.117.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.116.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.114.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.116.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.119.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.118.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.117.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.114.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.109.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.32.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.116.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.98.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.110.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.98.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOym6af7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.113.woff2",
+            "https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.110.woff2"
+          ]
+        },
+        {
+          "label": "no page errors",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [
+        "external requests attempted: [\"https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNOwtW_Wg.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.119.woff2\",\"https://fonts.gstatic.com/s/ibmplexmono/v23/-F6qfjptAgt5VM-kVkqdyU8n3twJwlBFgg.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.115.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOym6aT7HmqQ.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.119.woff2\",\"https://fonts.gstatic.com/s/ibmplexmono/v23/-F63fjptAgt5VM-kVkqdyU8n1i8q1w.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbT7HmqQ.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.118.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.117.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.115.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacT7HmqQ.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.118.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.117.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.116.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.114.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.116.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.119.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.118.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.117.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.114.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.109.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.32.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.116.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.98.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.110.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tfdTbzIx6SmGN7aVT6YLxnNoW0zig.98.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOym6af7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.113.woff2\",\"https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7OEvsHaFtDGbzuTFhzdq3hW5qs5jg.110.woff2\"]"
+      ],
+      "screenshots": [],
+      "errors": [],
+      "seconds": 3.338
+    },
+    {
+      "id": "S12",
+      "scenario": "HTTP localhost vs file",
+      "env": "Chrome headless 1440×900, http://127.0.0.1 (python http.server)",
+      "status": "fail",
+      "checks": [
+        {
+          "label": "server started",
+          "ok": true
+        },
+        {
+          "label": "same plan over HTTP",
+          "ok": true,
+          "detail": {
+            "ok": true,
+            "worker": true,
+            "t": {
+              "out": "103 min",
+              "back": "15 min",
+              "dwell": "192 min",
+              "split": "B 96 min  ·  A 96 min",
+              "status": "Ground coverage unverified"
+            },
+            "origin": "http://127.0.0.1:8765"
+          }
+        },
+        {
+          "label": "visor window opens over HTTP",
+          "ok": false
+        },
+        {
+          "label": "no page errors",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [
+        "HTTP load 641 ms; times {\"out\":\"103 min\",\"back\":\"15 min\",\"dwell\":\"192 min\",\"split\":\"B 96 min  ·  A 96 min\",\"status\":\"Ground coverage unverified\"}"
+      ],
+      "screenshots": [],
+      "errors": [],
+      "seconds": 3.527
+    },
+    {
+      "id": "S13",
+      "scenario": "Screen sizes: key controls visible, not covered, tappable",
+      "env": "Chrome headless device emulation",
+      "status": "fail",
+      "checks": [
+        {
+          "label": "desktop 1440×900: controls visible, inside viewport, not covered",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "label": "desktop 1440×900: no page scroll",
+          "ok": true,
+          "detail": {
+            "x": false,
+            "y": false
+          }
+        },
+        {
+          "label": "desktop 1440×900: site popup fits and can be closed",
+          "ok": true,
+          "detail": {
+            "inside": true,
+            "closeVisible": true
+          }
+        },
+        {
+          "label": "desktop 1440×900: settings drawer opens and close button reachable",
+          "ok": true,
+          "detail": {
+            "visible": true,
+            "closeInside": true
+          }
+        },
+        {
+          "label": "laptop 1366×768: controls visible, inside viewport, not covered",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "label": "laptop 1366×768: no page scroll",
+          "ok": true,
+          "detail": {
+            "x": false,
+            "y": false
+          }
+        },
+        {
+          "label": "laptop 1366×768: site popup fits and can be closed",
+          "ok": true,
+          "detail": {
+            "inside": true,
+            "closeVisible": true
+          }
+        },
+        {
+          "label": "laptop 1366×768: settings drawer opens and close button reachable",
+          "ok": true,
+          "detail": {
+            "visible": true,
+            "closeInside": true
+          }
+        },
+        {
+          "label": "phone 390×844 (touch emulation): controls visible, inside viewport, not covered",
+          "ok": false,
+          "detail": [
+            {
+              "id": "map-settings",
+              "visible": true,
+              "inside": true,
+              "covered": true,
+              "by": "map-shell map-tools",
+              "size": [
+                57,
+                33
+              ]
+            }
+          ]
+        },
+        {
+          "label": "phone 390×844 (touch emulation): touch targets ≥32px",
+          "ok": false,
+          "detail": [
+            {
+              "id": "map-out",
+              "visible": true,
+              "inside": true,
+              "covered": false,
+              "by": null,
+              "size": [
+                81,
+                28
+              ]
+            },
+            {
+              "id": "map-back",
+              "visible": true,
+              "inside": true,
+              "covered": false,
+              "by": null,
+              "size": [
+                70,
+                28
+              ]
+            },
+            {
+              "id": "map-dwell",
+              "visible": true,
+              "inside": true,
+              "covered": false,
+              "by": null,
+              "size": [
+                81,
+                28
+              ]
+            }
+          ]
+        },
+        {
+          "label": "phone 390×844 (touch emulation): no page scroll",
+          "ok": true,
+          "detail": {
+            "x": false,
+            "y": false
+          }
+        },
+        {
+          "label": "phone 390×844 (touch emulation): site popup fits and can be closed",
+          "ok": true,
+          "detail": {
+            "inside": true,
+            "closeVisible": true
+          }
+        },
+        {
+          "label": "phone 390×844 (touch emulation): settings drawer opens and close button reachable",
+          "ok": true,
+          "detail": {
+            "visible": true,
+            "closeInside": true
+          }
+        },
+        {
+          "label": "phone landscape 844×390 (touch emulation): controls visible, inside viewport, not covered",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "label": "phone landscape 844×390 (touch emulation): touch targets ≥32px",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "label": "phone landscape 844×390 (touch emulation): no page scroll",
+          "ok": true,
+          "detail": {
+            "x": false,
+            "y": false
+          }
+        },
+        {
+          "label": "phone landscape 844×390 (touch emulation): site popup fits and can be closed",
+          "ok": false,
+          "detail": {
+            "inside": false,
+            "closeVisible": true
+          }
+        },
+        {
+          "label": "phone landscape 844×390 (touch emulation): settings drawer opens and close button reachable",
+          "ok": true,
+          "detail": {
+            "visible": true,
+            "closeInside": true
+          }
+        }
+      ],
+      "notes": [
+        "desktop 1440×900: [\"map-play\",\"map-out\",\"map-back\",\"map-dwell\",\"map-north\",\"map-plus\",\"map-minus\",\"map-settings\",\"map-world\",\"map-sites\",\"map-return\",\"map-reset\"]",
+        "laptop 1366×768: [\"map-play\",\"map-out\",\"map-back\",\"map-dwell\",\"map-north\",\"map-plus\",\"map-minus\",\"map-settings\",\"map-world\",\"map-sites\",\"map-return\",\"map-reset\"]",
+        "phone 390×844 (touch emulation): [\"map-play\",\"map-out\",\"map-back\",\"map-dwell\",\"map-north\",\"map-plus\",\"map-minus\",\"map-settings\",\"map-world\",\"map-sites\",\"map-return\",\"map-reset\"]",
+        "phone landscape 844×390 (touch emulation): [\"map-play\",\"map-out\",\"map-back\",\"map-dwell\",\"map-north\",\"map-plus\",\"map-minus\",\"map-settings\",\"map-world\",\"map-sites\",\"map-return\",\"map-reset\"]"
+      ],
+      "screenshots": [
+        "reports/browser-qa/S13-desktop-1440x900.png",
+        "reports/browser-qa/S13-desktop-1440x900-settings.png",
+        "reports/browser-qa/S13-laptop-1366x768.png",
+        "reports/browser-qa/S13-laptop-1366x768-settings.png",
+        "reports/browser-qa/S13-phone-390x844.png",
+        "reports/browser-qa/S13-phone-390x844-settings.png",
+        "reports/browser-qa/S13-phone-844x390.png",
+        "reports/browser-qa/S13-phone-844x390-settings.png"
+      ],
+      "errors": [],
+      "seconds": 13.399
+    },
+    {
+      "id": "S14",
+      "scenario": "Touch: pinch, twist, pan (emulated touch events)",
+      "env": "Chrome headless 390×844 touch emulation",
+      "status": "fail",
+      "checks": [
+        {
+          "label": "one-finger pan moves the map",
+          "ok": false,
+          "detail": {
+            "s0": {
+              "x": 451.484375,
+              "y": 54.5
+            },
+            "s1": {
+              "x": 339.078125,
+              "y": 733.171875
+            }
+          }
+        },
+        {
+          "label": "two-finger pinch zooms ~2×",
+          "ok": true,
+          "detail": {
+            "k1": 1,
+            "k2": 1.9999999111346896
+          }
+        },
+        {
+          "label": "two-finger twist rotates ~30°",
+          "ok": true,
+          "detail": {
+            "a1": 0,
+            "a2": 30.000001469820518
+          }
+        },
+        {
+          "label": "no page errors",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [],
+      "screenshots": [],
+      "errors": [],
+      "seconds": 1.41
+    },
+    {
+      "id": "S15",
+      "scenario": "Keyboard and English-only text",
+      "env": "Chrome headless, 1440×900, file://",
+      "status": "fail",
+      "checks": [
+        {
+          "label": "Escape closes popup and returns focus to Sites",
+          "ok": true
+        },
+        {
+          "label": "visible controls have accessible names",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "label": "Tab reaches map controls",
+          "ok": false,
+          "detail": [
+            "map-roadview",
+            "map-visor",
+            "map-evidence",
+            "map-event",
+            "map-settings",
+            "map-north",
+            "map-rotate-left",
+            "map-rotate-right",
+            "map-plus",
+            "map-minus",
+            "map-center",
+            "map-fit",
+            "map-share",
+            "BUTTON",
+            "BUTTON",
+            "map-order",
+            "map-reset",
+            "map-play",
+            "BODY",
+            "map-target-pin",
+            "map-target-pin selected",
+            "map-target-pin",
+            "map-target-pin",
+            "sim-play",
+            "sim-t"
+          ]
+        },
+        {
+          "label": "default map UI has no Korean text",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "label": "map screen names/titles/alt have no Korean (screen readers, tooltips)",
+          "ok": false,
+          "detail": [
+            "ortho: HiRISE 정사영상: Jezero 크레이터 삼각주"
+          ]
+        },
+        {
+          "label": "settings drawer has no Korean text",
+          "ok": false,
+          "detail": [
+            "기준 상황(산소 816.466266 g, 만충, k 1.0) 24.57 km² 대비 +22% · 산소만 보면",
+            "96 / 96 min (작업 대사량 = 평지 보행 기준치)"
+          ]
+        },
+        {
+          "label": "visor window has no Korean text",
+          "ok": true,
+          "detail": []
+        }
+      ],
+      "notes": [
+        "tab order: map-roadview → map-visor → map-evidence → map-event → map-settings → map-north → map-rotate-left → map-rotate-right → map-plus → map-minus → map-center → map-fit → map-share → BUTTON → BUTTON → map-order → map-reset → map-play → BODY → map-target-pin → map-target-pin selected → map-target-pin → map-target-pin → sim-play → sim-t",
+        "Korean strings in settings drawer: 2"
+      ],
+      "screenshots": [],
+      "errors": [],
+      "seconds": 3.427
+    },
+    {
+      "id": "S16",
+      "scenario": "Performance (emulated desktop, this PC)",
+      "env": "Chrome headless 1440×900 on local Windows PC",
+      "status": "pass",
+      "checks": [
+        {
+          "label": "first map ≤10 s (provisional target)",
+          "ok": true,
+          "detail": 572
+        },
+        {
+          "label": "first plan ≤10 s after load (provisional target)",
+          "ok": true,
+          "detail": 1741
+        },
+        {
+          "label": "live estimate ≤10 s (provisional target)",
+          "ok": true,
+          "detail": 797
+        }
+      ],
+      "notes": [
+        "[{\"loadMs\":560,\"planMs\":1572,\"liveMs\":792,\"totalMs\":2974,\"heapMB\":null},{\"loadMs\":572,\"planMs\":1764,\"liveMs\":814,\"totalMs\":3186,\"heapMB\":null},{\"loadMs\":573,\"planMs\":1741,\"liveMs\":797,\"totalMs\":3147,\"heapMB\":null}]"
+      ],
+      "screenshots": [],
+      "errors": [],
+      "seconds": 9.309
+    }
+  ],
+  "not_run": [
+    "Physical phone/tablet (only Chrome device emulation)",
+    "Safari/Firefox",
+    "Popup-blocker enabled browser (headless allows window.open)",
+    "Screen recording (H7)"
+  ]
+}

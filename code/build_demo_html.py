@@ -79,6 +79,14 @@ def photos(site):
     for p in json.load(open(f"{d}/photos.json", encoding="utf-8")):
         q = {k: p[k] for k in ("x", "y", "sol", "rover", "date", "camera", "credit", "url")}
         q["img"] = "data:image/jpeg;base64," + b64(f"{d}/{p['file']}")
+        full = f"../data/downloaded/ui_support/visor/{site}/sol{int(p['sol']):04d}.png"
+        if os.path.exists(full):
+            q["full_img"] = "data:image/png;base64," + b64(full)
+            with open(full, "rb") as image:
+                header = image.read(24)
+            q["full_width"] = int.from_bytes(header[16:20], "big")
+            q["full_height"] = int.from_bytes(header[20:24], "big")
+            q["full_source_url"] = p["url"].replace("_800.jpg", ".png")
         out.append(q)
     return out
 
@@ -100,6 +108,7 @@ def main():
     assert OFF16[:8] == meta["offsets"], "앞 8방향 순서가 같아야 미리 계산한 자료를 그대로 읽을 수 있음"
     meta["offsets"] = OFF16
     meta["site"] = gale_site(meta)
+    meta["world"] = json.load(open("global_map.json", encoding="utf-8"))
     meta["photos"] = photos("gale")
     meta["tir"] = tir("gale")
     meta["targets"] = targets("gale")
@@ -118,6 +127,17 @@ def main():
         sm["tir"] = tir(sid)
         sm["targets"] = targets(sid)
         sm["roadview"] = roadview(sid)
+        if sid == "jezero":
+            ld = "../outputs/local_terrain/jezero"
+            lm = json.load(open(f"{ld}/manifest.json", encoding="utf-8"))
+            sm["localTerrain"] = dict(lm, preview="data:image/svg+xml;base64," + b64(f"{ld}/{lm['assets']['preview']}"))
+            station_targets = json.load(open(f"{ld}/stations.json", encoding="utf-8"))["targets"]
+            connectivity = json.load(open("../reports/packaged-grid-validation.json", encoding="utf-8"))["reachable_targets"]
+            for target in station_targets:
+                checked = next((r for r in connectivity if r["name"] == target["name"]), None)
+                if checked is not None: target["default_base_reachable"] = checked["reachable"]
+            sm["targets"].extend(station_targets)
+            sm["evidenceMission"] = json.load(open(f"{ld}/mission.json", encoding="utf-8"))
         sites.append({"meta": sm, "data": b64(f"{d}/data.bin.gz"),
                       "shade": "data:image/png;base64," + b64(f"{d}/hillshade.png"),
                       "ortho": "data:image/jpeg;base64," + b64(f"{d}/basemap.jpg")})
@@ -127,6 +147,8 @@ def main():
            "__SHADE__": "data:image/png;base64," + b64("../outputs/demo/hillshade.png"),
            "__ORTHO__": "data:image/jpeg;base64," + b64("../outputs/demo/basemap.jpg")}
     html = html.replace("/*__I18N__*/", open("i18n_en.js", encoding="utf-8").read(), 1)
+    html = html.replace("/*__MAP_UI_CSS__*/", open("map_ui.css", encoding="utf-8").read(), 1)
+    html = html.replace("/*__MAP_UI__*/", open("map_ui_policy.js", encoding="utf-8").read() + "\n" + open("map_ui.js", encoding="utf-8").read(), 1)
     for key, val in rep.items():
         assert html.count(key) == 1, key
         html = html.replace(key, val)

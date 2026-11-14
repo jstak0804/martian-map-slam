@@ -1,0 +1,194 @@
+{
+  "schema_version": 2,
+  "generated_at": "2026-11-14T11:34:31.800Z",
+  "status": "pass",
+  "html_sha256": "e207c9441d3ba4c4db98ae2c538209ed9236c8a2e76cd8a8dc28fc33d2f51c51",
+  "html_bytes": 40492997,
+  "inputs": {
+    "seed_manifest": {
+      "meta.json": {
+        "bytes": 1093951,
+        "sha256": "755aa0768eaae6261d98a4a6c88a8da24f32d55af75ea2e6bed6ca6be6a5a22d"
+      },
+      "sites.json": {
+        "bytes": 5393268,
+        "sha256": "78ad34974cccf5ce1ce1580aa6499b15c37cdd464a648f627a4fb657cb78875c"
+      },
+      "blob.b64": {
+        "bytes": 5725672,
+        "sha256": "ff9f089e44f6e2dca1a1751cc470c08d3048ebdf08b0663f402095fe232b063a"
+      },
+      "shade.txt": {
+        "bytes": 511182,
+        "sha256": "159be5a1b2621faefd07e52f4c55ab9c591822e10123e4a86d387fbc956ec96e"
+      },
+      "ortho.txt": {
+        "bytes": 961035,
+        "sha256": "09a134d0ff0ee4ce356e35f811e459e9e1346571e0614661bbddebf649143f89"
+      }
+    },
+    "template": "9d39959fc306da7586b7d7c8b8d6438ef04ff54281e70a3a53196ed27984846d",
+    "global_map": "73a7eebe3786ad0cda750bd5362260587b69c432e4df05fb78c079232e756f71",
+    "outputs/local_terrain/jezero/manifest.json": "dbd60af371cb2674dd986fcb134979d21ebc0e591626183a6d42920345e8c926",
+    "outputs/local_terrain/jezero/stations.json": "216e261d1c68d4f20514165c88b45d89c6e3aa6a99b32503345af67044d988b7",
+    "reports/packaged-grid-validation.json": "ee66bdf628f59bf52e3e306889dd722ac753e032da527369b1237ca140b2777b",
+    "outputs/local_terrain/jezero/mission.json": "e42b9ad650c900a2cef9eb008634229a4eb5d2d4646fa3ae0d92c8091c203b75",
+    "outputs/local_terrain/jezero/common-frame-preview.svg": "97ae9c39e8118f547884b7e80b91e5abab486f114349611bedb75f432b415109",
+    "code/i18n_en.js": "2c06ee6694aba81e3ab3c4feb1035ff92831f9cbc9bab5be6c8491a35cd3c8bc",
+    "code/map_ui.css": "b32223cd67c6e8b20d3cfa8036304623b12f6218903fa41a89cdf4639dd1884f",
+    "code/map_ui_policy.js": "b4eee3b21339e1e2907de6bbdc22869569460c7e2e33ef52191ff2f472dfe34d",
+    "code/map_ui.js": "7520b8d0f8e6d96dea26755beda7ea9af635b21cd753efd40cfa1dbe3b3d6910"
+  },
+  "node": "v22.11.0",
+  "platform": "win32 10.0.26200",
+  "check_counts": {
+    "ui": 39,
+    "remaining": 26,
+    "h0": 18
+  },
+  "check_total": 83,
+  "steps": [
+    {
+      "name": "build",
+      "status": "pass",
+      "seconds": 0.9801844999999999,
+      "result": {
+        "bytes": 40492997,
+        "html_sha256": "e207c9441d3ba4c4db98ae2c538209ed9236c8a2e76cd8a8dc28fc33d2f51c51",
+        "payloadSource": "data/packed_seed (hash-verified)",
+        "fullResolutionPhotos": 10,
+        "connectivity": {
+          "trusted": true,
+          "reason": null
+        },
+        "scriptSyntax": "pass"
+      }
+    },
+    {
+      "name": "ui",
+      "status": "pass",
+      "seconds": 0.022420200000000022,
+      "result": {
+        "passed": 39,
+        "scope": "Pure policy, coordinate inverses and complete-selection planner; not browser visual QA"
+      }
+    },
+    {
+      "name": "remaining",
+      "status": "pass",
+      "seconds": 0.3185162,
+      "result": {
+        "passed": 26,
+        "scope": "Observation integrity, registration rejection, global coordinates, actual worker graph fixtures"
+      }
+    },
+    {
+      "name": "h0",
+      "status": "pass",
+      "seconds": 0.10644180000000006,
+      "result": {
+        "passed": 18,
+        "scope": "H0 seed integrity, connectivity provenance, overwrite guards, package freshness"
+      }
+    },
+    {
+      "name": "python-reference",
+      "status": "pass",
+      "seconds": 0.04833330000000001,
+      "result": {
+        "rows": 84,
+        "comparisons": 504,
+        "worst_relative_error": 3.6128103312332233e-16,
+        "source_sha256": "439ffd78add11bbe8609074511e615f88446970037f41a92c31d10a3a1e62e80",
+        "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+        "numpy": "2.2.6",
+        "status": "pass"
+      }
+    },
+    {
+      "name": "grid (temp dir, product files untouched)",
+      "status": "pass",
+      "seconds": 106.0391687,
+      "result": {
+        "provenance": {
+          "grid_payload_sha256": "238cdf849ddc2a4873b61634ede18f19b7d67fcfcc4158d66f280ee8b3ddee67",
+          "model_source_sha256": "28fcf0c369eeb90e7bb4631e32a09538d02a91fbe946be14a389750d3b57aefd",
+          "seed_manifest_sha256": "e32b9f7dd9b4359828ff27921052492185d7f22cebb3dd89e515a45e17a7b64d",
+          "stations_sha256": "8a9f5a985dae749b6893e09ee7f6d773485453b54cce69d76d46e9cf4a0db21c",
+          "base": 405918,
+          "strict": true,
+          "overlay_revision": 0
+        },
+        "cells": 466900,
+        "directions": 16,
+        "flat_metabolic_w": 444.3962696888408,
+        "base": 405918,
+        "checked_path_edges": 663,
+        "oxygen_integral_g": 303.3991580317997,
+        "time_integral_s": 9633.262538871817,
+        "synthetic_event": {
+          "cell": 398559,
+          "before": {
+            "ok": true,
+            "outbound_s": 6197.963741395319,
+            "return_s": 905.1864002562336,
+            "dwell_s": 11520,
+            "o2_g": 587.8917410391745,
+            "status": "needs_observation"
+          },
+          "after": {
+            "ok": true,
+            "outbound_s": 3866.8900100160436,
+            "return_s": 3243.0286025922233,
+            "dwell_s": 11520,
+            "o2_g": 587.893015552067,
+            "status": "needs_observation"
+          }
+        },
+        "elapsed_s": 105.87099860000001,
+        "scope": "Actual packaged Jezero grid and actual worker, executed in Node VM; not browser rendering or device timing",
+        "written": {
+          "mission": "C:\\Users\\user\\AppData\\Local\\Temp\\jezero-grid-9Eu9uI\\mission.json",
+          "report": "C:\\Users\\user\\AppData\\Local\\Temp\\jezero-grid-9Eu9uI\\packaged-grid-validation.json",
+          "published": false
+        },
+        "product_files_unchanged": true,
+        "matches_published": true,
+        "reachable_targets": [
+          {
+            "id": "target-0",
+            "reachable": true
+          },
+          {
+            "id": "target-1",
+            "reachable": true
+          },
+          {
+            "id": "target-2",
+            "reachable": true
+          },
+          {
+            "id": "navcam-25-94",
+            "reachable": false
+          },
+          {
+            "id": "navcam-25-214",
+            "reachable": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "reproducible build",
+      "status": "pass",
+      "seconds": 1.6226034999999974,
+      "result": {
+        "builds": 3,
+        "html_sha256": "e207c9441d3ba4c4db98ae2c538209ed9236c8a2e76cd8a8dc28fc33d2f51c51",
+        "identical": true
+      }
+    }
+  ],
+  "scope": "Automated Node/Python checks only. Not browser/DOM visual QA (see reports/browser-qa.md).",
+  "elapsed_s": 109.1827574
+}

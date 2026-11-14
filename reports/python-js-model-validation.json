@@ -1,0 +1,9 @@
+{
+  "rows": 84,
+  "comparisons": 504,
+  "worst_relative_error": 3.6128103312332233e-16,
+  "source_sha256": "439ffd78add11bbe8609074511e615f88446970037f41a92c31d10a3a1e62e80",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "numpy": "2.2.6",
+  "status": "pass"
+}

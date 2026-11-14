@@ -1,0 +1,16 @@
+# These files are hash-verified inputs; keep their exact bytes on every platform.
+data/packed_seed/** -text
+data/jezero_observations/** -text
+code/*.mjs -text
+code/demo_template.html -text
+code/map_ui.js -text
+code/map_ui_policy.js -text
+code/map_ui.css -text
+code/i18n_en.js -text
+code/global_map.json -text
+outputs/local_terrain/** -text
+outputs/global_mars/** -text
+reports/18-eva-walkback-demo.html -text
+reports/18-eva-walkback-demo.standalone.html -text
+reports/*.json -text
+tests/fixtures/** -text

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "run_id": "H0-2026-11-14",
+  "environment": {
+    "os": "Windows 11 Home 10.0.26200",
+    "node": "v22.11.0 portable, C:/nasa/.tools/node-v22.11.0-win-x64 (nodejs.org zip, SHA256 905373a059aecaf7f48c1ce10ffbd5334457ca00f678747f19db5ea7d256c236 matched SHASUMS256.txt)",
+    "python": "3.12.10 + NumPy 2.2.6 at C:/nasa/.tools/python-3.12.10",
+    "git": "not available"
+  },
+  "baseline": {
+    "html_sha256_before": "659717e570f7f949e93919180739b68f6b9ce69c9f230cf0b121d807ded5ac19",
+    "run_manifest": "reports/run-manifest-pre-H0.json",
+    "backup": "C:/nasa/backups/2026-11-14-pre-H0",
+    "existing_checks_reproduced": {"ui": 39, "remaining": 26}
+  },
+  "changes": {
+    "seed": "data/packed_seed/ holds the terrain/photo/map payload extracted once from the baseline HTML, with build-derived fields removed (full-resolution photos, world map, PLACES station targets, localTerrain, evidenceMission). seed-manifest.json records per-file SHA256; loadSeed() refuses a mismatched or missing seed. buildUI no longer reads its own output.",
+    "grid_check": "runPackagedGrid(root) writes mission/report to a fresh temp dir by default. runPackagedGrid(root,{publish:true}) is the explicit product update. The runner hashes mission.json, packaged-grid-validation.json and manifest.json before/after the temp run.",
+    "connectivity_provenance": "packaged-grid-validation.json now carries provenance {grid_payload_sha256, model_source_sha256 (MAKE_MODEL+WORKER_MAIN source), seed_manifest_sha256, stations_sha256, base, strict, overlay_revision} and a stable id per target. buildUI joins by id only when grid/model/base match; otherwise default_base_reachable=null (unknown), never false. The UI shows 'Route from base not pre-checked' for unknown stations.",
+    "evidence": "buildEvidence/buildStationCandidates take outDir/catalogPath. Mesh selection is the explicit COMMON_FRAME_MESH_IDS list (PDS4 LIDs, no version); two files with the same LID and different content fail the build. A manifest with status != local_only, a grid_registration, or non-empty masks is never overwritten. buildStationCandidates reads the seed, not the output HTML.",
+    "runner": "tests/run_validation.mjs: build, ui, remaining, h0, python-reference, grid (temp), optional --publish-grid, --reproduce, --package. Writes automated-validation.json (schema 2, html_sha256, input hashes, per-step results) only when every step passes; exit 1 on failure.",
+    "package": "packageReview refuses when automated-validation.json is not passing, was made for another HTML hash, or the connectivity provenance does not match the current grid/model/base."
+  },
+  "verification": {
+    "seed_build_vs_baseline_html": "byte-identical after mapping the two Navcam default_base_reachable values null->false (the only expected difference, because the pre-H0 connectivity report had no provenance)",
+    "three_builds_same_inputs": "identical HTML SHA256",
+    "published_mission_vs_pre_H0": "byte-identical (fc /b)",
+    "grid_numbers_vs_pre_H0": "reachable targets, oxygen/time integrals, path edges and synthetic before/after identical",
+    "temp_grid_vs_published": "reachable targets and synthetic before identical; product files unchanged",
+    "buildEvidence_in_temp_dir": "catalog.json, common-frame-preview.svg, common-frame-points.json identical; manifest differs only in quality.runtime_s",
+    "checks": {"ui": 39, "remaining": 26, "h0": 18, "total": 83, "python_reference_rows": 84},
+    "html_sha256_after": "638e80e206efd67ab8c28dacfa68db2b926a7b207e804324c6284098d50ab07b",
+    "html_change_reason": "map_ui.js: one caption line for unknown station reachability; connectivity values unchanged (false for both Navcam stations, now provenance-checked)",
+    "dist_index_sha256": "638e80e206efd67ab8c28dacfa68db2b926a7b207e804324c6284098d50ab07b"
+  },
+  "limits": [
+    "Seed is the packaged payload, not a clean rebuild from raw DTM; code/build_demo_html.py full regeneration is still unverified.",
+    "Automated checks are Node VM/pure-function checks, not browser DOM or device QA.",
+    "build-reproducibility of buildEvidence was compared once; quality.runtime_s is timing and varies by run."
+  ]
+}

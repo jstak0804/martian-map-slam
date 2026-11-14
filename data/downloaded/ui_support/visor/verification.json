@@ -1,0 +1,165 @@
+{
+  "checked_at_utc": "2026-11-14T08:21:57.170Z",
+  "files": [
+    {
+      "path": "ui_support/visor/jezero/sol0013.jpg",
+      "dimensions": [
+        800,
+        600
+      ],
+      "sha256": "CDE020C252B32D7EF5192A4B9B2490F9BF66737B17EE4D6C89EFC3190B308CD3"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0127.jpg",
+      "dimensions": [
+        800,
+        600
+      ],
+      "sha256": "A6DF90C2E08840BE0B887FC354A3B28B49DA98115F7A441EC491D7AC2C06CC56"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0136.jpg",
+      "dimensions": [
+        800,
+        600
+      ],
+      "sha256": "4831593C4AA4475E465DDCD144A92A0F0E5E48DE389A3218D6CAD8A1EFDE8DF7"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0178.jpg",
+      "dimensions": [
+        800,
+        600
+      ],
+      "sha256": "04F73BD6946300DBCB1942A0F8ECA2E65CD377A4BA29C69C2F1AD09018E7F2B6"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0414.jpg",
+      "dimensions": [
+        800,
+        600
+      ],
+      "sha256": "595B515D4C1747A9B1E867EC2722F06298AA5BD6C2A471C7C313F9F6E1752384"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0464.jpg",
+      "dimensions": [
+        800,
+        600
+      ],
+      "sha256": "104720AD055ABAAEAB1CD35E89FDB6911CBB2432D80894475E00CAA5D0AD8AFB"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0714.jpg",
+      "dimensions": [
+        800,
+        600
+      ],
+      "sha256": "8BCDE9D4C65ABB193BB4E9775C6A298E764BEFA0F3C63B95ED319D56CA7AAEDE"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0717.jpg",
+      "dimensions": [
+        800,
+        600
+      ],
+      "sha256": "71BB158F78FB3608B28F9958F93F3904E83F501615E8570FCB144FF91F72D7B2"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0719.jpg",
+      "dimensions": [
+        800,
+        600
+      ],
+      "sha256": "205340096C1EDB8BD271775E6EA05C1D7B9AE30CF99E00733C08B59C7F48D958"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0732.jpg",
+      "dimensions": [
+        800,
+        600
+      ],
+      "sha256": "D13543EB944571A2774638E597C50ACAA1F2C6DECC0DC422CAC64B63326508AD"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0013.png",
+      "dimensions": [
+        1280,
+        960
+      ],
+      "sha256": "5E2CC6B45F288D296A1307484199CD9705E8106287202938D628421FC591F6C3"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0127.png",
+      "dimensions": [
+        1280,
+        960
+      ],
+      "sha256": "D8F953E43E72146DD98258DF2393FBC55DCBB64412D1CBDFAA967E9F3C73940A"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0136.png",
+      "dimensions": [
+        1280,
+        960
+      ],
+      "sha256": "1F91C1A29F724C9AD615667E9EDF45EBC63B385C83FDA997AD11DCB4ACF53AE8"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0178.png",
+      "dimensions": [
+        1280,
+        960
+      ],
+      "sha256": "1799B8847D2D03C37B3FBFFDAD4C1D95E9EFF897A40368D157074FBC2832AA94"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0414.png",
+      "dimensions": [
+        1280,
+        960
+      ],
+      "sha256": "B8C4F4E35AE3D9A4B3C6B560954206CB4F1FEC5FBC67D766815B68342DD14044"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0464.png",
+      "dimensions": [
+        1280,
+        960
+      ],
+      "sha256": "F4014FFA75C4F91D5A93551EC7AF8220C25DD40D62EF623BBCC76CC55D805BCF"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0714.png",
+      "dimensions": [
+        1280,
+        960
+      ],
+      "sha256": "48ADDFC7C7009A02CF85FAF0517D5818EF24B36427FEB9F1E2B9A0342FDB542B"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0717.png",
+      "dimensions": [
+        1280,
+        960
+      ],
+      "sha256": "2C5E5CE8A4A3A0126F63DA3DC7ECB82E5B77B09C62B7293A6EF5455CADA81DFC"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0719.png",
+      "dimensions": [
+        1280,
+        960
+      ],
+      "sha256": "8B11D285AEA949B8552AD1D44333051F5A9E7DC81F789A95F55CAADCA4C7C99E"
+    },
+    {
+      "path": "ui_support/visor/jezero/sol0732.png",
+      "dimensions": [
+        1280,
+        960
+      ],
+      "sha256": "7C390477CDBB7B8C9E6003181979DE92C3F92D6A0E2E12BFD06718486764E18F"
+    }
+  ]
+}
