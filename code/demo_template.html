@@ -127,6 +127,11 @@
     font: 400 12px/1.5 var(--font-sans, system-ui); color: var(--ink-soft); text-align: left; white-space: normal; letter-spacing: 0; }
   .info.r .tip { left: auto; right: -12px; }
   .info:hover .tip, .info:focus .tip { display: block; }
+  /* 설정 서랍 안: 도움말을 그 줄 폭에 맞춰 서랍 안에서만 펼침 (가로 스크롤이 생겼다 사라지며 깜빡이던 문제) */
+  body.wide .leftcol { overflow-x: hidden; }
+  body.wide .leftcol .ctl, body.wide .leftcol .group, body.wide .leftcol label.sw, body.wide .leftcol .row, body.wide .leftcol h2 { position: relative; }
+  body.wide .leftcol .info { position: static; }
+  body.wide .leftcol .info .tip { left: 0; right: 0; width: auto; max-width: none; box-sizing: border-box; }
   .info .tip small, .info .tip .hint, .info .tip p { display: block; margin: 0; color: inherit; font-size: inherit; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
 
@@ -3363,7 +3368,8 @@
       sv.innerHTML = state.mode !== "explore" ? "" : state.xT.map((x, n) => { if (!x.virt) return "";
         const ex = (x.cell % W) + 0.5, ey = ((x.cell / W) | 0) + 0.5, r = 10 * lw;
         return `<line x1="${ex}" y1="${ey}" x2="${x.virt.x}" y2="${x.virt.y}" stroke="#0d1016" stroke-width="${5 * lw}"/><line x1="${ex}" y1="${ey}" x2="${x.virt.x}" y2="${x.virt.y}" stroke="#ffb347" stroke-width="${2.5 * lw}" stroke-dasharray="${6 * lw} ${4 * lw}"/>`
-          + `<circle cx="${x.virt.x}" cy="${x.virt.y}" r="${r}" fill="#e2794d" stroke="#0d1016" stroke-width="${2 * lw}"/><text x="${x.virt.x}" y="${x.virt.y + 4 * lw}" font-size="${12 * lw}" font-weight="700" text-anchor="middle" fill="#0d1016" font-family="system-ui">${"ABC"[n]}</text>`;
+          + `<circle cx="${x.virt.x}" cy="${x.virt.y}" r="${r}" fill="#e2794d" stroke="#0d1016" stroke-width="${2 * lw}"/><text x="${x.virt.x}" y="${x.virt.y + 4 * lw}" font-size="${12 * lw}" font-weight="700" text-anchor="middle" fill="#0d1016" font-family="system-ui">${"ABC"[n]}</text>`
+          + `<circle cx="${x.virt.x + r * 1.15}" cy="${x.virt.y - r * 1.15}" r="${r * 0.62}" fill="#0d1016" stroke="#ffb347" stroke-width="${1.5 * lw}"/><text x="${x.virt.x + r * 1.15}" y="${x.virt.y - r * 1.15 + 3.6 * lw}" font-size="${10 * lw}" font-weight="700" text-anchor="middle" fill="#ffb347" font-family="system-ui">×</text>`;
       }).join("");
     }
     if (state.mode === "explore") state.xT.forEach((x, n) => {      // 고른 탐사 지점: A·B·C
@@ -3600,6 +3606,11 @@
                          : (en ? " Estimated: <b>not reachable</b> on a round trip." : " 추정: 왕복 <b>불가</b>.");
         }
       }
+    }
+    const near = state.xT.findIndex((x) => x.virt && Math.hypot(x.virt.x - g.x, x.virt.y - g.y) * pxPerCell() < 24);   // 바깥 지점(또는 ×)을 누르면 뺌
+    if (near >= 0) {
+      state.xT.splice(near, 1); state.xScn = -1; XMANUAL = false; stopSim(); activePreset = ""; update();
+      toast(en ? "Site removed." : "지점을 뺐습니다.", 1800); return true;
     }
     // 지점으로 추가: 지형 띠 안의 가장 유리한 가장자리 칸까지는 실제 경로, 그 너머는 평지(η 1.2) 직선 보행으로 가정
     const S = setNow(); let added = null;
