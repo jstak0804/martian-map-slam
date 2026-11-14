@@ -91,6 +91,8 @@ const I18N = {
   "Curiosity 착륙지 (Bradbury Landing)": "Curiosity landing site (Bradbury Landing)",
   "Perseverance 착륙지 (Octavia E. Butler Landing)": "Perseverance landing site (Octavia E. Butler Landing)",
   "가는 중": "Walking out",
+  "여기서는 거점으로 이어지는 길이 없습니다 (급경사로 막힘).": "No route to base from here (blocked by steep slopes).",
+  "가파른 내리막의 대사량은 실측 자료가 없는 외삽입니다.": "Metabolic cost on steep descents is an extrapolation without measured data.",
   "상황 설정": "Situation", "지금 상황": "Status", "지도 표시": "Map layers",
   "기준": "Baseline", "관측 SPE ×2.9": "Observed SPE ×2.9", "대형 SPE ×30 (스트레스 테스트)": "Large SPE ×30 (stress test)", "지친 대원 k 1.2": "Tired crew k 1.2",
   "냉각수 누수 0.6 kg": "Coolant leak 0.6 kg", "누수 + 더운 오후": "Leak + hot afternoon", "안전 우선 운용": "Safety-first ops",
@@ -168,6 +170,9 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^여기서는 거점까지 돌아오는 데만 산소 ([\d,]+) g이 들어 예산 ([\d,]+) g을 넘습니다\. 더 갈 수 있는 곳이 없고, 지금 바로 돌아서도 모자랍니다\.$/, "Just getting back to base from here takes $1 g of O2, more than the $2 g budget. There is nowhere further to go, and even turning back now falls short."],
+  [/^여기서 그 칸까지 갔다가 거점으로 돌아올 수 있는 곳( \(언덕 위: 가장 완만한 하산길로 내려와 출발\))?\. 산소만 보면 ([\d.,]+) km²$/, (m, a, b) => `Cells you can reach from here and still return to base${a ? " (on a hill: start by descending the gentlest way)" : ""}. O2 alone: ${b} km²`],
+  [/^([\d.,]+) km · (\d+)시간 (\d+)분 \(하산 포함\)$/, "$1 km · $2 h $3 min (incl. descent)"],
   [/^산소 ([\d,−-]+) g \(지도의 빨간 고리\)$/, "O2 $1 g (red ring on the map)"], [/^([\d.,]+) km \((\d+)%\), 가장 긴 두절 (\d+)분$/, "$1 km ($2%), longest dropout $3 min"],
   [/^(\d+)분 \(작업 대사량 = 평지 보행 기준치\)$/, "$1 min (work metabolic rate = level-walking baseline)"], [/^귀환 필요량 \+(\d+)% 를 늘 남기는 계획$/, "Always keeps the return need +$1% in hand"],
   [/^도착 (\d+)시간 (\d+)분 · 그때까지 산소 ([\d,]+) g$/, "arrive at $1 h $2 min · O2 used by then $3 g"],

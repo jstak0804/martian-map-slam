@@ -751,6 +751,8 @@ const I18N = {
   "Curiosity 착륙지 (Bradbury Landing)": "Curiosity landing site (Bradbury Landing)",
   "Perseverance 착륙지 (Octavia E. Butler Landing)": "Perseverance landing site (Octavia E. Butler Landing)",
   "가는 중": "Walking out",
+  "여기서는 거점으로 이어지는 길이 없습니다 (급경사로 막힘).": "No route to base from here (blocked by steep slopes).",
+  "가파른 내리막의 대사량은 실측 자료가 없는 외삽입니다.": "Metabolic cost on steep descents is an extrapolation without measured data.",
   "상황 설정": "Situation", "지금 상황": "Status", "지도 표시": "Map layers",
   "기준": "Baseline", "관측 SPE ×2.9": "Observed SPE ×2.9", "대형 SPE ×30 (스트레스 테스트)": "Large SPE ×30 (stress test)", "지친 대원 k 1.2": "Tired crew k 1.2",
   "냉각수 누수 0.6 kg": "Coolant leak 0.6 kg", "누수 + 더운 오후": "Leak + hot afternoon", "안전 우선 운용": "Safety-first ops",
@@ -828,6 +830,9 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^여기서는 거점까지 돌아오는 데만 산소 ([\d,]+) g이 들어 예산 ([\d,]+) g을 넘습니다\. 더 갈 수 있는 곳이 없고, 지금 바로 돌아서도 모자랍니다\.$/, "Just getting back to base from here takes $1 g of O2, more than the $2 g budget. There is nowhere further to go, and even turning back now falls short."],
+  [/^여기서 그 칸까지 갔다가 거점으로 돌아올 수 있는 곳( \(언덕 위: 가장 완만한 하산길로 내려와 출발\))?\. 산소만 보면 ([\d.,]+) km²$/, (m, a, b) => `Cells you can reach from here and still return to base${a ? " (on a hill: start by descending the gentlest way)" : ""}. O2 alone: ${b} km²`],
+  [/^([\d.,]+) km · (\d+)시간 (\d+)분 \(하산 포함\)$/, "$1 km · $2 h $3 min (incl. descent)"],
   [/^산소 ([\d,−-]+) g \(지도의 빨간 고리\)$/, "O2 $1 g (red ring on the map)"], [/^([\d.,]+) km \((\d+)%\), 가장 긴 두절 (\d+)분$/, "$1 km ($2%), longest dropout $3 min"],
   [/^(\d+)분 \(작업 대사량 = 평지 보행 기준치\)$/, "$1 min (work metabolic rate = level-walking baseline)"], [/^귀환 필요량 \+(\d+)% 를 늘 남기는 계획$/, "Always keeps the return need +$1% in hand"],
   [/^도착 (\d+)시간 (\d+)분 · 그때까지 산소 ([\d,]+) g$/, "arrive at $1 h $2 min · O2 used by then $3 g"],
@@ -1038,10 +1043,10 @@ const I18N_RE = [
   const REST_O2_GS = () => C.rest_mr_w * C.o2_g_per_j;
   const REST_W_GS = () => Math.max(0, C.rest_mr_w + state.q) / C.latent_j_kg * 1000;
   function victimReturn(X) {
-    const S = setNow();
-    if (S.o2[X] < 0) return null;
-    if (state.vcarry === "walk") return { o2: S.o2[X], w: waterOf(S.o2[X], S.t[X], 1, state.q), t: S.t[X] };
-    return { o2: REST_O2_GS() * S.t[X], w: REST_W_GS() * S.t[X], t: S.t[X] };
+    const r = retTot(X);
+    if (!r) return null;
+    if (state.vcarry === "walk") return { o2: r.o2, w: waterOf(r.o2, r.t, 1, state.q), t: r.t };
+    return { o2: REST_O2_GS() * r.t, w: REST_W_GS() * r.t, t: r.t };
   }
   function victimSupply(tGo, ret) {
     const needO2 = REST_O2_GS() * tGo + ret.o2 + O2RES();
@@ -1148,8 +1153,9 @@ const I18N_RE = [
     return p;
   }
   // reverse = false: src에서 각 칸으로 가는 비용 / true: 각 칸에서 src로 가는 비용
-  function dijkstra(src, reverse, nofall = state.nofall) {
-    const pass = passMask(src, nofall);
+  function dijkstra(src, reverse, nofall = state.nofall, extra = null) {
+    const pass = passMask(src, nofall), corr = new Uint8Array(N);
+    if (extra) for (const c of extra) { pass[c] = 1; corr[c] = 1; }
     const dist = new Float64Array(N).fill(Infinity), tt = new Float32Array(N), dd = new Float32Array(N);
     const pred = new Int32Array(N).fill(-1);
     let cap = 1 << 20, hk = new Float64Array(cap), hv = new Int32Array(cap), n = 0;
@@ -1184,7 +1190,7 @@ const I18N_RE = [
         for (const [mx, my] of MID[o]) if (!pass[(uy + my) * W + ux + mx]) { midOk = false; break; }
         if (!midOk) continue;
         const d = STEP_M[o];
-        if (C.edge_slope_cap && Math.abs(H[v] - H[u]) / d * 100 > C.max_edge_grade_pct) continue;
+        if (C.edge_slope_cap && !(corr[u] && corr[v]) && Math.abs(H[v] - H[u]) / d * 100 > C.max_edge_grade_pct) continue;
         const a = reverse ? v : u, b = reverse ? u : v;
         const nd = dist[u] + edgeO2(a, b, d);
         if (nd < dist[v]) {
@@ -1278,6 +1284,8 @@ const I18N_RE = [
       const pass = new Uint8Array(N);
       for (let i = 0; i < N; i++) pass[i] = (FLAGS[i] & 8) && !(q.nofall && CLS[i] === 2) ? 1 : 0;
       pass[q.base] = 1; if (q.src >= 0) pass[q.src] = 1;
+      const corr = new Uint8Array(N);       // 언덕 위 지점: 가장 완만한 하산 통로를 열어 둠
+      if (q.extra) for (const c of q.extra) { pass[c] = 1; corr[c] = 1; }
       const dist = new Float64Array(N).fill(Infinity), o2 = mo ? new Float64Array(N) : dist;
       const tt = new Float32Array(N), dd = new Float32Array(N), pred = new Int32Array(N).fill(-1);
       const h = heap();
@@ -1295,7 +1303,7 @@ const I18N_RE = [
           for (const [mx, my] of G.MID[o]) if (!pass[(uy + my) * W + ux + mx]) { midOk = false; break; }
           if (!midOk) continue;
           const d = STEP_M[o], a = q.reverse ? v : u, b = q.reverse ? u : v;
-          if (C.edge_slope_cap && Math.abs(H[v] - H[u]) / d * 100 > C.max_edge_grade_pct) continue;   // 간선 경사 상한
+          if (C.edge_slope_cap && !(corr[u] && corr[v]) && Math.abs(H[v] - H[u]) / d * 100 > C.max_edge_grade_pct) continue;   // 간선 경사 상한 (하산 통로는 예외)
           edge(a, b, d);
           const de = 0.5 * (RATE1[a] + RATE1[b]) * ET / 3600;
           const c = mo ? mo.k * EO / mo.bo2 + Math.max(0, mo.k * EO / C.o2_g_per_j + mo.q * ET) / C.latent_j_kg * 1000 / mo.bw + mo.mult * de / mo.bd : EO;
@@ -1393,10 +1401,10 @@ const I18N_RE = [
       WK.postMessage({ id, type, ...msg });
     });
   }
-  function wkDijkstra(src, reverse, nofall, asTree = false) {
+  function wkDijkstra(src, reverse, nofall, asTree = false, extra = null) {
     const tag = { src, nofall, base: state.base, model: modelKey() };
-    const q = { src, reverse, nofall, base: state.base, M: MF(), asTree };
-    return wkCall("dijkstra", { q }, () => (asTree ? returnTree(state.base, nofall) : dijkstra(src, reverse, nofall))).then((r) => Object.assign(r, tag));
+    const q = { src, reverse, nofall, base: state.base, M: MF(), asTree, extra };
+    return wkCall("dijkstra", { q }, () => (asTree ? returnTree(state.base, nofall) : dijkstra(src, reverse, nofall, extra))).then((r) => Object.assign(r, tag));
   }
   const INFLIGHT = new Map();               // 같은 계산이 겹쳐 요청되면 한 번만
   const once = (key, fn) => { if (!INFLIGHT.has(key)) INFLIGHT.set(key, fn().finally(() => INFLIGHT.delete(key))); return INFLIGHT.get(key); };
@@ -1468,8 +1476,9 @@ const I18N_RE = [
       ])).then(([v, ok]) => { VIS = v; RELAY_OK = ok; VIS_BASE = base; }));
     }
     const tk = `${state.nofall ? 1 : 0}|${state.base}|${modelKey()}`;
-    if (needF) jobs.push(once(`F${state.here}|${tk}`, () => wkDijkstra(state.here, false, state.nofall)).then((r) => { FWD = r; }));
-    if (needR) jobs.push(once(`R${state.victim}|${tk}`, () => wkDijkstra(state.victim, true, state.nofall)).then((r) => { REV = r; }));
+    const corridor = (c) => { const S = setNow(); if (!S || S.o2[c] >= 0) return null; const D = descentOf(c); return D ? D.path : null; };
+    if (needF) jobs.push(once(`F${state.here}|${tk}`, () => wkDijkstra(state.here, false, state.nofall, false, corridor(state.here))).then((r) => { FWD = r; }));
+    if (needR) jobs.push(once(`R${state.victim}|${tk}`, () => wkDijkstra(state.victim, true, state.nofall, false, corridor(state.victim))).then((r) => { REV = r; }));
     if (needB) jobs.push(once(`B|${tk}`, () => wkDijkstra(state.base, false, state.nofall)).then((r) => { FWDB = r; }));
     if (needE) {
       if (LEGS.size > 24) LEGS.clear();
@@ -1529,12 +1538,12 @@ const I18N_RE = [
     return { cell: f < 0.5 ? tr.cells[lo] : tr.cells[hi], o2: tr.co[lo] + f * (tr.co[hi] - tr.co[lo]), m: tr.cm[lo] + f * (tr.cm[hi] - tr.cm[lo]) };
   }
   function simFeasible(pos, o2, w, k, extraGs = 0) {   // 지금 이 자리에서 돌아서면 거점까지 갈 수 있는가 (extraGs: 대원이 아는 누설 g/s)
-    const S = setNow();
-    if (S.o2[pos] < 0) return { ok: false, need: Infinity, needW: Infinity, tRet: Infinity };
-    const need = k * S.o2[pos] + extraGs * S.t[pos], needW = waterOf(S.o2[pos], S.t[pos], k, state.q);
+    const r = retTot(pos);
+    if (!r) return { ok: false, need: Infinity, needW: Infinity, tRet: Infinity };
+    const need = k * r.o2 + extraGs * r.t, needW = waterOf(r.o2, r.t, k, state.q);
     const f = 1 + state.planMargin / 100;       // 왕복 계획 여유: 귀환 필요량에 여유를 얹어 판단
-    const ok = need * f <= o2 - O2RES() && needW * f <= w - waterReserve(state.q) && multNow() * S.dose[pos] <= C.dose_budget_msv;
-    return { ok, need, needW, tRet: S.t[pos] };
+    const ok = need * f <= o2 - O2RES() && needW * f <= w - waterReserve(state.q) && multNow() * r.dose <= C.dose_budget_msv;
+    return { ok, need, needW, tRet: r.t };
   }
   // 탱크 압력 -> 남은 산소: m = P V M / (Z R T). Z = 1(이상기체)로 둠. 6.2 MPa·21 °C에서 540 g이 되도록 V를 잡음(EMU 1차 탱크 수준, 가정)
   const TK = { M: 0.032, R: 8.314, V: 0.54 * 8.314 * 294.15 / (6.2e6 * 0.032), T0: 294.15, Tend: 274.15, tau: 90 };
@@ -1564,10 +1573,15 @@ const I18N_RE = [
     if (plan) out = plan.path;
     else {
       const target = state.simTarget;
-      if (!isFinite(FWDB.o2[target])) return { ok: false, kind: "sim", msg: "거점에서 그 목적지까지 걸어갈 길이 없습니다. 다른 곳을 찍어 주세요." };
-      out = [target];
-      for (let cur = target; FWDB.pred[cur] >= 0;) { cur = FWDB.pred[cur]; out.push(cur); }
-      out.reverse();
+      let end = target, climb = [];
+      if (!isFinite(FWDB.o2[target])) {
+        const D = (FLAGS[target] & 1) ? descentOf(target) : null;
+        if (!D || !isFinite(FWDB.o2[D.exit])) return { ok: false, kind: "sim", msg: "거점에서 그 목적지까지 걸어갈 길이 없습니다. 다른 곳을 찍어 주세요." };
+        end = D.exit; climb = D.path.slice(0, -1).reverse();      // 합류점 -> 언덕 위 목적지
+      }
+      out = [end];
+      for (let cur = end; FWDB.pred[cur] >= 0;) { cur = FWDB.pred[cur]; out.push(cur); }
+      out.reverse(); out.push(...climb);
     }
     const scn = plan ? state.evaScn : state.simScenario;
     const custom = scn === "custom" ? parseCustom(state.simCustom) : null;
@@ -1762,8 +1776,7 @@ const I18N_RE = [
     const mode = !modeReady() || state.mode === "base" || state.mode === "sim" || state.mode === "eva" ? "inspect" : state.mode;
     const vh = victimHours(), vSec = Math.min(vh.o2, vh.water) * 3600;
     // 구조 모드: 구조 대상 지점에서 거점까지(혼자 돌아오는 구조대원)
-    const X = state.victim, back = mode === "rescue" && S.o2[X] >= 0
-      ? { o2: S.o2[X], t: S.t[X], dose: S.dose[X] } : null;
+    const X = state.victim, back = mode === "rescue" ? retTot(X, S) : null;
     const vRet = mode === "rescue" ? victimReturn(X) : null;
     for (let i = 0; i < N; i++) {
       if (!(FLAGS[i] & 1)) { STATUS[i] = 0; OKO2[i] = 0; continue; }
@@ -1898,7 +1911,11 @@ const I18N_RE = [
         : `거점을 옮김 (원래 거점의 기준 상황은 ${fmt(B0, 2)} km²) · 산소만 보면 ${fmt(s.o2, 2)} km²`;
       $("t-area").classList.toggle("alert", state.base === BASE0 && pct < -25);
     } else if (s.mode === "here") {
-      $("d-area").textContent = `여기서 그 칸까지 갔다가 거점으로 돌아올 수 있는 곳. 산소만 보면 ${fmt(s.o2, 2)} km²`;
+      const rh = retTot(state.here), bh = budgets();
+      $("d-area").textContent = s.safe < 0.005 && (!rh || EK() * rh.o2 > bh.o2)
+        ? (rh ? `여기서는 거점까지 돌아오는 데만 산소 ${fmt(EK() * rh.o2, 0)} g이 들어 예산 ${fmt(Math.max(0, bh.o2), 0)} g을 넘습니다. 더 갈 수 있는 곳이 없고, 지금 바로 돌아서도 모자랍니다.`
+              : "여기서는 거점으로 이어지는 길이 없습니다 (급경사로 막힘).")
+        : `여기서 그 칸까지 갔다가 거점으로 돌아올 수 있는 곳${rh && rh.D ? " (언덕 위: 가장 완만한 하산길로 내려와 출발)" : ""}. 산소만 보면 ${fmt(s.o2, 2)} km²`;
       $("t-area").classList.toggle("alert", s.safe < 1);
     } else {
       $("d-area").textContent = `여기서 출발한 구조대원이 구조 대상에게 모자란 산소·냉각수를 나눠 주고 함께 거점까지 올 수 있는 곳. 구조대원 혼자만 돌아올 수 있는 곳 ${fmt(s.alone, 2)} km² · 가기만 가능 ${fmt(s.oneway, 2)} km² · 도착 전에 구조 대상의 소모품이 떨어지는 곳 ${fmt(s.late, 2)} km²`;
@@ -1994,7 +2011,22 @@ const I18N_RE = [
   }
 
   // ---------- paths ----------
-  function pathToBase(i, S = setNow()) {  // 귀환 트리를 따라 거점까지 (S: 산소 최소 트리, 또는 다목적 트리)
+  const DESC = new Map();
+  function descentOf(i) {                 // 하산 경로(가장 완만한 길로 귀환 경로망까지), 거점·모델별로 기억
+    const key = `${i}|${treeKey(state.base, state.nofall)}`;
+    if (!DESC.has(key)) { if (DESC.size > 300) DESC.clear(); DESC.set(key, descentRoute(i)); }
+    return DESC.get(key);
+  }
+  function retTot(i, S = setNow()) {      // i에서 거점까지 귀환 합계 {o2, t, dose} (못 가면 null)
+    if (!S || i < 0) return null;
+    if (S.o2[i] >= 0) return { o2: S.o2[i], t: S.t[i], dose: S.dose[i] };
+    if (!(FLAGS[i] & 1)) return null;
+    const D = descentOf(i);
+    if (!D || S.o2[D.exit] < 0) return null;
+    return { o2: D.o2 + S.o2[D.exit], t: D.t + S.t[D.exit], dose: D.dose + S.dose[D.exit], D };
+  }
+  function pathToBase(i, S = setNow()) {  // 귀환 트리를 따라 거점까지 (S: 산소 최소 트리, 또는 다목적 트리). 언덕 위면 하산 구간부터
+    if (S.o2[i] < 0 && S === setNow()) { const D = (FLAGS[i] & 1) ? descentOf(i) : null; if (D) return [...D.path, ...pathToBase(D.exit, S).slice(1)]; }
     const path = [i];
     let cur = i;
     for (let n = 0; n < 8000 && S.next[cur] >= 0; n++) { cur = S.next[cur]; path.push(cur); }
@@ -2290,7 +2322,7 @@ const I18N_RE = [
     visorEl.style.backgroundImage = bp ? `url("${bp.img}")` : "none";
     capEl.textContent = bp ? `배경 사진: ${bp.rover} Navcam sol ${bp.sol} (이 위치에서 ${fmt(bd / 1000, 2)} km 떨어진 곳, NASA/JPL-Caltech)` : "이 지형에는 로버 사진이 없어 배경을 비웠습니다.";
     const k = EK(), o2 = EO2(), w = EW() * 1000;
-    const need = S.o2[pos] >= 0 ? k * S.o2[pos] : NaN;
+    const rt = retTot(pos, S), need = rt ? k * rt.o2 : NaN;
     const margin = o2 - O2RES() - need;
     const o2rate = levelO2gh() * k, wrate = waterOf(levelO2gh() / 3600, 1, k, state.q) * 3600;
     const o2min = Math.max(0, o2 - O2RES()) / o2rate * 60, wmin = Math.max(0, w - waterReserve(state.q)) / wrate * 60;
@@ -2433,7 +2465,7 @@ const I18N_RE = [
       <dt>그 뒤 귀환 (흰색)</dt><dd>${fmt(ps.dist / 1000, 2)} km · ${hm(S.t[D.exit] / 3600)}</dd>
       <dt>전체 시간</dt><dd>${hm(t / 3600)}</dd>
       <dt>넘어짐 높음 · 중간 칸 (귀환 구간)</dt><dd>${fmt(ps.high, 0)} m · ${fmt(ps.med, 0)} m</dd>
-      <dt>주의</dt><dd>${steep ? "보행 한도 20°를 넘는 경사를 지나야 합니다. 실제로는 로프나 동료 부축이 필요할 수 있고, " : ""}이 칸은 귀환 경로망 밖이라 지도 색칠에는 빠져 있습니다. 가파른 내리막의 대사량은 Pandolf 식이 잘 맞추지 못합니다(가정).</dd>`;
+      <dt>주의</dt><dd>${steep ? "보행 한도 20°를 넘는 경사를 지나야 합니다. 실제로는 로프나 동료 부축이 필요할 수 있고, " : ""}이 칸은 귀환 경로망 밖이라 지도 색칠에는 빠져 있습니다. 가파른 내리막의 대사량은 실측 자료가 없는 외삽입니다.</dd>`;
     drawVec({ path: rest, color: "#ffffff", path2: D.path, descent: true });
   }
 
@@ -2574,8 +2606,8 @@ const I18N_RE = [
     const go = { o2: REV.o2[start], t: REV.t[start], dose: REV.dose[start] };
     const vRet = victimReturn(X);
     const sup = vRet ? victimSupply(go.t, vRet) : null;
-    const hasBack = S.o2[X] >= 0;
-    const tot = hasBack ? { o2: go.o2 + S.o2[X], t: go.t + S.t[X], dose: go.dose + S.dose[X] } : null;
+    const bk = retTot(X, S), hasBack = !!bk;
+    const tot = hasBack ? { o2: go.o2 + bk.o2, t: go.t + bk.t, dose: go.dose + bk.dose } : null;
     const okGo = classifyTot(go.o2, go.t, go.dose, b) === 3;
     const okRound = tot && classifyTot(tot.o2, tot.t, tot.dose, b) === 3;
     const inTime = go.t <= vSec;
@@ -2602,7 +2634,7 @@ const I18N_RE = [
     $("pt-facts").innerHTML = `
       <dt>가는 길</dt><dd>${fmt(s1.dist / 1000, 2)} km · ${hm(go.t / 3600)}</dd>
       <dt>도착 여유</dt><dd>${vSec >= go.t ? "+" : "−"}${hm(Math.abs(vSec - go.t) / 3600)}</dd>
-      <dt>구조 대상 → 거점</dt><dd>${s2 ? `${fmt(s2.dist / 1000, 2)} km · ${hm(S.t[X] / 3600)}` : "걸어서 갈 길 없음"}</dd>
+      <dt>구조 대상 → 거점</dt><dd>${s2 ? `${fmt(s2.dist / 1000, 2)} km · ${hm(bk.t / 3600)}${bk.D ? " (하산 포함)" : ""}` : "걸어서 갈 길 없음"}</dd>
       <dt>구조 대상 위치 통신</dt><dd>${linked(X) ? "거점과 닿음" : "음영 (위치 보고 불가)"}</dd>
       <dt>가는 길 통신 두절</dt><dd>${fmt(s1.dark / 1000, 2)} km, 가장 긴 ${fmt(mins(s1.maxRun), 0)}분</dd>
       <dt>가는 길 넘어짐 높음 · 중간</dt><dd>${fmt(s1.high, 0)} m · ${fmt(s1.med, 0)} m</dd>`;
@@ -3085,7 +3117,7 @@ const I18N_RE = [
     SIM = null; SIMSIG = ""; SIMTARGET = -1; LMR = null; LMR_KEY = "";
     await decode(site);
     SEL_INIT = true;
-    INFLIGHT.clear(); MO = null; MO_KEY = ""; MO_PEND = ""; ETGEN++;
+    INFLIGHT.clear(); DESC.clear(); MO = null; MO_KEY = ""; MO_PEND = ""; ETGEN++;
     wkStart();
     TIR = null; TIR_LO = 0; TIR_HI = 255;
     if (META.tir) {                         // Mars Trek THEMIS 야간 적외선 (데모 격자에 맞춘 8비트 PNG)
@@ -3177,7 +3209,7 @@ const I18N_RE = [
   notesLang();
   $("lang-btn").textContent = LANG === "ko" ? "EN" : "한국어";
   // 자동 화면 점검용 손잡이 (헤드리스 테스트에서 상태를 읽고 지점을 고를 때만 씀)
-  window.EVA_DEBUG = { state, update, setNow, get md() { return md(); }, get C() { return C; }, get TREES() { return TREES; }, get HUDWIN() { return HUDWIN; }, get SIM() { return SIM; }, get OFF() { return OFF; }, get MO() { return MO; }, get ALT() { return ALT; }, get N() { return N; }, get W() { return W; }, get R() { return R; }, get META() { return META; } };
+  window.EVA_DEBUG = { state, update, setNow, get md() { return md(); }, get C() { return C; }, get TREES() { return TREES; }, get FLAGS() { return FLAGS; }, get H() { return H; }, get HUDWIN() { return HUDWIN; }, get SIM() { return SIM; }, get OFF() { return OFF; }, get MO() { return MO; }, get ALT() { return ALT; }, get N() { return N; }, get W() { return W; }, get R() { return R; }, get META() { return META; } };
   document.addEventListener("click", (e) => { if (e.target.closest(".info")) e.preventDefault(); }, true);   // ⓘ를 눌러도 체크박스가 바뀌지 않게
   loadSite(START, devHash).then(() => { if (HASH === "#selftest" && SETS) selfTest(); })
     .catch((err) => { $("loading").hidden = false; $("loading").textContent = "데이터를 풀지 못했습니다. 최신 Chrome, Edge, Safari, Firefox에서 열어 주세요. (" + err.message + ")"; });
