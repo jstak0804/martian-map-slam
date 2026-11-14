@@ -409,7 +409,10 @@
   body.wide header.top .wlogo { position: absolute; left: 14px; top: 13px; width: 26px; height: 26px; transform: rotate(45deg); border: 3px solid var(--accent); border-radius: 4px; box-sizing: border-box; }
   body.wide header.top .wlogo::after { content: ""; position: absolute; inset: 4px; background: var(--accent); border-radius: 1px; opacity: .55; }
   body.wide header.top .eyebrow { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
-  body.wide header.top h1 { font-size: 15px; letter-spacing: .02em; margin: 2px 0 0; }
+  body.wide header.top h1 { display: none; }   /* 간소화: 흰 제목 글씨는 숨김 (로고 + 회색 한 줄) */
+  body.wide header.top { min-height: 0; padding: 12px 14px 12px 52px; }
+  body.wide header.top .eyebrow { display: block !important; margin: 0; line-height: 1.3; white-space: nowrap; }
+  body.wide header.top { max-width: none !important; }
   body.wide header.top h1 .reset { display: none; }
   body.wide .sitebar { display: none; }
   .wbar { display: none; }
@@ -420,7 +423,7 @@
     font: inherit; font-size: 12.5px; font-weight: 600; color: var(--ink); background: #161b26; border: 1px solid var(--rule); border-radius: 8px;
     padding: 7px 10px; cursor: pointer; white-space: nowrap; line-height: 1.2; margin: 0; box-shadow: none; }
   body.wide .wbar { gap: 5px; } body.wide .wbar .wsel { max-width: 170px; }
-  @media (max-width: 1500px) { body.wide header.top .eyebrow { display: none; } body.wide header.top { max-width: 190px; } body.wide .wbar { max-width: calc(100vw - 230px); }
+  @media (max-width: 1500px) { body.wide header.top { max-width: 190px; } body.wide .wbar { max-width: calc(100vw - 230px); }
     body.wide .wbar .wsel, body.wide .wbar .wbtn, body.wide .wbar .mode-more, body.wide .wbar .reset, body.wide .wbar .feat { font-size: 11.5px; padding: 7px 8px; } }
   body.wide .wbar .wbtn:hover, body.wide .wbar .reset:hover, body.wide .wbar .wsel:hover { border-color: var(--accent); }
   body.wide .wbar [aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: rgba(226,121,77,.14); }
@@ -442,6 +445,10 @@
   body.wide .zoomctl svg { width: 24px; height: 24px; }
   body.wide .zoomctl #zbase { color: #a7e8a0; } body.wide .zoomctl #zbase svg { width: 22px; height: 22px; }
   /* 아래 계획 카드 */
+  .toast { position: absolute; z-index: 12; left: 50%; top: 74px; transform: translateX(-50%); max-width: min(560px, calc(100vw - 32px)); padding: 9px 14px;
+    background: rgba(11,14,21,.95); border: 1px solid #3d8bfd; border-radius: 10px; color: var(--ink); font-size: 13px; line-height: 1.45;
+    box-shadow: 0 10px 30px rgba(0,0,0,.5); transition: opacity .3s; }
+  .toast[hidden] { display: none; } .toast.fade { opacity: 0; } .toast b { color: #8fc0ff; }
   .tripcard { display: none; }
   body.wide { --tc-w: min(980px, calc(100vw - 500px)); }
   body.wide .tripcard { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 8; display: block; width: var(--tc-w, 940px); padding: 12px 16px 14px; box-sizing: border-box; max-height: 44vh; overflow: auto; }
@@ -496,6 +503,7 @@
   .statuscard .glance { grid-template-columns: 1fr 1fr; gap: 6px; }
   .statuscard .glance .gc { padding: 7px 9px; }
   body.wide .modebar { right: 392px; }
+  body.wide:not(.show-hint) .modebar { display: none; }   /* 안내는 탐사 계획 버튼에 마우스를 올렸을 때(또는 거점 옮기는 중)만 */
   .tc-more { display: block; width: 100%; margin-top: 10px; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--accent); background: rgba(226,121,77,.1);
     border: 1px dashed var(--accent); border-radius: 8px; padding: 7px; cursor: pointer; }
   .tc-more[hidden] { display: none; }
@@ -555,7 +563,7 @@
   <nav class="wbar float" id="wbar" aria-label="메뉴">
     <select id="site-sel" class="wsel" aria-label="지형"></select>
     <div class="qbtns" id="qbtns" role="group" aria-label="핵심 시나리오">
-      <button type="button" class="wbtn" data-q="explore">① 탐사 계획</button>
+      <button type="button" class="wbtn" data-q="explore" id="q-explore"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px;margin-right:4px"><path d="M2.5 5.5 8 3.5l6 2 5.5-2v9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M2.5 5.5v14l5.5-2 4 1.3M8 3.5v14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="17" cy="16.5" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m19.6 19.1 2.4 2.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>탐사 계획</span></button>
     </div>
     <span class="wslot" id="wslot-mode"></span>
     <span class="wsep" aria-hidden="true"></span>
@@ -564,6 +572,7 @@
     <button type="button" class="wbtn" id="w-settings" aria-pressed="false" aria-controls="leftcol" title="설정: 상황·산소·모델 보정·지도 레이어"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px;margin-right:4px"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.5 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg><span>설정</span></button>
     <span class="wslot" id="wslot-doc"></span>
   </nav>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
   <section class="statuscard float" id="statuscard" aria-label="지금 상태"><button type="button" class="sc-h" id="sc-fold" aria-expanded="true" title="상태 접기/펼치기"><span>상태</span><i aria-hidden="true">▾</i></button></section>
   <section class="tripcard float" id="tripcard" aria-label="탐사 계획">
     <div class="tc-head"><b id="tc-title">TRIP PLAN</b><span class="tc-where" id="tc-where"></span><span class="tc-slot" id="tc-verdict"></span><button type="button" class="tc-fold" id="tc-clear" title="고른 탐사 지점과 작업 시간을 모두 지웁니다">↺ 계획 초기화</button><button type="button" class="tc-fold" id="tc-fold" aria-expanded="true" aria-label="계획 카드 접기" title="계획 카드 접기">▾</button></div>
@@ -2000,6 +2009,7 @@
     const cx = CTXS[META.site.id] || { x: -W / 2, y: -R / 2, w: 2 * W, h: 2 * R };
     const gx0 = Math.floor(cx.x), gy0 = Math.floor(cx.y), CW = Math.ceil(cx.w / XQ), CH = Math.ceil(cx.h / XQ), NP = CW * CH;
     if (!XOUT || XOUT.NP !== NP) XOUT = { NP, rt: new Float32Array(NP), ow: new Float32Array(NP), has: new Uint8Array(NP), img: null };
+    Object.assign(XOUT, { gx0, gy0, CW, CH });
     const { rt, ow, has } = XOUT;
     rt.fill(Infinity); ow.fill(Infinity); has.fill(0);
     for (let i = 0; i < N; i++) {
@@ -3552,12 +3562,45 @@
     const g = evToGrid(ev), x = Math.floor(g.x), y = Math.floor(g.y);
     return x < 0 || y < 0 || x >= W || y >= R ? -1 : y * W + x;
   }
+  let TOAST_T = 0;
+  function toast(html, ms = 3800) {         // 잠깐 떴다 사라지는 안내
+    const t = $("toast"); t.innerHTML = html; t.hidden = false; t.classList.remove("fade");
+    clearTimeout(TOAST_T); TOAST_T = setTimeout(() => { t.classList.add("fade"); TOAST_T = setTimeout(() => { t.hidden = true; }, 320); }, ms);
+  }
+  function outsideClick(ev) {               // 고도 자료 밖 클릭: 평지 가정 추정값을 잠깐 알려 줌
+    if (state.mode !== "explore") return false;
+    const g = evToGrid(ev), x = Math.floor(g.x), y = Math.floor(g.y);
+    const inGrid = x >= 0 && y >= 0 && x < W && y < R;
+    if (inGrid && (FLAGS[y * W + x] & 1)) return false;
+    const en = LANG === "en";
+    let est = "";
+    if (XOUT && XOUT.CW) {
+      const px = Math.floor((g.x - XOUT.gx0) / XQ), py = Math.floor((g.y - XOUT.gy0) / XQ);
+      if (px >= 0 && py >= 0 && px < XOUT.CW && py < XOUT.CH) {
+        const p = py * XOUT.CW + px, rt = summary && summary.xLive ? XOUT.ow[p] : XOUT.rt[p];
+        if (isFinite(rt)) {
+          const rem = ((summary && summary.xLive ? summary.xNow : state.o2) - state.k * rt) / state.o2 * 100;
+          est = rem >= 0 ? (en ? ` Estimated O2 left after the round trip: about <b>${Math.round(rem)}%</b>.` : ` 왕복 뒤 남는 산소 추정: 약 <b>${Math.round(rem)}%</b>.`)
+                         : (en ? " Estimated: <b>not reachable</b> on a round trip." : " 추정: 왕복 <b>불가</b>.");
+        }
+      }
+    }
+    toast(en ? `<b>Outside the elevation data</b> — colours here are a level-ground estimate (no terrain slope).${est} Sites can be picked inside the HiRISE terrain strip.`
+             : `<b>고도 자료 밖</b> — 이 부분 색은 경사 없이 평지로 가정한 추정입니다.${est} 탐사 지점은 HiRISE 지형 자료 안에서 고를 수 있습니다.`);
+    return true;
+  }
+  wrap.addEventListener("click", (ev) => {   // 지형 격자 바깥(둘레 CTX 배경)을 눌렀을 때
+    if (ev.target !== wrap && !ev.target.closest(".map-stage")) return;
+    if (ev.target === vec) return;
+    if (dragMoved) { dragMoved = false; return; }
+    outsideClick(ev);
+  });
   vec.addEventListener("click", (ev) => {
     if (dragMoved) { dragMoved = false; return; }   // 끌어서 옮긴 것은 클릭이 아님
     const hit = rvHit(ev);
     if (hit >= 0) { state.rv = hit; renderRv(); drawVec(); return; }
     if (state.rvMode) return;                // 로드뷰 모드에서는 아이콘만 반응
-    if (state.mode === "explore") { exploreClick(ev); return; }
+    if (state.mode === "explore") { if (!outsideClick(ev)) exploreClick(ev); return; }
     const i = cellAt(ev); if (i < 0 || !H) return;
     if (state.mode !== "inspect" && !(FLAGS[i] & 1)) { $("hover").textContent = "지형 자료가 없는 칸입니다. 지도 안쪽을 찍어 주세요."; return; }
     if (state.mode === "inspect") state.sel = i;
@@ -4042,6 +4085,8 @@
       const on = document.body.classList.toggle(cls); $(btn).setAttribute("aria-pressed", String(on));
     });
     drawer("w-settings", "show-settings");
+    const hint = (on) => document.body.classList.toggle("show-hint", on || state.mode === "base");
+    for (const id of ["q-explore", "zbase"]) { $(id).addEventListener("mouseenter", () => hint(true)); $(id).addEventListener("mouseleave", () => hint(false)); $(id).addEventListener("focus", () => hint(true)); $(id).addEventListener("blur", () => hint(false)); }
     $("zbase").addEventListener("click", () => {   // 거점 옮기기 켜고 끄기 (지도 도구)
       stopSim(); state.mode = state.mode === "base" ? "explore" : "base"; syncInputs(); update(); setTimeout(sync, 0);
     });
@@ -4061,6 +4106,8 @@
       const q = state.mode === "sim" ? "surge" : state.mode;
       document.querySelectorAll("#qbtns [data-q]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.q === q)));
       $("zbase").setAttribute("aria-pressed", String(state.mode === "base"));
+      if (state.mode === "base") document.body.classList.add("show-hint");
+      else if (!$("q-explore").matches(":hover") && !$("zbase").matches(":hover")) document.body.classList.remove("show-hint");
       const en = LANG === "en";               // 툴팁(속성)은 자동 번역이 안 되므로 직접
       $("zbase").title = en ? "Move base: click this, then click the map to move the base (house); return routes, zones and comms are recomputed for the new base. Click again to go back to the exploration plan."
         : "거점 옮기기: 누른 뒤 지도를 클릭하면 거점(집)이 그 자리로 옮겨지고, 귀환 경로·반경·통신이 새 거점 기준으로 다시 계산됩니다. 다시 누르면 탐사 계획으로 돌아갑니다.";
