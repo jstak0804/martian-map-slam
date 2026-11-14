@@ -448,7 +448,7 @@
   .tc-fold:hover { border-color: var(--accent); } .tc-fold:disabled { opacity: .4; cursor: default; } .tc-fold[hidden] { display: none; }
   .tripcard.folded .tc-body, .tripcard.folded .tc-more { display: none !important; }
   /* 접기 손잡이: 카드 바깥 위쪽 가운데 탭 */
-  body.wide .tc-fold.tab { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); bottom: calc(var(--tc-h, 200px) + 14px);
+  body.wide .tc-fold.tab { position: absolute; z-index: 8; left: auto; right: var(--tc-r, 200px); bottom: calc(var(--tc-h, 200px) + 14px); font-size: 17px; line-height: 1; padding: 5px 18px 6px;
     background: rgba(11,14,21,.94); border: 1px solid var(--rule); border-bottom: 0; border-radius: 10px 10px 0 0; padding: 4px 18px 5px; font-size: 12px;
     box-shadow: 0 -4px 14px rgba(0,0,0,.35); }
   body.wide .tc-fold.tab:hover { color: var(--accent); }
@@ -541,7 +541,7 @@
     <span class="wslot" id="wslot-doc"></span>
   </nav>
   <section class="tripcard float" id="tripcard" aria-label="탐사 계획">
-    <div class="tc-head"><b id="tc-title">TRIP PLAN</b><span class="tc-where" id="tc-where"></span><span class="tc-slot" id="tc-verdict"></span><button type="button" class="tc-fold" id="tc-clear" title="고른 탐사 지점과 작업 시간을 모두 지웁니다">↺ 계획 초기화</button><button type="button" class="tc-fold" id="tc-fold" aria-expanded="true" title="계획 카드 접기/펼치기">▾ 접기</button></div>
+    <div class="tc-head"><b id="tc-title">TRIP PLAN</b><span class="tc-where" id="tc-where"></span><span class="tc-slot" id="tc-verdict"></span><button type="button" class="tc-fold" id="tc-clear" title="고른 탐사 지점과 작업 시간을 모두 지웁니다">↺ 계획 초기화</button><button type="button" class="tc-fold" id="tc-fold" aria-expanded="true" aria-label="계획 카드 접기" title="계획 카드 접기">▾</button></div>
     <div class="tc-body"><div class="tc-left" id="tc-left"><p class="tc-simnote" id="tc-simnote">심박 급증 시나리오: 60분부터 대사량 +25%, 산소 450 g으로 목적지 왕복. 매분 "1분 더 가도 돌아올 수 있나"를 따져 자동 회항 경보를 냅니다.</p></div><div class="tc-right" id="tc-right"></div></div>
     <button type="button" class="tc-more" id="tc-more" hidden>▼ 실시간 그래프 · 게이지 (아래로 스크롤)</button>
   </section>
@@ -3950,7 +3950,8 @@
     const fold = (on) => {                 // 재생 중 지도를 더 넓게 보도록 계획 카드를 접음 (재생 막대·요약 줄은 남김)
       $("tripcard").classList.toggle("folded", on);
       $("tc-fold").setAttribute("aria-expanded", String(!on));
-      $("tc-fold").textContent = on ? (LANG === "en" ? "▴ Expand" : "▴ 펼치기") : (LANG === "en" ? "▾ Collapse" : "▾ 접기");
+      $("tc-fold").textContent = on ? "▴" : "▾";   // 글자 없이 화살표만 (설명은 title·aria-label)
+      $("tc-fold").title = $("tc-fold").ariaLabel = on ? (LANG === "en" ? "Expand the plan card" : "계획 카드 펼치기") : (LANG === "en" ? "Collapse the plan card" : "계획 카드 접기");
       try { localStorage.setItem("eva-card-folded", on ? "1" : "0"); } catch (e) {}
     };
     $("tc-fold").addEventListener("click", () => fold(!$("tripcard").classList.contains("folded")));
@@ -3995,6 +3996,8 @@
       $("tripcard").hidden = !(state.mode === "explore" || state.mode === "sim");
       $("tc-clear").hidden = state.mode !== "explore"; $("tc-clear").disabled = !state.xT.length;
       $("tc-fold").hidden = $("tripcard").hidden;
+      const cr = $("tripcard").getBoundingClientRect(), ar = document.querySelector(".app").getBoundingClientRect();   // 탭은 카드 오른쪽 끝 위
+      document.body.style.setProperty("--tc-r", Math.max(8, ar.right - cr.right + 16) + "px");
       if (state.mode === "sim") $("tc-title").textContent = LANG === "en" ? "HEART-RATE SURGE SIM" : "심박 급증 시뮬레이션";
       document.body.classList.toggle("mode-sim", state.mode === "sim");
       const q = state.mode === "sim" ? "surge" : state.mode;
