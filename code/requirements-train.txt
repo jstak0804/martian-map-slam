@@ -1,3 +1,0 @@
-# 지형 분할 학습·미세조정 (code/.venv 에서 검증: torch 2.8 CPU)
--r requirements.txt
-torch>=2.2

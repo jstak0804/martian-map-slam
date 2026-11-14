@@ -1,8 +1,0 @@
-{
-  "n_stops": 46,
-  "path_length_true_m": 113.96069758554776,
-  "coverage_pct_oracle": 128.08789820035736,
-  "final_pose_error_m": 1.850389924282834,
-  "iou_high_risk_oracle": 0.8,
-  "iou_high_risk_vo": 0.09090909090909091
-}
