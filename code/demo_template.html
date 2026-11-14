@@ -124,6 +124,10 @@
   .zoomctl { position: absolute; top: 10px; left: 10px; z-index: 4; display: grid; gap: 4px; }
   .zoomctl button { font: inherit; font-size: 16px; line-height: 1; width: 30px; height: 30px; color: var(--ink); background: rgba(11,14,21,.85); border: 1px solid var(--rule); border-radius: 6px; cursor: pointer; }
   .zoomctl button:hover { border-color: var(--accent); }
+  .zoomctl button[aria-pressed="true"] { border-color: var(--accent); background: rgba(226,121,77,.25); }
+  .zoomctl svg { width: 20px; height: 20px; transition: transform .2s; }
+  .scale { position: absolute; right: 14px; bottom: 14px; z-index: 4; display: grid; justify-items: start; gap: 2px; font: 600 11px/1 var(--font-mono); color: #e7eaf0; text-shadow: 0 0 3px #000; pointer-events: none; }
+  .scale .bar { height: 6px; border: 2px solid #e7eaf0; border-top: 0; box-shadow: 0 1px 2px #000; }
   .pipbtn { font: inherit; font-size: 12px; line-height: 1; min-width: 24px; height: 22px; color: var(--ink-soft); background: transparent; border: 1px solid var(--rule); border-radius: 5px; cursor: pointer; }
   .pipbtn:hover { color: var(--ink); border-color: var(--accent); }
   .map-stage canvas.cells { image-rendering: pixelated; opacity: var(--cells-alpha); }
@@ -281,6 +285,7 @@
     background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px),
                 radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,12,8,.6) 100%),
                 linear-gradient(160deg, rgba(255,255,255,.08), rgba(255,255,255,0) 40%); }
+  .visor .pov3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: auto; }
   .visor .brackets { position: absolute; inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); pointer-events: none; filter: drop-shadow(0 0 3px rgba(125,255,176,.6)); }
   .visor .hud { background: none; }
   .visor .hud .c { font-size: clamp(9px, 2.2cqw, 13px); padding: .4em .7em; }
@@ -320,18 +325,56 @@
   details.notes ul { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 6px; color: var(--ink-soft); font-size: 13px; max-width: 110ch; }
   details.notes a { color: var(--accent); }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  /* ===== 지도 전체 화면 배치: 지도가 바탕, 패널은 그 위에 뜬 카드 ===== */
+  html, body { height: 100%; overflow: hidden; }
+  .app { position: fixed; inset: 0; max-width: none; padding: 0; display: block; }
+  .mapcol { position: fixed; inset: 0; z-index: 0; display: block; }
+  .mapcol .mapwrap { position: absolute; inset: 0; width: 100% !important; height: 100% !important; max-width: none !important; aspect-ratio: auto !important; border: 0; border-radius: 0; background: #05070a; }
+  .map-stage { inset: auto; left: 0; top: 0; }
+  .float { background: rgba(11,14,21,.9); border: 1px solid var(--rule); border-radius: 10px; box-shadow: 0 8px 28px rgba(0,0,0,.45); backdrop-filter: blur(6px); }
+  header.top { position: fixed; top: 10px; left: 12px; z-index: 7; width: 320px; padding: 8px 12px; box-sizing: border-box; }
+  header.top h1 { font-size: 15px; line-height: 1.35; }
+  header.top .sitebar { position: static; width: auto; padding: 6px 0 0; background: none; border: 0; box-shadow: none; backdrop-filter: none; } header.top .sub { display: none; } header.top .eyebrow { font-size: 11px; }
+  .sitebar { position: fixed; top: 72px; left: 12px; z-index: 7; width: 320px; padding: 6px; box-sizing: border-box; gap: 0; }
+  .sitebar .seg label { font-size: 12px; padding: 4px 6px; }
+  .sitebar .site-desc, .sitebar .site-stats { display: none; }
+  .grid { display: block; }
+  .leftcol { position: fixed; top: 118px; left: 12px; bottom: 12px; z-index: 6; width: 320px; box-sizing: border-box; overflow: auto; gap: 10px; padding: 12px; }
+  .rightcol { position: fixed; top: 10px; right: 12px; bottom: 12px; z-index: 6; width: 330px; overflow: auto; display: grid; gap: 10px; align-content: start; }
+  .rightcol > .panel { padding: 12px; gap: 10px; }
+  .modebar { position: fixed; top: 10px; left: 344px; right: 356px; z-index: 6; display: grid; justify-items: center; gap: 6px; pointer-events: none; }
+  .modebar > * { pointer-events: auto; }
+  .modebar .seg { background: rgba(11,14,21,.9); box-shadow: 0 6px 20px rgba(0,0,0,.4); }
+  .modebar .seg label { font-size: 12.5px; padding: 6px 10px; white-space: nowrap; }
+  .modeline { background: rgba(11,14,21,.82); border-radius: 8px; padding: 4px 8px; gap: 6px 10px; }
+  .modehint { font-size: 12px; }
+  .zoomctl { left: auto; right: 356px; top: 96px; }
+  .scale { right: 356px; bottom: 16px; }
+  .legend { position: fixed; left: 344px; bottom: 12px; z-index: 5; max-width: calc(100vw - 840px); padding: 6px 10px; font-size: 11.5px; background: rgba(11,14,21,.82); border-radius: 8px; }
+  .hover { display: none; }
+  .simbar { position: fixed; left: 344px; right: 356px; bottom: 54px; z-index: 6; margin: 0 auto; max-width: 720px; padding: 8px 10px; background: rgba(11,14,21,.92); box-shadow: 0 8px 28px rgba(0,0,0,.45); }
+  #sim-chart { height: 130px; }
+  .rv.drawer { left: 344px; right: 356px; bottom: 96px; }
+  .visor-wrap.pip { right: 356px; bottom: 96px; }
+  details.notes { position: fixed; inset: 60px 18% auto 18%; max-height: calc(100vh - 120px); overflow: auto; z-index: 20; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+  details.notes.closed { display: none; }
+  @media (max-width: 1100px) {
+    .leftcol, .rightcol { width: 280px; } .rightcol { top: auto; height: 46vh; } .modebar, .legend, .simbar, .rv.drawer { left: 300px; right: 12px; }
+    .zoomctl, .scale { right: 12px; } header.top, .sitebar { width: 280px; }
+  }
 </style>
 
 <div class="app">
-  <header class="top">
+  <header class="top float">
     <div class="brand">
       <div class="eyebrow">Mars EVA Walkback &amp; Survival Planner</div>
-      <h1><span id="site-title">Gale 크레이터</span> EVA 귀환 반경 <button type="button" class="reset" id="lang-btn" style="font-size:12px;vertical-align:middle">EN</button></h1>
+      <h1><span id="site-title">Gale 크레이터</span> EVA 귀환 반경 <button type="button" class="reset" id="lang-btn" style="font-size:12px;vertical-align:middle">EN</button> <button type="button" class="reset" id="notes-btn" style="font-size:12px;vertical-align:middle">방법·한계</button></h1>
       <p class="sub">HiRISE 지형·로버 관측·RAD 선량 자료를 한 격자에 겹친 <b>10 m 단위 귀환 가능 지역·최적 귀환 경로 시뮬레이터</b>. 고장이 난 순간 남은 산소·냉각수·선량 여유로 거점까지 걸어 돌아올 수 있는 곳을 그리고, 지도를 누르면 그 지점에서 돌아오는 길을 따져 봅니다.</p>
     </div>
   </header>
 
-  <section class="sitebar" aria-label="지형 선택">
+  <section class="sitebar float" aria-label="지형 선택">
     <div class="seg" id="sites-seg" role="radiogroup" aria-label="지형"></div>
     <p class="site-desc" id="site-desc"></p>
     <div class="site-stats" id="site-stats"></div>
@@ -339,7 +382,7 @@
 
   <div class="grid">
     <!-- 조건 -->
-    <section class="panel" aria-labelledby="h-ctl">
+    <section class="panel leftcol" id="leftcol" aria-labelledby="h-ctl">
       <div class="modectl" id="modectl">
       <div class="group" id="explore-ctl">
         <h2>탐사 계획<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">지도의 ◆ 탐사 지점(로버가 조사한 곳)이나 원하는 곳을 눌러 최대 3곳을 고릅니다. 출발 산소는 Apollo 15~17 PLSS 기준 680 g(1.5 lb, 1,430 psi급). 체류 가능 시간은 거점에 돌아왔을 때 산소·냉각수가 20% 이상 남는 조건으로 계산하고, 체류 중 대사량은 평지 보행과 같다고 봅니다. 여러 곳이면 체류 시간을 똑같이 나눕니다.</span></span></span></h2>
@@ -553,9 +596,12 @@
           <canvas class="vec" id="vec" aria-label="지도를 누르면 그 지점에서 거점까지의 귀환 경로를 보여 줍니다"></canvas>
           <div class="walker" id="walker" hidden aria-hidden="true"></div>
         </div>
-        <div class="zoomctl" role="group" aria-label="지도 확대">
-          <button type="button" id="zin" aria-label="확대">+</button><button type="button" id="zout" aria-label="축소">−</button><button type="button" id="zreset" aria-label="원래 크기" hidden>⟲</button>
+        <div class="zoomctl" role="group" aria-label="지도 조작">
+          <button type="button" id="compass" aria-label="정북 위 / 진행 방향 위" aria-pressed="false" title="정북 위 ↔ 진행 방향 위"><svg id="compass-needle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l4 10h-8z" fill="#ef6b5e"/><path d="M12 22l-4-10h8z" fill="#c9d1e0"/><text x="12" y="9.6" font-size="5" text-anchor="middle" fill="#0d1016" font-weight="700">N</text></svg></button>
+          <button type="button" id="zin" aria-label="확대">+</button><button type="button" id="zout" aria-label="축소">−</button><button type="button" id="zreset" aria-label="원래대로" hidden>⟲</button>
+          <button type="button" id="visor-open" aria-label="1인칭 바이저 화면 열기" title="1인칭 바이저 화면">🥽</button>
         </div>
+        <div class="scale" id="scale" aria-label="축척"><div class="bar" id="scale-bar"></div><span id="scale-txt"></span></div>
         <div class="loading" id="loading">지형 격자를 푸는 중…</div>
         <section class="rv drawer" id="rv" hidden aria-label="로드뷰">
           <div class="rv-head"><b id="rv-title"></b><span class="rv-nav"><button type="button" class="pipbtn" id="rv-prev" aria-label="이전">◀</button><button type="button" class="pipbtn" id="rv-next" aria-label="다음">▶</button><button type="button" class="pipbtn" id="rv-close" aria-label="닫기">✕</button></span></div>
@@ -565,6 +611,7 @@
         <section class="visor-wrap pip pos-br" id="visor-wrap" hidden aria-label="헬멧 바이저 HUD">
           <div class="pip-head"><b>🥽 헬멧 바이저 HUD</b><span class="rv-nav"><button type="button" class="pipbtn" id="visor-pop" aria-label="팝업 창으로 열기">⧉</button><button type="button" class="pipbtn" id="visor-move" aria-label="다른 모서리로">⇱</button><button type="button" class="pipbtn" id="visor-big" aria-label="크게 보기">⤢</button><button type="button" class="pipbtn" id="visor-close" aria-label="닫기">✕</button></span></div>
           <div class="visor" id="visor">
+            <canvas class="pov3d" id="pov3d"></canvas>
             <svg class="brackets" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1 12V1H9M91 1H99V12M99 88V99H91M9 99H1V88" fill="none" stroke="#7dffb0" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>
             <div class="hud" id="hud"></div>
           </div>
@@ -589,7 +636,7 @@
     </section>
 
     <!-- 결과 -->
-    <div style="display:grid;gap:16px;min-width:0">
+    <div class="rightcol" id="rightcol">
       <section class="panel" aria-labelledby="h-sum">
         <h2 id="h-sum">지금 상황<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">산소·냉각수는 예비분을 빼고 평지를 걸을 때 남은 시간, 선량은 거점 선량률로 귀환 예산을 다 쓰기까지의 시간, 통신은 귀환 가능 영역 중 가시선이 안 닿는 비율. 초록 여유 · 노랑 주의 · 빨강 위험 (산소·냉각수 60분/20분, 선량 8시간/2시간, 통신 15%/40%, 기준치는 시뮬레이션 파라미터)</span></span></span></h2>
         <div class="tiles">
@@ -615,7 +662,7 @@
   </div>
 
   <pre id="selftest" hidden></pre>
-  <details class="notes" id="notes-ko">
+  <details class="notes closed" id="notes-ko">
     <summary>계산 방법과 한계</summary>
     <ul>
       <li>지형: HiRISE DTM DTEEC_018854_1755_018920_1755_U01(Gale, 1 m)을 10 m 칸으로 묶음. 거점은 Curiosity 착륙지, 노란 점은 sol 1282 지점.</li>
@@ -644,7 +691,7 @@
       <li>과학 EVA 실시간 시뮬레이션: 계획 경로를 따라 1분 단위로 걷고 목표마다 작업(작업 대사량 = 평지 보행)하며, 심박 시나리오로 실제 대사량을 바꾼다. 매분 이동·작업을 1분 더 했을 때 왕복 여유(+20%)를 지킬 수 있는지 보고, 못 지키면 남은 목표를 건너뛰고 귀환 트리로 돌아선다. 계획 단계는 각 칸 귀환 냉각수 여유를 따로 검사하지 않으므로 재생 중 경보가 계획보다 조금 일찍 울릴 수 있다.</li>
     </ul>
   </details>
-  <details class="notes" id="notes-en" hidden>
+  <details class="notes closed" id="notes-en" hidden>
     <summary>Methods and limitations</summary>
     <ul>
       <li>Data: HiRISE 1 m DTMs and orthoimages (NASA PDS) for Gale (DTEEC_018854_1755_018920_1755_U01), Jezero (DTEEC_045994_1985_046060_1985_U01) and Aram Chaos (DTEEC_054753_1825_055452_1825_A01), resampled to 10 m cells; MSL and Mars 2020 traverses and Navcam raw images; JPL Mars Trek THEMIS night IR (reference layer only); Curiosity RAD dose rates.</li>
@@ -824,7 +871,7 @@
   const plainNow = () => TREES.get(treeKey(state.base, false));
 
   // 심박 시뮬레이션 중에는 그 시각의 남은 산소·냉각수와 심박으로 추정한 k로 지도를 그림
-  const simFrame = () => ((state.mode === "sim" || state.mode === "eva") && SIM && SIM.ok && SIM.kind === state.mode ? SIM.frames[SIM.idx] : null);
+  const simFrame = () => ((state.mode === "sim" || state.mode === "eva" || state.mode === "explore") && SIM && SIM.ok && SIM.kind === state.mode ? SIM.frames[SIM.idx] : null);
   const EK = () => { const f = simFrame(); return f ? f.k : state.k; };
   const EO2 = () => { const f = simFrame(); return f ? f.o2 : state.o2; };
   const EW = () => { const f = simFrame(); return f ? f.w / 1000 : state.water; };
@@ -2163,6 +2210,7 @@
     }
     showPov(state.sel);
     ensureSim();
+    $("simbar").hidden = !sc.ok;
     $("v-bind").textContent = sc.ok ? fmtDur(sc.dwell) : sc.why; $("d-bind").textContent = sc.ok ? `${sc.bind} 기준` : "";
     const title = sc.ord.map((j) => `${xName(j)} ${state.xT[j - 1].name}`).join(" → ");
     $("pt-where").textContent = title;
@@ -2265,6 +2313,63 @@
     if (x < 1 || y < 1 || x >= W - 1 || y >= R - 1) return 0;
     return Math.atan(Math.hypot((H[i + 1] - H[i - 1]) / (2 * CELL), (H[i + W] - H[i - W]) / (2 * CELL))) * 180 / Math.PI;
   }
+  // ---------- 1인칭 바이저 시점: HiRISE 높이(H) + 위성 사진 색으로 눈높이 1.7 m에서 본 지형을 그림 (높이맵 광선 렌더러) ----------
+  let COLMAP = null, COLMAP_SITE = -1;
+  function colMap() {                     // 위성 사진을 격자 크기로 줄인 색
+    if (COLMAP && COLMAP_SITE === SITE_I) return COLMAP;
+    const im = $("ortho");
+    if (!im.complete || !im.naturalWidth) return null;
+    const cv = document.createElement("canvas"); cv.width = W; cv.height = R;
+    const cx = cv.getContext("2d"); cx.drawImage(im, 0, 0, W, R);
+    COLMAP = cx.getImageData(0, 0, W, R).data; COLMAP_SITE = SITE_I; return COLMAP;
+  }
+  function drawPOV(cv, fx, fy, hd) {
+    if (!cv || !H) return;
+    const col = colMap(); if (!col) return;
+    const cw0 = cv.clientWidth || 640, ch0 = cv.clientHeight || 360, sc = Math.min(1, 640 / cw0);
+    const w = Math.max(160, Math.round(cw0 * sc)), h = Math.max(90, Math.round(ch0 * sc));
+    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+    const g = cv.getContext("2d"), img = g.createImageData(w, h), d32 = new Uint32Array(img.data.buffer);
+    const horizon = Math.round(h * 0.46), sky0 = [150, 112, 88], sky1 = [214, 178, 140];
+    for (let y = 0; y < h; y++) {          // 화성 하늘: 위는 짙은 버터스카치, 지평선 쪽은 밝게
+      const t = Math.min(1, y / horizon), r = sky0[0] + (sky1[0] - sky0[0]) * t, gg = sky0[1] + (sky1[1] - sky0[1]) * t, b = sky0[2] + (sky1[2] - sky0[2]) * t;
+      const c = (255 << 24) | (b << 16) | (gg << 8) | r;
+      d32.fill(c, y * w, y * w + w);
+    }
+    const ix = Math.max(0, Math.min(W - 1, fx | 0)), iy = Math.max(0, Math.min(R - 1, fy | 0));
+    const camH = H[iy * W + ix] + 1.7;
+    const th = hd * Math.PI / 180, fwx = Math.sin(th), fwy = -Math.cos(th), rtx = Math.cos(th), rty = Math.sin(th);
+    const tanh = Math.tan(35 * Math.PI / 180), focal = (w / 2) / tanh;
+    const ybuf = new Int32Array(w).fill(h);
+    let z = 0.25, dz = 0.12;
+    while (z < 520) {
+      const zm = z * CELL, cx = fx + fwx * z, cy = fy + fwy * z, hx = rtx * z * tanh, hy = rty * z * tanh;
+      let px = cx - hx, py = cy - hy;
+      const stx = 2 * hx / w, sty = 2 * hy / w, fog = Math.min(0.85, Math.pow(zm / 7000, 0.9));
+      for (let i = 0; i < w; i++, px += stx, py += sty) {
+        if (px < 1 || py < 1 || px >= W - 1 || py >= R - 1) continue;
+        const x0 = px | 0, y0 = py | 0, k = y0 * W + x0, ax = px - x0, ay = py - y0;
+        if (!(FLAGS[k] & 1)) continue;
+        const hh = (H[k] * (1 - ax) + H[k + 1] * ax) * (1 - ay) + (H[k + W] * (1 - ax) + H[k + W + 1] * ax) * ay;   // 높이 쌍선형 보간
+        const yy = Math.max(0, ((camH - hh) / zm * focal + horizon) | 0);
+        if (yy >= ybuf[i]) continue;
+        const shade = Math.max(0.55, Math.min(1.45, 1 + (H[k - 1] - H[k + 1] + H[k - W] - H[k + W]) * 0.045));   // 서북쪽 해
+        const r = col[4 * k] * shade * (1 - fog) + sky1[0] * fog, gg = col[4 * k + 1] * shade * (1 - fog) + sky1[1] * fog, b = col[4 * k + 2] * shade * (1 - fog) + sky1[2] * fog;
+        const c = (255 << 24) | (Math.min(255, b) << 16) | (Math.min(255, gg) << 8) | Math.min(255, r);
+        for (let y = yy; y < ybuf[i]; y++) d32[y * w + i] = c;
+        ybuf[i] = yy;
+      }
+      z += dz; dz *= 1.013;
+    }
+    g.putImageData(img, 0, 0);
+  }
+  const povTargets = () => { const out = []; if (state.hud) { if (hudPopupOpen()) out.push(HUDWIN.document.getElementById("pov3d")); else out.push($("pov3d")); } return out.filter(Boolean); };
+  function povHeading(pos) {              // 재생 중이 아니면: 거점에서 그 지점을 바라보는 방향(도착하는 방향)
+    if (pos !== state.base) return bearingTo(state.base, pos);
+    const t = state.mode === "explore" && state.xT.length ? state.xT[0].cell : state.sel;
+    return t >= 0 && t !== pos ? bearingTo(pos, t) : 0;
+  }
+
   // HUD는 팝업 창(두 번째 화면·헬멧 화면 시연용)에 띄우고, 팝업이 막히면 지도 위 PIP 창에 띄운다. 둘 다 같은 내용으로 실시간 갱신
   let HUDWIN = null;
   const hudPopupOpen = () => !!(HUDWIN && !HUDWIN.closed);
@@ -2280,7 +2385,7 @@
       .pop .visor{width:min(100vw, calc(100vh * 16 / 9));aspect-ratio:16/9;border-radius:0}
       .pop .pip-cap{position:absolute;left:10px;bottom:6px;margin:0}
       .pop .live{position:absolute;right:12px;top:8px;font:600 11px/1 system-ui;color:#7dffb0;letter-spacing:.06em}
-    </style></head><body><div class="pop"><div class="visor" id="visor">${br}<div class="hud" id="hud"></div></div><span class="live">● LIVE</span><p class="pip-cap" id="visor-cap"></p></div></body></html>`);
+    </style></head><body><div class="pop"><div class="visor" id="visor"><canvas class="pov3d" id="pov3d"></canvas>${br}<div class="hud" id="hud"></div></div><span class="live">● LIVE</span><p class="pip-cap" id="visor-cap"></p></div></body></html>`);
     HUDWIN.document.close();
     const w = HUDWIN;
     const watch = setInterval(() => { if (w.closed) { clearInterval(watch); if (HUDWIN === w) { HUDWIN = null; state.hud = false; $("hud-btn").setAttribute("aria-pressed", "false"); renderHud(); } } }, 500);
@@ -2301,8 +2406,8 @@
     const P = META.photos || [];
     let bp = null, bd = Infinity;
     for (const p of P) { const d = Math.hypot(p.x - (pos % W + 0.5), p.y - (((pos / W) | 0) + 0.5)) * CELL; if (d < bd) { bd = d; bp = p; } }
-    visorEl.style.backgroundImage = bp ? `url("${bp.img}")` : "none";
-    capEl.textContent = bp ? `배경 사진: ${bp.rover} Navcam sol ${bp.sol} (이 위치에서 ${fmt(bd / 1000, 2)} km 떨어진 곳, NASA/JPL-Caltech)` : "이 지형에는 로버 사진이 없어 배경을 비웠습니다.";
+    visorEl.style.backgroundImage = "none";
+    capEl.textContent = "1인칭 시점: HiRISE 지형(10 m 격자)과 위성 사진으로 그린 눈높이 1.7 m 화면";
     const k = EK(), o2 = EO2(), w = EW() * 1000;
     const rt = retTot(pos, S), need = rt ? k * rt.o2 : NaN;
     const margin = o2 - O2RES() - need;
@@ -2315,6 +2420,8 @@
     const tmin = (m) => (m >= 60 ? `${Math.floor(m / 60)}:${String(Math.round(m % 60)).padStart(2, "0")}` : `${Math.round(m)} ${L.min}`);
     let heading = 0;                        // 진행 방향 (시뮬레이션 재생 중), 아니면 북쪽 위
     if (simF && SIM.idx > 0) { const pv = SIM.frames[Math.max(0, SIM.idx - 1)].pos; if (pv !== pos) heading = bearingTo(pv, pos); }
+    if (!simF) heading = povHeading(pos);
+    if (!playing) drawPOV(doc.getElementById("pov3d"), (pos % W) + 0.5, ((pos / W) | 0) + 0.5, simF && SIM.idx > 0 ? heading : povHeading(pos));
     const marks = [{ b: bearingTo(pos, state.base), t: "★" + L.base, c: "ok", d: distKm(pos, state.base) }];
     const dest = simF && simF.dest >= 0 ? simF.dest : state.mode === "sim" ? state.simTarget : state.mode === "eva" && EVA && EVA.ok && EVA.order.length ? tCell(META.targets[EVA.order[0]]) : -1;
     if (dest >= 0 && dest !== pos) marks.push({ b: bearingTo(pos, dest), t: "◆" + L.dest, c: "warn", d: distKm(pos, dest) });
@@ -2656,7 +2763,7 @@
     queueMicrotask(applyLang);
     if (v) lastVec = v;
     const dpr = Math.min((window.devicePixelRatio || 1) * ZK, 4);   // 확대하면 벡터층 해상도도 올림
-    const cw = wrap.clientWidth, ch = wrap.clientHeight;
+    const cw = FIT.w, ch = FIT.h;
     vec.width = Math.round(cw * dpr); vec.height = Math.round(ch * dpr);
     const g = vec.getContext("2d");
     g.setTransform(dpr * cw / W, 0, 0, dpr * ch / R, 0, 0);
@@ -2745,7 +2852,7 @@
     if (state.mode === "inspect" && lastVec.path) ring(g, ...xy(state.sel), 7 * lw, "#ffffff", lw);
     if (state.here >= 0 && state.mode !== "inspect") person(g, ...xy(state.here), 8 * lw, "#7fd0ff", lw);
     if (state.victim >= 0 && state.mode === "rescue") cross(g, ...xy(state.victim), 9 * lw, lw);
-    scalebar(g, lw);
+    // 축척은 지도 위 DOM(#scale)으로
   }
   const dot = (g, x, y, r, c, lw) => { g.fillStyle = c; g.strokeStyle = "#0d1016"; g.lineWidth = 1.5 * lw; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.stroke(); };
   const ring = (g, x, y, r, c, lw) => { g.strokeStyle = "#0d1016"; g.lineWidth = 4 * lw; g.beginPath(); g.arc(x, y, r, 0, 7); g.stroke(); g.strokeStyle = c; g.lineWidth = 2 * lw; g.stroke(); };
@@ -2784,24 +2891,54 @@
     sim: "지도를 눌러 <b>목적지</b>를 찍으세요. 대원이 거점에서 출발해 다녀오는 동안 산소를 빼고(심박 또는 탱크 압력으로 추정), 매 순간의 귀환 가능 영역을 그립니다. 아래 ▶로 재생합니다.",
     base: "지도를 눌러 <b>거점(★)</b>을 옮기세요. 귀환 경로와 통신 가시권이 새 거점 기준으로 다시 계산됩니다. 점선 원은 원래 거점입니다.",
   };
-  // ---------- 지도 확대(휠)·이동(드래그): CSS transform, 클릭 좌표는 getBoundingClientRect가 변환을 반영 ----------
-  let ZK = 1, ZX = 0, ZY = 0, zTimer = 0, drag = null, dragMoved = false;
+  // ---------- 지도 엔진: 지도는 화면 전체에 맞춰(contain) 놓고, 확대·이동·회전은 행렬 M 하나로 ----------
+  // 화면 좌표 = M · (FIT 오프셋 + 지도 무대 좌표). 클릭은 역행렬로 칸을 찾음 (회전해도 정확)
+  let M = new DOMMatrix(), FIT = { x: 0, y: 0, w: 1, h: 1 }, ZK = 1, zTimer = 0, drag = null, dragMoved = false;
+  let headingUp = false, mapAngle = 0;    // 진행 방향 위(heading-up) 모드와 지금 지도 회전각(도)
   const stage = $("stage");
+  const fullM = () => M.multiply(new DOMMatrix().translate(FIT.x, FIT.y));
+  function fitStage() {
+    const ww = wrap.clientWidth, wh = wrap.clientHeight;
+    if (!W || !R || !ww || !wh) return;
+    const wide = ww > 1100, L = wide ? 340 : 0, Rr = wide ? 352 : 0, T = 56, B = 40;   // 양옆 카드가 덮는 폭은 빼고 맞춤
+    const aw = Math.max(200, ww - L - Rr), ah = Math.max(200, wh - T - B), sc = Math.min(aw / W, ah / R);
+    FIT = { w: W * sc, h: R * sc, x: L + (aw - W * sc) / 2, y: T + (ah - R * sc) / 2 };
+    stage.style.width = `${FIT.w}px`; stage.style.height = `${FIT.h}px`;
+  }
   function applyZoom(redraw = true) {
-    const cw = wrap.clientWidth, ch = wrap.clientHeight;
-    ZK = Math.min(10, Math.max(1, ZK));
-    ZX = Math.min(0, Math.max(cw * (1 - ZK), ZX)); ZY = Math.min(0, Math.max(ch * (1 - ZK), ZY));
-    stage.style.transform = ZK === 1 ? "" : `translate(${ZX}px, ${ZY}px) scale(${ZK})`;
+    ZK = Math.hypot(M.a, M.b);
+    mapAngle = Math.atan2(M.b, M.a) * 180 / Math.PI;
+    stage.style.transform = fullM().toString();
     stage.style.setProperty("--zk", String(ZK));
     cells.style.imageRendering = ZK >= 2 ? "auto" : "pixelated";   // 크게 확대하면 10 m 칸이 블록처럼 보이지 않게
-    $("zreset").hidden = ZK === 1;
+    $("zreset").hidden = ZK < 1.01 && Math.abs(mapAngle) < 0.5 && Math.abs(M.e) < 1 && Math.abs(M.f) < 1;
+    $("compass-needle").style.transform = `rotate(${mapAngle}deg)`;
+    $("compass").setAttribute("aria-pressed", String(headingUp));
+    paintScale();
     if (redraw) { clearTimeout(zTimer); zTimer = setTimeout(() => drawVec(), 90); }
   }
-  function zoomAt(f, cx, cy) {
-    const k0 = ZK; ZK = Math.min(10, Math.max(1, ZK * f));
-    const r = ZK / k0; ZX = cx - (cx - ZX) * r; ZY = cy - (cy - ZY) * r; applyZoom();
+  function paintScale() {                 // 축척 막대: 화면 100 px 안팎의 보기 좋은 길이
+    const mPerPx = (W * CELL) / (FIT.w * ZK);
+    const nice = [10, 20, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000];
+    const len = nice.reduce((b, v) => (v / mPerPx <= 130 ? v : b), nice[0]);
+    $("scale-bar").style.width = `${len / mPerPx}px`;
+    $("scale-txt").textContent = len >= 1000 ? `${len / 1000} km` : `${len} m`;
   }
-  const resetZoom = () => { ZK = 1; ZX = 0; ZY = 0; applyZoom(); };
+  const around = (cx, cy, m) => new DOMMatrix().translate(cx, cy).multiply(m).multiply(new DOMMatrix().translate(-cx, -cy));
+  function zoomAt(f, cx, cy) {
+    const k = Math.min(12, Math.max(1, ZK * f)) / ZK;
+    M = around(cx, cy, new DOMMatrix().scale(k)).multiply(M); applyZoom();
+  }
+  function rotateTo(deg, cx = wrap.clientWidth / 2, cy = wrap.clientHeight / 2) {
+    M = around(cx, cy, new DOMMatrix().rotate(deg - mapAngle)).multiply(M); applyZoom();
+  }
+  const resetZoom = () => { M = new DOMMatrix(); headingUp = false; applyZoom(); };
+  function followWalker(fx, fy, headingDeg) {     // 진행 방향 위: 대원을 화면 가운데, 진행 방향을 위로
+    const k = Math.max(ZK, 3), cx = wrap.clientWidth / 2, cy = wrap.clientHeight * 0.58;
+    const sx = FIT.x + fx / W * FIT.w, sy = FIT.y + fy / R * FIT.h;
+    M = new DOMMatrix().translate(cx, cy).rotate(-headingDeg).scale(k).translate(-sx, -sy);
+    applyZoom(false);
+  }
   wrap.addEventListener("wheel", (e) => {
     if (!H || e.target.closest(".visor-wrap, .rv, .zoomctl")) return;
     e.preventDefault();
@@ -2811,18 +2948,27 @@
   $("zin").addEventListener("click", () => zoomAt(1.6, wrap.clientWidth / 2, wrap.clientHeight / 2));
   $("zout").addEventListener("click", () => zoomAt(1 / 1.6, wrap.clientWidth / 2, wrap.clientHeight / 2));
   $("zreset").addEventListener("click", resetZoom);
-  stage.addEventListener("pointerdown", (e) => { if (e.button !== 0) return; drag = { x: e.clientX, y: e.clientY, zx: ZX, zy: ZY }; dragMoved = false; });
+  $("compass").addEventListener("click", () => {  // 정북 위 <-> 진행 방향 위
+    headingUp = !headingUp;
+    if (!headingUp) rotateTo(0); else { applyZoom(); if (SIM && SIM.ok && simFrame()) placeWalker(SIM.idx); }
+  });
+  stage.addEventListener("pointerdown", (e) => { if (e.button !== 0) return; drag = { x: e.clientX, y: e.clientY, m: M }; dragMoved = false; });
   window.addEventListener("pointermove", (e) => {
-    if (!drag || ZK === 1) return;
+    if (!drag) return;
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
     if (!dragMoved && Math.hypot(dx, dy) < 5) return;
     dragMoved = true; stage.classList.add("grab");
-    ZX = drag.zx + dx; ZY = drag.zy + dy; applyZoom(false);
+    M = new DOMMatrix().translate(dx, dy).multiply(drag.m); applyZoom(false);
   });
   window.addEventListener("pointerup", () => { if (drag && dragMoved) drawVec(); drag = null; stage.classList.remove("grab"); });
+  function evToGrid(ev) {                 // 화면 좌표 -> 칸 좌표(실수)
+    const r = wrap.getBoundingClientRect();
+    const q = fullM().inverse().transformPoint(new DOMPoint(ev.clientX - r.left, ev.clientY - r.top));
+    return { x: q.x / FIT.w * W, y: q.y / FIT.h * R };
+  }
+  const pxPerCell = () => FIT.w / W * ZK;
   function cellAt(ev) {
-    const r = vec.getBoundingClientRect();
-    const x = Math.floor((ev.clientX - r.left) / r.width * W), y = Math.floor((ev.clientY - r.top) / r.height * R);
+    const g = evToGrid(ev), x = Math.floor(g.x), y = Math.floor(g.y);
     return x < 0 || y < 0 || x >= W || y >= R ? -1 : y * W + x;
   }
   vec.addEventListener("click", (ev) => {
@@ -2843,8 +2989,7 @@
   });
   function exploreClick(ev) {             // ◆ 탐사 지점(가까우면) 또는 아무 지점을 골라 넣고 빼기 (최대 3곳)
     const i = cellAt(ev); if (i < 0 || !H) return;
-    const r = vec.getBoundingClientRect(), pxPerCell = r.width / W;
-    let best = -1, bd = 14 / pxPerCell;
+    let best = -1, bd = 14 / pxPerCell();
     (META.targets || []).forEach((t, ti) => { const d = Math.hypot(t.x - ((i % W) + 0.5), t.y - (((i / W) | 0) + 0.5)); if (d < bd) { bd = d; best = ti; } });
     const cell = best >= 0 ? tCell(META.targets[best]) : i;
     if (!(FLAGS[cell] & 1)) { $("hover").textContent = "지형 자료가 없는 칸입니다."; return; }
@@ -2921,6 +3066,7 @@
     $("eva-ctl").hidden = state.mode !== "eva";
     $("explore-ctl").hidden = state.mode !== "explore";
     $("eva-dwell-out").textContent = `${state.evaDwell}분`;
+    $("sim-chart").hidden = $("sim-note").hidden = state.mode !== "sim";
     $("simbar").hidden = !(state.mode === "sim" || (state.mode === "eva" && EVA && EVA.ok) || (state.mode === "explore" && XS.length > 0));
     $("k-ctl").dataset.off = String(state.mode === "sim");
     $("sim-custom-ctl").hidden = state.simScenario !== "custom";
@@ -2987,6 +3133,7 @@
     const el = $("visor-wrap"), cur = PIP_POS.findIndex((c) => el.classList.contains(c));
     el.classList.remove(...PIP_POS); el.classList.add(PIP_POS[(Math.max(0, cur) + 1) % PIP_POS.length]);
   });
+  $("visor-open").addEventListener("click", () => { if (!state.hud) $("hud-btn").click(); else if (!hudPopupOpen() && openHudPopup()) renderHud(); });
   $("visor-big").addEventListener("click", () => $("visor-wrap").classList.toggle("big"));
   $("visor-close").addEventListener("click", () => { state.hud = false; if (hudPopupOpen()) { HUDWIN.close(); HUDWIN = null; } $("hud-btn").setAttribute("aria-pressed", "false"); renderHud(); });
   $("rv-btn").addEventListener("click", () => {           // 로드뷰 모드 켜기/끄기: 켜면 지도에 카메라 아이콘, 아이콘을 누르면 사진
@@ -3002,8 +3149,7 @@
   function rvHit(ev) {                    // 로드뷰 모드에서 아이콘(16 px 안)을 눌렀는지
     const RV = META.roadview || [];
     if (!state.rvMode || !RV.length) return -1;
-    const r = vec.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width * W, y = (ev.clientY - r.top) / r.height * R;
-    const tol = 16 * W / r.width;
+    const { x, y } = evToGrid(ev), tol = 16 / pxPerCell();
     let best = -1, bd = tol;
     RV.forEach((s, n) => { const d = Math.hypot(s.x - x, s.y - y); if (d < bd) { bd = d; best = n; } });
     return best;
@@ -3031,6 +3177,7 @@
   }
   function stopSim() { playing = false; $("sim-play").textContent = "▶"; $("sim-play").setAttribute("aria-label", "재생"); $("eva-play").textContent = "▶"; }
   // 재생 중 사람 아이콘은 분과 분 사이를 매 화면 보간해 부드럽게 (지도·HUD는 1분마다 다시 그림)
+  let walkerHeading = 0;
   function placeWalker(fi) {
     const el = $("walker");
     if (!simFrame()) { el.hidden = true; return; }
@@ -3038,6 +3185,10 @@
     const a = F[i0].pos, b = F[i1].pos;
     const x = ((a % W) + 0.5) * (1 - u) + ((b % W) + 0.5) * u, y = (((a / W) | 0) + 0.5) * (1 - u) + (((b / W) | 0) + 0.5) * u;
     el.style.left = `${x / W * 100}%`; el.style.top = `${y / R * 100}%`;
+    const pa = F[Math.max(0, i0 - 1)].pos, nb = F[Math.min(F.length - 1, i0 + 2)].pos;   // 진행 방향: 앞 프레임 -> 다음 프레임
+    if (pa !== nb) walkerHeading = walkerHeading + ((((bearingTo(pa, nb) - walkerHeading) % 360) + 540) % 360 - 180) * 0.25;
+    if (headingUp) followWalker(x, y, walkerHeading);
+    if (playing) for (const cv of povTargets()) drawPOV(cv, x, y, walkerHeading);
     el.classList.toggle("back", F[i0].phase === "back" || F[i0].phase === "home");
     el.classList.toggle("work", F[i0].phase === "work");
     el.hidden = false;
@@ -3113,7 +3264,7 @@
   });
 
   // ---------- boot ----------
-  new ResizeObserver(() => requestAnimationFrame(() => { applyZoom(false); drawVec(); })).observe(wrap);
+  new ResizeObserver(() => requestAnimationFrame(() => { fitStage(); applyZoom(false); drawVec(); })).observe(wrap);
   const enTerms = (x) => x.replace("평탄한 바닥 (자동으로 고른 가상 거점)", "flat floor (auto-selected virtual base)").replace("착륙지", "landing site")
     .replace("Mars 2020 착륙 후보지 관측", "Mars 2020 landing-site survey").replace(/정사영상/g, "orthoimage").replace("주행 경로", "traverse");
   function siteTexts() {                  // 지형마다 바뀌는 문구
@@ -3171,9 +3322,8 @@
       TIR_LO = vals[Math.floor(vals.length * 0.02)]; TIR_HI = vals[Math.floor(vals.length * 0.98)];
       TIR_Q = [vals[Math.floor(vals.length * 0.25)], vals[Math.floor(vals.length * 0.75)]];
     }
-    ZK = 1; ZX = 0; ZY = 0; applyZoom(false);
-    wrap.style.aspectRatio = `${W} / ${R}`;
-    wrap.style.maxWidth = `min(100%, calc(88vh * ${(W / R).toFixed(4)}))`;
+    M = new DOMMatrix(); headingUp = false;
+    fitStage(); applyZoom(false);
     $("shade").src = site.shade; $("ortho").src = site.ortho;
     Object.assign(state, { base: BASE0, sel: GOAL, here: -1, victim: -1, simTarget: GOAL, evaSel: (site.meta.targets || []).map(() => true) });
     PRESETS = makePresets();
@@ -3244,6 +3394,11 @@
     const gn = document.querySelector(".gnote"); if (gn) $("h-sum").appendChild(mk([gn]));
   }
   infoize();
+  // 지형 선택을 제목 카드 안에 넣고, 왼쪽 패널은 그 아래에서 시작
+  document.querySelector("header.top").appendChild(document.querySelector(".sitebar"));
+  const placeLeft = () => { const h = document.querySelector("header.top"); $("leftcol").style.top = `${h.offsetTop + h.offsetHeight + 8}px`; };
+  new ResizeObserver(placeLeft).observe(document.querySelector("header.top")); placeLeft();
+  $("notes-btn").addEventListener("click", () => { for (const id of ["notes-ko", "notes-en"]) { const d = $(id); d.classList.toggle("closed"); d.open = !d.classList.contains("closed"); } });
   const notesLang = () => { $("notes-ko").hidden = LANG !== "ko"; $("notes-en").hidden = LANG === "ko"; };
   notesLang();
   $("lang-btn").textContent = LANG === "ko" ? "EN" : "한국어";
