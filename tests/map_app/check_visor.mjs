@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 const b=await launch({port:9453});
 try{
- const p=await b.newPage();await p.viewport(1440,1000);await p.goto(pathToFileURL(path.join(ROOT,'reports/18-eva-walkback-demo.html')).href);
+ const p=await b.newPage();await p.viewport(1440,1000);await p.goto(pathToFileURL(path.join(ROOT,'reports/Martian-Map-Final.html')).href);
  await p.waitFor('window.EVA_DEBUG?.setNow() && document.getElementById("radius-outer")');
  assert.equal(await p.eval('!!document.getElementById("travel-mode")'),true,'Planning must offer On foot / Rover');
  await p.eval(`(()=>{const D=EVA_DEBUG,S=D.setNow(),w=D.W;let c=-1;for(let i=0;i<D.N;i++)if((D.FLAGS[i]&8)&&S.o2[i]>0&&S.t[i]>600&&S.t[i]<900){c=i;break;}if(c<0)throw Error('No test location');D.META.targets.push({x:c%w+.5,y:Math.floor(c/w)+.5,name_en:'QA travel target',planned_minutes:2,source_kind:'user_target'});D.state.evaSel=D.META.targets.map((_,i)=>i===D.META.targets.length-1);D.update();})()`);

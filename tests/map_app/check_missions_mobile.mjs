@@ -7,7 +7,7 @@ const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const b=await launch({port:9457});
 try{
   const p=await b.newPage();await p.viewport(390,844,{mobile:true,touch:true});
-  await p.goto(pathToFileURL(path.join(ROOT,'reports/18-eva-walkback-demo.html')).href);
+  await p.goto(pathToFileURL(path.join(ROOT,'reports/Martian-Map-Final.html')).href);
   await p.waitFor('window.EVA_DEBUG?.setNow() && document.getElementById("radius-outer")');
   const bounds=await p.eval(`['.map-actions','.map-bottom','#map-visor'].map(s=>{const r=document.querySelector(s).getBoundingClientRect();return {s,left:r.left,right:r.right,top:r.top,bottom:r.bottom}})`);
   for(const r of bounds){assert(r.left>=0&&r.right<=391,JSON.stringify(r));assert(r.top>=0&&r.bottom<=845,JSON.stringify(r));}

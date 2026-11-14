@@ -5,7 +5,7 @@ import {launch} from './cdp.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 const b=await launch({port:9454});
-try{const p=await b.newPage();await p.viewport(1440,1000);await p.goto(pathToFileURL(path.join(ROOT,'reports/18-eva-walkback-demo.html')).href);await p.waitFor('window.EVA_DEBUG?.setNow() && document.getElementById("radius-status")');
+try{const p=await b.newPage();await p.viewport(1440,1000);await p.goto(pathToFileURL(path.join(ROOT,'reports/Martian-Map-Final.html')).href);await p.waitFor('window.EVA_DEBUG?.setNow() && document.getElementById("radius-status")');
 await p.eval(`(()=>{const l=document.getElementById('settings-language');l.value='ko';l.dispatchEvent(new Event('change',{bubbles:true}));})()`);
 assert.equal(await p.eval(`document.querySelector('#custom-planning details summary').textContent`),'경로 비교','Compare routes must translate');
 assert.equal(await p.eval(`document.querySelector('#radius-status button')?.textContent`),'전체 영역 보기','Fit button must be Korean');

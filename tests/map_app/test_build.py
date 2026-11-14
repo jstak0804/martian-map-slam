@@ -9,7 +9,7 @@ def test_build():
     builder = ROOT / 'code' / 'build_map_app.py'
     assert builder.exists(), 'Integrated reproducible builder is missing'
     subprocess.run([sys.executable, str(builder)], check=True)
-    output = ROOT / 'reports/18-eva-walkback-demo.html'
+    output = ROOT / 'reports/Martian-Map-Final.html'
     first = hashlib.sha256(output.read_bytes()).hexdigest()
     subprocess.run([sys.executable, str(builder)], check=True)
     assert hashlib.sha256(output.read_bytes()).hexdigest() == first

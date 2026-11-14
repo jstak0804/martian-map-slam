@@ -19,7 +19,7 @@ class BuilderValidation(unittest.TestCase):
         (self.app / 'src').mkdir(parents=True)
         (self.app / 'assets').mkdir()
         (self.root / 'reports').mkdir()
-        self.output = self.root / 'reports/18-eva-walkback-demo.html'
+        self.output = self.root / 'reports/Martian-Map-Final.html'
         self.output.write_text('working demo', encoding='utf-8')
         self.write('modules.json', '["main.js"]')
         self.write('src/main.js', 'const ready = true;')
