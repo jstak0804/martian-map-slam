@@ -114,6 +114,7 @@ const I18N = {
   "왕복 뒤 산소 20% 넘게 남는 곳": "Round trip leaves >20% O2", "선택한 시나리오 체류 가능": "Stay time (selected scenario)", "지도의 ◆ 탐사 지점을 누르세요": "Click a ◆ site on the map", "지도에서 ◆ 탐사 지점을 누르세요 (최대 3곳)": "Click ◆ sites on the map (up to 3)", "경로 계산 중…": "Computing routes…",
   "거점 → 그곳 → 거점 왕복 뒤 남는 산소": "O2 left after base → there → base", "20% 초과": ">20%", "10~20%": "10–20%", "0~10%": "0–10%", "다녀올 수 있는 곳 윤곽": "Outline of reachable area",
   "1인칭 시점: HiRISE 지형(10 m 격자)과 위성 사진으로 그린 눈높이 1.7 m 화면": "First-person view rendered from HiRISE terrain (10 m grid) and satellite imagery at 1.7 m eye height",
+  "지금 남은 산소로 돌아와도 20% 넘게 남는 곳": "Return now still leaves >20% O2", "지금 남은 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 left if you return to base from there with the O2 you have now",
   "상황 설정": "Situation", "지금 상황": "Status", "지도 표시": "Map layers",
   "기준": "Baseline", "관측 SPE ×2.9": "Observed SPE ×2.9", "대형 SPE ×30 (스트레스 테스트)": "Large SPE ×30 (stress test)", "지친 대원 k 1.2": "Tired crew k 1.2",
   "냉각수 누수 0.6 kg": "Coolant leak 0.6 kg", "누수 + 더운 오후": "Leak + hot afternoon", "안전 우선 운용": "Safety-first ops",
@@ -191,6 +192,7 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^지금 산소 ([\d,]+) g \/ 출발 ([\d,]+) g · 노랑 ([\d.,]+) · 빨강 ([\d.,]+) km²$/, "O2 now $1 g / start $2 g · yellow $3 · red $4 km²"],
   [/^(.*)만$/, (m, a) => `${a} only`], [/^산소 ([\d,]+) g · (산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a, b) => `O2 ${a} g · limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[b]}`],
   [/^(\d+)시간 (\d+)분$/, "$1 h $2 min"], [/^복귀 시 (산소|냉각수|선량) 20% 미만$/, (m, a) => `Under 20% ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose" })[a]} on return`],
   [/^(산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a) => `limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[a]}`],
