@@ -134,6 +134,18 @@ A geometric indicator, not a link budget.
 - IST tests ran at 0.12–0.32 g on Earth, not Mars 0.378 g with a 90 kg suit; downhill costs are scaled
   extrapolations; rover speed and riding metabolism are assumptions; terrain shielding and fall risk are proxies.
 
+
+### Observed data vs. models
+
+| Observed / published data (NASA) | Models and scenarios (computed or chosen by us) |
+|---|---|
+| HiRISE 1 m DTMs and orthoimages | Walking metabolism (regression on NASA IST tests, extrapolated to Mars gravity) |
+| Curiosity / Perseverance traverses, stops, Navcam raw images | Return routes, walk-back areas, stay times (Dijkstra results) |
+| Mars 2020 sample list | Heart-rate and tank-pressure telemetry (synthetic scenarios or CSV input) |
+| Curiosity RAD background dose, observed SPE ×2.9 | 1 mSv dose budget, terrain shielding proxy, large SPE multipliers |
+| Apollo 15–17 PLSS consumables (680 g O2, 5.2 kg water) | Rover speed and riding metabolism; fall-risk and comm-bar proxies |
+| JPL Mars Trek THEMIS night IR | First-person visor rendered from the 10 m terrain (not a photograph) |
+
 ## References
 
 - NASA/TP-2010-216115 (IST-1) and NASA/TP-2010-216125 (IST-2), reduced-gravity suited walking.

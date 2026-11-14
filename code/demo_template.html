@@ -332,13 +332,20 @@
   details.notes summary { cursor: pointer; font-weight: 600; }
   details.notes ul { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 6px; color: var(--ink-soft); font-size: 13px; max-width: 110ch; }
   details.notes a { color: var(--accent); }
+  table.dsrc { width: 100%; border-collapse: collapse; margin: 10px 0 4px; font-size: 12.5px; }
+  table.dsrc th, table.dsrc td { border: 1px solid var(--rule); padding: 5px 8px; text-align: left; vertical-align: top; }
+  table.dsrc th:first-child, table.dsrc td:first-child { color: #9fe6b8; } table.dsrc th:last-child, table.dsrc td:last-child { color: #ffd9a8; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
   /* ===== 지도 전체 화면 배치: 지도가 바탕, 패널은 그 위에 뜬 카드 ===== */
   html, body { height: 100%; overflow: hidden; }
   .app { position: fixed; inset: 0; max-width: none; padding: 0; display: block; }
   .mapcol { position: fixed; inset: 0; z-index: 0; display: block; }
-  .mapcol .mapwrap { position: absolute; inset: 0; width: 100% !important; height: 100% !important; max-width: none !important; aspect-ratio: auto !important; border: 0; border-radius: 0; background: #05070a; }
+  .mapcol .mapwrap { position: absolute; inset: 0; width: 100% !important; height: 100% !important; max-width: none !important; aspect-ratio: auto !important; border: 0; border-radius: 0;
+    background:
+      repeating-linear-gradient(0deg, rgba(120,140,170,.07) 0 1px, transparent 1px 64px),
+      repeating-linear-gradient(90deg, rgba(120,140,170,.07) 0 1px, transparent 1px 64px),
+      radial-gradient(ellipse at 50% 45%, #1a2130 0%, #10141d 45%, #07090e 100%); }
   .map-stage { inset: auto; left: 0; top: 0; }
   .float { background: rgba(11,14,21,.9); border: 1px solid var(--rule); border-radius: 10px; box-shadow: 0 8px 28px rgba(0,0,0,.45); backdrop-filter: blur(6px); }
   header.top { position: fixed; top: 10px; left: 12px; z-index: 7; width: 320px; padding: 8px 12px; box-sizing: border-box; }
@@ -374,7 +381,7 @@
   @media (max-width: 1100px) {
     .leftcol, .rightcol { width: 280px; } .rightcol { top: auto; height: 46vh; } .modebar, .legend, .simbar, .rv.drawer { left: 300px; right: 12px; }
     .zoomctl { right: 12px; bottom: calc(46vh + 24px); } .scale { right: 58px; bottom: calc(46vh + 26px); } header.top, .sitebar { width: 280px; }
-    .rv.drawer, .visor-wrap.pip { bottom: calc(46vh + 24px); } .simbar { bottom: calc(46vh + 24px); right: 304px; } .legend { bottom: 12px; left: 300px; max-width: calc(100vw - 600px); }
+    .rv.drawer, .visor-wrap.pip { bottom: calc(46vh + 24px); } #sim-chart { height: 80px; } .simbar { bottom: calc(46vh + 24px); right: 304px; } .legend { bottom: 12px; left: 300px; max-width: calc(100vw - 600px); }
   }
 </style>
 
@@ -382,7 +389,7 @@
   <header class="top float">
     <div class="brand">
       <div class="eyebrow">Mars EVA Walkback &amp; Survival Planner</div>
-      <h1><span id="site-title">Gale 크레이터</span> EVA 귀환 반경 <button type="button" class="reset" id="lang-btn" style="font-size:12px;vertical-align:middle">EN</button> <button type="button" class="reset" id="notes-btn" style="font-size:12px;vertical-align:middle">방법·한계</button></h1>
+      <h1><span id="site-title">Gale 크레이터</span> EVA 귀환 반경 <button type="button" class="reset" id="lang-btn" style="font-size:12px;vertical-align:middle">EN</button> <button type="button" class="reset" id="notes-btn" style="font-size:12px;vertical-align:middle">자료 구분·방법</button></h1>
       <p class="sub">HiRISE 지형·로버 관측·RAD 선량 자료를 한 격자에 겹친 <b>10 m 단위 귀환 가능 지역·최적 귀환 경로 시뮬레이터</b>. 고장이 난 순간 남은 산소·냉각수·선량 여유로 거점까지 걸어 돌아올 수 있는 곳을 그리고, 지도를 누르면 그 지점에서 돌아오는 길을 따져 봅니다.</p>
     </div>
   </header>
@@ -685,6 +692,14 @@
   <details class="notes closed" id="notes-ko">
     <summary>계산 방법과 한계</summary>
     <p>전체 계산식: <a href="https://github.com/jstak0804/martian-map-slam/blob/main/docs/METHODS.ko.md" target="_blank" rel="noopener">docs/METHODS.ko.md</a></p>
+        <table class="dsrc"><thead><tr><th>실측·공개 자료 (NASA)</th><th>모델·시나리오 (우리가 계산하거나 정한 값)</th></tr></thead><tbody>
+      <tr><td>HiRISE 1 m DTM·정사영상 (Gale·Jezero·Aram 지형, 경사)</td><td>걷기 대사량: NASA IST 실측을 회귀한 모델 (화성 중력 조건은 외삽)</td></tr>
+      <tr><td>Curiosity·Perseverance 주행 경로, 정지 지점, Navcam 원본 사진</td><td>귀환 경로·면적·체류 가능 시간: 다익스트라 계산 결과</td></tr>
+      <tr><td>Mars 2020 시료 목록 (Jezero 지점 이름)</td><td>심박·탱크 압력 텔레메트리: 합성 시나리오 또는 CSV 입력</td></tr>
+      <tr><td>Curiosity RAD 배경 선량률 0.655 mSv/일, 관측 SPE ×2.9</td><td>선량 예산 1 mSv, 지형 차폐(대리 지표), 큰 SPE 배율</td></tr>
+      <tr><td>Apollo 15~17 PLSS 소모품 (산소 680 g, 냉각수 5.2 kg)</td><td>로버 속도·탑승 대사량, 넘어짐 위험·통신 신호 단계 (대리 지표)</td></tr>
+      <tr><td>JPL Mars Trek THEMIS 야간 적외선 (참고 층)</td><td>1인칭 바이저 화면: 10 m 지형으로 그린 렌더링 (사진 아님)</td></tr>
+    </tbody></table>
     <ul>
       <li>지형: HiRISE DTM DTEEC_018854_1755_018920_1755_U01(Gale, 1 m)을 10 m 칸으로 묶음. 거점은 Curiosity 착륙지, 노란 점은 sol 1282 지점.</li>
       <li>바탕 사진: 같은 DTM의 정사영상 ESP_018854_1755_RED_C_01_ORTHO(1 m, 4 m로 줄임). DTM과 같은 격자라 판정 칸과 화소 단위로 맞음. HiRISE RED 밴드는 흑백이라 밝기를 화성 표토 색조로 바꿔 칠했음(표시용 가색). <a href="https://hirise-pds.lpl.arizona.edu/PDS/DTM/ESP/ORB_018800_018899/ESP_018854_1755_ESP_018920_1755/">HiRISE PDS</a></li>
@@ -715,6 +730,14 @@
   <details class="notes closed" id="notes-en" hidden>
     <summary>Methods and limitations</summary>
     <p>All formulas: <a href="https://github.com/jstak0804/martian-map-slam/blob/main/docs/METHODS.md" target="_blank" rel="noopener">docs/METHODS.md</a></p>
+        <table class="dsrc"><thead><tr><th>Observed / published data (NASA)</th><th>Models and scenarios (computed or chosen by us)</th></tr></thead><tbody>
+      <tr><td>HiRISE 1 m DTMs and orthoimages (terrain, slopes)</td><td>Walking metabolism: regression on NASA IST measurements (extrapolated to Mars gravity)</td></tr>
+      <tr><td>Curiosity and Perseverance traverses, stops and Navcam raw images</td><td>Return routes, areas and stay times: Dijkstra results</td></tr>
+      <tr><td>Mars 2020 sample list (Jezero site names)</td><td>Heart-rate and tank-pressure telemetry: synthetic scenarios or CSV input</td></tr>
+      <tr><td>Curiosity RAD background 0.655 mSv/day, observed SPE ×2.9</td><td>1 mSv dose budget, terrain shielding (proxy), large SPE multipliers</td></tr>
+      <tr><td>Apollo 15–17 PLSS consumables (680 g O2, 5.2 kg water)</td><td>Rover speed and riding metabolism, fall risk and comm bars (proxies)</td></tr>
+      <tr><td>JPL Mars Trek THEMIS night IR (reference layer)</td><td>First-person visor: rendered from the 10 m terrain (not a photo)</td></tr>
+    </tbody></table>
     <ul>
       <li>Data: HiRISE 1 m DTMs and orthoimages (NASA PDS) for Gale (DTEEC_018854_1755_018920_1755_U01), Jezero (DTEEC_045994_1985_046060_1985_U01) and Aram Chaos (DTEEC_054753_1825_055452_1825_A01), resampled to 10 m cells; MSL and Mars 2020 traverses and Navcam raw images; JPL Mars Trek THEMIS night IR (reference layer only); Curiosity RAD dose rates.</li>
       <li>Walking metabolism: regression on NASA IST-1/IST-2 reduced-gravity suited walking data (NASA/TP-2010-216115, 216125). Level walking at 0.92 m/s (Apollo 15 emergency walk-back speed) costs 444 W; uphill speed keeps the same effort as level walking (Waligora &amp; Horrigan 1975); downhill uses the Looney et al. 2019 grade cost ratio scaled to suit grade sensitivity, slowed by Tobler's hiking function; floor = 222 W standing with load. Converted to O2 with 20.1 kJ/L. IST was run at 0.12–0.32 g on Earth, so it is not a direct validation at Mars 0.378 g with a 90 kg suit.</li>
@@ -3383,6 +3406,18 @@
     else if (!C.cal_status || C.cal_status === "문헌값") $("m-sand-d").textContent = `모래언덕 후보 ${fmt(st.dune_km2, 1)} km²(위성 사진 밝기로 추정)에 적용. 0.92 m/s에서 약 3.0, 식의 자료 범위 밖인 0.85 m/s 미만은 0.85 값(3.3)`;
     $("ortho").alt = `HiRISE 정사영상: ${SITE().name}`;
   }
+  // 바탕 사진에서 지형 자료가 없는 칸(HiRISE 띠 바깥의 검은 모서리)을 투명하게: 뒤의 배경이 보이게
+  function maskNoData(im, site) {
+    if (!im.naturalWidth || !FLAGS || im.dataset.masked === String(site)) return;
+    const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight;
+    const g = cv.getContext("2d"); g.drawImage(im, 0, 0);
+    const m = document.createElement("canvas"); m.width = W; m.height = R;
+    const mg = m.getContext("2d"), id = mg.createImageData(W, R);
+    for (let i = 0; i < N; i++) id.data[4 * i + 3] = FLAGS[i] & 1 ? 255 : 0;
+    mg.putImageData(id, 0, 0);
+    g.globalCompositeOperation = "destination-in"; g.imageSmoothingEnabled = true; g.drawImage(m, 0, 0, cv.width, cv.height);
+    cv.toBlob((b) => { if (!b || SITE_I !== site) return; im.dataset.masked = String(site); im.src = URL.createObjectURL(b); });
+  }
   async function loadSite(i, before) {    // 지형 바꾸기: 격자·거점·트리·캔버스·사진·문구를 모두 새로
     stopSim();
     SITE_I = i;
@@ -3411,6 +3446,7 @@
     M = new DOMMatrix(); headingUp = false;
     fitStage(); applyZoom(false);
     $("shade").src = site.shade; $("ortho").src = site.ortho;
+    for (const id of ["ortho", "shade"]) $(id).decode().then(() => maskNoData($(id), SITE_I)).catch(() => {});
     Object.assign(state, { base: BASE0, sel: GOAL, here: -1, victim: -1, simTarget: GOAL, evaSel: (site.meta.targets || []).map(() => true) });
     PRESETS = makePresets();
     $("presets").innerHTML = presetsHtml();
