@@ -433,6 +433,7 @@
   body.wide .leftcol, body.wide .rightcol { top: 64px; bottom: 16px; transition: transform .22s ease, opacity .22s; z-index: 9; }
   body.wide .leftcol { left: 12px; bottom: calc(var(--tc-h, 200px) + 28px); } body.wide .rightcol { right: 12px; top: 112px; bottom: calc(var(--tc-h, 200px) + 28px); }
   body.wide:not(.show-settings) .leftcol { transform: translateX(calc(-100% - 24px)); opacity: 0; pointer-events: none; }
+  body.wide .rightcol { display: none !important; }
   body.wide:not(.show-status) .rightcol { transform: translateX(calc(100% + 24px)); opacity: 0; pointer-events: none; }
   /* 오른쪽 도구 기둥 */
   body.wide .zoomctl { position: fixed; right: 16px; left: auto; top: 112px; bottom: auto; gap: 8px; z-index: 7; }
@@ -533,12 +534,12 @@
   <nav class="wbar float" id="wbar" aria-label="메뉴">
     <select id="site-sel" class="wsel" aria-label="지형"></select>
     <div class="qbtns" id="qbtns" role="group" aria-label="핵심 시나리오">
-      <button type="button" class="wbtn" data-q="explore">① 탐사 계획</button><button type="button" class="wbtn" data-q="surge">② 심박 급증 시뮬</button><button type="button" class="wbtn" data-q="base">⌂ 거점 옮기기</button>
+      <button type="button" class="wbtn" data-q="explore">① 탐사 계획</button><button type="button" class="wbtn" data-q="base">② 거점 옮기기</button>
     </div>
     <span class="wslot" id="wslot-mode"></span>
     <span class="wsep" aria-hidden="true"></span>
     <span class="wslot" id="wslot-view"></span>
-    <button type="button" class="wbtn" id="w-status" aria-pressed="false" aria-controls="rightcol">상태</button>
+
     <button type="button" class="wbtn" id="w-settings" aria-pressed="false" aria-controls="leftcol">설정</button>
     <span class="wslot" id="wslot-doc"></span>
   </nav>
@@ -2209,9 +2210,7 @@
     let html;
     if (m === "explore") {
       const sg = xSegs(summary);
-      $("legend").innerHTML = `<span style="color:var(--ink-soft)">${summary.xLive ? "지금 남은 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소" : "거점 → 그곳 → 거점 왕복 뒤 남는 산소"}</span>` + sg.map((x) => item("background:" + x.c, x.n)).join("")
-        + item("background:#e6fffb;height:3px;vertical-align:3px;box-shadow:0 0 0 1px #04070a", "다녀올 수 있는 곳 윤곽")
-        + item("background:repeating-linear-gradient(45deg,rgba(61,139,253,.25) 0 2px,#3d8bfd 2px 6px)", "고도 자료 밖: 평지 가정 추정");
+      $("legend").innerHTML = `<span style="color:var(--ink-soft)">${summary.xLive ? "지금 남은 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소" : "거점 → 그곳 → 거점 왕복 뒤 남는 산소"}</span>` + sg.map((x) => item("background:" + x.c, x.n)).join("");   // 간소화: 색깔별 반경 설명만
       return;
     }
     if (m === "rescue" && summary.rLive) {
@@ -3953,7 +3952,7 @@
     $("mode-more").hidden = true; $("mode-more").querySelectorAll("option[value]:not([value=''])").forEach((o) => o.remove());   // 중복(거점 옮기기)·뺀 모드 항목 제거            // 경로 탐색·현재 위치·과학 EVA·조난 구조는 화면에서 뺌 (탐사 계획과 심박 시뮬에 집중)
     $("wslot-view").append($("hud-btn"), $("rv-btn"));
     $("hud-btn").textContent = "🥽 바이저"; $("rv-btn").textContent = "📷 로드뷰";
-    $("wslot-doc").append($("notes-btn"), $("lang-btn"));
+    $("wslot-doc").append($("lang-btn")); $("notes-btn").hidden = true;   // 간소화: 상태 서랍·자료 구분 버튼 뺌
     $("tc-left").append($("explore-ctl"), $("rescue-ctl"));
     $("tc-right").append($("pt-meters"), $("x-scn"));   // 시나리오 카드는 오른쪽, 최적 계획이 맨 앞
     $("tc-verdict").append($("pt-verdict"));
@@ -4001,7 +4000,7 @@
     const drawer = (btn, cls) => $(btn).addEventListener("click", () => {
       const on = document.body.classList.toggle(cls); $(btn).setAttribute("aria-pressed", String(on));
     });
-    drawer("w-settings", "show-settings"); drawer("w-status", "show-status");
+    drawer("w-settings", "show-settings");
     const sync = () => {                   // 카드·범례 높이에 맞춰 재생 막대·축척 위치와 지도 맞춤을 갱신
       const h = $("tripcard").offsetHeight, lg = $("legend").offsetHeight;
       document.body.style.setProperty("--tc-h", h + "px"); document.body.style.setProperty("--lg-h", lg + "px");
