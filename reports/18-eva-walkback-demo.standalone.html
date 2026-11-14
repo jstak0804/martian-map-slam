@@ -95,6 +95,14 @@
   .xbig span { display: grid; gap: 2px; background: var(--panel-2); border: 1px solid var(--rule); border-radius: 8px; padding: 8px; font-size: 11.5px; color: var(--ink-soft); }
   .xbig b { font-size: 18px; color: var(--ink); font-family: var(--font-mono); }
   .xbig .dw { border-color: var(--safe); } .xbig .dw b { color: var(--safe); }
+  .xbig .dw.over { border-color: var(--bad); } .xbig .dw.over b { color: var(--bad); }
+  .xbig.live span { border-color: var(--accent); } .xbig.live .dw { border-color: var(--safe); }
+  .xlive { font: 12px/1.4 var(--font-mono); color: var(--accent); margin-top: 4px; }
+  .dwrow { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; align-items: center; }
+  .dwin { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; }
+  .dwin input { width: 54px; font: inherit; font-family: var(--font-mono); color: var(--ink); background: var(--panel-2); border: 1px solid var(--rule); border-radius: 5px; padding: 1px 4px; text-align: right; }
+  .dwin input.auto { color: var(--ink-soft); border-style: dashed; }
+  .facts dd.bad { color: var(--bad); }
   .xcard .split { font-size: 11px; color: var(--ink-soft); font-family: var(--font-mono); }
   .evaplay { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--rule); border-radius: 8px; background: var(--panel); }
   .evaplay span { display: grid; gap: 1px; flex: 1; font-size: 13px; } .evaplay small { font-size: 11.5px; color: var(--ink-soft); font-family: var(--font-mono); }
@@ -427,6 +435,11 @@
         <button type="button" class="reset" id="base-reset2">원래 거점으로 되돌리기</button>
       </div>
       <div class="group" id="rescue-ctl" hidden>
+        <div class="evaplay">
+          <button type="button" class="play" id="rs-play" aria-label="구조 재생">▶</button>
+          <span><b>구조 재생</b><small id="rs-play-t">구조 대상을 찍으면 재생할 수 있습니다</small></span>
+          <button type="button" class="reset" id="rs-restart">처음으로</button>
+        </div>
         <h2>구조 대상 (움직일 수 없는 대원)<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">위의 산소·냉각수·k·열 설정은 <strong>구조대원</strong>의 값으로 씁니다. 구조대원은 "현재 위치"에서 찍은 곳에서, 찍지 않았으면 거점에서 출발합니다.</span></span></span></h2>
         <div class="ctl">
           <div class="row"><label for="vo2">구조 대상의 남은 산소</label><output id="vo2-out" for="vo2"></output></div>
@@ -866,6 +879,8 @@ const I18N = {
   "거점 → 그곳 → 거점 왕복 뒤 남는 산소": "O2 left after base → there → base", "20% 초과": ">20%", "10~20%": "10–20%", "0~10%": "0–10%", "다녀올 수 있는 곳 윤곽": "Outline of reachable area",
   "1인칭 시점: HiRISE 지형(10 m 격자)과 위성 사진으로 그린 눈높이 1.7 m 화면": "First-person view rendered from HiRISE terrain (10 m grid) and satellite imagery at 1.7 m eye height",
   "지금 남은 산소로 돌아와도 20% 넘게 남는 곳": "Return now still leaves >20% O2", "지금 남은 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 left if you return to base from there with the O2 you have now",
+  "구조 재생": "Play rescue", "구조 대상을 찍으면 재생할 수 있습니다": "Set the stranded crew member to play", "작업 남은 시간": "Work left", "다음 지점까지": "To next site", "거점까지": "To base", "지금 돌아서면 복귀": "Return if turning now", "더 머물 수 있음": "Can still stay", "체류 계획": "Planned stay", "자동": "Auto",
+  "구조 대상": "Stranded crew member",
   "상황 설정": "Situation", "지금 상황": "Status", "지도 표시": "Map layers",
   "기준": "Baseline", "관측 SPE ×2.9": "Observed SPE ×2.9", "대형 SPE ×30 (스트레스 테스트)": "Large SPE ×30 (stress test)", "지친 대원 k 1.2": "Tired crew k 1.2",
   "냉각수 누수 0.6 kg": "Coolant leak 0.6 kg", "누수 + 더운 오후": "Leak + hot afternoon", "안전 우선 운용": "Safety-first ops",
@@ -943,6 +958,11 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^(.*) 도착 → 응급 처치·보급 (\d+)분$/, (m, a, b) => `${I18N_SUB(a)} reached → first aid and supply ${b} min`],
+  [/^(\d+)분 · (이동 중|작업 중|돌아오는 중)(?: · (.*))? · 산소 ([\d,]+) g \((\d+)%\)$/, (m, a, b, c, d, e) => `min ${a} · ${({ "이동 중": "walking", "작업 중": "working", "돌아오는 중": "returning" })[b]}${c ? " · " + c : ""} · O2 ${d} g (${e}%)`],
+  [/^([\d,]+) g \((\d+)%\) · 체류 한도 (.*) 초과$/, (m, a, b, c) => `${a} g (${b}%) · over the ${I18N_SUB(c)} stay limit`],
+  [/^구조 출발: (현재 위치|거점) → 구조 대상 \(구조대원 산소 ([\d,]+) g, 냉각수 ([\d,]+) g\)$/, (m, a, b, c) => `Rescue start: ${a === "거점" ? "base" : "current position"} → stranded crew (rescuer O2 ${b} g, coolant ${c} g)`],
+  [/^구조 대상에게 산소 ([\d,]+) g · 냉각수 ([\d,]+) g 전달 → 함께 귀환$/, "Handed $1 g O2 · $2 g coolant to the stranded crew → returning together"],
   [/^지금 산소 ([\d,]+) g \/ 출발 ([\d,]+) g · 노랑 ([\d.,]+) · 빨강 ([\d.,]+) km²$/, "O2 now $1 g / start $2 g · yellow $3 · red $4 km²"],
   [/^(.*)만$/, (m, a) => `${a} only`], [/^산소 ([\d,]+) g · (산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a, b) => `O2 ${a} g · limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[b]}`],
   [/^(\d+)시간 (\d+)분$/, "$1 h $2 min"], [/^복귀 시 (산소|냉각수|선량) 20% 미만$/, (m, a) => `Under 20% ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose" })[a]} on return`],
@@ -1050,7 +1070,7 @@ const I18N_RE = [
   const APOLLO_W = 5200;                   // g, Apollo 15~17 PLSS 냉각수 11.5 lb
   const ROVER_V = 2.2, RIDE_W = 147;       // 로버: 운행 속도 m/s(약 8 km/h, Apollo LRV 평균 운행 수준), 탑승 대사량 W(약 500 BTU/h)
   const BASE_O2 = 250;                     // 기본·기준 산소(g): 탱크 540 g의 약 46%. 귀환 가능 영역의 경계가 지도 안에 보이는 양
-  const state = { o2: APOLLO_O2, water: APOLLO_W / 1000, xRover: false, xT: [], xScn: 0, k: 1, q: 0, spe: false, mult: C.spe_observed, nofall: false, relay: false,
+  const state = { o2: APOLLO_O2, water: APOLLO_W / 1000, xRover: false, xDwell: {}, xT: [], xScn: 0, k: 1, q: 0, spe: false, mult: C.spe_observed, nofall: false, relay: false,
                   showfall: false, showcomm: true, showtrav: true,
                   mode: "explore", sel: GOAL, here: -1, victim: -1, vo2: 150, vwater: 1, vcarry: "walk", base: BASE0,
                   simTarget: GOAL, simScenario: "surge", simNoise: 8, simAuto: true, simCustom: "",
@@ -1140,7 +1160,7 @@ const I18N_RE = [
   const plainNow = () => TREES.get(treeKey(state.base, false));
 
   // 심박 시뮬레이션 중에는 그 시각의 남은 산소·냉각수와 심박으로 추정한 k로 지도를 그림
-  const simFrame = () => ((state.mode === "sim" || state.mode === "eva" || state.mode === "explore") && SIM && SIM.ok && SIM.kind === state.mode ? SIM.frames[SIM.idx] : null);
+  const simFrame = () => ((state.mode === "sim" || state.mode === "eva" || state.mode === "explore" || state.mode === "rescue") && SIM && SIM.ok && SIM.kind === state.mode ? SIM.frames[SIM.idx] : null);
   const EK = () => { const f = simFrame(); return f ? f.k : state.k; };
   const EO2 = () => { const f = simFrame(); return f ? f.o2 : state.o2; };
   const EW = () => { const f = simFrame(); return f ? f.w / 1000 : state.water; };
@@ -1704,8 +1724,8 @@ const I18N_RE = [
     return { path: EVA.path.slice(0, end + 1), cells, names: EVA.marks.map((mk) => T[mk.ti].name) };
   }
   function buildSim() {
-    const plan = state.mode === "eva" ? evaRunPlan() : state.mode === "explore" ? exploreRunPlan() : null;
-    if ((state.mode === "eva" || state.mode === "explore") && !plan) return { ok: false, kind: state.mode, msg: "계획이 서야 시뮬레이션할 수 있습니다." };
+    const plan = state.mode === "eva" ? evaRunPlan() : state.mode === "explore" ? exploreRunPlan() : state.mode === "rescue" ? rescueRunPlan() : null;
+    if ((state.mode === "eva" || state.mode === "explore" || state.mode === "rescue") && !plan) return { ok: false, kind: state.mode, msg: "계획이 서야 시뮬레이션할 수 있습니다." };
     let out;
     if (plan) out = plan.path;
     else {
@@ -1720,10 +1740,10 @@ const I18N_RE = [
       for (let cur = end; FWDB.pred[cur] >= 0;) { cur = FWDB.pred[cur]; out.push(cur); }
       out.reverse(); out.push(...climb);
     }
-    const scn = plan ? (state.mode === "explore" ? "model" : state.evaScn) : state.simScenario;
+    const scn = plan ? (state.mode === "explore" || state.mode === "rescue" ? "model" : state.evaScn) : state.simScenario;
     const custom = scn === "custom" ? parseCustom(state.simCustom) : null;
     if (custom && !custom.length) return { ok: false, kind: "sim", msg: "직접 입력한 심박이 없습니다. 분당 bpm을 한 줄에 하나씩 넣고 '적용'을 누르세요." };
-    const kTrue = SIM_K[scn], autoTurn = plan ? true : state.simAuto;
+    const kTrue = SIM_K[scn], autoTurn = plan ? !plan.give : state.simAuto;   // 구조대원은 구조 대상을 두고 돌아서지 않음
     const rnd = mulberry(7); let spare = null;
     const gauss = () => {
       if (spare !== null) { const v = spare; spare = null; return v; }
@@ -1739,7 +1759,7 @@ const I18N_RE = [
     const stops = [];
     if (plan) { let from = 0; plan.cells.forEach((c, n) => { const j = out.indexOf(c, from); if (j >= 0) { from = j; stops.push({ s: outTr.cd[j], min: plan.dwell ? plan.dwell[n] : state.evaDwell, name: plan.names[n], cell: c }); } }); }
     const workO2PerMin = levelMR() * C.o2_g_per_j * 60;                  // 작업 대사량 = 평지 보행 기준치 (계획과 같은 가정)
-    let stopI = 0, dwellLeft = 0, stopName = "";
+    let stopI = 0, dwellLeft = 0, stopName = "", trav = 0;    // trav: 지금까지 이동에 쓴 모델 산소(g, 작업 제외)
     const knownGs = press && state.simLeakSub ? leakGs : 0;               // 대원이 알고 귀환 계산에 넣는 누설
     const prnd = mulberry(11); let pspare = null;
     const pgauss = () => {
@@ -1753,7 +1773,8 @@ const I18N_RE = [
     const win = [], frames = [], log = [], meas = [], modelPM = [];
     const restO2perMin = C.rest_mr_w * C.o2_g_per_j * 60;
     log.push({ m: 0, cls: "", text: plan
-      ? (state.mode === "explore" ? `탐사 출발${plan.rover ? " (로버)" : " (도보)"}: ${stops.map((x) => `${x.name} ${x.min}분`).join(" → ")} (산소 ${fmt(o2, 0)} g, 냉각수 ${fmt(w, 0)} g)`
+      ? (state.mode === "rescue" ? `구조 출발: ${plan.startName} → 구조 대상 (구조대원 산소 ${fmt(o2, 0)} g, 냉각수 ${fmt(w, 0)} g)`
+        : state.mode === "explore" ? `탐사 출발${plan.rover ? " (로버)" : " (도보)"}: ${stops.map((x) => `${x.name} ${x.min}분`).join(" → ")} (산소 ${fmt(o2, 0)} g, 냉각수 ${fmt(w, 0)} g)`
         : `과학 EVA 출발: 목표 ${stops.length}곳(${stops.map((x) => x.name).join(" → ")}), 작업 ${state.evaDwell}분씩 (산소 ${fmt(o2, 0)} g, 냉각수 ${fmt(w, 0)} g)`)
       : `거점 출발 → 목적지 ${fmt(outTr.lenM / 1000, 2)} km (산소 ${fmt(o2, 0)} g, 냉각수 ${fmt(w, 0)} g)` + (press ? ` · 탱크 ${fmt(pFromG(o2, TK.T0) / 1e6, 2)} MPa` : "") });
     if (state.simLeak > 0 && !press) log.push({ m: 0, cls: "warn", text: `누설 ${state.simLeak} g/h가 있지만 심박으로는 보이지 않음 → 남은 산소를 실제보다 많게 봄` });
@@ -1777,7 +1798,8 @@ const I18N_RE = [
       const frame = { m, pos: here, o2: o2c, o2True: o2, w, k, phase, need: fz.need, needW: fz.needW, ok: fz.ok,
                       hr: NaN, hrExp: NaN, kTrue: NaN, P, T, naive,
                       dest: phase === "out" || phase === "work" ? (plan ? (stops[phase === "work" ? stopI - 1 : stopI] || {}).cell ?? state.base : state.simTarget) : state.base,
-                      stopName: phase === "work" ? stopName : "" };
+                      stopName: phase === "work" ? stopName : "", trav,
+                      tNext: phase === "work" ? dwellLeft : phase === "out" && plan && stopI < stops.length ? Math.max(0, stops[stopI].s - s) : NaN };
       frames.push(frame);
       if (phase === "home" || phase === "dead") break;
       if (phase === "out" && !fz.ok && !infeasLogged && m > 0) {
@@ -1814,8 +1836,12 @@ const I18N_RE = [
           const st = Math.min(left, dwellLeft);
           modelO2 += workO2PerMin * st / 60; dwellLeft -= st; left -= st;
           if (dwellLeft <= 1e-6) {
+            if (plan && plan.give && stopI >= stops.length) {     // 구조: 구조 대상에게 산소·냉각수를 건넴
+              o2 -= plan.give.o2; o2Seen -= plan.give.o2; w -= plan.give.w;
+              log.push({ m: m + 1, cls: "warn", text: `구조 대상에게 산소 ${fmt(plan.give.o2, 0)} g · 냉각수 ${fmt(plan.give.w, 0)} g 전달 → 함께 귀환` });
+            }
             if (stopI >= stops.length) {        // 마지막 목표 끝: 귀환 트리로 거점까지
-              phase = "back"; log.push({ m: m + 1, cls: "", text: `${stopName} 작업 끝 → 마지막 목표, 귀환 시작` });
+              phase = "back"; if (!plan.give) log.push({ m: m + 1, cls: "", text: `${stopName} 작업 끝 → 마지막 목표, 귀환 시작` });
               tr = mkTr(pathToBase(trackAt(tr, s).cell)); s = 0;
             } else { phase = "out"; log.push({ m: m + 1, cls: "", text: `${stopName} 작업 끝 → 다음 목표 ${stops[stopI].name}` }); }
           }
@@ -1823,10 +1849,10 @@ const I18N_RE = [
         }
         const lim = phase === "out" && stopI < stops.length ? Math.max(0, stops[stopI].s - s) : tr.len - s;
         const a = trackAt(tr, s), step = Math.min(left, lim), b = trackAt(tr, s + step);
-        modelO2 += b.o2 - a.o2; s += step; left -= step;
+        modelO2 += b.o2 - a.o2; trav += b.o2 - a.o2; s += step; left -= step;
         if (phase === "out" && stopI < stops.length && s >= stops[stopI].s - 1e-6) {
           stopName = stops[stopI].name; dwellLeft = stops[stopI].min * 60; stopI++; phase = "work";
-          log.push({ m: m + 1, cls: "", text: `${stopName} 도착 → 작업 ${stops[stopI - 1].min}분` });
+          log.push({ m: m + 1, cls: "", text: `${stopName} 도착 → ${plan && plan.give ? "응급 처치·보급" : "작업"} ${stops[stopI - 1].min}분` });
           continue;
         }
         if (s >= tr.len - 1e-6) {
@@ -1861,7 +1887,8 @@ const I18N_RE = [
   }
   function ensureSim() {
     const sig = JSON.stringify([state.mode, state.mode === "eva" ? [EVASIG, EVA && EVA.ok ? EVA.path.length : 0, state.evaScn] : 0,
-      state.mode === "explore" ? [state.xT.map((x) => x.cell), state.xScn, state.xRover, XS[state.xScn] ? Math.round(XS[state.xScn].dwell) : -1] : 0, state.simTarget, state.simScenario, state.simNoise, state.simAuto, state.simCustom, state.simSrc, state.simLeak, state.simPNoise, state.simTcomp, state.simLeakSub, modelKey(), state.o2, state.water,
+      state.mode === "rescue" ? [state.victim, state.here, state.vo2, state.vwater, state.vcarry] : 0,
+      state.mode === "explore" ? [state.xT.map((x) => x.cell), state.xScn, state.xRover, JSON.stringify(state.xDwell), XS[state.xScn] ? Math.round(XS[state.xScn].dwell) : -1] : 0, state.simTarget, state.simScenario, state.simNoise, state.simAuto, state.simCustom, state.simSrc, state.simLeak, state.simPNoise, state.simTcomp, state.simLeakSub, modelKey(), state.o2, state.water,
       state.q, state.spe, state.mult, state.nofall, state.base, state.planMargin]);
     if (sig === SIMSIG) return;
     const keep = SIM && SIM.ok && SIM.kind === state.mode && SIMTARGET === state.simTarget ? SIM.idx : 0;
@@ -2376,9 +2403,20 @@ const I18N_RE = [
         });
         lim.walk = Math.min(lo, lw);
       }
-      const dwell = Math.min(lim.o2, lim.w, lim.dose, lim.walk ?? Infinity);
-      const bind = dwell === lim.walk ? "로버 고장 시 도보 귀환" : dwell === lim.o2 ? "산소" : dwell === lim.w ? "냉각수" : "선량";
-      out.push({ ord: best.ord, legs: best.legs, ok: dwell > 0, dwell: Math.max(0, dwell), bind, useO2, useW, tt, dd,
+      const tmax = Math.min(lim.o2, lim.w, lim.dose, lim.walk ?? Infinity);
+      const bind = tmax === lim.walk ? "로버 고장 시 도보 귀환" : tmax === lim.o2 ? "산소" : tmax === lim.w ? "냉각수" : "선량";
+      // 지점별 체류: 정한 값(분)은 그대로, 나머지 지점은 남는 시간을 똑같이 나눔
+      const fixed = best.ord.map((j) => state.xDwell[nodes[j]]), nFree = fixed.filter((f) => f == null).length;
+      const fixedSum = fixed.reduce((a, f) => a + (f == null ? 0 : f * 60), 0), each = nFree ? Math.max(0, tmax - fixedSum) / nFree : 0;
+      const dwells = fixed.map((f) => (f == null ? each : f * 60)), dwell = dwells.reduce((a, d) => a + d, 0);
+      const endO2 = O2s - useO2 - dwell * rateO2, endW = Ws - useW - dwell * rateW;
+      let over = tmax > 0 && dwell > tmax + 30;                 // 정한 체류가 한도를 넘음 (30초 여유)
+      if (rover && !over) {                 // 로버: 실제 배분으로 지점마다 도보 귀환 조건 다시 확인
+        let up = 0, cum = 0;
+        best.ord.forEach((jj, n) => { up += best.legs[n].o2; cum += dwells[n]; const wo = S.o2[nodes[jj]];
+          if (wo >= 0 && O2s - k * up - cum * rateO2 - k * wo < 0.2 * O2s - 0.5) over = true; });
+      }
+      out.push({ ord: best.ord, legs: best.legs, ok: tmax > 0, dwell: Math.max(0, dwell), tmax: Math.max(0, tmax), dwells, over, endO2, endW, bind, useO2, useW, tt, dd,
                  dist: best.legs.reduce((a, l, j) => a + 0, 0), why: dwell > 0 ? "" : `복귀 시 ${bind} 20% 미만` });
     }
     out.sort((a, b) => a.ord.length - b.ord.length || a.ord[0] - b.ord[0]);
@@ -2391,13 +2429,21 @@ const I18N_RE = [
     for (let j = 0; j + 1 < seq.length; j++) { const P = legPath(LEGS.get(legKey(nodes[seq[j]])), nodes[seq[j + 1]]); path.push(...(path.length ? P.slice(1) : P)); }
     return path;
   }
+  function rescueRunPlan() {              // 구조: 출발점 -> 구조 대상(건네는 10분) -> 함께 거점
+    const X = state.victim;
+    if (X < 0 || !REV) return null;
+    const start = state.here >= 0 ? state.here : state.base;
+    if (!isFinite(REV.o2[start])) return null;
+    const vRet = victimReturn(X), sup = vRet ? victimSupply(REV.t[start], vRet) : null;
+    return { path: pathToVictim(start), cells: [X], names: ["구조 대상"], dwell: [10], startName: state.here >= 0 ? "현재 위치" : "거점",
+             give: { o2: sup ? sup.o2 : 0, w: sup ? sup.w : 0 } };
+  }
   function exploreRunPlan() {             // 재생용: 마지막 지점까지의 경로 + 지점별 체류(분)
     const sc = XS[state.xScn];
     if (!sc || !sc.ok) return null;
     const nodes = [state.base, ...state.xT.map((x) => x.cell)], seq = [0, ...sc.ord], path = [];
     for (let j = 0; j + 1 < seq.length; j++) { const P = legPath(LEGS.get(legKey(nodes[seq[j]])), nodes[seq[j + 1]]); path.push(...(path.length ? P.slice(1) : P)); }
-    const each = Math.floor(sc.dwell / 60 / sc.ord.length);
-    return { path, cells: sc.ord.map((j) => nodes[j]), names: sc.ord.map((j) => `${xName(j)} · ${state.xT[j - 1].name}`), dwell: sc.ord.map(() => each), rover: state.xRover };
+    return { path, cells: sc.ord.map((j) => nodes[j]), names: sc.ord.map((j) => `${xName(j)} · ${state.xT[j - 1].name}`), dwell: sc.dwells.map((d) => Math.round(d / 60)), rover: state.xRover };
   }
   function renderExplore() {
     const T = state.xT;
@@ -2411,7 +2457,7 @@ const I18N_RE = [
       const title = c.ord.map(xName).join(" → ") + (c.ord.length === 1 ? "만" : "");
       if (!c.ok) return `<button type="button" class="xcard bad${i === state.xScn ? " on" : ""}" data-xs="${i}"><span class="t">${title}<small>${c.why}</small></span></button>`;
       const back = c.legs[c.legs.length - 1].t, go = c.legs[0].t, mid = c.legs.slice(1, -1).reduce((a, l) => a + l.t, 0);
-      const split = c.ord.length > 1 ? `<span class="split">${c.ord.map((j) => `${xName(j)} ${fmtDur(c.dwell / c.ord.length)}`).join(" · ")}${mid > 0 ? ` · 지점 간 이동 ${fmtDur(mid)}` : ""}</span>` : "";
+      const split = c.ord.length > 1 || c.over ? `<span class="split">${c.ord.map((j, n) => `${xName(j)} ${fmtDur(c.dwells[n])}`).join(" · ")}${mid > 0 ? ` · 지점 간 이동 ${fmtDur(mid)}` : ""}${c.over ? ` · ⚠ 한도 ${fmtDur(c.tmax)} 초과` : ""}</span>` : "";
       return `<button type="button" class="xcard${i === state.xScn ? " on" : ""}" data-xs="${i}"><span class="t">${title}<small>산소 ${fmt(c.useO2, 0)} g · ${c.bind} 기준</small></span>
         <span class="row3"><span>가는 시간<b>${fmtDur(go)}</b></span><span>복귀 시간<b>${fmtDur(back)}</b></span><span class="dw">체류 가능<b>${fmtDur(c.dwell)}</b></span></span>${split}</button>`;
     }).join("");
@@ -2490,13 +2536,29 @@ const I18N_RE = [
     if (!sc.ok) { $("pt-meters").innerHTML = ""; $("pt-facts").innerHTML = ""; drawVec({ path: null }); return; }
     const path = scnPath(sc), ps = pathStats(path);
     const go = sc.legs[0].t, back = sc.legs[sc.legs.length - 1].t, mid = sc.legs.slice(1, -1).reduce((a, l) => a + l.t, 0);
-    const rateO2 = levelMR() * C.o2_g_per_j * state.k, endO2 = state.o2 - sc.useO2 - sc.dwell * rateO2;
-    $("pt-meters").innerHTML = `<div class="xbig"><span>가는 시간<b>${fmtDur(go)}</b></span><span>복귀 시간<b>${fmtDur(back)}</b></span><span class="dw">체류 가능<b>${fmtDur(sc.dwell)}</b></span></div>`;
+    const rateO2 = levelMR() * C.o2_g_per_j * state.k, endO2 = sc.endO2;
+    const f = simFrame(), live = f && SIM.idx > 0 && f.phase !== "home" && f.phase !== "dead";
+    if (live) {                          // 재생 중: 그 시각 기준으로 다시 계산
+      const pos = f.pos, rt = retTot(pos), retT = !rt ? NaN : state.xRover ? pathStats(pathToBase(pos)).dist / ROVER_V : rt.t;
+      const remTravel = Math.max(0, sc.useO2 - state.k * f.trav), remW = Math.max(0, sc.useW - waterOf(f.trav, 0, state.k, state.q));
+      const rateW = waterOf(levelMR() * C.o2_g_per_j, 1, state.k, state.q);
+      const stayO2 = (f.o2 - 0.2 * state.o2 - (f.phase === "back" ? state.k * (rt ? rt.o2 : 0) : remTravel)) / rateO2;
+      const stayW = rateW > 0 ? (f.w - 0.2 * state.water * 1000 - (f.phase === "back" ? 0 : remW)) / rateW : Infinity;
+      const stay = f.phase === "back" ? NaN : Math.max(0, Math.min(stayO2, stayW));
+      const first = f.phase === "work" ? ["작업 남은 시간", f.tNext] : f.phase === "out" ? ["다음 지점까지", f.tNext] : ["거점까지", retT];
+      $("pt-meters").innerHTML = `<div class="xbig live"><span>${first[0]}<b>${fmtDur(first[1])}</b></span><span>지금 돌아서면 복귀<b>${fmtDur(retT)}</b></span><span class="dw">더 머물 수 있음<b>${isFinite(stay) ? fmtDur(stay) : "–"}</b></span></div>
+        <div class="xlive">${f.m}분 · ${{ out: "이동 중", work: "작업 중", back: "돌아오는 중" }[f.phase] || ""}${f.stopName ? " · " + f.stopName : ""} · 산소 ${fmt(f.o2, 0)} g (${fmt(f.o2 / state.o2 * 100, 0)}%)</div>`;
+    } else {
+      $("pt-meters").innerHTML = `<div class="xbig"><span>가는 시간<b>${fmtDur(go)}</b></span><span>복귀 시간<b>${fmtDur(back)}</b></span><span class="dw${sc.over ? " over" : ""}">체류 ${sc.over ? "계획" : "가능"}<b>${fmtDur(sc.dwell)}</b></span></div>`;
+    }
+    const dwRows = sc.ord.map((j, n) => { const c = state.xT[j - 1].cell, fx = state.xDwell[c];
+      return `<label class="dwin"><b>${xName(j)}</b><input type="number" min="0" step="5" data-dwc="${c}" value="${Math.round(sc.dwells[n] / 60)}" class="${fx == null ? "auto" : ""}" aria-label="${xName(j)} 체류(분)">분</label>`; }).join("");
     $("pt-facts").innerHTML = `
-      ${sc.ord.length > 1 ? `<dt>지점별 체류</dt><dd>${sc.ord.map((j) => `${xName(j)} ${fmtDur(sc.dwell / sc.ord.length)}`).join(" · ")}</dd><dt>지점 간 이동</dt><dd>${fmtDur(mid)}</dd>` : ""}
+      <dt>지점별 체류</dt><dd class="dwrow">${dwRows}<button type="button" class="pipbtn" id="dw-auto" title="최대로 균등 분배">자동</button></dd>
+      ${sc.ord.length > 1 ? `<dt>지점 간 이동</dt><dd>${fmtDur(mid)}</dd>` : ""}
       <dt>거리 (왕복)</dt><dd>${fmt(ps.dist / 1000, 2)} km</dd>
       <dt>이동에 드는 산소 · 냉각수</dt><dd>${fmt(sc.useO2, 0)} g · ${fmt(sc.useW, 0)} g</dd>
-      <dt>복귀 때 남는 산소</dt><dd>${fmt(endO2, 0)} g (${fmt(endO2 / state.o2 * 100, 0)}%) · ${sc.bind} 기준</dd>`;
+      <dt>복귀 때 남는 산소</dt><dd class="${sc.over ? "bad" : ""}">${fmt(endO2, 0)} g (${fmt(endO2 / state.o2 * 100, 0)}%)${sc.over ? ` · 체류 한도 ${fmtDur(sc.tmax)} 초과` : ` · ${sc.bind} 기준`}</dd>`;
     drawVec({ path, color: "#ffffff" });
   }
   function paintEva() {
@@ -2867,6 +2929,9 @@ const I18N_RE = [
     drawSimChart();
   }
   function evaPlayLabel() {
+    const rok = SIM && SIM.ok && SIM.kind === "rescue";
+    $("rs-play").disabled = !rok; $("rs-restart").disabled = !rok;
+    if (rok) $("rs-play-t").textContent = `${SIM.frames[SIM.idx].m} / ${SIM.frames[SIM.frames.length - 1].m}분`;
     const ok = SIM && SIM.ok && SIM.kind === "eva";
     $("eva-play").disabled = !ok; $("eva-restart").disabled = !ok;
     if (ok) { const f = SIM.frames[SIM.idx]; $("eva-play-t").textContent = `${f.m} / ${SIM.frames[SIM.frames.length - 1].m}분`; }
@@ -2961,7 +3026,8 @@ const I18N_RE = [
       v.className = "verdict"; v.textContent = "";
       $("pt-meters").innerHTML = ""; $("pt-facts").innerHTML = ""; $("supply").hidden = true; drawVec({ path: null }); return;
     }
-    const S = setNow(), b = budgets();
+    const S = setNow(), b = budgets(true);
+    ensureSim();
     const start = state.here >= 0 ? state.here : state.base;
     const startName = state.here >= 0 ? "현재 위치" : "거점";
     $("pt-where").textContent = `구조 대상: ${where(X)} · 구조대원 출발: ${startName}`;
@@ -3094,6 +3160,7 @@ const I18N_RE = [
         g.beginPath(); g.moveTo((a % W) + 0.5, ((a / W) | 0) + 0.5); g.lineTo((c % W) + 0.5, ((c / W) | 0) + 0.5); g.stroke();
       }
     };
+    let passedTrail = null;
     if (simFrame()) {
       const xy0 = (i) => [(i % W) + 0.5, ((i / W) | 0) + 0.5];
       g.strokeStyle = "rgba(255,255,255,0.7)"; g.lineWidth = 1.6 * lw; g.setLineDash([5 * lw, 4 * lw]); g.beginPath();
@@ -3102,8 +3169,12 @@ const I18N_RE = [
         for (let n = 1; n <= SIM.idx; n++) { if (!pred(SIM.frames[n - 1].phase)) { on = false; continue; }
           const [x0, y0] = xy0(SIM.frames[n - 1].pos), [x1, y1] = xy0(SIM.frames[n].pos); if (!on) { g.moveTo(x0, y0); on = true; } g.lineTo(x1, y1); } };
       g.lineJoin = "round"; g.lineCap = "round";
-      trail((ph) => ph !== "back"); g.strokeStyle = "#0d1016"; g.lineWidth = 5 * lw; g.stroke(); g.strokeStyle = "#ffd23f"; g.lineWidth = 2.6 * lw; g.stroke();
-      trail((ph) => ph === "back"); g.strokeStyle = "#0d1016"; g.lineWidth = 6 * lw; g.stroke(); g.strokeStyle = "#7fd0ff"; g.lineWidth = 3.2 * lw; g.stroke();   // 돌아오는 길
+      // 지나온 길: 앞으로 갈 경로 위를 흐린 회색으로 덮음 (돌아오는 길은 푸른 회색)
+      passedTrail = () => {
+        trail((ph) => ph !== "back"); g.strokeStyle = "rgba(13,16,22,0.75)"; g.lineWidth = 5.5 * lw; g.stroke(); g.strokeStyle = "rgba(150,156,170,0.85)"; g.lineWidth = 3 * lw; g.stroke();
+        trail((ph) => ph === "back"); g.strokeStyle = "rgba(13,16,22,0.75)"; g.lineWidth = 6 * lw; g.stroke(); g.strokeStyle = "rgba(120,150,175,0.85)"; g.lineWidth = 3.4 * lw; g.stroke();
+      };
+      passedTrail();
       const [tx, ty] = xy0(state.simTarget);
       if (state.mode === "sim") { g.strokeStyle = "#0d1016"; g.lineWidth = 2 * lw; g.beginPath(); g.moveTo(tx, ty); g.lineTo(tx, ty - 16 * lw); g.stroke(); }
       if (state.mode === "sim") { g.fillStyle = "#ff8a3d"; g.beginPath(); g.moveTo(tx, ty - 16 * lw); g.lineTo(tx + 11 * lw, ty - 12 * lw); g.lineTo(tx, ty - 8 * lw); g.closePath(); g.fill(); g.stroke(); }
@@ -3116,6 +3187,7 @@ const I18N_RE = [
       g.strokeStyle = "#ffb347"; g.lineWidth = 2.6 * lw; g.setLineDash([6 * lw, 4 * lw]); line(); g.setLineDash([]);
     } else drawPath(lastVec.path2, lastVec.color2 || "#ffffff");
     drawPath(lastVec.path, lastVec.color || "#ffffff");
+    if (passedTrail) passedTrail();          // 지나온 길은 계획 경로 위에 흐리게
     const xy = (i) => [(i % W) + 0.5, ((i / W) | 0) + 0.5];
     dot(g, ...xy(GOAL), 4.5 * lw, "#f2d430", lw);
     if (state.relay) diamond(g, ...xy(META.relay[1] * W + META.relay[0]), 7 * lw, "#e2794d", lw);
@@ -3339,7 +3411,7 @@ const I18N_RE = [
     $("explore-ctl").hidden = state.mode !== "explore";
     $("eva-dwell-out").textContent = `${state.evaDwell}분`;
     $("sim-chart").hidden = $("sim-note").hidden = state.mode !== "sim";
-    $("simbar").hidden = !(state.mode === "sim" || (state.mode === "eva" && EVA && EVA.ok) || (state.mode === "explore" && XS.length > 0));
+    $("simbar").hidden = !(state.mode === "sim" || (state.mode === "rescue" && SIM && SIM.ok && SIM.kind === "rescue") || (state.mode === "eva" && EVA && EVA.ok) || (state.mode === "explore" && XS.length > 0));
     $("k-ctl").dataset.off = String(state.mode === "sim");
     $("sim-custom-ctl").hidden = state.simScenario !== "custom";
     $("sim-noise-ctl").dataset.off = String(state.simScenario === "custom");
@@ -3430,6 +3502,11 @@ const I18N_RE = [
   $("showphoto").addEventListener("change", (e) => { state.showphoto = e.target.checked; update(false); });
   $("showtargets").addEventListener("change", (e) => { state.showtargets = e.target.checked; update(false); });
   $("eva-targets").addEventListener("change", (e) => { const ti = e.target.dataset.ti; if (ti === undefined) return; state.evaSel[Number(ti)] = e.target.checked; activePreset = ""; update(); });
+  $("pt-facts").addEventListener("change", (e) => {
+    const inp = e.target.closest("[data-dwc]"); if (!inp) return;
+    const v = Math.max(0, Number(inp.value) || 0); state.xDwell[Number(inp.dataset.dwc)] = v; stopSim(); update();
+  });
+  $("pt-facts").addEventListener("click", (e) => { if (e.target.id === "dw-auto") { state.xDwell = {}; stopSim(); update(); } });
   $("x-mode").addEventListener("change", (e) => { state.xRover = e.target.value === "rover"; stopSim(); update(); });
   $("x-sel").addEventListener("click", (e) => { const b = e.target.closest("[data-xrm]"); if (!b) return; state.xT.splice(Number(b.dataset.xrm), 1); state.xScn = 0; stopSim(); update(); });
   $("x-scn").addEventListener("click", (e) => { const b = e.target.closest("[data-xs]"); if (!b) return; state.xScn = Number(b.dataset.xs); stopSim(); update(); });
@@ -3447,7 +3524,7 @@ const I18N_RE = [
     $("sim-t").value = SIM.idx; simLabel();
     recompute(); paintPoint();
   }
-  function stopSim() { playing = false; $("sim-play").textContent = "▶"; $("sim-play").setAttribute("aria-label", "재생"); $("eva-play").textContent = "▶"; }
+  function stopSim() { playing = false; $("sim-play").textContent = "▶"; $("sim-play").setAttribute("aria-label", "재생"); $("eva-play").textContent = "▶"; $("rs-play").textContent = "▶"; }
   // 재생 중 사람 아이콘은 분과 분 사이를 매 화면 보간해 부드럽게 (지도·HUD는 1분마다 다시 그림)
   let walkerHeading = 0;
   function placeWalker(fi) {
@@ -3481,11 +3558,13 @@ const I18N_RE = [
     if (playing) { stopSim(); return; }
     if (SIM.idx >= SIM.frames.length - 1) setSimIdx(0);
     playing = true; acc = 0; lastTs = performance.now();
-    $("sim-play").textContent = "⏸"; $("sim-play").setAttribute("aria-label", "일시정지"); $("eva-play").textContent = "⏸";
+    $("sim-play").textContent = "⏸"; $("sim-play").setAttribute("aria-label", "일시정지"); $("eva-play").textContent = "⏸"; $("rs-play").textContent = "⏸";
     requestAnimationFrame(tick);
   });
   $("sim-restart").addEventListener("click", () => { stopSim(); setSimIdx(0); });
   $("eva-play").addEventListener("click", () => $("sim-play").click());            // EVA 계획 탭에서 바로 재생
+  $("rs-play").addEventListener("click", () => $("sim-play").click());             // 구조 탭에서 바로 재생
+  $("rs-restart").addEventListener("click", () => { stopSim(); setSimIdx(0); });
   $("eva-restart").addEventListener("click", () => { stopSim(); setSimIdx(0); });
   $("sim-t").addEventListener("input", (e) => { stopSim(); setSimIdx(Number(e.target.value)); });
   $("sim-scn").addEventListener("change", (e) => {

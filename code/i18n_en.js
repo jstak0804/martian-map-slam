@@ -115,6 +115,8 @@ const I18N = {
   "거점 → 그곳 → 거점 왕복 뒤 남는 산소": "O2 left after base → there → base", "20% 초과": ">20%", "10~20%": "10–20%", "0~10%": "0–10%", "다녀올 수 있는 곳 윤곽": "Outline of reachable area",
   "1인칭 시점: HiRISE 지형(10 m 격자)과 위성 사진으로 그린 눈높이 1.7 m 화면": "First-person view rendered from HiRISE terrain (10 m grid) and satellite imagery at 1.7 m eye height",
   "지금 남은 산소로 돌아와도 20% 넘게 남는 곳": "Return now still leaves >20% O2", "지금 남은 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 left if you return to base from there with the O2 you have now",
+  "구조 재생": "Play rescue", "구조 대상을 찍으면 재생할 수 있습니다": "Set the stranded crew member to play", "작업 남은 시간": "Work left", "다음 지점까지": "To next site", "거점까지": "To base", "지금 돌아서면 복귀": "Return if turning now", "더 머물 수 있음": "Can still stay", "체류 계획": "Planned stay", "자동": "Auto",
+  "구조 대상": "Stranded crew member",
   "상황 설정": "Situation", "지금 상황": "Status", "지도 표시": "Map layers",
   "기준": "Baseline", "관측 SPE ×2.9": "Observed SPE ×2.9", "대형 SPE ×30 (스트레스 테스트)": "Large SPE ×30 (stress test)", "지친 대원 k 1.2": "Tired crew k 1.2",
   "냉각수 누수 0.6 kg": "Coolant leak 0.6 kg", "누수 + 더운 오후": "Leak + hot afternoon", "안전 우선 운용": "Safety-first ops",
@@ -192,6 +194,11 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^(.*) 도착 → 응급 처치·보급 (\d+)분$/, (m, a, b) => `${I18N_SUB(a)} reached → first aid and supply ${b} min`],
+  [/^(\d+)분 · (이동 중|작업 중|돌아오는 중)(?: · (.*))? · 산소 ([\d,]+) g \((\d+)%\)$/, (m, a, b, c, d, e) => `min ${a} · ${({ "이동 중": "walking", "작업 중": "working", "돌아오는 중": "returning" })[b]}${c ? " · " + c : ""} · O2 ${d} g (${e}%)`],
+  [/^([\d,]+) g \((\d+)%\) · 체류 한도 (.*) 초과$/, (m, a, b, c) => `${a} g (${b}%) · over the ${I18N_SUB(c)} stay limit`],
+  [/^구조 출발: (현재 위치|거점) → 구조 대상 \(구조대원 산소 ([\d,]+) g, 냉각수 ([\d,]+) g\)$/, (m, a, b, c) => `Rescue start: ${a === "거점" ? "base" : "current position"} → stranded crew (rescuer O2 ${b} g, coolant ${c} g)`],
+  [/^구조 대상에게 산소 ([\d,]+) g · 냉각수 ([\d,]+) g 전달 → 함께 귀환$/, "Handed $1 g O2 · $2 g coolant to the stranded crew → returning together"],
   [/^지금 산소 ([\d,]+) g \/ 출발 ([\d,]+) g · 노랑 ([\d.,]+) · 빨강 ([\d.,]+) km²$/, "O2 now $1 g / start $2 g · yellow $3 · red $4 km²"],
   [/^(.*)만$/, (m, a) => `${a} only`], [/^산소 ([\d,]+) g · (산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a, b) => `O2 ${a} g · limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[b]}`],
   [/^(\d+)시간 (\d+)분$/, "$1 h $2 min"], [/^복귀 시 (산소|냉각수|선량) 20% 미만$/, (m, a) => `Under 20% ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose" })[a]} on return`],
