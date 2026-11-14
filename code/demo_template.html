@@ -624,11 +624,11 @@
       <div class="group" id="explore-ctl">
         <h2>탐사 계획<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">지도의 ◆ 탐사 지점(로버가 조사한 곳)이나 원하는 곳을 눌러 최대 3곳을 고릅니다. 출발 산소는 Apollo 15~17 PLSS 기준 680 g(1.5 lb, 1,430 psi급). 체류 가능 시간 = (출발 산소 × (1 − 복귀 여유%) − 이동에 쓰는 산소) ÷ 작업 중 소모율. 즉 거점에 돌아왔을 때 산소·냉각수가 복귀 여유(기본 20%) 이상 남는 조건이고, 작업 중 대사량은 평지 보행과 같다고 봅니다. 지점마다 체류를 비워 두면(자동) 이 시간을 지점 수로 똑같이 나누고(1/n), 직접 넣은 지점이 있으면 나머지 시간을 자동 지점끼리 나눕니다.</span></span></span></h2>
         <div class="seg xmode" id="x-mode" role="radiogroup" aria-label="이동 수단">
-          <label><input type="radio" name="xmode" value="walk" checked>🚶 도보</label>
-          <label><input type="radio" name="xmode" value="rover">🚙 로버</label>
+          <label><input type="radio" name="xmode" value="walk" checked><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px;margin-right:5px"><circle cx="13" cy="4.2" r="2" fill="currentColor"/><path d="M10.5 21l2.2-6.2 2.6 2.4V21M8 12.2l2.6-4.4h3.2l1.8 3.4 2.4 1M12.7 14.8l.9-3.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span>도보</span></label>
+          <label><input type="radio" name="xmode" value="rover"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px;margin-right:5px"><path d="M3.5 15.5V11h4l1.5-3h6l1.5 3h4v4.5M7 8V5.5h3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><circle cx="6.5" cy="17.5" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="17.5" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="17.5" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span>로버</span></label>
         </div>
         <div class="xrsrc"><label>산소 <input type="number" id="x-o2" min="100" max="1200" step="10"> g</label><label>냉각수 <input type="number" id="x-w" min="0.5" max="8" step="0.1"> kg</label></div>
-        <label class="xres" title="거점에 돌아왔을 때 출발량 대비 이만큼 이상 남깁니다. 지도 색 경계, 체류 시간, 귀환 경보, 구조 보급량에 모두 적용">복귀 때 남길 산소·냉각수 <input type="number" id="x-res" min="0" max="60" step="5" value="20">%</label>
+        <label class="xres" title="거점에 돌아왔을 때 출발량 대비 이만큼 이상 남깁니다. 작업 시간과 돌아서는 시점에 적용 (지도 색 띠는 고정)">복귀 때 남길 산소·냉각수 <input type="number" id="x-res" min="0" max="60" step="5" value="20">%</label>
         <div class="xsel" id="x-sel"></div>
         <div class="xscn" id="x-scn"></div>
       </div>
@@ -1043,6 +1043,14 @@
       if (rec && v === rec.ko) { if (LANG === "en") n.nodeValue = rec.en; continue; }
       if (LANG === "en") { const e = trText(v); if (e) { TRN.set(n, { ko: v, en: e }); n.nodeValue = e; } }
     }
+    }
+    for (const el of document.querySelectorAll("[title], [aria-label], [placeholder]")) {   // 툴팁·화면 낭독용 이름도 언어 전환
+      for (const a of ["title", "aria-label", "placeholder"]) {
+        const v = el.getAttribute(a); if (v == null) continue;
+        const k = "ko" + a.replace("-", ""), ko = el.dataset[k];
+        if (LANG === "en") { if (/[가-힣]/.test(v)) { const e = trText(v); if (e) { el.dataset[k] = v; el.setAttribute(a, e); } } }
+        else if (ko && !/[가-힣]/.test(v)) el.setAttribute(a, ko);
+      }
     }
     document.documentElement.lang = LANG;
   }
@@ -2230,10 +2238,10 @@
     const o2pct = EO2() / TANK_G * 100, wpct = EW() * 1000 / WATER_FULL_G * 100;
     const sg = signalAt(focusPos());
     const cards = [
-      { id: "o2", nm: "산소", st: st(o2h * 60, 60, 20), gv: `<span class="gauge">${batterySvg(o2pct)}<b>${fmt(o2pct, 0)}%</b></span><small>${hmS(o2h)} 남음</small>`, gd: `${who}탱크 ${fmt(TANK_G, 0)} g 중 ${fmt(EO2(), 0)} g · 예비분 ${fmt(O2RES(), 0)} g 빼고 평지 보행(시간당 ${fmt(o2Rate, 0)} g)으로 버티는 시간` },
-      { id: "water", nm: "냉각수", st: st(wh * 60, 60, 20), gv: `<span class="gauge">${batterySvg(wpct)}<b>${fmt(Math.max(0, wpct), 0)}%</b></span><small>${isFinite(wh) ? hmS(wh) + " 남음" : "제한 없음"}</small>`, gd: `${who}만충 3.6 kg 중 ${fmt(EW() * 1000, 0)} g · 시간당 ${fmt(wRate, 0)} g${wh < o2h ? " · 산소보다 먼저 바닥" : ""}` },
-      { id: "dose", nm: "선량", st: st(doseH, 8, 2), gv: doseH > 99 ? "99시간+" : hmS(doseH), gd: `예산 ${fmt(C.dose_budget_msv, 1)} mSv까지 · ${state.spe ? `SPE ×${fmt(state.mult, 1)}` : "배경"}` },
-      { id: "comm", nm: "통신", st: sg.lv >= 3 ? "ok" : sg.lv === 2 ? "warn" : "bad", gv: `<span class="gauge">${signalSvg(sg.lv)}<b>${SIG.ko[sg.lv]}</b></span><small>${sg.via === "relay" ? "중계기 경유" : isFinite(sg.d) ? `거점까지 ${fmt(sg.d, 1)} km` : ""} · 귀환 영역 음영 ${fmt(darkPct, 0)}%</small>`, gd: `신호 단계는 지형 가시선과 거리로 나눈 것(강함 ≤2 km, 양호 ≤5 km, 약함 5 km 넘게·중계기 경유, "50 m 안 연결" = 음영이지만 50 m 안에 가시선이 닿는 곳). 송신 출력·주파수를 넣은 링크 예산은 아님` },
+      { id: "o2", nm: "산소", st: st(o2h * 60, 60, 20), gv: `<span class="gauge">${batterySvg(o2pct)}<b>${fmt(o2pct, 0)}%</b></span><small>${hmS(o2h)} 남음</small>`, gd: LANG === "en" ? `${fmt(EO2(), 0)} g of the ${fmt(TANK_G, 0)} g tank · time left walking on the level (${fmt(o2Rate, 0)} g/h) after the ${fmt(O2RES(), 0)} g reserve` : `${who}탱크 ${fmt(TANK_G, 0)} g 중 ${fmt(EO2(), 0)} g · 예비분 ${fmt(O2RES(), 0)} g 빼고 평지 보행(시간당 ${fmt(o2Rate, 0)} g)으로 버티는 시간` },
+      { id: "water", nm: "냉각수", st: st(wh * 60, 60, 20), gv: `<span class="gauge">${batterySvg(wpct)}<b>${fmt(Math.max(0, wpct), 0)}%</b></span><small>${isFinite(wh) ? hmS(wh) + " 남음" : "제한 없음"}</small>`, gd: LANG === "en" ? `${fmt(EW() * 1000, 0)} g of ${fmt(WATER_FULL_G / 1000, 1)} kg · ${fmt(wRate, 0)} g/h${wh < o2h ? " · runs out before O2" : ""}` : `${who}만충 ${fmt(WATER_FULL_G / 1000, 1)} kg 중 ${fmt(EW() * 1000, 0)} g · 시간당 ${fmt(wRate, 0)} g${wh < o2h ? " · 산소보다 먼저 바닥" : ""}` },
+      { id: "dose", nm: "선량", st: st(doseH, 8, 2), gv: doseH > 99 ? "99시간+" : hmS(doseH), gd: LANG === "en" ? `Up to the ${fmt(C.dose_budget_msv, 1)} mSv budget · ${state.spe ? `SPE ×${fmt(state.mult, 1)}` : "background"}` : `예산 ${fmt(C.dose_budget_msv, 1)} mSv까지 · ${state.spe ? `SPE ×${fmt(state.mult, 1)}` : "배경"}` },
+      { id: "comm", nm: "통신", st: sg.lv >= 3 ? "ok" : sg.lv === 2 ? "warn" : "bad", gv: `<span class="gauge">${signalSvg(sg.lv)}<b>${SIG.ko[sg.lv]}</b></span><small>${sg.via === "relay" ? "중계기 경유" : isFinite(sg.d) ? `거점까지 ${fmt(sg.d, 1)} km` : ""} · 귀환 영역 음영 ${fmt(darkPct, 0)}%</small>`, gd: LANG === "en" ? `Signal level from terrain line of sight and distance (strong ≤2 km, good ≤5 km, weak beyond 5 km or via relay, "link within 50 m" = shadowed but line of sight within 50 m). Not a link budget with power and frequency.` : `신호 단계는 지형 가시선과 거리로 나눈 것(강함 ≤2 km, 양호 ≤5 km, 약함 5 km 넘게·중계기 경유, "50 m 안 연결" = 음영이지만 50 m 안에 가시선이 닿는 곳). 송신 출력·주파수를 넣은 링크 예산은 아님` },
     ];
     $("glance").innerHTML = cards.map((c) => `<div class="gc" role="listitem" data-st="${c.st}" title="${c.gd}"><div class="nm">${ICON[c.id]}<span>${c.nm}</span><span class="pill">${PILL[c.st]}</span></div><div class="gv">${c.gv}</div></div>`).join("");
 
