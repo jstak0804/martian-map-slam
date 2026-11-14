@@ -76,7 +76,7 @@ const I18N = {
   "대원의 현재 위치": "crew's current position",
   "를 찍으세요. 거기서 더 갔다가 거점으로 돌아올 수 있는 범위가 그려집니다.": ". The map shows how much farther they can go and still get back to base.",
   "지도를 눌러 현재 위치를 찍으세요": "Click the map to set the current position",
-  "거점(★)": "base (★)",
+  "거점(★)": "base (★)", "거점(⌂)": "base (⌂)",
   "을 옮기세요. 귀환 경로와 통신 가시권이 새 거점 기준으로 다시 계산됩니다. 점선 원은 원래 거점입니다.": ". Return routes and comm coverage are recomputed for the new base; the dashed circle is the original base.",
   "고도 (원래 거점 대비)": "Elevation (vs original base)",
   "중계기와 가시선": "Line of sight to relay",
@@ -231,6 +231,8 @@ const I18N = {
   "② 거점 옮기기": "② Move base",
   "상태": "Status",
   "▼ 실시간 그래프 (아래로 스크롤)": "▼ Live chart (scroll down)", "심박 · 보정계수 k · 남은 산소 vs 귀환에 필요한 산소": "Heart rate · correction k · usable O2 vs O2 needed to return",
+  "거점 옮기기": "Move base", "거점 옮기기: 누른 뒤 지도를 클릭하면 거점(집)이 그 자리로 옮겨지고, 귀환 경로·반경·통신이 새 거점 기준으로 다시 계산됩니다. 다시 누르면 탐사 계획으로 돌아갑니다.": "Move base: click this, then click the map to move the base (house); return routes, zones and comms are recomputed for the new base. Click again to go back to the exploration plan.",
+  "설정: 상황·산소·모델 보정·지도 레이어": "Settings: scenario, O2, model corrections, map layers", "상태 접기/펼치기": "Collapse or expand status",
   "왕복 계획 여유": "Round-trip planning margin", "복귀 여유": "Return reserve", "고도 자료 밖: 평지 가정 추정": "Outside elevation data: level-ground estimate", "복귀 때 남길 산소·냉각수 ": "Keep at return (O2 & coolant) ", "복귀 때 남길 산소·냉각수": "Keep at return (O2 & coolant)", "두 사람이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소 (덜 남는 쪽)": "O2 left if both walked home from there now (the lower of the two)", "구조 대상이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 the stranded crew would have left walking home from there now",
   "과학 EVA 계획과 EVA 시뮬레이션의 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 산소·냉각수의 이만큼을 더 남깁니다. 지도 색(절대 한계)은 그대로입니다.":
     "Keeps this much extra over the O2/coolant needed to get home, so science plans and the simulation's turn-back alert don't hug the walk-back boundary. Map colours (absolute limit) are unchanged.",

@@ -431,8 +431,8 @@
   body.wide .modebar .modehint { font-size: 11.5px; }
   /* 서랍: 설정(왼쪽) · 상태(오른쪽) */
   body.wide .leftcol, body.wide .rightcol { top: 64px; bottom: 16px; transition: transform .22s ease, opacity .22s; z-index: 9; }
-  body.wide .leftcol { left: 12px; bottom: calc(var(--tc-h, 200px) + 28px); } body.wide .rightcol { right: 12px; top: 112px; bottom: calc(var(--tc-h, 200px) + 28px); }
-  body.wide:not(.show-settings) .leftcol { transform: translateX(calc(-100% - 24px)); opacity: 0; pointer-events: none; }
+  body.wide .leftcol { left: auto; right: 12px; top: 64px; bottom: 16px; z-index: 10; box-shadow: -10px 0 30px rgba(0,0,0,.45); }   /* 설정 서랍: 오른쪽에서 열림 */ body.wide .rightcol { right: 12px; top: 112px; bottom: calc(var(--tc-h, 200px) + 28px); }
+  body.wide:not(.show-settings) .leftcol { transform: translateX(calc(100% + 24px)); opacity: 0; pointer-events: none; }
   body.wide .rightcol { display: none !important; }
   body.wide:not(.show-status) .rightcol { transform: translateX(calc(100% + 24px)); opacity: 0; pointer-events: none; }
   /* 오른쪽 도구 기둥 */
@@ -440,9 +440,11 @@
   body.wide.show-status .zoomctl { right: 356px; }
   body.wide .zoomctl button { width: 44px; height: 44px; border-radius: 10px; font-size: 20px; background: rgba(11,14,21,.92); box-shadow: 0 6px 18px rgba(0,0,0,.4); }
   body.wide .zoomctl svg { width: 24px; height: 24px; }
+  body.wide .zoomctl #zbase { color: #a7e8a0; } body.wide .zoomctl #zbase svg { width: 22px; height: 22px; }
   /* 아래 계획 카드 */
   .tripcard { display: none; }
-  body.wide .tripcard { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 8; display: block; width: min(1060px, calc(100vw - 420px)); padding: 12px 16px 14px; box-sizing: border-box; max-height: 44vh; overflow: auto; }
+  body.wide { --tc-w: min(980px, calc(100vw - 500px)); }
+  body.wide .tripcard { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 8; display: block; width: var(--tc-w, 940px); padding: 12px 16px 14px; box-sizing: border-box; max-height: 44vh; overflow: auto; }
   .tc-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
   #sim-restart.icon { font-size: 17px; line-height: 1; padding: 4px 10px; }
   #sim-return { color: #ffb4a8; border-color: #e0614f; } #sim-return:disabled { opacity: .35; cursor: default; }
@@ -458,11 +460,13 @@
   .tripcard.folded .simbar { margin-bottom: 6px; padding-bottom: 6px; }
   .tripcard.folded .tc-head { margin-bottom: 0; }
   .tc-head b { font-size: 12px; letter-spacing: .14em; } .tc-where { color: var(--ink-soft); font-size: 12px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .tc-body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .tc-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; align-items: start; }
   .tc-left .group { border: 0; padding: 0; margin: 0; background: none; } .tc-left .group > h2 { display: none; }
   .tc-left .xmode { display: inline-flex; } .tc-left .xres { display: inline-flex; margin: 0 0 0 12px; } .tc-left .xrsrc { display: inline-flex; margin: 0 0 0 12px; }
   .tc-left .xsel { margin-top: 8px; } .tc-right .xscn { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; margin-top: 10px; } .tc-right .xscn .xcard.best { order: -1; } .tc-right .xscn .xcard { margin: 0; } .tc-right .xcard .t { display: block; white-space: nowrap; } .tc-right .xcard .t small { display: block; white-space: normal; margin-top: 2px; }
-  .tc-right .xbig span b { font-size: clamp(20px, 2vw, 28px); white-space: nowrap; } .tc-right .xbig { gap: 0; } .tc-right .xbig > span { border-left: 1px solid var(--rule); padding-left: 14px; }
+  .tc-right .xbig span b { font-size: clamp(18px, 1.8vw, 26px); white-space: nowrap; }
+  .tc-right .xbig > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tc-right .xcard .row3 b { white-space: nowrap; font-size: 13px; } .tc-right .xbig { gap: 0; } .tc-right .xbig > span { border-left: 1px solid var(--rule); padding-left: 14px; }
   .tc-right .xbig > span:first-child { border-left: 0; padding-left: 0; }
   .tc-right .meters { margin: 0; }
   .tc-slot .verdict { font-size: 12px; }
@@ -481,7 +485,14 @@
   .statuscard { display: none; }
   body.wide .statuscard { display: block; position: absolute; z-index: 7; right: 76px; top: 64px; width: 300px; padding: 10px; box-sizing: border-box; }
   body.wide .statuscard[hidden] { display: none; }
-  .statuscard .sc-h { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 6px 2px; font-weight: 700; }
+  .statuscard .sc-h { all: unset; display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box; cursor: pointer;
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); padding: 0 2px 6px; font-weight: 700; }
+  .statuscard .sc-h i { font-style: normal; font-size: 14px; letter-spacing: 0; } .statuscard .sc-h:hover { color: var(--accent); }
+  .statuscard.folded .glance { display: none; } .statuscard.folded .sc-h { padding-bottom: 0; }
+  .statuscard .gc .gv { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; }
+  .statuscard .gc .gv > * { min-width: 0; }
+  .statuscard .gc small, .statuscard .gc .gv small { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .statuscard .gc { min-height: 82px; min-width: 0; overflow: hidden; }
   .statuscard .glance { grid-template-columns: 1fr 1fr; gap: 6px; }
   .statuscard .glance .gc { padding: 7px 9px; }
   body.wide .modebar { right: 392px; }
@@ -504,11 +515,11 @@
   .tc-gauges .glance { grid-template-columns: 1fr 1fr; }
   /* 재생 막대는 카드 바로 위, 범례·축척은 왼쪽 아래 */
   body.wide .simbar { left: 50%; right: auto; transform: translateX(-50%); width: min(760px, calc(100vw - 420px)); bottom: calc(var(--tc-h, 200px) + 24px); }
-  body.wide .legend { left: 20px; right: auto; top: 112px; bottom: auto; max-width: 360px; width: max-content; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 3px 12px; font-size: 11px; }
-  body.wide .legend > span:not(:first-child) { white-space: nowrap; }
-  body.wide .legend > span:first-child { flex: 1 0 100%; }
+  body.wide .legend { left: 16px; right: auto; top: auto; bottom: 16px; max-width: calc((100vw - var(--tc-w, 940px)) / 2 - 28px); box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 3px 8px; font-size: 10.5px; }
+  body.wide .legend > span:first-child, body.wide .legend > span:nth-child(n+5) { flex: 1 0 100%; }
+  body.wide .legend > span:nth-child(-n+4):not(:first-child) { white-space: nowrap; }
   body.wide .legend > span:first-child { font-size: 11px; }
-  body.wide .scale { left: 16px; right: auto; bottom: 18px; }
+  body.wide .scale { left: 16px; right: auto; bottom: calc(var(--lg-h, 120px) + 46px); }
   body.wide .rv.drawer { left: 50%; right: auto; transform: translateX(-50%); width: min(900px, calc(100vw - 420px)); bottom: calc(var(--tc-h, 200px) + 24px); }
   body.wide .visor-wrap.pip { right: 388px; top: 64px; bottom: auto; width: min(620px, 44vw, calc((100vh - var(--tc-h, 200px) - 150px) * 1.65)); }
   body.wide .tripcard .simbar { position: static; transform: none; width: auto; max-width: none; margin: 0 0 10px; padding: 0 0 10px; background: none; box-shadow: none; border: 0; border-bottom: 1px solid var(--rule); border-radius: 0; }
@@ -544,16 +555,16 @@
   <nav class="wbar float" id="wbar" aria-label="메뉴">
     <select id="site-sel" class="wsel" aria-label="지형"></select>
     <div class="qbtns" id="qbtns" role="group" aria-label="핵심 시나리오">
-      <button type="button" class="wbtn" data-q="explore">① 탐사 계획</button><button type="button" class="wbtn" data-q="base">② 거점 옮기기</button>
+      <button type="button" class="wbtn" data-q="explore">① 탐사 계획</button>
     </div>
     <span class="wslot" id="wslot-mode"></span>
     <span class="wsep" aria-hidden="true"></span>
     <span class="wslot" id="wslot-view"></span>
 
-    <button type="button" class="wbtn" id="w-settings" aria-pressed="false" aria-controls="leftcol">설정</button>
+    <button type="button" class="wbtn" id="w-settings" aria-pressed="false" aria-controls="leftcol" title="설정: 상황·산소·모델 보정·지도 레이어"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px;margin-right:4px"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.5 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg><span>설정</span></button>
     <span class="wslot" id="wslot-doc"></span>
   </nav>
-  <section class="statuscard float" id="statuscard" aria-label="지금 상태"><div class="sc-h">상태</div></section>
+  <section class="statuscard float" id="statuscard" aria-label="지금 상태"><button type="button" class="sc-h" id="sc-fold" aria-expanded="true" title="상태 접기/펼치기"><span>상태</span><i aria-hidden="true">▾</i></button></section>
   <section class="tripcard float" id="tripcard" aria-label="탐사 계획">
     <div class="tc-head"><b id="tc-title">TRIP PLAN</b><span class="tc-where" id="tc-where"></span><span class="tc-slot" id="tc-verdict"></span><button type="button" class="tc-fold" id="tc-clear" title="고른 탐사 지점과 작업 시간을 모두 지웁니다">↺ 계획 초기화</button><button type="button" class="tc-fold" id="tc-fold" aria-expanded="true" aria-label="계획 카드 접기" title="계획 카드 접기">▾</button></div>
     <div class="tc-body"><div class="tc-left" id="tc-left"><p class="tc-simnote" id="tc-simnote">심박 급증 시나리오: 60분부터 대사량 +25%, 산소 450 g으로 목적지 왕복. 매분 "1분 더 가도 돌아올 수 있나"를 따져 자동 회항 경보를 냅니다.</p></div><div class="tc-right" id="tc-right"></div></div>
@@ -790,6 +801,7 @@
         </div>
         <div class="zoomctl" role="group" aria-label="지도 조작">
           <button type="button" id="compass" aria-label="정북 위 / 목표 방향 위" aria-pressed="false" title="정북 위 ↔ 목표 방향 위 (목표 지점 쪽을 화면 위로)"><svg id="compass-needle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l4 10h-8z" fill="#ef6b5e"/><path d="M12 22l-4-10h8z" fill="#c9d1e0"/><text x="12" y="9.6" font-size="5" text-anchor="middle" fill="#0d1016" font-weight="700">N</text></svg></button>
+          <button type="button" id="zbase" aria-pressed="false" aria-label="거점 옮기기" title="거점 옮기기: 누른 뒤 지도를 클릭하면 거점(집)이 그 자리로 옮겨지고, 귀환 경로·반경·통신이 새 거점 기준으로 다시 계산됩니다. 다시 누르면 탐사 계획으로 돌아갑니다."><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 11.2 12 3.5l9 7.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.6V20h4.6v-5.6h3.8V20h4.6V9.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
           <button type="button" id="zin" aria-label="확대">+</button><button type="button" id="zout" aria-label="축소">−</button><button type="button" id="zreset" aria-label="원래대로" hidden>⟲</button>
         </div>
         <div class="scale" id="scale" aria-label="축척"><div class="bar" id="scale-bar"></div><span id="scale-txt"></span></div>
@@ -2221,7 +2233,9 @@
     let html;
     if (m === "explore") {
       const sg = xSegs(summary);
-      $("legend").innerHTML = `<span style="color:var(--ink-soft)">${summary.xLive ? "지금 남은 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소" : "거점 → 그곳 → 거점 왕복 뒤 남는 산소"}</span>` + sg.map((x) => item("background:" + x.c, x.n)).join("");   // 간소화: 색깔별 반경 설명만
+      $("legend").innerHTML = `<span style="color:var(--ink-soft)">${summary.xLive ? "지금 남은 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소" : "거점 → 그곳 → 거점 왕복 뒤 남는 산소"}</span>` + sg.map((x) => item("background:" + x.c, x.n)).join("")
+        + item("background:#e6fffb;height:3px;vertical-align:3px;box-shadow:0 0 0 1px #04070a", "다녀올 수 있는 곳 윤곽")
+        + item("background:repeating-linear-gradient(45deg,rgba(61,139,253,.25) 0 2px,#3d8bfd 2px 6px)", "고도 자료 밖: 평지 가정 추정");
       return;
     }
     if (m === "rescue" && summary.rLive) {
@@ -2866,7 +2880,7 @@
     }
     const mark = (cell, txt, col) => { if (cell < 0) return; const b = bearingTo(Math.round(P.fy - 0.5) * W + Math.round(P.fx - 0.5), cell), r = ((b - hd + 540) % 360) - 180;
       const x = cx + Math.max(-span / 2, Math.min(span / 2, r)) / span * tw; g.fillStyle = col; g.fillText(txt, x, ty + H2 * 0.058); };
-    mark(state.base, "★", "#9dffbf"); mark(dest, "◆", cyan);
+    mark(state.base, "⌂", "#9dffbf"); mark(dest, "◆", cyan);
     g.restore();
     g.save(); g.fillStyle = "rgba(4,14,18,.85)"; g.strokeStyle = cyan; g.lineWidth = 1.5;
     const bw = W2 * 0.075, bh = H2 * 0.05; g.fillRect(cx - bw / 2, ty + H2 * 0.077, bw, bh); g.strokeRect(cx - bw / 2, ty + H2 * 0.077, bw, bh);
@@ -2956,7 +2970,7 @@
     if (simF && SIM.idx > 0) { const pv = SIM.frames[Math.max(0, SIM.idx - 1)].pos; if (pv !== pos) heading = bearingTo(pv, pos); }
     if (!simF) heading = povHeading(pos);
     if (!playing) povRender((pos % W) + 0.5, ((pos / W) | 0) + 0.5, simF && SIM.idx > 0 ? heading : povHeading(pos), false);
-    const marks = [{ b: bearingTo(pos, state.base), t: "★" + L.base, c: "ok", d: distKm(pos, state.base) }];
+    const marks = [{ b: bearingTo(pos, state.base), t: "⌂" + L.base, c: "ok", d: distKm(pos, state.base) }];
     const dest = simF && simF.dest >= 0 ? simF.dest : state.mode === "sim" ? state.simTarget : state.mode === "eva" && EVA && EVA.ok && EVA.order.length ? tCell(META.targets[EVA.order[0]]) : -1;
     if (dest >= 0 && dest !== pos) marks.push({ b: bearingTo(pos, dest), t: "◆" + L.dest, c: "warn", d: distKm(pos, dest) });
     const ticks = [["N", 0], ["E", 90], ["S", 180], ["W", 270], ["NE", 45], ["SE", 135], ["SW", 225], ["NW", 315]];
@@ -3396,7 +3410,7 @@
     const xy = (i) => [(i % W) + 0.5, ((i / W) | 0) + 0.5];
     // 예시 목적지(GOAL) 점은 그리지 않음: 뺀 모드(경로 탐색·심박 시뮬·구조)에서만 쓰던 표시
     if (state.relay) diamond(g, ...xy(META.relay[1] * W + META.relay[0]), 7 * lw, "#e2794d", lw);
-    star(g, ...xy(state.base), (state.mode === "base" ? 12 : 9) * lw, "#a7e8a0", lw);
+    house(g, ...xy(state.base), (state.mode === "base" ? 13 : 10) * lw, "#a7e8a0", lw);
     if (state.base !== BASE0) { g.strokeStyle = "#0d1016"; g.lineWidth = 4 * lw; g.beginPath(); g.arc(...xy(BASE0), 9 * lw, 0, 7); g.stroke(); g.strokeStyle = "#a7e8a0"; g.lineWidth = 2 * lw; g.setLineDash([4 * lw, 3 * lw]); g.stroke(); g.setLineDash([]); }
     if (state.mode === "inspect" && lastVec.path) ring(g, ...xy(state.sel), 7 * lw, "#ffffff", lw);
     if (state.here >= 0 && state.mode !== "inspect") person(g, ...xy(state.here), 8 * lw, "#7fd0ff", lw);
@@ -3407,6 +3421,12 @@
   const dot = (g, x, y, r, c, lw) => { g.fillStyle = c; g.strokeStyle = "#0d1016"; g.lineWidth = 1.5 * lw; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.stroke(); };
   const ring = (g, x, y, r, c, lw) => { g.strokeStyle = "#0d1016"; g.lineWidth = 4 * lw; g.beginPath(); g.arc(x, y, r, 0, 7); g.stroke(); g.strokeStyle = c; g.lineWidth = 2 * lw; g.stroke(); };
   const diamond = (g, x, y, r, c, lw) => { g.fillStyle = c; g.strokeStyle = "#0d1016"; g.lineWidth = 1.5 * lw; g.beginPath(); g.moveTo(x, y - r); g.lineTo(x + r, y); g.lineTo(x, y + r); g.lineTo(x - r, y); g.closePath(); g.fill(); g.stroke(); };
+  const house = (g, x, y, r, c, lw) => {    // 거점: 집 모양
+    g.fillStyle = c; g.strokeStyle = "#0d1016"; g.lineWidth = 1.8 * lw; g.lineJoin = "round"; g.beginPath();
+    g.moveTo(x, y - r); g.lineTo(x + r, y - r * 0.1); g.lineTo(x + r * 0.72, y - r * 0.1); g.lineTo(x + r * 0.72, y + r * 0.85);
+    g.lineTo(x - r * 0.72, y + r * 0.85); g.lineTo(x - r * 0.72, y - r * 0.1); g.lineTo(x - r, y - r * 0.1); g.closePath(); g.fill(); g.stroke();
+    g.fillStyle = "#0d1016"; g.fillRect(x - r * 0.2, y + r * 0.3, r * 0.4, r * 0.55);
+  };
   const star = (g, x, y, r, c, lw) => {
     g.fillStyle = c; g.strokeStyle = "#0d1016"; g.lineWidth = 1.5 * lw; g.beginPath();
     for (let n = 0; n < 10; n++) { const a = -Math.PI / 2 + n * Math.PI / 5, rr = n % 2 ? r * 0.45 : r; g.lineTo(x + rr * Math.cos(a), y + rr * Math.sin(a)); }
@@ -3439,7 +3459,7 @@
     here: "지도를 눌러 <b>대원의 현재 위치</b>를 찍으세요. 거기서 더 갔다가 거점으로 돌아올 수 있는 범위가 그려집니다.",
     rescue: "지도를 눌러 <b>움직일 수 없는 대원의 위치</b>를 찍으세요. 구조대원이 어디서 출발하면 제때 갈 수 있는지 그려집니다. 구조대원 출발점은 \"현재 위치\" 모드에서 찍습니다.",
     sim: "지도를 눌러 <b>목적지</b>를 찍으세요. 대원이 거점에서 출발해 다녀오는 동안 산소를 빼고(심박 또는 탱크 압력으로 추정), 매 순간의 귀환 가능 영역을 그립니다. 아래 ▶로 재생합니다.",
-    base: "지도를 눌러 <b>거점(★)</b>을 옮기세요. 귀환 경로와 통신 가시권이 새 거점 기준으로 다시 계산됩니다. 점선 원은 원래 거점입니다.",
+    base: "지도를 눌러 <b>거점(⌂)</b>을 옮기세요. 귀환 경로와 통신 가시권이 새 거점 기준으로 다시 계산됩니다. 점선 원은 원래 거점입니다.",
   };
   // ---------- 지도 엔진: 지도는 화면 전체에 맞춰(contain) 놓고, 확대·이동·회전은 행렬 M 하나로 ----------
   // 화면 좌표 = M · (FIT 오프셋 + 지도 무대 좌표). 클릭은 역행렬로 칸을 찾음 (회전해도 정확)
@@ -3451,7 +3471,7 @@
     const ww = wrap.clientWidth, wh = wrap.clientHeight;
     if (!W || !R || !ww || !wh) return;
     const WUI = document.body.classList.contains("wide");
-    const SC = WUI && $("statuscard") && !$("statuscard").hidden ? 312 : 0;   // 오른쪽 위 상태 카드 폭만큼 비움
+    const SC = WUI && $("statuscard") && !$("statuscard").hidden && !$("statuscard").classList.contains("folded") ? 312 : 0;   // 오른쪽 위 상태 카드 폭만큼 비움
     const wide = ww > 1100, L = WUI ? 16 : wide ? 340 : 0, Rr = WUI ? 76 + SC : wide ? 352 : 0, T = WUI ? 64 : 56,
       B = WUI ? ($("tripcard").offsetHeight || 200) + 24 : 40;   // 덮는 카드 폭·높이는 빼고 맞춤
     const aw = Math.max(200, ww - L - Rr), ah = Math.max(200, wh - T - B), sc = Math.min(aw / W, ah / R);
@@ -3981,6 +4001,14 @@
       try { localStorage.setItem("eva-card-folded", on ? "1" : "0"); } catch (e) {}
     };
     $("tc-fold").addEventListener("click", () => fold(!$("tripcard").classList.contains("folded")));
+    const scFold = (on) => {               // 상태 카드 접기
+      $("statuscard").classList.toggle("folded", on); $("sc-fold").setAttribute("aria-expanded", String(!on));
+      $("sc-fold").querySelector("i").textContent = on ? "▸" : "▾";
+      try { localStorage.setItem("eva-status-folded", on ? "1" : "0"); } catch (e) {}
+      fitStage(); applyZoom(); drawVec();
+    };
+    $("sc-fold").addEventListener("click", () => scFold(!$("statuscard").classList.contains("folded")));
+    try { if (localStorage.getItem("eva-status-folded") === "1") scFold(true); } catch (e) {}
     $("tc-clear").addEventListener("click", () => {   // 탐사 계획 초기화: 고른 지점·작업 시간·즉시 복귀 명령 지움
       stopSim(); state.xT = []; state.xDwell = {}; state.xScn = 0; XMANUAL = false; RETURN_AT = -1; activePreset = "";
       if (SIM && SIM.ok) setSimIdx(0); update();
@@ -4014,6 +4042,9 @@
       const on = document.body.classList.toggle(cls); $(btn).setAttribute("aria-pressed", String(on));
     });
     drawer("w-settings", "show-settings");
+    $("zbase").addEventListener("click", () => {   // 거점 옮기기 켜고 끄기 (지도 도구)
+      stopSim(); state.mode = state.mode === "base" ? "explore" : "base"; syncInputs(); update(); setTimeout(sync, 0);
+    });
     const sync = () => {                   // 카드·범례 높이에 맞춰 재생 막대·축척 위치와 지도 맞춤을 갱신
       const h = $("tripcard").offsetHeight, lg = $("legend").offsetHeight;
       document.body.style.setProperty("--tc-h", h + "px"); document.body.style.setProperty("--lg-h", lg + "px");
@@ -4029,6 +4060,13 @@
       document.body.classList.toggle("mode-sim", state.mode === "sim");
       const q = state.mode === "sim" ? "surge" : state.mode;
       document.querySelectorAll("#qbtns [data-q]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.q === q)));
+      $("zbase").setAttribute("aria-pressed", String(state.mode === "base"));
+      const en = LANG === "en";               // 툴팁(속성)은 자동 번역이 안 되므로 직접
+      $("zbase").title = en ? "Move base: click this, then click the map to move the base (house); return routes, zones and comms are recomputed for the new base. Click again to go back to the exploration plan."
+        : "거점 옮기기: 누른 뒤 지도를 클릭하면 거점(집)이 그 자리로 옮겨지고, 귀환 경로·반경·통신이 새 거점 기준으로 다시 계산됩니다. 다시 누르면 탐사 계획으로 돌아갑니다.";
+      $("zbase").ariaLabel = en ? "Move base" : "거점 옮기기";
+      $("w-settings").title = en ? "Settings: scenario, O2, model corrections, map layers" : "설정: 상황·산소·모델 보정·지도 레이어";
+      $("sc-fold").title = en ? "Collapse or expand status" : "상태 접기/펼치기";
       const live = !!(SIM && SIM.ok && (playing || SIM.idx > 0 || state.mode === "sim") && ["explore", "rescue", "sim"].includes(state.mode));
       if (live !== document.body.classList.contains("has-live")) {
         document.body.classList.toggle("has-live", live); $("tc-more").hidden = !live; lastSim = null;
