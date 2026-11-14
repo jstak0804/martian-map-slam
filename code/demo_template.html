@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mars EVA Walkback Planner</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -79,7 +82,7 @@
   .xsel { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12.5px; }
   .xsel { flex-direction: column; align-items: stretch; }
   .xsel .chip .dwin { margin-left: auto; font-size: 11.5px; color: var(--ink-soft); }
-  .xsel .chip .dwin input { width: 64px; }
+  .xsel .chip .dwin input { width: 78px; }
   .xres { display: flex; align-items: center; gap: 6px; margin: 8px 0 2px; font-size: 12.5px; color: var(--ink-soft); }
   .xres input { width: 56px; }
   .xsel .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 4px 3px 8px; border: 1px solid var(--rule); border-radius: 999px; background: var(--panel); }
@@ -2431,7 +2434,7 @@
       $("pt-meters").innerHTML = `<div class="xbig"><span>가는 시간<b>${fmtDur(go)}</b></span><span>복귀 시간<b>${fmtDur(back)}</b></span><span class="dw${sc.over ? " over" : ""}">체류 ${sc.over ? "계획" : "가능"}<b>${fmtDur(sc.dwell)}</b></span></div>`;
     }
     const dwRows = sc.ord.map((j, n) => { const c = state.xT[j - 1].cell, fx = state.xDwell[c];
-      return `<span class="dwin"><b>${xName(j)}</b> ${fmtDur(sc.dwells[n])}${fx == null ? (LANG === "en" ? " (auto)" : " (자동)") : ""}</span>`; }).join(" · ");
+      return `<span class="dwin"><b>${xName(j)}</b> <span>${fmtDur(sc.dwells[n])}</span>${fx == null ? (LANG === "en" ? " (auto)" : " (자동)") : ""}</span>`; }).join(" · ");
     $("pt-facts").innerHTML = `
       <dt>지점별 체류</dt><dd class="dwrow">${dwRows}<button type="button" class="pipbtn" id="dw-auto" title="최대로 균등 분배">자동</button></dd>
       ${sc.ord.length > 1 ? `<dt>지점 간 이동</dt><dd>${fmtDur(mid)}</dd>` : ""}

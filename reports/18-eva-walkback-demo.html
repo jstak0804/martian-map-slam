@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mars EVA Walkback Planner</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -79,7 +82,7 @@
   .xsel { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12.5px; }
   .xsel { flex-direction: column; align-items: stretch; }
   .xsel .chip .dwin { margin-left: auto; font-size: 11.5px; color: var(--ink-soft); }
-  .xsel .chip .dwin input { width: 64px; }
+  .xsel .chip .dwin input { width: 78px; }
   .xres { display: flex; align-items: center; gap: 6px; margin: 8px 0 2px; font-size: 12.5px; color: var(--ink-soft); }
   .xres input { width: 56px; }
   .xsel .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 4px 3px 8px; border: 1px solid var(--rule); border-radius: 999px; background: var(--panel); }
@@ -989,6 +992,9 @@ const I18N = {
   "탐사 계획·구조: 거점에 돌아왔을 때 출발량 대비 이 % 이상 남깁니다(탐사 계획 칸의 숫자와 같은 값). 더보기의 과학 EVA: 귀환에 필요한 산소·냉각수에 이 %를 더 얹어 남깁니다.": "Exploration and rescue: arrive at base with at least this % of the starting amount (same value as the box in the exploration plan). Science EVA (More): keep this % on top of the O2 and coolant needed to return.",
   "지도의 ◆ 탐사 지점(로버가 조사한 곳)이나 원하는 곳을 눌러 최대 3곳을 고릅니다. 출발 산소는 Apollo 15~17 PLSS 기준 680 g(1.5 lb, 1,430 psi급). 체류 가능 시간 = (출발 산소 × (1 − 복귀 여유%) − 이동에 쓰는 산소) ÷ 작업 중 소모율. 즉 거점에 돌아왔을 때 산소·냉각수가 복귀 여유(기본 20%) 이상 남는 조건이고, 작업 중 대사량은 평지 보행과 같다고 봅니다. 지점마다 체류를 비워 두면(자동) 이 시간을 지점 수로 똑같이 나누고(1/n), 직접 넣은 지점이 있으면 나머지 시간을 자동 지점끼리 나눕니다.": "Click ◆ sites (places a rover surveyed) or anywhere on the map, up to 3. Start O2 is 680 g, Apollo 15–17 PLSS (1.5 lb at ~1,430 psi). Stay time = (start O2 × (1 − return reserve %) − O2 used travelling) ÷ work-rate O2 use, i.e. O2 and coolant at base stay above the reserve (20% by default); work metabolism equals level walking. Sites left blank (auto) share this time equally (1/n); if you type minutes for some sites, the rest is split among the auto sites.",
   "거점에 돌아왔을 때 출발량 대비 이만큼 이상 남깁니다. 지도 색 경계, 체류 시간, 귀환 경보, 구조 보급량에 모두 적용": "Keep at least this share of the starting amount when back at base. Applies to map colours, stay times, the turn-back alarm and rescue supply.",
+  "지도의": "Click a", "◆ 탐사 지점": "◆ exploration site", "을 누르세요 (최대 3곳). 시나리오마다 가는 시간·복귀 시간·체류 가능 시간이 나옵니다.": " on the map (up to 3). Each scenario shows go, return and possible stay times.",
+  "과학 EVA 예시 (산소 만충 680 g)": "Science EVA example (full O2 680 g)",
+  "지도의 ◆를 눌러 지점을 고르세요": "Click a ◆ site on the map",
   "왕복 계획 여유": "Round-trip planning margin", "복귀 여유": "Return reserve", "고도 자료 밖: 평지 가정 추정": "Outside elevation data: level-ground estimate", "복귀 때 남길 산소·냉각수 ": "Keep at return (O2 & coolant) ", "복귀 때 남길 산소·냉각수": "Keep at return (O2 & coolant)", "두 사람이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소 (덜 남는 쪽)": "O2 left if both walked home from there now (the lower of the two)", "구조 대상이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 the stranded crew would have left walking home from there now",
   "과학 EVA 계획과 EVA 시뮬레이션의 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 산소·냉각수의 이만큼을 더 남깁니다. 지도 색(절대 한계)은 그대로입니다.":
     "Keeps this much extra over the O2/coolant needed to get home, so science plans and the simulation's turn-back alert don't hug the walk-back boundary. Map colours (absolute limit) are unchanged.",
@@ -2710,7 +2716,7 @@ const I18N_RE = [
       $("pt-meters").innerHTML = `<div class="xbig"><span>가는 시간<b>${fmtDur(go)}</b></span><span>복귀 시간<b>${fmtDur(back)}</b></span><span class="dw${sc.over ? " over" : ""}">체류 ${sc.over ? "계획" : "가능"}<b>${fmtDur(sc.dwell)}</b></span></div>`;
     }
     const dwRows = sc.ord.map((j, n) => { const c = state.xT[j - 1].cell, fx = state.xDwell[c];
-      return `<span class="dwin"><b>${xName(j)}</b> ${fmtDur(sc.dwells[n])}${fx == null ? (LANG === "en" ? " (auto)" : " (자동)") : ""}</span>`; }).join(" · ");
+      return `<span class="dwin"><b>${xName(j)}</b> <span>${fmtDur(sc.dwells[n])}</span>${fx == null ? (LANG === "en" ? " (auto)" : " (자동)") : ""}</span>`; }).join(" · ");
     $("pt-facts").innerHTML = `
       <dt>지점별 체류</dt><dd class="dwrow">${dwRows}<button type="button" class="pipbtn" id="dw-auto" title="최대로 균등 분배">자동</button></dd>
       ${sc.ord.length > 1 ? `<dt>지점 간 이동</dt><dd>${fmtDur(mid)}</dd>` : ""}
