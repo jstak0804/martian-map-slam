@@ -445,7 +445,7 @@
   .tc-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
   #sim-return { color: #ffb4a8; border-color: #e0614f; } #sim-return:disabled { opacity: .35; cursor: default; }
   .tc-fold { font: inherit; font-size: 12px; font-weight: 600; color: var(--ink); background: #161b26; border: 1px solid var(--rule); border-radius: 7px; padding: 4px 10px; cursor: pointer; white-space: nowrap; }
-  .tc-fold:hover { border-color: var(--accent); }
+  .tc-fold:hover { border-color: var(--accent); } .tc-fold:disabled { opacity: .4; cursor: default; } .tc-fold[hidden] { display: none; }
   .tripcard.folded .tc-body, .tripcard.folded .tc-more { display: none !important; }
   .tripcard.folded .simbar { margin-bottom: 6px; padding-bottom: 6px; }
   .tripcard.folded .tc-head { margin-bottom: 0; }
@@ -535,7 +535,7 @@
     <span class="wslot" id="wslot-doc"></span>
   </nav>
   <section class="tripcard float" id="tripcard" aria-label="탐사 계획">
-    <div class="tc-head"><b id="tc-title">TRIP PLAN</b><span class="tc-where" id="tc-where"></span><span class="tc-slot" id="tc-verdict"></span><button type="button" class="tc-fold" id="tc-fold" aria-expanded="true" title="계획 카드 접기/펼치기">▾ 접기</button></div>
+    <div class="tc-head"><b id="tc-title">TRIP PLAN</b><span class="tc-where" id="tc-where"></span><span class="tc-slot" id="tc-verdict"></span><button type="button" class="tc-fold" id="tc-clear" title="고른 탐사 지점과 작업 시간을 모두 지웁니다">↺ 계획 초기화</button><button type="button" class="tc-fold" id="tc-fold" aria-expanded="true" title="계획 카드 접기/펼치기">▾ 접기</button></div>
     <div class="tc-body"><div class="tc-left" id="tc-left"><p class="tc-simnote" id="tc-simnote">심박 급증 시나리오: 60분부터 대사량 +25%, 산소 450 g으로 목적지 왕복. 매분 "1분 더 가도 돌아올 수 있나"를 따져 자동 회항 경보를 냅니다.</p></div><div class="tc-right" id="tc-right"></div></div>
     <button type="button" class="tc-more" id="tc-more" hidden>▼ 실시간 그래프 · 게이지 (아래로 스크롤)</button>
   </section>
@@ -3910,7 +3910,9 @@
       if (cx) { im.src = cx.img; Object.assign(im.style, { left: `${cx.x / W * 100}%`, top: `${cx.y / R * 100}%`, width: `${cx.w / W * 100}%`, height: `${cx.h / R * 100}%` }); }
     }
     for (const id of ["ortho", "shade"]) $(id).decode().then(() => maskNoData($(id), SITE_I)).catch(() => {});
-    Object.assign(state, { base: BASE0, sel: GOAL, here: -1, victim: -1, simTarget: GOAL, evaSel: (site.meta.targets || []).map(() => true) });
+    Object.assign(state, { base: BASE0, sel: GOAL, here: -1, victim: -1, simTarget: GOAL, evaSel: (site.meta.targets || []).map(() => true),
+                           xT: [], xDwell: {}, xScn: 0 });   // 다른 지도로 바꾸면 탐사 계획 지점도 초기화
+    XMANUAL = false; RETURN_AT = -1; stopSim();
     PRESETS = makePresets();
     $("presets").innerHTML = presetsHtml();
     if (before) before();
@@ -3945,6 +3947,10 @@
       try { localStorage.setItem("eva-card-folded", on ? "1" : "0"); } catch (e) {}
     };
     $("tc-fold").addEventListener("click", () => fold(!$("tripcard").classList.contains("folded")));
+    $("tc-clear").addEventListener("click", () => {   // 탐사 계획 초기화: 고른 지점·작업 시간·즉시 복귀 명령 지움
+      stopSim(); state.xT = []; state.xDwell = {}; state.xScn = 0; XMANUAL = false; RETURN_AT = -1; activePreset = "";
+      if (SIM && SIM.ok) setSimIdx(0); update();
+    });
     try { if (localStorage.getItem("eva-card-folded") === "1") fold(true); } catch (e) {}
     // 핵심 시나리오 버튼: ① 탐사 계획 ② 심박 급증 시뮬(실시간) ③ 조난 구조 — 한 번에 바꾸고 바로 재생
     const whenReady = (fn, tries = 60) => { if (SIM && SIM.ok && SIM.frames.length > 1) fn(); else if (tries > 0) setTimeout(() => whenReady(fn, tries - 1), 150); };
@@ -3980,6 +3986,7 @@
       $("tc-title").textContent = state.mode === "rescue" ? (LANG === "en" ? "RESCUE PLAN" : "구조 계획") : (LANG === "en" ? "TRIP PLAN" : "탐사 계획");
       $("tc-where").textContent = $("pt-where").textContent === "–" ? "" : $("pt-where").textContent;
       $("tripcard").hidden = !(state.mode === "explore" || state.mode === "sim");
+      $("tc-clear").hidden = state.mode !== "explore"; $("tc-clear").disabled = !state.xT.length;
       if (state.mode === "sim") $("tc-title").textContent = LANG === "en" ? "HEART-RATE SURGE SIM" : "심박 급증 시뮬레이션";
       document.body.classList.toggle("mode-sim", state.mode === "sim");
       const q = state.mode === "sim" ? "surge" : state.mode;
