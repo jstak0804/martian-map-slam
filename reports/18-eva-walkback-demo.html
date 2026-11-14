@@ -664,6 +664,7 @@
   <pre id="selftest" hidden></pre>
   <details class="notes closed" id="notes-ko">
     <summary>계산 방법과 한계</summary>
+    <p>전체 계산식: <a href="https://github.com/jstak0804/martian-map-slam/blob/main/docs/METHODS.ko.md" target="_blank" rel="noopener">docs/METHODS.ko.md</a></p>
     <ul>
       <li>지형: HiRISE DTM DTEEC_018854_1755_018920_1755_U01(Gale, 1 m)을 10 m 칸으로 묶음. 거점은 Curiosity 착륙지, 노란 점은 sol 1282 지점.</li>
       <li>바탕 사진: 같은 DTM의 정사영상 ESP_018854_1755_RED_C_01_ORTHO(1 m, 4 m로 줄임). DTM과 같은 격자라 판정 칸과 화소 단위로 맞음. HiRISE RED 밴드는 흑백이라 밝기를 화성 표토 색조로 바꿔 칠했음(표시용 가색). <a href="https://hirise-pds.lpl.arizona.edu/PDS/DTM/ESP/ORB_018800_018899/ESP_018854_1755_ESP_018920_1755/">HiRISE PDS</a></li>
@@ -693,6 +694,7 @@
   </details>
   <details class="notes closed" id="notes-en" hidden>
     <summary>Methods and limitations</summary>
+    <p>All formulas: <a href="https://github.com/jstak0804/martian-map-slam/blob/main/docs/METHODS.md" target="_blank" rel="noopener">docs/METHODS.md</a></p>
     <ul>
       <li>Data: HiRISE 1 m DTMs and orthoimages (NASA PDS) for Gale (DTEEC_018854_1755_018920_1755_U01), Jezero (DTEEC_045994_1985_046060_1985_U01) and Aram Chaos (DTEEC_054753_1825_055452_1825_A01), resampled to 10 m cells; MSL and Mars 2020 traverses and Navcam raw images; JPL Mars Trek THEMIS night IR (reference layer only); Curiosity RAD dose rates.</li>
       <li>Walking metabolism: regression on NASA IST-1/IST-2 reduced-gravity suited walking data (NASA/TP-2010-216115, 216125). Level walking at 0.92 m/s (Apollo 15 emergency walk-back speed) costs 444 W; uphill speed keeps the same effort as level walking (Waligora &amp; Horrigan 1975); downhill uses the Looney et al. 2019 grade cost ratio scaled to suit grade sensitivity, slowed by Tobler's hiking function; floor = 222 W standing with load. Converted to O2 with 20.1 kJ/L. IST was run at 0.12–0.32 g on Earth, so it is not a direct validation at Mars 0.378 g with a 90 kg suit.</li>
