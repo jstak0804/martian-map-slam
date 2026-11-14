@@ -3146,13 +3146,7 @@ const I18N_RE = [
     g.save(); g.translate(cx, hz); g.rotate(roll * Math.PI / 180); g.strokeStyle = "rgba(150,245,255,.75)"; g.fillStyle = "rgba(150,245,255,.8)";
     g.shadowColor = glow; g.shadowBlur = 6; g.lineWidth = 1.4; g.font = `${Math.max(9, W2 * 0.012)}px "IBM Plex Mono", monospace`;
     const fs = P.focal * sy;
-    g.beginPath(); g.moveTo(-W2 * 0.46, 0); g.lineTo(-W2 * 0.07, 0); g.moveTo(W2 * 0.07, 0); g.lineTo(W2 * 0.46, 0); g.stroke();
-    for (const deg of [-15, -10, -5, 5, 10, 15]) {
-      const y = -Math.tan(deg * Math.PI / 180) * fs, half = W2 * (Math.abs(deg) % 10 ? 0.05 : 0.09);
-      g.globalAlpha = .55; g.setLineDash(deg < 0 ? [6, 5] : []);
-      g.beginPath(); g.moveTo(-half, y); g.lineTo(-W2 * 0.035, y); g.moveTo(W2 * 0.035, y); g.lineTo(half, y); g.stroke();
-      if (Math.abs(deg) % 10 === 0) { g.fillText(String(Math.abs(deg)), -half - W2 * 0.025, y + 4); g.fillText(String(Math.abs(deg)), half + 6, y + 4); }
-    }
+    // 가운데 수평선·피치 눈금은 그리지 않음 (화면 가운데를 비움)
     g.setLineDash([]); g.globalAlpha = .9; g.restore();
     g.save(); g.strokeStyle = "rgba(150,245,255,.85)"; g.lineWidth = 1.4; g.shadowColor = glow; g.shadowBlur = 6;
     const rr = W2 * 0.035, ccy = hz;
