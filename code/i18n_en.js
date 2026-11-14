@@ -244,6 +244,7 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^산소 ([\d,]+) g · (산소|냉각수|선량|로버 고장 시 도보 귀환) 기준 · ⚠ 통행 불가 지점: 가장 완만한 길로 오름$/, (m, a, b) => `O2 ${a} g · limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[b]} · ⚠ impassable site: gentlest climb`],
   [/^즉시 복귀: 남은 계획을 멈추고 거점으로 \(남은 산소 ([\d,]+) g\)$/, "Return now: remaining plan stopped, heading to base ($1 g O2 left)"],
   [/^([A-C] \d+분.*)$/, (m, a) => a.replace(/(\d+)분/g, "$1 min").replace("지점 간 이동", "travel between sites").replace(/⚠ 한도 (.*) 초과/, "⚠ over the $1 limit")],
   [/^(Curiosity|Perseverance) 탐사 정지 지점 \((.*)\)$/, "$1 stop ($2)"],
