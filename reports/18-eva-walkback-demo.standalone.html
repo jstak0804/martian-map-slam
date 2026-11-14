@@ -74,7 +74,7 @@
   .speblock[data-off="true"] .ctl { opacity: .45; }
   .modectl { display: grid; gap: 12px; }
   .modectl:not(:has(.group:not([hidden]))) { display: none; }
-  .modectl .group { border: 1.5px solid var(--accent); background: #1f1a1c; border-radius: 10px; padding: 12px; animation: fadein .35s ease-out; }
+  .modectl .group { border: 1px solid var(--rule); border-left: 4px solid var(--accent); background: var(--panel-2); border-radius: 10px; padding: 12px; animation: fadein .35s ease-out; }
   .modectl .group h2 { color: var(--accent); }
   @keyframes fadein { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
   /* ⓘ 툴팁: 설명문은 마우스를 올리거나 포커스할 때만 */
@@ -411,7 +411,7 @@
 
       <div class="ctl">
         <div class="row"><label for="o2">남은 산소</label><output id="o2-out" for="o2"></output></div>
-        <input type="range" id="o2" min="40" max="540" step="5" value="150">
+        <input type="range" id="o2" min="40" max="540" step="5" value="250">
         <div class="hint" id="o2-hint"></div>
       </div>
       <div class="ctl">
@@ -573,33 +573,53 @@
   </div>
 
   <pre id="selftest" hidden></pre>
-  <details class="notes">
+  <details class="notes" id="notes-ko">
     <summary>계산 방법과 한계</summary>
     <ul>
       <li>지형: HiRISE DTM DTEEC_018854_1755_018920_1755_U01(Gale, 1 m)을 10 m 칸으로 묶음. 거점은 Curiosity 착륙지, 노란 점은 sol 1282 지점.</li>
       <li>바탕 사진: 같은 DTM의 정사영상 ESP_018854_1755_RED_C_01_ORTHO(1 m, 4 m로 줄임). DTM과 같은 격자라 판정 칸과 화소 단위로 맞음. HiRISE RED 밴드는 흑백이라 밝기를 화성 표토 색조로 바꿔 칠했음(표시용 가색). <a href="https://hirise-pds.lpl.arizona.edu/PDS/DTM/ESP/ORB_018800_018899/ESP_018854_1755_ESP_018920_1755/">HiRISE PDS</a></li>
-      <li>산소: Pandolf 보행 대사량(화성 0.38 g, 체중 75 kg + 우주복 90 kg, 속도 0.92 m/s 고정)을 산소로 환산. 예비분은 평지 보행 30분어치(39 g).</li>
-      <li>귀환 경로: 칸마다 산소가 가장 적게 드는 길 하나를 미리 계산해 두고, 같은 길 위에서 선량·냉각수를 따짐. 원 분석(spe_walkback.py)은 선량·냉각수 몫까지 섞어 길을 고르므로 아주 큰 SPE에서 면적이 조금 다름(×30: 원 분석 16.03 km², 데모 15.97 km²).</li>
+      <li>산소(보행 대사): NASA IST-1·IST-2 감중 우주복 보행 실측 회귀(NASA/TP-2010-216115, 216125). 평지 0.92 m/s에서 444 W(Apollo 15 비상 귀환 계획 속도), 오르막은 평지와 같은 노력이 되는 속도(Waligora &amp; Horrigan 1975), 내리막은 Looney et al. 2019 경사 비용 비율을 우주복 경사 민감도로 줄여 적용하고 Tobler 보행 함수로 감속. 하한은 짐 진 채 서 있는 대사량 222 W. 대사량은 Weir 식(20.1 kJ/L)으로 산소로 환산. 예비분은 NASA PLSS 설계 평균 1200 BTU/h(352 W) 30분 = 산소 45 g. IST는 0.12~0.32 g 지상 감중 실험이라 화성 0.378 g·90 kg 우주복 조건의 직접 검증은 아님.</li>
+      <li>귀환 경로: 16방향 격자(나이트 이동은 걸쳐 지나는 두 칸도 통행 가능해야 함, 간선 경사 20° 상한)에서 칸마다 산소가 가장 적게 드는 길을 역방향 다익스트라로 계산하고, 같은 길 위에서 선량·냉각수를 따짐. SPE를 켜면 아래 다목적 경로를 함께 봄.</li>
       <li>선량: Curiosity RAD 배경 0.655 mSv/일, 골짜기 지형 차폐로 최대 50% 감소(근사), 귀환 1회 예산 1.0 mSv(가정).</li>
       <li>냉각수: 대사열 + 환경·PLSS 열을 물 증발(2.477 MJ/kg)로 버림. 만충 3.6 kg(Nabity et al. 2007). 물이 떨어진 뒤에는 체온 비상한계 2.0 BTU/lb까지 버팀 = 냉각수 141 g어치(ICES-2026-170). 환경 열이 음수일 때 구간별 0 하한은 경로 전체 합에만 적용.</li>
       <li>통신: 거점 안테나 3 m, 우주복 2 m, 중계기 3 m. 지형과 화성 곡률만 반영한 가시선. SPE 때 UHF 감쇠는 자료가 없어 넣지 않음.</li>
       <li>넘어짐: 1 m 지형에서 3 m 안 높이차 0.5 m 이상 또는 1 m 경사 20° 이상인 화소가 칸의 25% 이상이면 높음, 5% 이상이면 중간. 기준값은 가정이고, 2~15 cm 걸림 장애물은 DTM 오차보다 작아 보이지 않음.</li>
       <li>현재 위치·구조 모드: 찍은 지점에서 출발하는 길(또는 그 지점으로 가는 길)을 브라우저에서 바로 계산함(산소 최소 경로, 같은 Pandolf 식). 현재 위치 모드의 면적 = 거기서 그 칸까지 갔다가 거점으로 돌아올 수 있는 곳. 구조 모드의 면적 = 그 칸에서 출발한 구조대원이 구조 대상에게 갈 수 있는 곳(왕복은 구조 대상 지점에서 거점까지 혼자 돌아오는 것까지 포함). 구조 대상을 업고 오는 부담은 넣지 않음.</li>
       <li>심박 시뮬레이션: 분당 심박을 Hoffmann 2021 회귀식(대사량 BTU/h = 284.55 + 5.984 × 심박)으로 대사량으로 바꿔 산소·냉각수를 뺌. k = 최근 10분 심박 대사량 ÷ 같은 구간 Pandolf 예측. 매분 "1분 더 가면 지금 k로 돌아올 수 없는가"를 보고 경보. 시나리오의 심박은 k × 모델 대사량에서 거꾸로 만든 합성값(잡음은 고정 시드). 회귀식은 무중력 EVA 자료라 화성 보행에 그대로 맞는지는 검증되지 않음.</li>
-      <li>대사량 모델 보정(기본 끔, 왼쪽 "대사량 모델 보정"): ① 경사별 속도 V = 0.75 − 0.01 × 오르막 경사(°), 0.3~0.75 m/s (Kim 2025 논문 식 (2)의 θ는 도 단위; 2026-11-14 이전 버전은 %로 잘못 적용). 달 보행 모델(Peña-Asensio et al. 2024, NASA Kim et al. 2025 ICES-2025-129에서 인용)이며 경사 단위(%/도)는 원문 확인 필요. ② 표토 지형계수 +0.2(바위 거칠기 계수 위에 더함): Richmond, Potter & Santee 2015 표 11의 자갈·비포장길 1.2. ③ 내리막: Santee 2003 보정 M = Pandolf − CF, CF = η[G·(W+L)·V/3.5 − (W+L)(G+6)²/W + (25 − V²)]에서 질량 항(W+L)마다 중력비를 곱함. NASA 슬라이드는 첫 항에만 중력을 곱해 0% 경사에서 값이 끊기므로(356 W vs 301 W) 이렇게 해석했고, 원 논문으로 확인 필요. ④ 모래: η = 1.5 + 1.3/V²(Richmond 2015 식 16, 자료 범위 0.85 m/s 이상이라 그보다 느리면 0.85 값). 모래언덕 후보는 HiRISE 정사영상 밝기에 Otsu 문턱을 두 번 적용해 뽑은 추정 영역(dune_mask.py)이며, 지구 모래 자료를 화성 0.38 g에 그대로 쓴 것도 가정. 기준 상황 면적: 기본 18.64 → 속도 15.20, η 16.75, 내리막 20.11, 모래 17.67, 모두 14.79 km².</li>
+      <li>이전 모델 비교(왼쪽 "안전 운용 · 문헌 기반 보정"): Pandolf 식 전체에 화성 중력비를 곱한 모델(평지 301 W)로 다시 계산. 이 모델에서만 쓰는 문헌 보정: ① 경사별 속도 V = 0.75 − 0.01 × 오르막 경사(°), 0.3~0.75 m/s(Peña-Asensio et al. 2024, Kim et al. 2025 식 (2)) ② 내리막 Santee 2003 보정(질량 항마다 중력비). 두 모델 공통: ③ 표토 지형계수 +0.2(Richmond, Potter &amp; Santee 2015 표 11) ④ 모래 η = 1.5 + 1.3/V²(Richmond 2015 식 16, 0.85 m/s 미만은 0.85 값). 모래언덕 후보는 HiRISE 정사영상 밝기에 Otsu 문턱을 두 번 적용한 추정 영역이며, 지구 모래 자료를 화성 중력에 그대로 쓴 것도 가정.</li>
       <li>칸별 대사량 지도: 각 칸의 가장 가파른 경사를 오른다고 보고 계산한 대사량(W). NASA Kim 2025의 "local metabolic rate" 지도처럼 경사 20° 초과 칸은 흰색(금지). 경로 방향을 모르는 상태의 최악값이라 실제 경로 비용과 다름.</li>
-      <li>탱크 압력 방식(회의 제안): 남은 산소 m = PVM/(ZRT), Z = 1. 탱크 부피는 6.2 MPa·21 °C에서 540 g이 되도록 잡은 가정값(ISS EMU 1차 탱크 900 psia 수준). 탱크 온도는 21 °C에서 1 °C로 90분 시상수로 식는다고 가정. 센서 잡음은 매분 정규분포(고정 시드). 최근 10분 표본에 직선을 맞춰 남은 양과 소모율을 구하고, k = (소모율 − 알려진 누설) ÷ 같은 구간 Pandolf 예측. 귀환 판단은 측정한 남은 양과 지형 모델(k × 귀환 경로 산소)로 하며, "지금 소모율 × 귀환 시간" 단순 외삽은 비교용으로만 그림. ISS도 압력 감소로 소모를 근사하며 잡음·누설을 오차 원인으로 꼽음(NASA ISS RDC 2024).</li>
-      <li>거점 옮기기: 새 거점까지의 귀환 경로와 거점 안테나의 가시권을 브라우저에서 다시 계산함(comm_los.py와 같은 광선 방식). 중계기는 원래 자리에 두고, 새 거점과 가시선이 닿을 때만 중계로 침. 선량률·넘어짐 등급은 거점과 무관함.</li>
+      <li>탱크 압력 방식: 남은 산소 m = PVM/(ZRT), Z = 1. 탱크 부피는 6.2 MPa·21 °C에서 540 g이 되도록 잡은 가정값(ISS EMU 1차 탱크 900 psia 수준). 탱크 온도는 21 °C에서 1 °C로 90분 시상수로 식는다고 가정. 센서 잡음은 매분 정규분포(고정 시드). 최근 10분 표본에 직선을 맞춰 남은 양과 소모율을 구하고, k = (소모율 − 알려진 누설) ÷ 같은 구간 Pandolf 예측. 귀환 판단은 측정한 남은 양과 지형 모델(k × 귀환 경로 산소)로 하며, "지금 소모율 × 귀환 시간" 단순 외삽은 비교용으로만 그림. ISS도 압력 감소로 소모를 근사하며 잡음·누설을 오차 원인으로 꼽음(NASA ISS RDC 2024).</li>
+      <li>거점 옮기기: 새 거점까지의 귀환 경로와 거점 안테나의 가시권을 브라우저에서 다시 계산함(같은 광선 추적 방식). 중계기는 원래 자리에 두고, 새 거점과 가시선이 닿을 때만 중계로 침. 선량률·넘어짐 등급은 거점과 무관함.</li>
       <li>보급 계산: 구조 대상 필요량 = 구조대원을 기다리는 동안(정지 대사량) + 거점까지 귀환(부축 보행이면 보행 대사량 k = 1, 이송이면 정지 대사량) + 30분 예비분. 가진 양을 넘는 만큼이 줘야 할 최소량. 구조대원 출발 시 최소량 = 자기 왕복 + 그 보급량 + 자기 예비분. 냉각수는 같은 열을 버리는 데 드는 물로 환산한 값이라, 실제로는 물을 옮겨 담거나 동료 냉각 회로에 연결(Apollo BSLSS 방식, 화성 PLSS에서 검토 중)하는 방식이 됨. 옮기는 동안의 손실은 넣지 않음.</li>
-      <li>구조 대상이 버티는 시간: 가만히 서 있는 대사량(Pandolf, 짐 진 채 정지, 222 W)으로 산소와 냉각수가 떨어지는 시간 중 짧은 쪽. 다친 사람의 실제 대사량은 이보다 높을 수 있음.</li>
-      <li>올해 해커톤 데이터가 공개되기 전이라 공개 NASA 자료로 만든 프로토타입입니다. 심박 보정계수 k와 환경 열은 슬라이더로 넣는 값이고, 실제 측정값이 아닙니다.</li>
+      <li>구조 대상이 버티는 시간: 짐 진 채 서 있는 대사량(222 W)으로 산소와 냉각수가 떨어지는 시간 중 짧은 쪽. 다친 사람의 실제 대사량은 이보다 높을 수 있음.</li>
+      <li>자료와 입력: 지형·영상·주행 경로·로버 사진·선량은 NASA PDS(HiRISE, MSL·Mars 2020), JPL Mars Trek, Curiosity RAD의 공개 자료다. 심박·탱크 압력은 매분 들어오는 원격측정 값을 받아 귀환 판단을 갱신하는 구조이며, 이 데모에서는 합성 시나리오나 직접 입력(CSV)으로 넣는다. 심박 보정계수 k와 환경 열은 시나리오 입력값이다.</li>
           <li>다목적 귀환 경로(SPE를 켰을 때): 산소 최소 트리와 별도로, 간선 비용을 C = k·ΔO₂/B<sub>O₂</sub> + ΔH₂O/B<sub>H₂O</sub> + SPE배율·ΔDose/B<sub>Dose</sub>(B는 예비분을 뺀 남은 예산)로 둔 귀환 트리를 하나 더 계산한다. 가장 빠듯한 자원의 몫이 저절로 커져, 선량이 높으면 지형 차폐가 큰 곳으로 돌아가는 길을 고른다. 칸은 두 경로 중 하나라도 모든 예산 안이면 "돌아올 수 있음"이다. 가중합 경로 하나를 더 보는 것이라 모든 가능한 경로를 찾는 제약 최적화는 아니다. 지형 차폐(최대 50%)는 주변보다 낮은 정도로 만든 대리 지표로, 실측 차폐가 아니므로 실제 피난처 판정에 쓰지 않는다.</li>
       <li>계산 워커: 귀환 트리·다목적 트리·가시선은 단일 HTML 안의 인라인 Web Worker에서 계산해 조작 중 화면이 멈추지 않게 했다(메인 스레드와 같은 식, Jezero 기준 면적 24.57 km²로 일치 확인). 워커를 만들 수 없는 브라우저에서는 예전처럼 메인 스레드에서 계산한다.</li>
       <li>지형 위험 지표의 뜻: "넘어짐 위험"은 1 m DTM의 3×3 고도차(최대−최소) 0.5 m·경사 20° 화소 비율로 만든 미세 기복 후보다. 연속 경사면도 잡히므로 턱 전용 검출이 아니고, 실제 낙상 확률이 아니다. 20° 보행 한도도 화성 우주인 안전 임계값으로 검증된 값이 아니다.</li>
       <li>로버 사진·로드뷰: 경로 정지 지점(sol)의 Navcam 원본 사진을 붙인 "인근 로버 관측"이다. 같은 sol·다음 sol 사진이 같은 좌표에 붙을 수 있고, 250 m 안의 사진도 그 칸의 정밀 지상 관측은 아니다.</li>
-      <li>대사 모델(2026-11-14부터 기본): NASA IST-1·IST-2 감중 우주복 보행 실측 회귀(팀 검증본 walkback_verification, CHANGELOG 2~20절). 평지 0.92 m/s 444 W, 오르막은 평지와 같은 노력이 되는 속도, 내리막은 Looney 2019 비용 비율을 우주복 경사 민감도로 줄이고 Tobler 감속, 하한은 서 있는 대사량 222 W. 16방향 격자(나이트 이동의 중간 칸 검사)와 간선 경사 상한을 쓴다. 예비분은 NASA 설계 평균 352 W × 30분(산소 45 g). Gale 산소 150 g 귀환 면적 9.72 km²(팀 검증본과 일치). "비교: 이전 대사 모델"을 켜면 Pandolf × 중력비(301 W, 16방향) 19.95 km²로 다시 계산한다. IST는 0.12~0.32 g 지상 감중 실험이라 화성 0.378 g·90 kg 우주복으로 검증된 값은 아니다. 속도·VO₂는 경사 0.01% 간격 표로 미리 계산해 보간한다.</li>
+      <li>모델 검증: 같은 Gale 지형·산소 150 g에서 IST 모델 귀환 면적 9.72 km²는 독립 구현(Python, 16방향)과 일치한다. 이전 모델(Pandolf × 중력비)로는 19.95 km²로, 대사 모델 선택만으로 면적이 약 2배 달라진다. 속도·VO₂는 경사 0.01% 간격 표로 미리 계산해 보간한다.</li>
       <li>잔량 표시: 산소는 EMU 1차 탱크 수준 540 g(가정)을, 냉각수는 만충 3.6 kg을 100%로 둔 비율과, 예비분을 빼고 평지 보행으로 버티는 시간. 통신 신호 단계는 지형 가시선과 거리로 나눈 것(강함 ≤2 km, 양호 ≤5 km, 약함 그 이상·중계기 경유, "50 m 안 연결" = 음영이지만 50 m 안에 가시선)으로, 송신 출력·주파수·안테나 방향을 넣은 링크 예산이 아니다.</li>
       <li>과학 EVA 실시간 시뮬레이션: 계획 경로를 따라 1분 단위로 걷고 목표마다 작업(작업 대사량 = 평지 보행)하며, 심박 시나리오로 실제 대사량을 바꾼다. 매분 이동·작업을 1분 더 했을 때 왕복 여유(+20%)를 지킬 수 있는지 보고, 못 지키면 남은 목표를 건너뛰고 귀환 트리로 돌아선다. 계획 단계는 각 칸 귀환 냉각수 여유를 따로 검사하지 않으므로 재생 중 경보가 계획보다 조금 일찍 울릴 수 있다.</li>
+    </ul>
+  </details>
+  <details class="notes" id="notes-en" hidden>
+    <summary>Methods and limitations</summary>
+    <ul>
+      <li>Data: HiRISE 1 m DTMs and orthoimages (NASA PDS) for Gale (DTEEC_018854_1755_018920_1755_U01), Jezero (DTEEC_045994_1985_046060_1985_U01) and Aram Chaos (DTEEC_054753_1825_055452_1825_A01), resampled to 10 m cells; MSL and Mars 2020 traverses and Navcam raw images; JPL Mars Trek THEMIS night IR (reference layer only); Curiosity RAD dose rates.</li>
+      <li>Walking metabolism: regression on NASA IST-1/IST-2 reduced-gravity suited walking data (NASA/TP-2010-216115, 216125). Level walking at 0.92 m/s (Apollo 15 emergency walk-back speed) costs 444 W; uphill speed keeps the same effort as level walking (Waligora &amp; Horrigan 1975); downhill uses the Looney et al. 2019 grade cost ratio scaled to suit grade sensitivity, slowed by Tobler's hiking function; floor = 222 W standing with load. Converted to O2 with 20.1 kJ/L. IST was run at 0.12–0.32 g on Earth, so it is not a direct validation at Mars 0.378 g with a 90 kg suit.</li>
+      <li>Reserve: 30 min at the NASA PLSS design average of 1200 BTU/h (352 W) = 45 g O2. Gauges: O2 as % of a 540 g tank (EMU primary-tank level, assumed) and coolant as % of 3.6 kg, plus the time left walking on level ground after the reserve.</li>
+      <li>Return routes: reverse Dijkstra on a 16-direction grid (knight moves require both crossed cells to be passable; 20° edge-slope cap), minimising O2; dose and coolant are evaluated along the same route. Same Gale area at 150 g O2 as an independent Python implementation (9.72 km²). The previous model (whole Pandolf equation × gravity ratio, 301 W) is available as a comparison switch: 19.95 km², i.e. the model choice alone changes the area about twofold.</li>
+      <li>Multi-objective routes (when an SPE is on): a second tree with edge cost k·ΔO₂/B<sub>O₂</sub> + ΔH₂O/B<sub>H₂O</sub> + multiplier·ΔDose/B<sub>Dose</sub> (B = budget left after the reserve). A cell is returnable if either route fits every budget. Terrain shielding (up to 50%) is a proxy from local relief, not a measured shield, so it is not used to certify shelters.</li>
+      <li>Coolant: metabolic plus environment/PLSS heat rejected by water evaporation (2.477 MJ/kg), full 3.6 kg (Nabity et al. 2007); after the water runs out, the body-heat emergency limit of 2.0 BTU/lb (≈141 g of water) applies.</li>
+      <li>Radiation: Curiosity RAD background 0.655 mSv/day (Gale), observed SPE ×2.9, 1.0 mSv per return (scenario budget). Not a Jezero-specific forecast.</li>
+      <li>Communications: line of sight over terrain and Mars curvature with 3 m base, 2 m suit and 3 m relay antennas. Signal bars (strong ≤2 km, good ≤5 km, weak beyond or via relay, "link within 50 m") are geometric steps, not a link budget with power, frequency or antenna pointing.</li>
+      <li>Terrain risk: share of 1 m pixels with ≥0.5 m 3×3 relief or ≥20° slope per cell. A micro-relief proxy, not a step detector or a fall probability; the 20° walking limit is not a validated astronaut safety threshold.</li>
+      <li>Heart-rate simulation: per-minute heart rate is converted with the Hoffmann 2021 regression (Shuttle/ISS EVA data); k = heart-rate metabolic rate ÷ model over the last 10 minutes. Every minute the crew asks "would one more minute still let me get home with a +20% round-trip margin?" and turns back if not. Heart rates in the scenarios are synthetic.</li>
+      <li>Tank-pressure simulation: O2 left from m = PVM/(ZRT) with a tank sized to hold 540 g at 6.2 MPa and 21 °C, tank cooling and sensor noise; k from the pressure-drop slope minus known leaks.</li>
+      <li>Science EVA: targets are rover dwell and sampling sites (NASA Mars 2020 sample list for Jezero). The planner enumerates visit orders with O2 pruning (up to 400 candidates) and checks the return margin at every cell; the live simulation walks the plan minute by minute, works at each target (work metabolic rate = level walking) and skips the remaining targets when the turn-back alarm fires.</li>
+      <li>Rescue: the immobilised crew member's needs = waiting (standing metabolic rate) + return (assisted walking or carried) + reserve; the shortfall is what the rescuer must carry. Transfer losses are not modelled.</li>
+      <li>Telemetry: heart rate and tank pressure are designed to arrive as per-minute telemetry; in this demo they come from synthetic scenarios or CSV input. k and environment heat are scenario inputs.</li>
+      <li>Computation: all routes, the multi-objective tree and line of sight run in an inline Web Worker inside the single HTML file (main-thread fallback). Speed and VO₂ are tabulated every 0.01% of grade and interpolated.</li>
     </ul>
   </details>
 </div>
@@ -631,7 +651,7 @@
     GOAL = meta.goal[1] * W + meta.goal[0];           // 예시 목적지
     RELAY = meta.relay[1] * W + meta.relay[0];
     STEP_M = OFF.map(([dx, dy]) => Math.hypot(dx, dy) * CELL);
-    // 나이트 이동(16방향)이 걸쳐 지나가는 두 칸 (팀 검증본 mars_walkback.mid_offsets와 같음)
+    // 나이트 이동(16방향)이 걸쳐 지나가는 두 칸: 둘 다 통행 가능해야 간선 허용
     MID = OFF.map(([dx, dy]) => (Math.abs(dy) === 2 ? [[0, Math.sign(dy)], [dx, Math.sign(dy)]]
       : Math.abs(dx) === 2 ? [[Math.sign(dx), 0], [Math.sign(dx), dy]] : []));
   }
@@ -673,6 +693,64 @@ const I18N = {
   "실시간 시뮬레이션": "Live simulation", "남은 산소 · 지금 귀환에 필요": "O2 left · needed to return now", "귀환 경보": "Turn-back alarm", "울리지 않음": "Not triggered",
   "두절": "No link", "50 m 안 연결": "Link within 50 m", "약함": "Weak", "양호": "Good", "강함": "Strong", "중계기 경유": "via relay",
   "이동 중": "Walking", "작업 중": "Working", "거점 도착": "Back at base", "귀환 실패": "Return failed", "돌아오는 중": "Returning",
+  "들를 과학 목표를 고르세요. 거점에서 출발해 들렀다 돌아오는, 산소가 가장 덜 드는 순서를 찾습니다. 경로의 모든 지점에서 \"지금 돌아서도 거점까지 갈 수 있는가\"(귀환 반경)를 확인하고, 다 못 들르면 들를 수 있는 가장 많은 조합을 고릅니다.": "Pick the science targets to visit. The planner finds the lowest-O2 order for a base → targets → base loop, checks at every point of the route \"could I still get home if I turned back now?\" (the walk-back radius), and if not all fit, picks the largest feasible set.",
+  "위의 산소·냉각수·k·열 설정은": "The O2, coolant, k and heat settings above are used for the",
+  "구조대원": "rescuer",
+  "의 값으로 씁니다. 구조대원은 \"현재 위치\"에서 찍은 곳에서, 찍지 않았으면 거점에서 출발합니다.": ". The rescuer starts from the spot set in \"Current position\" mode, or from base if none is set.",
+  "걷기는 구조대원과 같은 보행 대사량, 이송은 가만히 있는 대사량으로 귀환 시간 동안 소모": "Walking uses the same walking metabolic rate as the rescuer; carried uses the resting rate for the return time",
+  "대원이 거점에서 출발해 지도에서 찍은 목적지(★가 아닌 주황 깃발)까지 갔다가 돌아옵니다. 출발할 때 산소·냉각수는 위 슬라이더 값이고, k는 아래에서 고른 방법으로 매분 추정합니다.": "The crew walks from base to the destination clicked on the map (orange flag) and back. Starting O2 and coolant come from the sliders above; k is estimated every minute with the method chosen below.",
+  "심박을 대사량으로 바꿔 소모를 셉니다. 누설은 심박에 안 나타나므로 대원은 남은 산소를 실제보다 많게 봅니다.": "Heart rate is converted to metabolic rate to count consumption. Leaks do not show up in heart rate, so the crew overestimates the O2 left.",
+  "탱크 온도 보정 (P/T로 계산)": "Tank temperature correction (P/T)",
+  "끄면 충전 온도 21 °C로 고정해 계산합니다. 탱크가 식는 것을 산소 소모로 착각합니다": "Off = fixed at the 21 °C fill temperature; tank cooling is mistaken for O2 use",
+  "알려진 누설률을 빼고 k 계산": "Subtract the known leak rate when estimating k",
+  "끄면 누설이 대사량으로 섞여 k가 커집니다(보수적)": "Off = the leak is mixed into metabolic rate and k comes out higher (conservative)",
+  "분당 심박 (한 줄에 하나, 또는 \"분,bpm\")": "Heart rate per minute (one per line, or \"minute,bpm\")",
+  "CSV 불러오기": "Load CSV",
+  "적용": "Apply",
+  "입력이 경로보다 짧으면 마지막 값을 계속 씁니다.": "If the input is shorter than the route, the last value is repeated.",
+  "V = 0.75 − 0.01 × 오르막 경사(°), 최저 0.3 m/s. 달 보행 모델(Peña-Asensio 2024, NASA Kim 2025 인용). 끄면 0.92 m/s 고정": "V = 0.75 − 0.01 × uphill slope (°), min 0.3 m/s. Lunar walking model (Peña-Asensio 2024, cited by NASA Kim 2025). Off = fixed 0.92 m/s",
+  "로버가 오래 머물며 조사한 곳(Gale·Jezero), 열관성 높은 노출 암반 후보(Aram)": "Where the rover stayed to investigate (Gale, Jezero); high-thermal-inertia outcrop candidates (Aram)",
+  "지도를 누르면 250 m 안의 가장 가까운 로버 사진이 오른쪽에 뜹니다 (NASA 원본 사진)": "Clicking the map shows the nearest rover photo within 250 m on the right (original NASA images)",
+  "각 칸을 가장 가파른 방향으로 오를 때의 대사량. 파랑 낮음 → 노랑 높음, 흰색은 20° 넘는 금지 구역 (NASA Kim 2025 방식)": "Metabolic rate when climbing each cell along its steepest direction. Blue low → yellow high; white = over 20°, no-go (NASA Kim 2025 style)",
+  "🥽 헬멧 바이저 HUD": "🥽 Helmet visor HUD",
+  "속도": "Speed",
+  "그중 통신 음영": "of which comm shadow",
+  "탱크가 비고 체온 비상한계로 겨우": "Tanks empty, only on the body-heat emergency limit",
+  "경로 계산 중…": "Computing routes…",
+  "귀환에 필요한 산소 / 쓸 수 있는 산소": "O2 needed to return / usable O2",
+  "귀환에 필요한 냉각수 / 쓸 수 있는 냉각수": "Coolant needed to return / usable coolant",
+  "심박 (측정 · 모델 기대)": "Heart rate (measured · model expected)",
+  "k (최근 10분 추정 · 실제)": "k (last-10-min estimate · true)",
+  "남은 산소 (대원이 보는 값 · 실제)": "O2 left (as the crew sees it · true)",
+  "목적지까지 경로": "Route to destination",
+  "고른 목표 중 어느 곳도 지금 남은 소모품으로는 다녀올 수 없습니다. 산소를 늘리거나 가까운 목표를 고르세요.": "None of the selected targets can be visited with the consumables left. Add O2 or pick closer targets.",
+  "계획 불가": "No feasible plan",
+  "왼쪽에서 들를": "Pick the",
+  "를 고르세요. 마름모 번호가 들르는 순서이고, 빨간 고리는 귀환 여유가 가장 빠듯한 지점입니다.": "to visit on the left. Diamond numbers give the visiting order; the red ring marks the tightest return margin.",
+  "지도를 눌러": "Click the map to set the",
+  "목적지": "destination",
+  "를 찍으세요. 대원이 거점에서 출발해 다녀오는 동안 산소를 빼고(심박 또는 탱크 압력으로 추정), 매 순간의 귀환 가능 영역을 그립니다. 아래 ▶로 재생합니다.": ". The crew walks out and back while O2 is drawn down (estimated from heart rate or tank pressure), and the walk-back zone is redrawn every moment. Press ▶ below to play.",
+  "움직일 수 없는 대원의 위치": "position of the immobilized crew member",
+  "를 찍으세요. 구조대원이 어디서 출발하면 제때 갈 수 있는지 그려집니다. 구조대원 출발점은 \"현재 위치\" 모드에서 찍습니다.": ". The map shows where a rescuer can start from and still reach them in time. Set the rescuer's start in \"Current position\" mode.",
+  "지도를 눌러 움직일 수 없는 대원의 위치를 찍으세요": "Click the map to set the position of the immobilized crew member",
+  "대원의 현재 위치": "crew's current position",
+  "를 찍으세요. 거기서 더 갔다가 거점으로 돌아올 수 있는 범위가 그려집니다.": ". The map shows how much farther they can go and still get back to base.",
+  "지도를 눌러 현재 위치를 찍으세요": "Click the map to set the current position",
+  "거점(★)": "base (★)",
+  "을 옮기세요. 귀환 경로와 통신 가시권이 새 거점 기준으로 다시 계산됩니다. 점선 원은 원래 거점입니다.": ". Return routes and comm coverage are recomputed for the new base; the dashed circle is the original base.",
+  "고도 (원래 거점 대비)": "Elevation (vs original base)",
+  "중계기와 가시선": "Line of sight to relay",
+  "닿음": "Yes",
+  "안 닿음 (중계 불가)": "No (relay unusable)",
+  ": 지도의 주황 카메라 아이콘을 누르면 그 지점 인근에서 로버가 찍은 사진이 지도 아래쪽 창에 열립니다. 다시 누르면 끕니다.": ": click an orange camera icon on the map to open photos the rover took near that spot in the drawer at the bottom of the map. Click the button again to turn it off.",
+  "이 지형에는 모래언덕 후보를 넣지 않았습니다 (위성 사진 밝기로 뽑으면 급사면 그늘이 잡혀서).": "No dune candidates for this site (brightness-based detection picks up scarp shadows here).",
+  "초록 점선(실제 k)은 시나리오가 정한 값이고, 파란 선(k 추정)은 심박만 보고 최근 10분으로 계산한 값입니다. 두 산소 선이 만나는 때가 돌아서야 하는 때입니다. 심박은 시나리오 대사량을 Hoffmann 2021 회귀식(Shuttle·ISS EVA 자료)으로 거꾸로 바꾼 합성값입니다. 우주복 보행 대사량(평지 444 W)이 커서 200 bpm 안팎이 나오며, 이 회귀식을 화성 보행에 그대로 쓸 수 있는지는 검증되지 않았습니다.": "Green dashed (true k) is set by the scenario; blue (k estimate) is computed from heart rate alone over the last 10 minutes. Turn back when the two O2 lines meet. Heart rate is synthetic: the scenario metabolic rate converted back with the Hoffmann 2021 regression (Shuttle/ISS EVA data). Suited walking (444 W level) gives around 200 bpm, and whether this regression holds for walking on Mars is not validated.",
+  "초록 점선(실제 k)은 시나리오가 정한 값, 파란 선(k 추정)은 압력 감소 기울기로 구한 값입니다. 하늘색(측정 산소)과 빨강(지형 모델 귀환 필요)이 만나면 돌아서야 합니다. 주황 점선은 '지금 소모율 × 귀환 시간'으로 단순 외삽한 값으로, 귀환길이 내리막이면 너무 많이, 오르막이면 너무 적게 잡습니다.": "Green dashed (true k) is set by the scenario; blue (k estimate) comes from the pressure-drop slope. Turn back when cyan (measured O2) meets red (terrain-model return need). Orange dashed is the naive 'current rate × return time' extrapolation, which overestimates downhill returns and underestimates uphill ones.",
+  "냉각수 바닥: 이제부터 체온이 오름": "Coolant empty: body temperature now rising",
+  "목적지 도착 → 귀환 시작": "Destination reached → heading back",
+  "Curiosity 착륙지 (Bradbury Landing)": "Curiosity landing site (Bradbury Landing)",
+  "Perseverance 착륙지 (Octavia E. Butler Landing)": "Perseverance landing site (Octavia E. Butler Landing)",
+  "가는 중": "Walking out",
   "상황 설정": "Situation", "지금 상황": "Status", "지도 표시": "Map layers",
   "기준": "Baseline", "관측 SPE ×2.9": "Observed SPE ×2.9", "대형 SPE ×30 (스트레스 테스트)": "Large SPE ×30 (stress test)", "지친 대원 k 1.2": "Tired crew k 1.2",
   "냉각수 누수 0.6 kg": "Coolant leak 0.6 kg", "누수 + 더운 오후": "Leak + hot afternoon", "안전 우선 운용": "Safety-first ops",
@@ -742,26 +820,62 @@ const I18N = {
   "산소·냉각수는 예비분을 빼고 평지를 걸을 때 남은 시간, 선량은 거점 선량률로 귀환 예산을 다 쓰기까지의 시간, 통신은 귀환 가능 영역 중 가시선이 안 닿는 비율. 초록 여유 · 노랑 주의 · 빨강 위험 (산소·냉각수 60분/20분, 선량 8시간/2시간, 통신 15%/40%, 기준치는 시뮬레이션 파라미터)":
     "O2/coolant: time left walking on level ground after the reserve. Dose: time until the return budget is used at the base dose rate. Comm: share of the returnable area without line of sight. Green OK · yellow caution · red danger (O2/coolant 60/20 min, dose 8/2 h, comm 15%/40%; thresholds are simulation parameters)", "과학 목표": "Science targets", "로드뷰 모드": "Road-view mode",
 };
+// 문장 속 장소·목표 이름 같은 조각을 다시 번역
+function I18N_SUB(x) {
+  const t = String(x).trim();
+  if (I18N[t] !== undefined) return I18N[t];
+  for (const [re, rp] of I18N_RE) if (re.test(t)) return t.replace(re, rp);
+  return t;
+}
 const I18N_RE = [
+  [/^산소 ([\d,−-]+) g \(지도의 빨간 고리\)$/, "O2 $1 g (red ring on the map)"], [/^([\d.,]+) km \((\d+)%\), 가장 긴 두절 (\d+)분$/, "$1 km ($2%), longest dropout $3 min"],
+  [/^(\d+)분 \(작업 대사량 = 평지 보행 기준치\)$/, "$1 min (work metabolic rate = level-walking baseline)"], [/^귀환 필요량 \+(\d+)% 를 늘 남기는 계획$/, "Always keeps the return need +$1% in hand"],
+  [/^도착 (\d+)시간 (\d+)분 · 그때까지 산소 ([\d,]+) g$/, "arrive at $1 h $2 min · O2 used by then $3 g"],
+  [/^(Curiosity|Perseverance)가 sol (\S+) 동안 머물며 조사한 곳(?:, 드릴 시료 채취 sol (.*))?$/, (m, r, a, b) => `${r} stayed and investigated here during sol ${a}${b ? `; drill samples on sol ${b}` : ""}`],
+  [/^Perseverance가 sol (\S+) 동안 머문 곳\. 이 기간 밀봉한 시료: (.*) · (.*)$/, "Perseverance stayed here during sol $1. Samples sealed then: $2 · $3"],
+  [/^가만히 있을 때 시간당 산소 ([\d,]+) g, 냉각수 ([\d,]+) g 소모$/, "At rest: $1 g O2 and $2 g coolant per hour"],
+  [/^([\d.,]+) km · (\d+)시간 (\d+)분$/, "$1 km · $2 h $3 min"], [/^([\d.,]+) km ≈ (\d+)분$/, "$1 km ≈ $2 min"], [/^평지 보행 약 (\d+)분$/, "about $1 min of level walking"],
+  [/^(\d+)분\/초$/, "$1 min/s"], [/^이 근처에서 (\S+)가 본 풍경$/, "What $1 saw near here"],
+  [/^· 고른 지점에서 ([\d,]+) m · sol (\d+) \((.*)\) · (\S+) \((왼쪽|오른쪽)\) · (.*)$/, (m, a, b, c, d, e, f) => `· ${a} m from the selected point · sol ${b} (${c}) · ${d} (${e === "왼쪽" ? "left" : "right"}) · ${f}`],
+  [/^(\d+)분: 남은 산소 ([\d,]+) g · 냉각수 ([\d,]+) g · 심박으로 본 k ([\d.]+)$/, "min $1: O2 left $2 g · coolant $3 g · k from heart rate $4"],
+  [/^평지 보행: ([\d.]+) m\/s, ([\d,]+) W, 시간당 산소 ([\d,]+) g · 1 km에 ([\d.]+) g(?: \(기본 모델\)| \(보정: (.*)\)) · 파라미터: 문헌값$/, (m, a, b, c, d, e) => `Level walking: ${a} m/s, ${b} W, ${c} g O2/h · ${d} g per km${e ? ` (corrections: ${e})` : " (default model)"} · parameters: literature`],
+  [/^모래언덕 후보 ([\d.]+) km²\(위성 사진 밝기로 추정\)에 적용\. (.*)$/, "Applied to $1 km² of dune candidates (estimated from image brightness)."],
+  [/^귀환 가능 ([\d.,]+) km²$/, "Walk-back area $1 km²"], [/^([\d.,]+) km² \(원래 거점 ([\d.,]+) km²\)$/, "$1 km² (original base $2 km²)"],
+  [/^(.*)까지 직선$/, (m, a) => `Straight-line to ${I18N_SUB(a)}`], [/^(.*) \(원래 거점\)$/, (m, a) => `${I18N_SUB(a)} (original base)`],
+  [/^원래 거점에서 ([\d.,]+) km 옮긴 거점$/, "Base moved $1 km from the original"],
+  [/^거점에서 ([\d.,]+) km, 거점과 가시선이 닿는 곳 중 귀환 영역을 가장 많이 덮는 자리 \(자동 선택\)$/, "$1 km from base, the spot in line of sight of base that covers the most walk-back area (auto-selected)"],
+  [/^거점 출발 → 목적지 ([\d.,]+) km \(산소 ([\d,]+) g, 냉각수 ([\d,]+) g\)(.*)$/, "Leave base → destination $1 km (O2 $2 g, coolant $3 g)$4"],
+  [/^(심박|압력)으로 본 k = ([\d.]+): 모델보다 산소를 (\d+)% (더|덜) 쓰는 중$/, (m, a, k, p, d) => `k from ${a === "심박" ? "heart rate" : "pressure"} = ${k}: using ${p}% ${d === "더" ? "more" : "less"} O2 than the model`],
+  [/^귀환 경보 → 돌아섬\. 1분 더 가면 (?:왕복 여유\(\+(\d+)%\)를 지킬 수 없음|귀환 불가) \(남은 산소 (?:측정 )?([\d,]+) g, 지금 귀환에 ([\d,]+) g \+ 예비 ([\d,]+) g\)$/, (m, pm, a, b, c) => `Turn-back alarm → turned around. One more minute would ${pm ? `break the +${pm}% round-trip margin` : "make return impossible"} (O2 left ${a} g, return needs ${b} g + ${c} g reserve)`],
+  [/^거점 도착: 산소 ([\d,]+) g, 냉각수 ([\d,]+) g 남음( \(예비분까지 씀\))?$/, (m, a, b, c) => `Back at base: ${a} g O2, ${b} g coolant left${c ? " (reserve used)" : ""}`],
+  [/^과학 EVA 출발: 목표 (\d+)곳\((.*)\), 작업 (\d+)분씩 \(산소 ([\d,]+) g, 냉각수 ([\d,]+) g\)$/, (m, n, l, w, a, b) => `Science EVA start: ${n} targets (${l.split(" → ").map(I18N_SUB).join(" → ")}), ${w} min work each (O2 ${a} g, coolant ${b} g)`],
+  [/^(.*) 도착 → 작업 (\d+)분$/, (m, a, b) => `${I18N_SUB(a)} reached → ${b} min work`],
+  [/^(.*) 작업 끝 → 다음 목표 (.*)$/, (m, a, b) => `${I18N_SUB(a)} done → next target ${I18N_SUB(b)}`],
+  [/^(.*) 작업 끝 → 마지막 목표, 귀환 시작$/, (m, a) => `${I18N_SUB(a)} done → last target, heading back`],
+  [/^귀환 경보 → (.*) 작업을 줄이고 돌아섬(?: \(못 들른 목표: (.*)\))?$/, (m, a, b) => `Turn-back alarm → cut work at ${I18N_SUB(a)} short and turned around${b ? ` (skipped: ${b.split(", ").map(I18N_SUB).join(", ")})` : ""}`],
+  [/^못 들른 목표: (.*)$/, (m, a) => `Skipped targets: ${a.split(", ").map(I18N_SUB).join(", ")}`],
+  [/^여기부터는 지금 k\(([\d.]+)\)로 귀환 불가: 필요 산소 ([\d,]+) g(?: \(\+왕복 여유 (\d+)% = ([\d,]+) g\))? > 쓸 수 있는 ([\d,]+) g$/, (m, k, a, p, b, c) => `From here, return is impossible at current k (${k}): needs ${a} g${p ? ` (+${p}% margin = ${b} g)` : ""} > ${c} g usable`],
+  [/^산소 소진: 거점까지 ([\d.,]+) km 남음$/, "O2 exhausted: $1 km short of base"],
+  [/^(\d+)분 · (가는 중|이동 중|작업 중|돌아오는 중|거점 도착|귀환 실패) · (.*)$/, (m, a, b, c) => `min ${a} · ${({ "가는 중": "walking out", "이동 중": "walking", "작업 중": "working", "돌아오는 중": "returning", "거점 도착": "back at base", "귀환 실패": "return failed" })[b]} · ${I18N_SUB(c)}`],
   [/^(\d+)시간 (\d+)분 남음$/, "$1 h $2 min left"], [/^(\d+)분 남음$/, "$1 min left"],
   [/^거점까지 ([\d.,]+) km · 귀환 영역 음영 ([\d.,]+)%$/, "$1 km to base · $2% of zone in comm shadow"], [/^중계기 경유 · 귀환 영역 음영 ([\d.,]+)%$/, "via relay · $1% of zone in comm shadow"],
   [/^예비분 ([\d.,]+) g\((설계 평균 352 W|평지 보행) 30분\)을 빼고 ([\d.,]+) g으로 다녀야 함 · 탱크 ([\d.,]+) g 기준 ([\d.,]+)%$/, (m, a, b, c, d, e) => `After the ${a} g reserve (30 min at ${b === "평지 보행" ? "level walking" : "the 352 W design average"}): ${c} g usable · ${e}% of a ${d} g tank`],
   [/^(\d+)분 · (이동 중|작업 중|돌아오는 중|거점 도착|귀환 실패)(?: · (.*))?$/, (m, a, b, c) => `min ${a} · ${({ "이동 중": "walking", "작업 중": "working", "돌아오는 중": "returning", "거점 도착": "back at base", "귀환 실패": "return failed" })[b]}${c ? " · " + c : ""}`],
   [/^([\d.,]+) g \(([\d.,]+)%\) · ([\d.,–]+) g$/, "$1 g ($2%) · $3 g"], [/^(\d+)분에 돌아섬$/, "turned back at min $1"],
-  [/^목표 (\d+)곳 중 (\d+)곳 · ([\d.,]+) km · (.*)$/, "$2 of $1 targets · $3 km · $4"],
+  [/^목표 (\d+)곳 중 (\d+)곳 · ([\d.,]+) km · (.*)$/, (m, a, b, c, d) => `${b} of ${a} targets · ${c} km · ${I18N_SUB(d)}`],
   [/^km² · 지형의 ([\d.,]+)%$/, "km² · $1% of mapped terrain"],
-  [/^기준 상황\(산소 150 g, 만충, k 1\.0\) ([\d.,]+) km² 대비 ([+-]?[\d.,]+)% · 산소만 보면 ([\d.,]+) km²(?: · 선량 회피 경로로 추가 확보 ([\d.,]+) km²)?$/,
-    (m, a, b, c, d) => `vs baseline (O2 150 g, full coolant, k 1.0) ${a} km²: ${b}% · O2 alone ${c} km²${d ? ` · dose-avoiding routes add ${d} km²` : ""}`],
+  [/^기준 상황\(산소 (\d+) g, 만충, k 1\.0\) ([\d.,]+) km² 대비 ([+-]?[\d.,]+)% · 산소만 보면 ([\d.,]+) km²(?: · 선량 회피 경로로 추가 확보 ([\d.,]+) km²)?$/,
+    (m, g, a, b, c, d) => `vs baseline (O2 ${g} g, full coolant, k 1.0) ${a} km²: ${b}% · O2 alone ${c} km²${d ? ` · dose-avoiding routes add ${d} km²` : ""}`],
   [/^산소로는 되는데 (.*) 때문에 ([\d.,]+) km²를 못 감$/, (m, a, b) => `O2 allows it, but ${({ "선량": "dose", "냉각수": "coolant", "넘어짐 금지": "fall-risk ban" })[a] || a} rules out ${b} km²`],
   [/^산소 ([+-]?[\d.,]+) g · 선량 ([+-]?[\d.,]+) µSv$/, "O2 $1 g · dose $2 µSv"],
   [/^×([\d.]+) \(시나리오\)$/, "×$1 (scenario)"], [/^×([\d.]+) \(관측\)$/, "×$1 (observed)"],
-  [/^거점에서 직선 ([\d.,]+) km( · (.*))?$/, (m, a, b, c) => `${a} km from base${c ? " · " + c : ""}`],
+  [/^거점에서 직선 ([\d.,]+) km( · (.*))?$/, (m, a, b, c) => `${a} km from base${c ? " · " + I18N_SUB(c) : ""}`],
   [/^(\d+)시간 (\d+)분$/, "$1 h $2 min"], [/^(\d+)분$/, "$1 min"], [/^(\d+)분 \/ (\d+)분$/, "$1 / $2 min"],
   [/^평지 보행 · 시간당 ([\d,]+) g$/, "level walking · $1 g/h"], [/^시간당 ([\d,]+) g(.*)$/, "$1 g/h$2"],
   [/^예산 ([\d.]+) mSv까지 · (.*)$/, "to $1 mSv budget · $2"], [/^귀환 영역 중 ([\d.,]+) km²(.*)$/, "$1 km² of returnable area$2"],
   [/^(\d+)곳만 가능$/, "Only $1 feasible"], [/^목표 (\d+)곳 중 (\d+)곳 · (.*)$/, "$2 of $1 targets · $3"],
-  [/^구조 예시: (.*)$/, "Rescue example: $1"], [/^경사 20° 넘는 칸$/, "Cells over 20°"], [/^넘어짐 위험 높음$/, "High fall risk"],
-  [/^기복$/, "Relief"], [/^산소 150 g 귀환 면적$/, "Walk-back area at 150 g O2"], [/^거점 안테나 가시권$/, "Base antenna coverage"],
+  [/^구조 예시: (.*)$/, (m, a) => `Rescue example: ${I18N_SUB(a)}`], [/^경사 20° 넘는 칸$/, "Cells over 20°"], [/^넘어짐 위험 높음$/, "High fall risk"],
+  [/^기복$/, "Relief"], [/^산소 (\d+) g 귀환 면적$/, "Walk-back area at $1 g O2"], [/^거점 안테나 가시권$/, "Base antenna coverage"],
   [/^(.*) \(하산 포함\)$/, "$1 (incl. descent)"],
   [/^배경 사진: (\S+) Navcam sol (\d+) \(이 위치에서 ([\d.,]+) km 떨어진 곳, NASA\/JPL-Caltech\)$/, "Background: $1 Navcam sol $2 ($3 km from this spot, NASA/JPL-Caltech)"],
   [/^sol (\d+) 지점$/, "sol $1 site"], [/^절벽을 돌아가야 하는 곳$/, "Spot behind the scarps"], [/^블록을 돌아가야 하는 곳$/, "Spot behind the blocks"],
@@ -801,7 +915,8 @@ const I18N_RE = [
   const multFromSlider = (s) => SPE_MIN * Math.pow(SPE_MAX / SPE_MIN, s / 100);
   const sliderFromMult = (m) => Math.round(100 * Math.log(m / SPE_MIN) / Math.log(SPE_MAX / SPE_MIN));
 
-  const state = { o2: 150, water: 3.6, k: 1, q: 0, spe: false, mult: C.spe_observed, nofall: false, relay: false,
+  const BASE_O2 = 250;                     // 기본·기준 산소(g): 탱크 540 g의 약 46%. 귀환 가능 영역의 경계가 지도 안에 보이는 양
+  const state = { o2: BASE_O2, water: 3.6, k: 1, q: 0, spe: false, mult: C.spe_observed, nofall: false, relay: false,
                   showfall: false, showcomm: true, showtrav: true,
                   mode: "inspect", sel: GOAL, here: -1, victim: -1, vo2: 150, vwater: 1, vcarry: "walk", base: BASE0,
                   simTarget: GOAL, simScenario: "surge", simNoise: 8, simAuto: true, simCustom: "",
@@ -832,7 +947,7 @@ const I18N_RE = [
     return PRESETS.filter((p) => MAIN_PRESETS.includes(p.id)).map(b).join("")
       + `<details class="adv more"><summary>다른 상황</summary><div class="presets">${PRESETS.filter((p) => !MAIN_PRESETS.includes(p.id) && !HIDDEN_PRESETS.includes(p.id)).map(b).join("")}</div></details>`;
   };
-  const DEFAULTS = { o2: 150, water: 3.6, k: 1, q: 0, spe: false, mult: C.spe_observed, nofall: false, relay: false, showfall: false,
+  const DEFAULTS = { o2: BASE_O2, water: 3.6, k: 1, q: 0, spe: false, mult: C.spe_observed, nofall: false, relay: false, showfall: false,
                      legacy: false, mSpeed: false, mEta: false, mDown: false, mSand: false };
 
   // ---------- data ----------
@@ -949,7 +1064,7 @@ const I18N_RE = [
 
   const MF = () => ({ legacy: !!state.legacy, mSpeed: state.mSpeed, mEta: state.mEta, mDown: state.mDown, mSand: state.mSand });
   // ---------- 보행 대사 모델 (메인 스레드와 계산 워커가 같은 함수를 씀) ----------
-  // 기본: NASA IST-1·IST-2 감중 우주복 보행 실측 회귀(팀 검증본 walkback_verification/code/metabolic_model.py와 같은 식)
+  // 기본: NASA IST-1·IST-2 감중 우주복 보행 실측 회귀(NASA/TP-2010-216115·216125, Looney 2019, Tobler 1993)
   //   VO2 = L(v) + ΔG(G)·v/0.77 (오르막), L(v)·Looney 2019 내리막 비율(우주복 경사 민감도로 축소) (내리막)
   //   속도 = 평지 0.92 m/s, 오르막 "같은 노력", 내리막 min(같은 노력, Tobler 감속). 하한 = 서 있는 대사량
   // 비교용(legacy): Pandolf 식 전체 × 화성 중력비(평지 301 W) + 선택형 문헌 보정
@@ -1308,10 +1423,16 @@ const I18N_RE = [
       });
     }, 120);
   }
-  // 기준 면적(원래 거점, 산소 150 g, 기본 모델)을 지금 모델로 다시 셈: 지형 칩·"기준 대비 %"에 씀
+  // 기준 면적(원래 거점, 산소 BASE_O2, 기본 모델)을 지금 모델로 다시 셈: 지형 칩·"기준 대비 %"에 씀
+  let SEL_INIT = false;                   // 지형을 열 때 한 번: 첫 화면의 고른 지점을 예시 목적지 쪽 "돌아올 수 있는 가장 먼 곳"으로
   function baselineFrom(key, T) {
     if (key !== treeKey(BASE0, false, "00000")) return;
-    const lim = 150 - MAKE_MODEL({ C, SP, SAND, ETA_ADD, ETA, FLAGS, H }, {}).reserveO2;
+    const first = SEL_INIT; SEL_INIT = false;
+    if (first && state.sel === GOAL && state.mode === "inspect" && T.o2[GOAL] >= 0) {
+      const lim = (state.o2 - MAKE_MODEL({ C, SP, SAND, ETA_ADD, ETA, FLAGS, H }, {}).reserveO2) / (1 + state.planMargin / 100);
+      if (T.o2[GOAL] > lim) { let c = GOAL; for (let n = 0; n < 20000 && T.next[c] >= 0 && T.o2[c] > lim; n++) c = T.next[c]; state.sel = c; }
+    }
+    const lim = BASE_O2 - MAKE_MODEL({ C, SP, SAND, ETA_ADD, ETA, FLAGS, H }, {}).reserveO2;
     let n = 0; for (let i = 0; i < N; i++) if (T.o2[i] >= 0 && T.o2[i] <= lim) n++;
     SITE().stats.baseline_km2 = n * KM2; siteTexts();
   }
@@ -1773,7 +1894,7 @@ const I18N_RE = [
       const pct = (s.safe / SITE().stats.baseline_km2 - 1) * 100;
       const B0 = SITE().stats.baseline_km2;
       $("d-area").textContent = state.base === BASE0
-        ? `기준 상황(산소 150 g, 만충, k 1.0) ${fmt(B0, 2)} km² 대비 ${pct >= 0 ? "+" : ""}${fmt(pct, 0)}% · 산소만 보면 ${fmt(s.o2, 2)} km²${s.mo ? ` · 선량 회피 경로로 추가 확보 ${fmt(s.alt, 2)} km²` : ""}`
+        ? `기준 상황(산소 ${BASE_O2} g, 만충, k 1.0) ${fmt(B0, 2)} km² 대비 ${pct >= 0 ? "+" : ""}${fmt(pct, 0)}% · 산소만 보면 ${fmt(s.o2, 2)} km²${s.mo ? ` · 선량 회피 경로로 추가 확보 ${fmt(s.alt, 2)} km²` : ""}`
         : `거점을 옮김 (원래 거점의 기준 상황은 ${fmt(B0, 2)} km²) · 산소만 보면 ${fmt(s.o2, 2)} km²`;
       $("t-area").classList.toggle("alert", state.base === BASE0 && pct < -25);
     } else if (s.mode === "here") {
@@ -2761,7 +2882,7 @@ const I18N_RE = [
       : "심박을 대사량으로 바꿔 소모를 셉니다. 누설은 심박에 안 나타나므로 대원은 남은 산소를 실제보다 많게 봅니다.";
     $("sim-note").textContent = press
       ? "초록 점선(실제 k)은 시나리오가 정한 값, 파란 선(k 추정)은 압력 감소 기울기로 구한 값입니다. 하늘색(측정 산소)과 빨강(지형 모델 귀환 필요)이 만나면 돌아서야 합니다. 주황 점선은 '지금 소모율 × 귀환 시간'으로 단순 외삽한 값으로, 귀환길이 내리막이면 너무 많이, 오르막이면 너무 적게 잡습니다."
-      : "초록 점선(실제 k)은 시나리오가 정한 값이고, 파란 선(k 추정)은 심박만 보고 최근 10분으로 계산한 값입니다. 두 산소 선이 만나는 때가 돌아서야 하는 때입니다. 시나리오 심박이 200 bpm을 넘는 봉우리는 오르막에서도 속도를 0.92 m/s로 고정한 Pandolf 식의 한계입니다.";
+      : "초록 점선(실제 k)은 시나리오가 정한 값이고, 파란 선(k 추정)은 심박만 보고 최근 10분으로 계산한 값입니다. 두 산소 선이 만나는 때가 돌아서야 하는 때입니다. 심박은 시나리오 대사량을 Hoffmann 2021 회귀식(Shuttle·ISS EVA 자료)으로 거꾸로 바꾼 합성값입니다. 우주복 보행 대사량(평지 444 W)이 커서 200 bpm 안팎이 나오며, 이 회귀식을 화성 보행에 그대로 쓸 수 있는지는 검증되지 않았습니다.";
     $("mode-hint").innerHTML = state.rvMode ? "<b>로드뷰 모드</b>: 지도의 주황 카메라 아이콘을 누르면 그 지점 인근에서 로버가 찍은 사진이 지도 아래쪽 창에 열립니다. 다시 누르면 끕니다." : MODE_HINT[state.mode];
     if (C.cal_status && C.cal_status !== "문헌값") {       // 해커톤 자료 보정값이 켜져 있으면 설명을 그 값으로
       $("m-speed-d").textContent = SP.c_m_s_per_deg != null ? `V = ${SP.v0_m_s} − ${SP.c_m_s_per_deg} × 오르막 경사(°), 최저 ${SP.v_min_m_s} m/s. ${SP.source || ""}` : `V = ${SP.v0_m_s} − ${SP.c_m_s_per_pct} × 오르막 경사(%), 최저 ${SP.v_min_m_s} m/s. ${SP.source || ""}`;
@@ -2800,7 +2921,7 @@ const I18N_RE = [
   $("lang-btn").addEventListener("click", () => {
     LANG = LANG === "ko" ? "en" : "ko"; state.hudLang = LANG;
     $("lang-btn").textContent = LANG === "ko" ? "EN" : "한국어";
-    siteTexts(); renderHud(); applyLang();
+    siteTexts(); renderHud(); applyLang(); notesLang();
   });
   $("hud-btn").addEventListener("click", () => {        // 켜면 팝업 창으로(막히면 지도 위 PIP), 다시 누르면 닫음
     state.hud = !state.hud;
@@ -2922,14 +3043,16 @@ const I18N_RE = [
 
   // ---------- boot ----------
   new ResizeObserver(() => requestAnimationFrame(() => { applyZoom(false); drawVec(); })).observe(wrap);
+  const enTerms = (x) => x.replace("평탄한 바닥 (자동으로 고른 가상 거점)", "flat floor (auto-selected virtual base)").replace("착륙지", "landing site")
+    .replace("Mars 2020 착륙 후보지 관측", "Mars 2020 landing-site survey").replace(/정사영상/g, "orthoimage").replace("주행 경로", "traverse");
   function siteTexts() {                  // 지형마다 바뀌는 문구
     const st = SITE().stats, gale = SITE_I === 0;
     $("site-title").textContent = SITE().name;
-    $("site-desc").textContent = LANG === "en" && SITE().description_en ? `${SITE().description_en} Base: ${SITE().base_name}. Source: ${SITE().source}`
+    $("site-desc").textContent = LANG === "en" && SITE().description_en ? `${SITE().description_en} Base: ${enTerms(SITE().base_name)}. Source: ${enTerms(SITE().source)}`
       : `${SITE().description} 거점: ${SITE().base_name}. 출처: ${SITE().source}`;
     $("site-stats").innerHTML = [
       ["경사 20° 넘는 칸", fmt(st.impassable_pct, 1) + "%"], ["넘어짐 위험 높음", fmt(st.fall_high_pct, 1) + "%"],
-      ["기복", fmt(st.relief_m, 0) + " m"], ["산소 150 g 귀환 면적", fmt(st.baseline_km2, 1) + " km²"],
+      ["기복", fmt(st.relief_m, 0) + " m"], [`산소 ${BASE_O2} g 귀환 면적`, fmt(st.baseline_km2, 1) + " km²"],
       ["거점 안테나 가시권", fmt(st.base_vis_km2, 1) + " km²"]].map(([k, v]) => `<span>${k} <b>${v}</b></span>`).join("");
     document.querySelectorAll("#sites-seg input").forEach((r) => { r.checked = Number(r.value) === SITE_I; });
     $("relay-t").firstChild.textContent = gale ? "Mt. Sharp 비탈에 중계기 설치" : "중계기 설치";
@@ -2961,6 +3084,7 @@ const I18N_RE = [
     H = null; TREES.clear(); LEGS.clear(); EVA = null; EVASIG = ""; FWD = null; REV = null; FWDB = null; VIS = null; VIS_BASE = -1; RELAY_OK = true;
     SIM = null; SIMSIG = ""; SIMTARGET = -1; LMR = null; LMR_KEY = "";
     await decode(site);
+    SEL_INIT = true;
     INFLIGHT.clear(); MO = null; MO_KEY = ""; MO_PEND = ""; ETGEN++;
     wkStart();
     TIR = null; TIR_LO = 0; TIR_HI = 255;
@@ -3040,7 +3164,7 @@ const I18N_RE = [
       nodes.forEach((n) => tip.appendChild(n)); sp.appendChild(tip); return sp;
     };
     document.querySelectorAll(".ctl").forEach((c) => {
-      const hs = [...c.querySelectorAll(":scope > .hint:not([id])")];
+      const hs = [...c.querySelectorAll(":scope > .hint:not([id]), :scope > #o2-hint, :scope > #water-hint, :scope > #v-hint")];
       const lab = c.querySelector(":scope > .row > label, :scope > label, :scope > span");
       if (hs.length && lab) lab.appendChild(mk(hs));
     });
@@ -3049,6 +3173,8 @@ const I18N_RE = [
     const gn = document.querySelector(".gnote"); if (gn) $("h-sum").appendChild(mk([gn]));
   }
   infoize();
+  const notesLang = () => { $("notes-ko").hidden = LANG !== "ko"; $("notes-en").hidden = LANG === "ko"; };
+  notesLang();
   $("lang-btn").textContent = LANG === "ko" ? "EN" : "한국어";
   // 자동 화면 점검용 손잡이 (헤드리스 테스트에서 상태를 읽고 지점을 고를 때만 씀)
   window.EVA_DEBUG = { state, update, setNow, get md() { return md(); }, get C() { return C; }, get TREES() { return TREES; }, get HUDWIN() { return HUDWIN; }, get SIM() { return SIM; }, get OFF() { return OFF; }, get MO() { return MO; }, get ALT() { return ALT; }, get N() { return N; }, get W() { return W; }, get R() { return R; }, get META() { return META; } };
