@@ -221,6 +221,7 @@ const I18N = {
   "가는 길 넘어짐": "Fall risk en route",
   "구조 대상 칸": "Casualty cell",
   "경사 20°를 넘는 칸으로 막혀 있음. 로버·장비 필요": "Blocked by slopes over 20°. Rover or equipment needed",
+  "실시간 계측": "Live telemetry", "심박 · 보정계수 k · 남은 산소 vs 귀환에 필요한 산소 · 생존 게이지": "Heart rate · correction k · usable O2 vs O2 needed to return · survival gauges", "▼ 실시간 그래프 · 게이지 (아래로 스크롤)": "▼ Live chart & gauges (scroll down)",
   "왕복 계획 여유": "Round-trip planning margin", "복귀 여유": "Return reserve", "고도 자료 밖: 평지 가정 추정": "Outside elevation data: level-ground estimate", "복귀 때 남길 산소·냉각수 ": "Keep at return (O2 & coolant) ", "복귀 때 남길 산소·냉각수": "Keep at return (O2 & coolant)", "두 사람이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소 (덜 남는 쪽)": "O2 left if both walked home from there now (the lower of the two)", "구조 대상이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 the stranded crew would have left walking home from there now",
   "과학 EVA 계획과 EVA 시뮬레이션의 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 산소·냉각수의 이만큼을 더 남깁니다. 지도 색(절대 한계)은 그대로입니다.":
     "Keeps this much extra over the O2/coolant needed to get home, so science plans and the simulation's turn-back alert don't hug the walk-back boundary. Map colours (absolute limit) are unchanged.",

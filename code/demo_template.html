@@ -449,6 +449,22 @@
   .tc-right .xbig > span:first-child { border-left: 0; padding-left: 0; }
   .tc-right .meters { margin: 0; }
   .tc-slot .verdict { font-size: 12px; }
+  /* 스크롤 배치: 첫 화면은 지도(가리지 않음), 재생 중 그래프·게이지는 지도 아래 구역 */
+  html:has(body.wide), body.wide { height: auto; overflow-x: hidden; overflow-y: auto; }
+  body.wide .app { position: relative; inset: auto; height: 100vh; overflow: hidden; }
+  body.wide .mapcol, body.wide header.top, body.wide .wbar, body.wide .leftcol, body.wide .rightcol, body.wide .modebar,
+  body.wide .legend, body.wide .tripcard, body.wide .zoomctl { position: absolute; }
+  .below { display: none; }
+  body.wide.has-live .below { display: block; background: #0b0e15; border-top: 1px solid var(--rule); padding: 22px 16px 40px; }
+  .below-in { max-width: 1200px; margin: 0 auto; }
+  .below-h { font-size: 15px; margin: 0 0 12px; display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+  .below-h small { color: var(--ink-soft); font-weight: 400; font-size: 12px; }
+  .below .tc-live { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr); gap: 16px; max-height: none; opacity: 1; overflow: visible; margin: 0; border: 0; padding: 0; }
+  .below .tc-gauges .glance { grid-template-columns: 1fr 1fr; }
+  .tc-more { display: block; width: 100%; margin-top: 10px; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--accent); background: rgba(226,121,77,.1);
+    border: 1px dashed var(--accent); border-radius: 8px; padding: 7px; cursor: pointer; }
+  .tc-more[hidden] { display: none; }
+  @media (max-width: 900px) { .below .tc-live { grid-template-columns: 1fr; } }
   body.wide .wbar .qbtns { display: flex; gap: 4px; }
   body.wide .wbar #modes { display: none; }
   body.wide .wbar .qbtns .wbtn[aria-pressed="true"] { background: var(--accent); color: #111; border-color: var(--accent); }
@@ -512,7 +528,7 @@
   <section class="tripcard float" id="tripcard" aria-label="탐사 계획">
     <div class="tc-head"><b id="tc-title">TRIP PLAN</b><span class="tc-where" id="tc-where"></span><span class="tc-slot" id="tc-verdict"></span></div>
     <div class="tc-body"><div class="tc-left" id="tc-left"><p class="tc-simnote" id="tc-simnote">심박 급증 시나리오: 60분부터 대사량 +25%, 산소 450 g으로 목적지 왕복. 매분 "1분 더 가도 돌아올 수 있나"를 따져 자동 회항 경보를 냅니다.</p></div><div class="tc-right" id="tc-right"></div></div>
-    <div class="tc-live" id="tc-live"><div class="tc-chart" id="tc-chart"></div><div class="tc-gauges" id="tc-gauges"></div></div>
+    <button type="button" class="tc-more" id="tc-more" hidden>▼ 실시간 그래프 · 게이지 (아래로 스크롤)</button>
   </section>
   <section class="sitebar float" aria-label="지형 선택">
     <div class="seg" id="sites-seg" role="radiogroup" aria-label="지형"></div>
@@ -880,6 +896,12 @@
     </ul>
   </details>
 </div>
+<section class="below" id="below" aria-label="실시간 계측">
+  <div class="below-in">
+    <h2 class="below-h"><span id="below-title">실시간 계측</span><small id="below-sub">심박 · 보정계수 k · 남은 산소 vs 귀환에 필요한 산소 · 생존 게이지</small></h2>
+    <div class="tc-live" id="tc-live"><div class="tc-chart" id="tc-chart"></div><div class="tc-gauges" id="tc-gauges"></div></div>
+  </div>
+</section>
 
 <script type="application/json" id="meta">__META__</script>
 <script type="application/octet-stream" id="blob">__DATA__</script>
@@ -929,14 +951,15 @@
     return e === undefined ? null : raw.replace(t, e);
   }
   function applyLang() {
-    const root = document.querySelector(".app");
-    if (!root) return;
+    for (const root of [document.querySelector(".app"), document.getElementById("below")]) {   // 지도 아래 계측 구역도
+    if (!root) continue;
     const wk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     for (let n; (n = wk.nextNode());) {
       const rec = TRN.get(n), v = n.nodeValue;
       if (rec && v === rec.en) { if (LANG === "ko") n.nodeValue = rec.ko; continue; }
       if (rec && v === rec.ko) { if (LANG === "en") n.nodeValue = rec.en; continue; }
       if (LANG === "en") { const e = trText(v); if (e) { TRN.set(n, { ko: v, en: e }); n.nodeValue = e; } }
+    }
     }
     document.documentElement.lang = LANG;
   }
@@ -3132,6 +3155,9 @@
     const lg = press
       ? [["#ff8a65", "압력"], ["#7fd0ff", "k 추정"], ["#a6e07a", "실제 k"], ["#3fc1cc", "측정 산소"], ["#9aa3b5", "실제 산소"], ["#ef6b5e", "지형 모델 귀환 필요"], ["#ffb74d", "단순 외삽"], ["#ffd23f", "경보"]]
       : [["#ff8a65", "측정 심박"], ["#9aa3b5", "모델 기대 심박"], ["#7fd0ff", "k 추정"], ["#a6e07a", "실제 k"], ["#3fc1cc", "쓸 수 있는 산소"], ["#ef6b5e", "귀환 필요 산소"], ["#ffd23f", "귀환 경보"]];
+    const LGEN = { "측정 심박": "measured HR", "모델 기대 심박": "model HR", "k 추정": "k estimate", "실제 k": "true k", "쓸 수 있는 산소": "usable O2", "귀환 필요 산소": "O2 needed to return",
+      "귀환 경보": "turn-back alarm", "압력": "pressure", "측정 산소": "measured O2", "실제 산소": "true O2", "지형 모델 귀환 필요": "terrain-model need", "단순 외삽": "naive extrapolation", "경보": "alarm" };
+    if (LANG === "en") lg.forEach((x) => { x[1] = LGEN[x[1]] || x[1]; });
     let lx = L, ly = compact ? 214 : 312;
     if (compact) return;                   // 카드 안: 범례 생략 (선 색은 제목에)
     for (const [c, t] of lg) {
@@ -3888,6 +3914,7 @@
     $("tc-verdict").append($("pt-verdict"));
     $("tc-chart").append($("sim-chart")); $("tc-gauges").append($("glance"));
     $("tripcard").insertBefore($("simbar"), $("tripcard").firstChild);   // 재생 막대는 계획 카드 맨 위
+    $("tc-more").addEventListener("click", () => $("below").scrollIntoView({ behavior: "smooth" }));
     // 핵심 시나리오 버튼: ① 탐사 계획 ② 심박 급증 시뮬(실시간) ③ 조난 구조 — 한 번에 바꾸고 바로 재생
     const whenReady = (fn, tries = 60) => { if (SIM && SIM.ok && SIM.frames.length > 1) fn(); else if (tries > 0) setTimeout(() => whenReady(fn, tries - 1), 150); };
     const autoplay = () => whenReady(() => { if (!playing) { setSimIdx(0); $("sim-play").click(); } });
@@ -3926,7 +3953,7 @@
       const q = state.mode === "sim" ? "surge" : state.mode;
       document.querySelectorAll("#qbtns [data-q]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.q === q)));
       const live = !!(SIM && SIM.ok && (playing || SIM.idx > 0 || state.mode === "sim") && ["explore", "rescue", "sim"].includes(state.mode));
-      if (live !== $("tripcard").classList.contains("live")) $("tripcard").classList.toggle("live", live);
+      if (live !== document.body.classList.contains("has-live")) { document.body.classList.toggle("has-live", live); $("tc-more").hidden = !live; lastSim = null; }
       if (live && SIM !== lastSim) { lastSim = SIM; requestAnimationFrame(drawSimChart); }
       if (live && playing) drawSimChart();
       if (LANG === "en") applyLang();
