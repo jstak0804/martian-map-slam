@@ -1,7 +1,7 @@
 # Methods — how the planner turns terrain into minutes of oxygen
 
 Mars EVA Walkback & Survival Planner · NASA Space Apps 2026
-Korean version: [METHODS.ko.md](METHODS.ko.md)
+Korean version: [METHODS.ko.md](METHODS.ko.md) · Terrain factor η in detail: [TERRAIN.md](TERRAIN.md)
 
 All formulas below are the ones the demo actually runs (`code/demo_template.html`). Numbers in
 *italics* are worked examples.
@@ -101,13 +101,20 @@ level-walking metabolism ($\dot m_{O_2}^{stay}$, $\dot m_w^{stay}$):
 
 $$T_{stay} = \min\!\left(\frac{0.8\,O_s - U}{\dot m^{stay}_{O_2}},\ \frac{0.8\,W_s - U_w}{\dot m^{stay}_w},\ \frac{1\,\mathrm{mSv} - \mathrm{Dose}_{travel}}{\dot D_{site}}\right)$$
 
-i.e. **the crew must reach base with at least 20 % of the starting O2 and water**. Several sites share
-$T_{stay}$ equally. Reported times: go = base → first site, return = last site → base, stay = $T_{stay}$.
+i.e. **the crew must reach base with at least the return reserve R (20 % by default, adjustable) of the
+starting O2 and water**; 0.8 above is $1-R$ and 0.2 is $R$. Map colours follow R: blue > R, yellow R/2–R, red 0–R/2.
+Sites left on auto share $T_{stay}$ equally ($T_{stay}/n$); if minutes are typed for some sites, the remaining time
+is split among the auto sites. Reported times: go = base → first site, return = last site → base, stay = $T_{stay}$.
+
+**Rescue playback supply:** at least the minimum (the stranded crew member's walk home + 30 min reserve), and the
+rescuer's surplus is split in half so **both arrive with the same amount**. During playback the map shows, in the same
+three colours, what the stranded crew member (after hand-over: the lower of the two) would have left walking home
+from each cell, so the zone grows again at the moment of resupply.
 
 *Example (Jezero, on foot, site A only): (0.8 × 680 − 191) g ÷ 114 g/h = 3.1 h → "can stay 3 h 06 min".*
 
 **Rover:** travel time = distance / 2.2 m/s (≈8 km/h), travel metabolism 147 W. Apollo walk-back rule: at
-every site j the crew must still be able to **walk** home if the rover fails, arriving with ≥ 20 %:
+every site j the crew must still be able to **walk** home if the rover fails, arriving with ≥ R:
 
 $$O_s - U_{\le j} - T_{stay}\tfrac{j}{n}\,\dot m^{stay}_{O_2} - k\,S_{site_j} \ \ge\ 0.2\,O_s \quad\text{(same for water)}$$
 

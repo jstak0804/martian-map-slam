@@ -15,20 +15,20 @@ and radiation margin they have left, and **the safest way back** from any point.
 
 - **Walk-back zone:** every 10 m cell is checked for O2, coolant, dose and comms on the real return route.
 - **Science EVA planner:** visits real rover sampling sites and **turns back automatically** before the margin runs out.
-- **Live telemetry simulation:** heart rate or tank pressure drives a minute-by-minute **turn-back alarm**.
+- **Playback:** exploration and rescue plans play minute by minute with a shrinking walk-back zone and a **turn-back alarm**.
 - **Rescue planning:** shows where a rescuer can reach a stranded crew member in time, and how much O2 to carry.
 - **Helmet HUD:** a popup visor view with O2 and coolant battery gauges, comm signal bars and alarms.
 
 ### Why it is credible
 
 - **Measured suit data:** walking cost comes from NASA IST-1/2 reduced-gravity suited walking tests (444 W on level ground).
-- **All formulas, with worked examples:** [docs/METHODS.md](docs/METHODS.md) · [한국어](docs/METHODS.ko.md).
+- **All formulas, with worked examples:** [docs/METHODS.md](docs/METHODS.md) · [한국어](docs/METHODS.ko.md); terrain factor η: [docs/TERRAIN.md](docs/TERRAIN.md) · [한국어](docs/TERRAIN.ko.md).
 - **Independently verified:** the model was re-derived in [`walkback_verification/`](walkback_verification/), and the demo matches it (**Gale, 150 g O2 → 9.72 km²**).
 - **Model choice matters:** the older Pandolf model gives **2× the area**, so the comparison switch is built into the demo.
 
 ### NASA data
 
-HiRISE 1 m DTMs and orthoimages · Curiosity and Perseverance traverses and Navcam images ·
+HiRISE 1 m DTMs and orthoimages · MRO CTX mosaics (surroundings) · Curiosity and Perseverance traverses and Navcam images ·
 Mars 2020 sample list · JPL Mars Trek THEMIS · Curiosity RAD.
 Sites: **Gale**, **Jezero delta**, **Aram Chaos**.
 
