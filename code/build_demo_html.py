@@ -102,6 +102,7 @@ def main():
     assert OFF16[:8] == meta["offsets"], "앞 8방향 순서가 같아야 미리 계산한 자료를 그대로 읽을 수 있음"
     meta["offsets"] = OFF16
     meta["site"] = gale_site(meta)
+    meta["world"] = json.load(open("global_map.json", encoding="utf-8"))   # 3D 화성 지역 고르기: MOLA 음영 기복 (NASA/JPL Mars Trek)
     meta["photos"] = photos("gale")
     meta["tir"] = tir("gale")
     meta["targets"] = targets("gale")

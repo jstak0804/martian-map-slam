@@ -234,7 +234,8 @@ const I18N = {
   "거점 옮기기": "Move base", "거점 옮기기: 누른 뒤 지도를 클릭하면 거점(집)이 그 자리로 옮겨지고, 귀환 경로·반경·통신이 새 거점 기준으로 다시 계산됩니다. 다시 누르면 탐사 계획으로 돌아갑니다.": "Move base: click this, then click the map to move the base (house); return routes, zones and comms are recomputed for the new base. Click again to go back to the exploration plan.",
   "설정: 상황·산소·모델 보정·지도 레이어": "Settings: scenario, O2, model corrections, map layers", "상태 접기/펼치기": "Collapse or expand status",
   "탐사 계획": "Exploration plan",
-  "왕복 계획 여유": "Round-trip planning margin", "복귀 여유": "Return reserve", "고도 자료 밖: 평지 가정 추정": "Outside elevation data: level-ground estimate", "복귀 때 남길 산소·냉각수 ": "Keep at return (O2 & coolant) ", "복귀 때 남길 산소·냉각수": "Keep at return (O2 & coolant)", "두 사람이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소 (덜 남는 쪽)": "O2 left if both walked home from there now (the lower of the two)", "구조 대상이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 the stranded crew would have left walking home from there now",
+  "계획 초기화": "Clear plan", "지역": "Region",
+  "왕복 계획 여유": "Round-trip planning margin", "복귀 여유": "Return reserve", "고도 자료 밖: 평지 가정 추정": "Outside elevation data: level-ground estimate", "자료 밖: 평지 가정 추정": "Outside data: level estimate", "복귀 때 남길 산소·냉각수 ": "Keep at return (O2 & coolant) ", "복귀 때 남길 산소·냉각수": "Keep at return (O2 & coolant)", "두 사람이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소 (덜 남는 쪽)": "O2 left if both walked home from there now (the lower of the two)", "구조 대상이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 the stranded crew would have left walking home from there now",
   "과학 EVA 계획과 EVA 시뮬레이션의 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 산소·냉각수의 이만큼을 더 남깁니다. 지도 색(절대 한계)은 그대로입니다.":
     "Keeps this much extra over the O2/coolant needed to get home, so science plans and the simulation's turn-back alert don't hug the walk-back boundary. Map colours (absolute limit) are unchanged.",
   "헬멧 바이저에는 이렇게 표시할 예정입니다. 배경은 지금 위치 근처에서 로버가 찍은 실제 사진(바이저 너머 풍경 대신), 값은 지도에서 고른 지점·현재 위치·EVA 시뮬레이션 재생 시각 기준으로 바뀝니다.":
