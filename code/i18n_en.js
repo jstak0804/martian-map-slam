@@ -107,6 +107,7 @@ const I18N = {
   "원래 거점": "Original base",
   "귀환 가능 면적": "Walk-back area",
   "돌아올 길 없음": "No way back",
+  "계획 재생": "Play the plan", "계획을 세우면 재생할 수 있습니다": "Play becomes available once a plan is ready", "처음으로": "Restart",
   "상황 설정": "Situation", "지금 상황": "Status", "지도 표시": "Map layers",
   "기준": "Baseline", "관측 SPE ×2.9": "Observed SPE ×2.9", "대형 SPE ×30 (스트레스 테스트)": "Large SPE ×30 (stress test)", "지친 대원 k 1.2": "Tired crew k 1.2",
   "냉각수 누수 0.6 kg": "Coolant leak 0.6 kg", "누수 + 더운 오후": "Leak + hot afternoon", "안전 우선 운용": "Safety-first ops",
@@ -184,6 +185,7 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^(\d+) \/ (\d+)분$/, "$1 / $2 min"],
   [/^직선 ([\d.,]+) km$/, "$1 km straight-line"], [/^원래 거점에서 ([\d.,]+) km$/, "$1 km from the original base"],
   [/^산소 ([\d,]+) g · (\d+)시간 (\d+)분( \(하산 포함\))?$/, (m, a, b, c, d) => `O2 ${a} g · ${b} h ${c} min${d ? " (incl. descent)" : ""}`],
   [/^([\d.,]+) km²$/, "$1 km²"],

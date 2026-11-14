@@ -76,6 +76,8 @@
   .modectl:not(:has(.group:not([hidden]))) { display: none; }
   .modectl .group { border: 1px solid var(--rule); border-left: 4px solid var(--accent); background: var(--panel-2); border-radius: 10px; padding: 12px; animation: fadein .35s ease-out; }
   .modectl .group h2 { color: var(--accent); }
+  .evaplay { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--rule); border-radius: 8px; background: var(--panel); }
+  .evaplay span { display: grid; gap: 1px; flex: 1; font-size: 13px; } .evaplay small { font-size: 11.5px; color: var(--ink-soft); font-family: var(--font-mono); }
   @keyframes fadein { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
   /* ⓘ 툴팁: 설명문은 마우스를 올리거나 포커스할 때만 */
   .info { position: relative; display: inline-grid; place-items: center; width: 16px; height: 16px; margin-left: 6px; border-radius: 50%; vertical-align: 1px;
@@ -95,6 +97,10 @@
   .map-stage { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
   .map-stage > img, .map-stage > canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   .map-stage.grab .vec { cursor: grabbing; }
+  .walker { position: absolute; width: 18px; height: 18px; border-radius: 50%; pointer-events: none; z-index: 2;
+    transform: translate(-50%, -50%) scale(calc(1 / var(--zk, 1))); background: #ffd23f; border: 2.5px solid #0d1016; box-shadow: 0 0 0 3px rgba(255,210,63,.35); }
+  .walker.back { background: #7fd0ff; box-shadow: 0 0 0 3px rgba(127,208,255,.4); }
+  .walker.work { background: #e2794d; box-shadow: 0 0 0 4px rgba(226,121,77,.4); }
   .zoomctl { position: absolute; top: 10px; left: 10px; z-index: 4; display: grid; gap: 4px; }
   .zoomctl button { font: inherit; font-size: 16px; line-height: 1; width: 30px; height: 30px; color: var(--ink); background: rgba(11,14,21,.85); border: 1px solid var(--rule); border-radius: 6px; cursor: pointer; }
   .zoomctl button:hover { border-color: var(--accent); }
@@ -319,6 +325,11 @@
         <h2>과학 EVA 계획</h2>
         <div class="hint">들를 과학 목표를 고르세요. 거점에서 출발해 들렀다 돌아오는, 산소가 가장 덜 드는 순서를 찾습니다. 경로의 모든 지점에서 "지금 돌아서도 거점까지 갈 수 있는가"(귀환 반경)를 확인하고, 다 못 들르면 들를 수 있는 가장 많은 조합을 고릅니다.</div>
         <div class="evalist" id="eva-targets"></div>
+        <div class="evaplay">
+          <button type="button" class="play" id="eva-play" aria-label="계획 재생">▶</button>
+          <span><b>계획 재생</b><small id="eva-play-t">계획을 세우면 재생할 수 있습니다</small></span>
+          <button type="button" class="reset" id="eva-restart">처음으로</button>
+        </div>
         <div class="ctl">
           <label for="eva-scn">실시간 시뮬레이션 상황</label>
           <select id="eva-scn">
@@ -523,6 +534,7 @@
           <img id="shade" alt="같은 지역의 HiRISE DTM 음영 기복도" hidden>
           <canvas class="cells" id="cells"></canvas>
           <canvas class="vec" id="vec" aria-label="지도를 누르면 그 지점에서 거점까지의 귀환 경로를 보여 줍니다"></canvas>
+          <div class="walker" id="walker" hidden aria-hidden="true"></div>
         </div>
         <div class="zoomctl" role="group" aria-label="지도 확대">
           <button type="button" id="zin" aria-label="확대">+</button><button type="button" id="zout" aria-label="축소">−</button><button type="button" id="zreset" aria-label="원래 크기" hidden>⟲</button>
@@ -2297,7 +2309,13 @@
     drawVec({ sim: true });
     drawSimChart();
   }
+  function evaPlayLabel() {
+    const ok = SIM && SIM.ok && SIM.kind === "eva";
+    $("eva-play").disabled = !ok; $("eva-restart").disabled = !ok;
+    if (ok) { const f = SIM.frames[SIM.idx]; $("eva-play-t").textContent = `${f.m} / ${SIM.frames[SIM.frames.length - 1].m}분`; }
+  }
   function simLabel() {
+    evaPlayLabel();
     const T = SIM && SIM.ok ? SIM.frames.length - 1 : 0, m = SIM && SIM.ok ? SIM.frames[SIM.idx].m : 0;
     $("sim-t-out").textContent = `${m}분 / ${T}분`;
   }
@@ -2517,14 +2535,17 @@
       const xy0 = (i) => [(i % W) + 0.5, ((i / W) | 0) + 0.5];
       g.strokeStyle = "rgba(255,255,255,0.7)"; g.lineWidth = 1.6 * lw; g.setLineDash([5 * lw, 4 * lw]); g.beginPath();
       SIM.out.forEach((c, n) => { const [x, y] = xy0(c); n ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); g.setLineDash([]);
-      g.strokeStyle = "#0d1016"; g.lineWidth = 5 * lw; g.beginPath();
-      for (let n = 0; n <= SIM.idx; n++) { const [x, y] = xy0(SIM.frames[n].pos); n ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
-      g.strokeStyle = "#ffd23f"; g.lineWidth = 2.6 * lw; g.stroke();
+      const trail = (pred) => { g.beginPath(); let on = false;
+        for (let n = 1; n <= SIM.idx; n++) { if (!pred(SIM.frames[n - 1].phase)) { on = false; continue; }
+          const [x0, y0] = xy0(SIM.frames[n - 1].pos), [x1, y1] = xy0(SIM.frames[n].pos); if (!on) { g.moveTo(x0, y0); on = true; } g.lineTo(x1, y1); } };
+      g.lineJoin = "round"; g.lineCap = "round";
+      trail((ph) => ph !== "back"); g.strokeStyle = "#0d1016"; g.lineWidth = 5 * lw; g.stroke(); g.strokeStyle = "#ffd23f"; g.lineWidth = 2.6 * lw; g.stroke();
+      trail((ph) => ph === "back"); g.strokeStyle = "#0d1016"; g.lineWidth = 6 * lw; g.stroke(); g.strokeStyle = "#7fd0ff"; g.lineWidth = 3.2 * lw; g.stroke();   // 돌아오는 길
       const [tx, ty] = xy0(state.simTarget);
       if (state.mode === "sim") { g.strokeStyle = "#0d1016"; g.lineWidth = 2 * lw; g.beginPath(); g.moveTo(tx, ty); g.lineTo(tx, ty - 16 * lw); g.stroke(); }
       if (state.mode === "sim") { g.fillStyle = "#ff8a3d"; g.beginPath(); g.moveTo(tx, ty - 16 * lw); g.lineTo(tx + 11 * lw, ty - 12 * lw); g.lineTo(tx, ty - 8 * lw); g.closePath(); g.fill(); g.stroke(); }
       if (SIM.turnMin >= 0 && SIM.idx >= SIM.turnMin) ring(g, ...xy0(SIM.frames[SIM.turnMin].pos), 6 * lw, "#ffd23f", lw);
-      person(g, ...xy0(SIM.frames[SIM.idx].pos), 8 * lw, "#7fd0ff", lw);
+      if (!playing) placeWalker(SIM.idx);
     }
     if (lastVec.descent && lastVec.path2) {     // 하산 구간: 통신 색과 상관없이 검은 테두리 + 주황 점선
       const P = lastVec.path2, line = () => { g.beginPath(); P.forEach((c, n) => { const x = (c % W) + 0.5, y = ((c / W) | 0) + 0.5; n ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); };
@@ -2586,6 +2607,7 @@
     ZK = Math.min(10, Math.max(1, ZK));
     ZX = Math.min(0, Math.max(cw * (1 - ZK), ZX)); ZY = Math.min(0, Math.max(ch * (1 - ZK), ZY));
     stage.style.transform = ZK === 1 ? "" : `translate(${ZX}px, ${ZY}px) scale(${ZK})`;
+    stage.style.setProperty("--zk", String(ZK));
     cells.style.imageRendering = ZK >= 2 ? "auto" : "pixelated";   // 크게 확대하면 10 m 칸이 블록처럼 보이지 않게
     $("zreset").hidden = ZK === 1;
     if (redraw) { clearTimeout(zTimer); zTimer = setTimeout(() => drawVec(), 90); }
@@ -2802,15 +2824,28 @@
     $("sim-t").value = SIM.idx; simLabel();
     recompute(); paintPoint();
   }
-  function stopSim() { playing = false; $("sim-play").textContent = "▶"; $("sim-play").setAttribute("aria-label", "재생"); }
+  function stopSim() { playing = false; $("sim-play").textContent = "▶"; $("sim-play").setAttribute("aria-label", "재생"); $("eva-play").textContent = "▶"; }
+  // 재생 중 사람 아이콘은 분과 분 사이를 매 화면 보간해 부드럽게 (지도·HUD는 1분마다 다시 그림)
+  function placeWalker(fi) {
+    const el = $("walker");
+    if (!simFrame()) { el.hidden = true; return; }
+    const F = SIM.frames, i0 = Math.max(0, Math.min(F.length - 1, Math.floor(fi))), i1 = Math.min(F.length - 1, i0 + 1), u = Math.max(0, Math.min(1, fi - i0));
+    const a = F[i0].pos, b = F[i1].pos;
+    const x = ((a % W) + 0.5) * (1 - u) + ((b % W) + 0.5) * u, y = (((a / W) | 0) + 0.5) * (1 - u) + (((b / W) | 0) + 0.5) * u;
+    el.style.left = `${x / W * 100}%`; el.style.top = `${y / R * 100}%`;
+    el.classList.toggle("back", F[i0].phase === "back" || F[i0].phase === "home");
+    el.classList.toggle("work", F[i0].phase === "work");
+    el.hidden = false;
+  }
   function tick(ts) {
     if (!playing) return;
     acc += (ts - lastTs) / 1000 * Number($("sim-speed").value); lastTs = ts;
     if (acc >= 1) {
       const n = Math.floor(acc); acc -= n;
-      if (SIM.idx >= SIM.frames.length - 1) { stopSim(); return; }
+      if (SIM.idx >= SIM.frames.length - 1) { stopSim(); placeWalker(SIM.idx); return; }
       setSimIdx(SIM.idx + n);
     }
+    placeWalker(SIM.idx + acc);
     requestAnimationFrame(tick);
   }
   $("sim-play").addEventListener("click", () => {
@@ -2818,10 +2853,12 @@
     if (playing) { stopSim(); return; }
     if (SIM.idx >= SIM.frames.length - 1) setSimIdx(0);
     playing = true; acc = 0; lastTs = performance.now();
-    $("sim-play").textContent = "⏸"; $("sim-play").setAttribute("aria-label", "일시정지");
+    $("sim-play").textContent = "⏸"; $("sim-play").setAttribute("aria-label", "일시정지"); $("eva-play").textContent = "⏸";
     requestAnimationFrame(tick);
   });
   $("sim-restart").addEventListener("click", () => { stopSim(); setSimIdx(0); });
+  $("eva-play").addEventListener("click", () => $("sim-play").click());            // EVA 계획 탭에서 바로 재생
+  $("eva-restart").addEventListener("click", () => { stopSim(); setSimIdx(0); });
   $("sim-t").addEventListener("input", (e) => { stopSim(); setSimIdx(Number(e.target.value)); });
   $("sim-scn").addEventListener("change", (e) => {
     state.simScenario = e.target.value; activePreset = "";
@@ -3007,7 +3044,7 @@
   notesLang();
   $("lang-btn").textContent = LANG === "ko" ? "EN" : "한국어";
   // 자동 화면 점검용 손잡이 (헤드리스 테스트에서 상태를 읽고 지점을 고를 때만 씀)
-  window.EVA_DEBUG = { state, update, setNow, get md() { return md(); }, get C() { return C; }, get TREES() { return TREES; }, get FLAGS() { return FLAGS; }, get H() { return H; }, get HUDWIN() { return HUDWIN; }, get SIM() { return SIM; }, get OFF() { return OFF; }, get MO() { return MO; }, get ALT() { return ALT; }, get N() { return N; }, get W() { return W; }, get R() { return R; }, get META() { return META; } };
+  window.EVA_DEBUG = { state, update, setNow, get md() { return md(); }, get C() { return C; }, get TREES() { return TREES; }, get FLAGS() { return FLAGS; }, get H() { return H; }, get HUDWIN() { return HUDWIN; }, get SIM() { return SIM; }, setSimIdx: (i) => setSimIdx(i), get OFF() { return OFF; }, get MO() { return MO; }, get ALT() { return ALT; }, get N() { return N; }, get W() { return W; }, get R() { return R; }, get META() { return META; } };
   document.addEventListener("click", (e) => { if (e.target.closest(".info")) e.preventDefault(); }, true);   // ⓘ를 눌러도 체크박스가 바뀌지 않게
   loadSite(START, devHash).then(() => { if (HASH === "#selftest" && SETS) selfTest(); })
     .catch((err) => { $("loading").hidden = false; $("loading").textContent = "데이터를 풀지 못했습니다. 최신 Chrome, Edge, Safari, Firefox에서 열어 주세요. (" + err.message + ")"; });
