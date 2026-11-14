@@ -1,0 +1,41 @@
+{
+  "gale": {
+    "radius": 3396190.0,
+    "scale": 1.0117630165416,
+    "centerLat": 0.0,
+    "centerLon": 137.4,
+    "lineOffset": -261165.50000001,
+    "sampleOffset": 3738.5,
+    "cropLine": 7000,
+    "cropSample": 500,
+    "block": 10,
+    "sourceLabel": "ESP_018854_1755_RED_C_01_ORTHO.LBL",
+    "convention": "planetocentric latitude; east longitude; 0-based pixel centres"
+  },
+  "jezero": {
+    "radius": 3394839.8133163,
+    "scale": 1.0096633268711,
+    "centerLat": 15.0,
+    "centerLon": 77.44,
+    "lineOffset": 1088495.5,
+    "sampleOffset": 3210.5000000001,
+    "cropLine": 0,
+    "cropSample": 0,
+    "block": 10,
+    "sourceLabel": "DTEEC_045994_1985_046060_1985_U01.IMG",
+    "convention": "planetocentric latitude; east longitude; 0-based pixel centres"
+  },
+  "aram": {
+    "radius": 3396190.0,
+    "scale": 1.0118484940279,
+    "centerLat": 0.0,
+    "centerLon": 340.08,
+    "lineOffset": 138109.50000001,
+    "sampleOffset": 2697.5000000001,
+    "cropLine": 400,
+    "cropSample": 0,
+    "block": 10,
+    "sourceLabel": "DTEEC_054753_1825_055452_1825_A01.label.txt",
+    "convention": "planetocentric latitude; east longitude; 0-based pixel centres"
+  }
+}

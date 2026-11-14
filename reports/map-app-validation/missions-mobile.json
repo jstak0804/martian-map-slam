@@ -1,0 +1,39 @@
+{
+  "bounds": [
+    {
+      "s": ".map-actions",
+      "left": 12,
+      "right": 378,
+      "top": 12,
+      "bottom": 62
+    },
+    {
+      "s": ".map-bottom",
+      "left": 12,
+      "right": 378,
+      "top": 569.9375,
+      "bottom": 832
+    },
+    {
+      "s": "#map-visor",
+      "left": 324,
+      "right": 378,
+      "top": 503.9375,
+      "bottom": 557.9375
+    }
+  ],
+  "full": {
+    "stops": 3,
+    "stay": 5400,
+    "last": "home",
+    "minutes": 125,
+    "oxygen": 581.3892876052344,
+    "initial": 816.466266
+  },
+  "early": {
+    "manual": true,
+    "last": "home",
+    "minutes": 5
+  },
+  "errors": []
+}

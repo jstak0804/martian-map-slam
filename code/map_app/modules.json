@@ -1,0 +1,19 @@
+[
+  "planner-core.js",
+  "map_ui.js",
+  "visor_navigation.js",
+  "mars_globe.js",
+  "map_orientation.js",
+  "compact_navigation.js",
+  "base_drag.js",
+  "map_coordinates.js",
+  "settings_sections.js",
+  "language_switch.js",
+  "planning_targets.js",
+  "target_access.js",
+  "radius_overlay.js",
+  "base_icon.js",
+  "separate_site_pins.js",
+  "travel_mode.js",
+  "startup.js"
+]

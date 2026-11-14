@@ -1,0 +1,16 @@
+const path=require('node:path');const ROOT=path.resolve(__dirname,'../..');
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
+const c={};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(ROOT,'code/map_app/src/visor_navigation.js'),'utf8'),c);
+assert.equal(typeof c.uiVisorProject,'function','Visor must project actual route points');
+assert.equal(typeof c.uiVisorRoute,'function','Visor must sample the planned route');
+const camera={x:0,y:0,z:1.7,heading:0,horizon:175,focal:500,width:720};
+assert.equal(c.uiVisorProject({x:0,y:10,z:0},camera),null,'Behind-camera route must not be drawn');
+let p=c.uiVisorProject({x:0,y:-10,z:0},camera);assert.equal(p.x,360);assert(p.y>175);
+p=c.uiVisorProject({x:10,y:0,z:0},{...camera,heading:90});assert(Math.abs(p.x-360)<1e-6);
+const route=[0,1,2,12,22];const sample=c.uiVisorRoute(route,1,22,10);assert.deepEqual(Array.from(sample),[1,2,12,22]);
+assert.deepEqual(Array.from(c.uiVisorRoute(route,22,0,10)),[],'Never reverse a route implicitly');
+assert.equal(c.uiVisorGuideDue({time:0,target:5,signature:'x'},4999,5,'x'),false);
+assert.equal(c.uiVisorGuideDue({time:0,target:5,signature:'x'},5000,5,'x'),true);
+assert.equal(c.uiVisorGuideDue({time:0,target:5,signature:'x'},1,6,'x'),true);
+assert.equal(c.uiVisorGuideDue({time:0,target:5,signature:'x'},1,5,'y'),true);
+console.log('PASS: route shape, camera projection, 360 heading, behind-camera clipping, 5-second refresh and route invalidation');

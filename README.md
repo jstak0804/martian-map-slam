@@ -1,59 +1,26 @@
 # Mars EVA Walkback & Survival Planner
 
-**NASA Space Apps 2026 · Interplanetary Survival Guide: Martian Map**
+NASA Space Apps 2026 ? Interplanetary Survival Guide: Martian Map
 
-> ### If something breaks right now, can the astronaut still walk back to base?
+A map-first exploration planning demo for Gale, Jezero and Aram Chaos. Routes, consumables and return areas are model estimates, not an operational EVA safety system.
 
-A 10 m map of Mars that shows **where an EVA crew can still get home alive** with the oxygen, coolant
-and radiation margin they have left, and **the safest way back** from any point.
+**Open the [integrated demo](reports/Martian-Map-Final.html)** after downloading the repository/file. The HTML is self-contained; double-click to open in a modern browser. GitHub's file viewer displays source rather than running the application. The [standalone copy](reports/18-eva-walkback-demo.standalone.html) has identical content. The previous [wide UI](reports/18-eva-walkback-demo.wide-ui.html) is preserved separately.
 
-**▶ Demo:** [`reports/18-eva-walkback-demo.html`](reports/18-eva-walkback-demo.html) — one HTML file, open it in a desktop browser (best at 1440 px wide or more).
+## Controls
 
----
+- Start on a local map; use the globe/location menu to choose a region. Sites, Roadview and Settings use icons; language is under Settings.
+- Click a traversable location or site to plan up to three destinations. Delete custom points with the small marker ?. Enter all dwell times for fixed stays, or leave them blank for automatic allocation; compare subsets in Planning.
+- Drag the home marker to move base. Wheel zooms; drag pans; middle-button drag rotates. N points the active destination upward.
+- Choose On foot or Rover. Play/pause the mission or use Return now. Time values use minutes; resource deficits are shown when a plan exceeds available resources.
+- Radius colors show return oxygen: blue >20%, yellow 10?20%, red ?10%. Before departure it evaluates round trips; during playback it evaluates return to base from candidate cells using current oxygen. Hatched areas outside the DTM are level-ground estimates; they do not add selectable measured terrain.
+- Open Visor with the goggles button. Drag to look around the synthetic DTM terrain; heading, attitude grid, distance and oxygen/coolant remain visible. Guidance arrows were intentionally removed. Roadview contains actual rover images, which are separate from this simulated view.
+- Map clicks show latitude/longitude and offsets from base. These are projected map-cell positions, not independently verified rover-camera coordinates.
 
-### Key features
+## Build and development
 
-- **Walk-back zone:** every 10 m cell is checked for O2, coolant, dose and comms on the real return route; colours show the O2 left after a round trip (>20 %, 10–20 %, 0–10 %).
-- **Exploration planner:** enter O2, coolant and a return reserve, pick up to three sites, and it chooses the **optimal visit order and work time per site**.
-- **Playback with turn-back:** the plan plays minute by minute with a shrinking zone, a **turn-back alarm** and a **Return now** button.
-- **Hard-to-reach sites:** impassable sites are reached by the gentlest route; sites outside the elevation data use a level-ground estimate.
-- **Helmet visor:** first-person view from the terrain model with heading, O2/coolant bars, comms and return margin.
+Run `python code/build_demo_html.py` from the repository root. Python's standard library expands committed assets and assembles the explicit source modules; raw DTM downloads and npm packages are not required. Edit `code/map_app/`, not generated HTML. The previous builder is retained as `code/build_legacy_demo_html.py` and still requires its original data inputs.
 
-### How to use
-
-![Planner screen with numbered controls](docs/img/guide-planner.jpg)
-
-1. **Region** — Gale (Curiosity), Jezero (Perseverance) or Aram Chaos. Switching clears the picked sites.
-2. **Exploration plan** — hover to see how to pick sites.
-3. **Visor** — opens the helmet view (see below).
-4. **Roadview** — real rover photos (NASA/JPL Navcam) taken near each stop.
-5. **Settings** (gear) — scenarios, O2 and coolant sliders, solar particle event, model corrections (regolith, dune factor), map layers. Opens from the right.
-6. **Language** — English / Korean.
-7. **Pick a site on the map** — click a ◆ science site or any point (up to three: A, B, C). A site outside the elevation data is drawn with a dashed level-ground segment; click it (or its ×) to remove it.
-8. **Legend** — colour = O2 left after base → site → base. The hatched band outside the HiRISE strip is a level-ground estimate.
-9. **N** — north up ↔ target up (the current destination points to the top of the screen).
-10. **Move base** (house) — click, then click the map to move the base; routes and zones are recomputed.
-11. **Zoom** — or use the mouse wheel; drag to pan.
-12. **Status** — O2, coolant, dose and comms right now. Click the title to collapse it.
-13. **Resources** — on foot or rover, O2 (g), coolant (kg) and the reserve (%) to keep on return. The reserve changes work time and the turn-back moment, not the map colours.
-14. **Sites and work time** — type minutes per site, or leave blank for the optimal value (shown faintly). × removes the site.
-15. **Times** — go, return and work time; during playback: time to the next site, return time from here, and work time still possible.
-16. **Scenarios** — every subset and order of the picked sites. The one marked **OPTIMAL** (most sites, then longest work time) is used unless you pick another.
-17. **Playback** — ▶ play / pause, ↻ restart, **Return now** (stop the plan and walk back from here), speed.
-18. **Collapse** — fold the plan card to see more of the map.
-19. **Clear plan** — remove all picked sites.
-
-During playback, scroll below the map for the live chart (heart rate, correction factor k, usable O2 vs O2 needed to return).
-
-![Helmet visor with numbered elements](docs/img/guide-visor.jpg)
-
-1. **Heading** (0–360°) with base (⌂) and target (◆) marks.
-2. **O2 and coolant** — % inside the bar, minutes left beside it.
-3. **Comms** — signal strength to the base, and dose rate.
-4. **Waypoint** — the next site and its distance; an arrow at the edge when it is off-screen.
-5. **Return margin** — O2 left after walking home from here, and the O2 that return needs.
-6. **Slope and fall risk** at the current cell.
-7. **Drag** the visor to look around 360°; double-click to face the walking direction again. ⧉ opens it as a separate window.
+[Implementation plan and handoff](PLAN.md) ? [Validation results and limits](docs/map-app/VALIDATION.md)
 
 ### Why it is credible
 

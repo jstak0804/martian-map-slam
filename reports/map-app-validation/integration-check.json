@@ -1,0 +1,26 @@
+{
+  "regions": [
+    {
+      "id": "gale",
+      "background": "gale",
+      "pins": 4,
+      "targets": 4,
+      "language": "ko"
+    },
+    {
+      "id": "jezero",
+      "background": "jezero",
+      "pins": 5,
+      "targets": 5,
+      "language": "ko"
+    },
+    {
+      "id": "aram",
+      "background": "aram",
+      "pins": 5,
+      "targets": 5,
+      "language": "ko"
+    }
+  ],
+  "errors": []
+}
