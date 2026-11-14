@@ -144,11 +144,12 @@
   .map-stage > canvas#xout { inset: auto; pointer-events: none; opacity: var(--cells-alpha); }
   .map-stage > svg#xsvg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 3; }
   .map-stage > img#ctx { inset: auto; max-width: none; filter: brightness(.72) saturate(.85); pointer-events: none; }   /* 둘레 CTX 배경: 계획 영역보다 어둡게 */
-  .walker { position: absolute; width: 18px; height: 18px; border-radius: 50%; pointer-events: none; z-index: 2;
-    transform: translate(-50%, -50%) scale(calc(1 / var(--zk, 1))); background: #ffd23f; border: 2.5px solid #0d1016; box-shadow: 0 0 0 3px rgba(255,210,63,.35); }
-  .walker.back { background: #7fd0ff; box-shadow: 0 0 0 3px rgba(127,208,255,.4); }
+  .walker { position: absolute; width: 30px; height: 30px; pointer-events: none; z-index: 2; color: #ffd23f;
+    transform: translate(-50%, -50%) scale(calc(1 / var(--zk, 1))) rotate(var(--hd, 0deg)); filter: drop-shadow(0 0 4px rgba(0,0,0,.6)); }
+  .walker svg { width: 100%; height: 100%; display: block; }   /* 진행 방향을 가리키는 삼각 화살표 */
+  .walker.back { color: #7fd0ff; }
   .walker.pair { box-shadow: 0 0 0 3px rgba(127,208,255,.4), 13px 0 0 -3px #ef6b5e, 13px 0 0 -1px #0d1016; }
-  .walker.work { background: #e2794d; box-shadow: 0 0 0 4px rgba(226,121,77,.4); }
+  .walker.work { color: #e2794d; }
   .zoomctl { position: absolute; top: 10px; left: 10px; z-index: 4; display: grid; gap: 4px; }
   .zoomctl button { font: inherit; font-size: 16px; line-height: 1; width: 30px; height: 30px; color: var(--ink); background: rgba(11,14,21,.85); border: 1px solid var(--rule); border-radius: 6px; cursor: pointer; }
   .zoomctl button:hover { border-color: var(--accent); }
@@ -455,7 +456,10 @@
   .toast { position: absolute; z-index: 12; left: 50%; top: 74px; transform: translateX(-50%); max-width: min(560px, calc(100vw - 32px)); padding: 9px 14px;
     background: rgba(11,14,21,.95); border: 1px solid #3d8bfd; border-radius: 10px; color: var(--ink); font-size: 13px; line-height: 1.45;
     box-shadow: 0 10px 30px rgba(0,0,0,.5); transition: opacity .3s; }
-  .toast[hidden] { display: none; } .toast.fade { opacity: 0; } .toast b { color: #8fc0ff; }
+  .toast[hidden] { display: none; }
+  .ftip { position: absolute; z-index: 13; max-width: 310px; padding: 8px 11px; background: rgba(11,14,21,.96); border: 1px solid #b48cff; border-radius: 9px;
+    color: var(--ink); font-size: 12px; line-height: 1.45; pointer-events: none; display: grid; gap: 3px; box-shadow: 0 8px 24px rgba(0,0,0,.5); }
+  .ftip[hidden] { display: none; } .ftip b { color: #d9c6ff; font-size: 12.5px; } .ftip small { color: var(--ink-faint); font-size: 10.5px; } .toast.fade { opacity: 0; } .toast b { color: #8fc0ff; }
   body.wide #hud-btn, body.wide #rv-btn { display: none !important; }
   .globe-dlg { width: min(1100px, 94vw); height: min(780px, 90vh); max-width: none; max-height: none; padding: 16px 18px; box-sizing: border-box; color: var(--ink);
     background: radial-gradient(ellipse at 50% 55%, #1a1f2e 0%, #07090e 70%); border: 1px solid var(--rule); border-radius: 16px; display: none; }
@@ -551,6 +555,7 @@
     display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 3px 10px; font-size: 10.5px; padding: 6px 10px; }   /* 글자 폭에 맞춘 범례 */
   body.wide .legend > span { white-space: nowrap; }
   body.wide .legend > span:first-child, body.wide .legend > span:nth-child(n+5) { grid-column: 1 / -1; }
+  body.wide .legend > span:first-child { white-space: normal; width: 0; min-width: 100%; }   /* 제목은 줄바꿈, 박스 폭은 색 띠 줄에 맞춤 */
   body.wide .legend > span:first-child { font-size: 11px; }
   body.wide .scale { left: 16px; right: auto; bottom: calc(var(--lg-h, 120px) + 46px); }
   body.wide .rv.drawer { left: 50%; right: auto; transform: translateX(-50%); width: min(900px, calc(100vw - 420px)); bottom: calc(var(--tc-h, 200px) + 24px); }
@@ -599,6 +604,7 @@
     <span class="wslot" id="wslot-doc"></span>
   </nav>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <div class="ftip" id="ftip" role="tooltip" hidden></div>
   <section class="statuscard float" id="statuscard" aria-label="지금 상태"><button type="button" class="sc-h" id="sc-fold" aria-expanded="true" title="상태 접기/펼치기"><span>상태</span><i aria-hidden="true">▾</i></button></section>
   <section class="tripcard float" id="tripcard" aria-label="탐사 계획">
     <div class="tc-head"><b id="tc-title">TRIP PLAN</b><span class="tc-where" id="tc-where"></span><span class="tc-slot" id="tc-verdict"></span><button type="button" class="tc-fold" id="tc-clear" title="고른 탐사 지점과 작업 시간을 모두 지웁니다"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px;margin-right:4px"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span>계획 초기화</span></button><button type="button" class="tc-fold" id="tc-fold" aria-expanded="true" aria-label="계획 카드 접기" title="계획 카드 접기">▾</button></div>
@@ -833,7 +839,7 @@
           <img id="shade" alt="같은 지역의 HiRISE DTM 음영 기복도" hidden>
           <canvas class="cells" id="cells"></canvas>
           <canvas class="vec" id="vec" aria-label="지도를 누르면 그 지점에서 거점까지의 귀환 경로를 보여 줍니다"></canvas>
-          <div class="walker" id="walker" hidden aria-hidden="true"></div>
+          <div class="walker" id="walker" hidden aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5 19.5 20.5 12 16.6 4.5 20.5z" fill="currentColor" stroke="#0d1016" stroke-width="2" stroke-linejoin="round"/></svg></div>
         </div>
         <div class="zoomctl" role="group" aria-label="지도 조작">
           <button type="button" id="compass" aria-label="정북 위 / 목표 방향 위" aria-pressed="false" title="정북 위 ↔ 목표 방향 위 (목표 지점 쪽을 화면 위로)"><svg id="compass-needle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l4 10h-8z" fill="#ef6b5e"/><path d="M12 22l-4-10h8z" fill="#c9d1e0"/><text x="12" y="9.6" font-size="5" text-anchor="middle" fill="#0d1016" font-weight="700">N</text></svg></button>
@@ -1286,7 +1292,7 @@ const I18N_RE = [
   [/^└ 거점까지 귀환 \((\d+)분, (부축 보행|이송, 정지)\)$/, (m, a, b) => `└ return to base (${a} min, ${b === "부축 보행" ? "assisted walk" : "carried, resting"})`],
   [/^산소 ([\d,]+) g · 냉각수 ([\d,]+) g 부족$/, "short by $1 g O2 · $2 g coolant"],
   [/^(.*) 도착 → 응급 처치·보급 (\d+)분$/, (m, a, b) => `${I18N_SUB(a)} reached → first aid and supply ${b} min`],
-  [/^(\d+)분 · (이동 중|작업 중|돌아오는 중)(?: · (.*))? · 산소 ([\d,]+) g \((\d+)%\)$/, (m, a, b, c, d, e) => `min ${a} · ${({ "이동 중": "walking", "작업 중": "working", "돌아오는 중": "returning" })[b]}${c ? " · " + c : ""} · O2 ${d} g (${e}%)`],
+  [/^(\d+)분 · (이동 중|작업 중|돌아오는 중)(?: · (.*))? · 산소 ([\d,]+) g \((\d+)%\)$/, (m, a, b, c, d, e) => `min ${a} · ${({ "이동 중": "walking", "작업 중": "working", "돌아오는 중": "returning" })[b]}${c ? " · " + c.split(" · ").map(I18N_SUB).join(" · ") : ""} · O2 ${d} g (${e}%)`],
   [/^([\d,]+) g \((\d+)%\) · 체류 한도 (.*) 초과$/, (m, a, b, c) => `${a} g (${b}%) · over the ${I18N_SUB(c)} stay limit`],
   [/^구조 출발: (현재 위치|거점) → 구조 대상 \(구조대원 산소 ([\d,]+) g, 냉각수 ([\d,]+) g\)$/, (m, a, b, c) => `Rescue start: ${a === "거점" ? "base" : "current position"} → stranded crew (rescuer O2 ${b} g, coolant ${c} g)`],
   [/^구조 대상에게 산소 ([\d,]+) g · 냉각수 ([\d,]+) g 전달 \(남는 몫을 반씩\) → 함께 귀환$/, "Handed $1 g O2 · $2 g coolant to the stranded crew (surplus split evenly) → returning together"],
@@ -3764,10 +3770,15 @@ const I18N_RE = [
       const T = META.targets, order = state.mode === "eva" && EVA && EVA.ok ? EVA.order : [];
       T.forEach((t, ti) => {
         const n = order.indexOf(ti), sel = state.evaSel[ti], r = (n >= 0 ? 12 : 8) * lw;
-        g.save(); g.translate(t.x, t.y); g.rotate(Math.PI / 4);
-        g.fillStyle = n >= 0 ? "#e2794d" : state.mode === "eva" && sel ? "#6c7588" : "#b48cff";
-        g.strokeStyle = state.mode === "eva" && sel && n < 0 ? "#ef6b5e" : "#0d1016"; g.lineWidth = 1.6 * lw;
-        g.fillRect(-r * 0.7, -r * 0.7, r * 1.4, r * 1.4); g.strokeRect(-r * 0.7, -r * 0.7, r * 1.4, r * 1.4); g.restore();
+        const picked = state.mode === "explore" && state.xT.some((x) => x.ti === ti), hot = HOVER_T === ti;   // 깃발: 장대 + 삼각 깃발
+        const fr = (hot ? 13 : 10) * lw, col = picked ? "#e2794d" : "#b48cff";
+        g.save(); g.lineCap = "round"; g.lineJoin = "round";
+        g.strokeStyle = "#0d1016"; g.lineWidth = 4 * lw; g.beginPath(); g.moveTo(t.x, t.y); g.lineTo(t.x, t.y - fr * 1.9); g.stroke();
+        g.strokeStyle = "#e7eaf0"; g.lineWidth = 1.8 * lw; g.stroke();
+        g.fillStyle = col; g.strokeStyle = "#0d1016"; g.lineWidth = 1.6 * lw;
+        g.beginPath(); g.moveTo(t.x, t.y - fr * 1.9); g.lineTo(t.x + fr * 1.3, t.y - fr * 1.45); g.lineTo(t.x, t.y - fr); g.closePath(); g.fill(); g.stroke();
+        g.fillStyle = "#0d1016"; g.beginPath(); g.arc(t.x, t.y, 2.2 * lw, 0, 7); g.fill();
+        g.restore();
         if (n >= 0) { g.fillStyle = "#0d1016"; g.font = `bold ${12 * lw}px system-ui`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(String(n + 1), t.x, t.y + 0.5 * lw); }
       });
       if (state.mode === "eva" && EVA && EVA.ok) ring(g, (EVA.minAt % W) + 0.5, ((EVA.minAt / W) | 0) + 0.5, 9 * lw, "#ef6b5e", lw);
@@ -3916,7 +3927,7 @@ const I18N_RE = [
     const ww = wrap.clientWidth, wh = wrap.clientHeight;
     if (!W || !R || !ww || !wh) return;
     const WUI = document.body.classList.contains("wide");
-    const SC = WUI && $("statuscard") && !$("statuscard").hidden && !$("statuscard").classList.contains("folded") ? 312 : 0;   // 오른쪽 위 상태 카드 폭만큼 비움
+    const SC = WUI && $("statuscard") && !$("statuscard").hidden ? 312 : 0;   // 상태 카드를 접어도 지도는 그대로 (밀림 방지)   // 오른쪽 위 상태 카드 폭만큼 비움
     const wide = ww > 1100, L = WUI ? 16 : wide ? 340 : 0, Rr = WUI ? 76 + SC : wide ? 352 : 0, T = WUI ? 64 : 56,
       B = WUI ? ($("tripcard").offsetHeight || 200) + 24 : 40;   // 덮는 카드 폭·높이는 빼고 맞춤
     const aw = Math.max(200, ww - L - Rr), ah = Math.max(200, wh - T - B), sc = Math.min(aw / W, ah / R);
@@ -4083,6 +4094,7 @@ const I18N_RE = [
     const i = cellAt(ev); if (i < 0 || !H) return;
     let best = -1, bd = 14 / pxPerCell();
     (META.targets || []).forEach((t, ti) => { const d = Math.hypot(t.x - ((i % W) + 0.5), t.y - (((i / W) | 0) + 0.5)); if (d < bd) { bd = d; best = ti; } });
+    const ft = targetAt(ev); if (ft >= 0) best = ft;                       // 깃발 천을 눌러도 그 지점
     const cell = best >= 0 ? tCell(META.targets[best]) : i;
     if (!(FLAGS[cell] & 1)) { $("hover").textContent = "지형 자료가 없는 칸입니다."; return; }
     const at = state.xT.findIndex((x) => x.cell === cell || (best >= 0 && x.ti === best));
@@ -4094,6 +4106,33 @@ const I18N_RE = [
     }
     state.sel = cell; state.xScn = -1; XMANUAL = false; stopSim(); activePreset = ""; update();
   }
+  let HOVER_T = -1;
+  function targetAt(ev) {                  // 커서 아래 깃발(과학 지점)
+    const T = META.targets || []; if (!T.length) return -1;
+    const g = evToGrid(ev), ppc = pxPerCell(); let best = -1, bd = 16;
+    T.forEach((t, ti) => { const dx = (g.x - t.x) * ppc, dy = (g.y - (t.y - 15 / ppc)) * ppc, d = Math.hypot(dx, dy * 0.8); if (d < bd) { bd = d; best = ti; } });
+    return best;
+  }
+  function siteText(t) {                    // 깃발 설명 (영어 화면이면 영어로)
+    if (LANG !== "en") return { name: t.name, why: t.why || "" };
+    const name = t.name.replace(/ 드릴 지점$/, " drill site").replace(/ 시료 채취 지점$/, " sampling site").replace(/^Curiosity 탐사 정지 지점/, "Curiosity stop").replace(/^열관성 높은 노출 암반 후보 (\d+)$/, "High-thermal-inertia bedrock candidate $1");
+    let why = t.why || "", m;
+    if ((m = why.match(/^(\S+)가 sol ([\d–]+) 동안 머물며 조사한 곳(?:, 드릴 시료 채취 sol (.*))?$/))) why = `${m[1]} worked here on sols ${m[2]}${m[3] ? `; drill samples on sol ${m[3]}` : ""}.`;
+    else if ((m = why.match(/^(\S+)가 sol ([\d–]+) 동안 머문 곳\. 이 기간 밀봉한 시료: (.*?)(?: · (.*))?$/))) why = `${m[1]} stayed here on sols ${m[2]}. Samples sealed: ${m[3]}${m[4] ? ` · ${m[4]}` : ""}.`;
+    else if (/^THEMIS/.test(why)) why = "Top 8 % THEMIS night-IR blob (consolidated bedrock). Bright Aram Chaos layers are reported to hold hematite and hydrated sulfates (to be confirmed).";
+    return { name, why };
+  }
+  vec.addEventListener("mouseleave", () => { $("ftip").hidden = true; if (HOVER_T >= 0) { HOVER_T = -1; drawVec(); } });
+  vec.addEventListener("mousemove", (ev) => {
+    const ti = targetAt(ev), tip = $("ftip");
+    if (ti !== HOVER_T) { HOVER_T = ti; drawVec(); vec.style.cursor = ti >= 0 ? "pointer" : ""; }
+    if (ti >= 0) {
+      const t = META.targets[ti], tx = siteText(t);
+      tip.innerHTML = `<b>⚑ ${tx.name}</b><span>${tx.why}</span><small>${LANG === "en" ? "Click to add it to the plan" : "누르면 탐사 계획에 넣습니다"}</small>`;
+      tip.hidden = false; const r = wrap.getBoundingClientRect();
+      tip.style.left = `${Math.min(ev.clientX - r.left + 16, wrap.clientWidth - 330)}px`; tip.style.top = `${ev.clientY - r.top + 14}px`;
+    } else tip.hidden = true;
+  });
   vec.addEventListener("mousemove", (ev) => {
     const i = cellAt(ev); if (i < 0 || !H || !VIS) return;
     const S = setNow(); if (!S) return;
@@ -4317,6 +4356,7 @@ const I18N_RE = [
     el.classList.toggle("back", F[i0].phase === "back" || F[i0].phase === "home");
     el.classList.toggle("work", F[i0].phase === "work");
     el.classList.toggle("pair", !!F[i0].together);           // 구조: 두 사람이 함께
+    el.style.setProperty("--hd", `${walkerHeading}deg`);       // 화살표가 진행 방향을 가리킴 (지도 회전과 함께 돎)
     el.hidden = false;
   }
   function tick(ts) {
@@ -4602,7 +4642,6 @@ const I18N_RE = [
       $("statuscard").classList.toggle("folded", on); $("sc-fold").setAttribute("aria-expanded", String(!on));
       $("sc-fold").querySelector("i").textContent = on ? "▸" : "▾";
       try { localStorage.setItem("eva-status-folded", on ? "1" : "0"); } catch (e) {}
-      fitStage(); applyZoom(); drawVec();
     };
     $("sc-fold").addEventListener("click", () => scFold(!$("statuscard").classList.contains("folded")));
     try { if (localStorage.getItem("eva-status-folded") === "1") scFold(true); } catch (e) {}

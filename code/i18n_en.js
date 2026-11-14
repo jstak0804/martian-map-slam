@@ -268,7 +268,7 @@ const I18N_RE = [
   [/^└ 거점까지 귀환 \((\d+)분, (부축 보행|이송, 정지)\)$/, (m, a, b) => `└ return to base (${a} min, ${b === "부축 보행" ? "assisted walk" : "carried, resting"})`],
   [/^산소 ([\d,]+) g · 냉각수 ([\d,]+) g 부족$/, "short by $1 g O2 · $2 g coolant"],
   [/^(.*) 도착 → 응급 처치·보급 (\d+)분$/, (m, a, b) => `${I18N_SUB(a)} reached → first aid and supply ${b} min`],
-  [/^(\d+)분 · (이동 중|작업 중|돌아오는 중)(?: · (.*))? · 산소 ([\d,]+) g \((\d+)%\)$/, (m, a, b, c, d, e) => `min ${a} · ${({ "이동 중": "walking", "작업 중": "working", "돌아오는 중": "returning" })[b]}${c ? " · " + c : ""} · O2 ${d} g (${e}%)`],
+  [/^(\d+)분 · (이동 중|작업 중|돌아오는 중)(?: · (.*))? · 산소 ([\d,]+) g \((\d+)%\)$/, (m, a, b, c, d, e) => `min ${a} · ${({ "이동 중": "walking", "작업 중": "working", "돌아오는 중": "returning" })[b]}${c ? " · " + c.split(" · ").map(I18N_SUB).join(" · ") : ""} · O2 ${d} g (${e}%)`],
   [/^([\d,]+) g \((\d+)%\) · 체류 한도 (.*) 초과$/, (m, a, b, c) => `${a} g (${b}%) · over the ${I18N_SUB(c)} stay limit`],
   [/^구조 출발: (현재 위치|거점) → 구조 대상 \(구조대원 산소 ([\d,]+) g, 냉각수 ([\d,]+) g\)$/, (m, a, b, c) => `Rescue start: ${a === "거점" ? "base" : "current position"} → stranded crew (rescuer O2 ${b} g, coolant ${c} g)`],
   [/^구조 대상에게 산소 ([\d,]+) g · 냉각수 ([\d,]+) g 전달 \(남는 몫을 반씩\) → 함께 귀환$/, "Handed $1 g O2 · $2 g coolant to the stranded crew (surplus split evenly) → returning together"],
