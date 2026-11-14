@@ -447,6 +447,12 @@
   .tc-fold { font: inherit; font-size: 12px; font-weight: 600; color: var(--ink); background: #161b26; border: 1px solid var(--rule); border-radius: 7px; padding: 4px 10px; cursor: pointer; white-space: nowrap; }
   .tc-fold:hover { border-color: var(--accent); } .tc-fold:disabled { opacity: .4; cursor: default; } .tc-fold[hidden] { display: none; }
   .tripcard.folded .tc-body, .tripcard.folded .tc-more { display: none !important; }
+  /* 접기 손잡이: 카드 바깥 위쪽 가운데 탭 */
+  body.wide .tc-fold.tab { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); bottom: calc(var(--tc-h, 200px) + 14px);
+    background: rgba(11,14,21,.94); border: 1px solid var(--rule); border-bottom: 0; border-radius: 10px 10px 0 0; padding: 4px 18px 5px; font-size: 12px;
+    box-shadow: 0 -4px 14px rgba(0,0,0,.35); }
+  body.wide .tc-fold.tab:hover { color: var(--accent); }
+  body.wide .tc-fold.tab[hidden] { display: none; }
   .tripcard.folded .simbar { margin-bottom: 6px; padding-bottom: 6px; }
   .tripcard.folded .tc-head { margin-bottom: 0; }
   .tc-head b { font-size: 12px; letter-spacing: .14em; } .tc-where { color: var(--ink-soft); font-size: 12px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -3940,6 +3946,7 @@
     $("tc-chart").append($("sim-chart")); $("tc-gauges").append($("glance"));
     $("tripcard").insertBefore($("simbar"), $("tripcard").firstChild);   // 재생 막대는 계획 카드 맨 위
     $("tc-more").addEventListener("click", () => $("below").scrollIntoView({ behavior: "smooth" }));
+    $("tc-fold").classList.add("tab"); $("tripcard").after($("tc-fold"));   // 접기 버튼은 카드 위쪽 바깥 탭으로
     const fold = (on) => {                 // 재생 중 지도를 더 넓게 보도록 계획 카드를 접음 (재생 막대·요약 줄은 남김)
       $("tripcard").classList.toggle("folded", on);
       $("tc-fold").setAttribute("aria-expanded", String(!on));
@@ -3987,6 +3994,7 @@
       $("tc-where").textContent = $("pt-where").textContent === "–" ? "" : $("pt-where").textContent;
       $("tripcard").hidden = !(state.mode === "explore" || state.mode === "sim");
       $("tc-clear").hidden = state.mode !== "explore"; $("tc-clear").disabled = !state.xT.length;
+      $("tc-fold").hidden = $("tripcard").hidden;
       if (state.mode === "sim") $("tc-title").textContent = LANG === "en" ? "HEART-RATE SURGE SIM" : "심박 급증 시뮬레이션";
       document.body.classList.toggle("mode-sim", state.mode === "sim");
       const q = state.mode === "sim" ? "surge" : state.mode;
