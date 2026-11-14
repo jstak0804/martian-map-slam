@@ -225,6 +225,7 @@ const I18N = {
   "⌂ 거점 옮기기": "⌂ Move base", "산소": "O2", "냉각수": "Coolant",
   "더 작업할 수 있음": "Can still work",
   "▾ 접기": "▾ Collapse", "▴ 펼치기": "▴ Expand", "계획 카드 접기/펼치기": "Collapse or expand the plan card",
+  "⏎ 즉시 복귀": "⏎ Return now", "지금 위치에서 남은 계획을 멈추고 거점으로 돌아갑니다": "Stop the remaining plan here and walk back to base",
   "왕복 계획 여유": "Round-trip planning margin", "복귀 여유": "Return reserve", "고도 자료 밖: 평지 가정 추정": "Outside elevation data: level-ground estimate", "복귀 때 남길 산소·냉각수 ": "Keep at return (O2 & coolant) ", "복귀 때 남길 산소·냉각수": "Keep at return (O2 & coolant)", "두 사람이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소 (덜 남는 쪽)": "O2 left if both walked home from there now (the lower of the two)", "구조 대상이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 the stranded crew would have left walking home from there now",
   "과학 EVA 계획과 EVA 시뮬레이션의 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 산소·냉각수의 이만큼을 더 남깁니다. 지도 색(절대 한계)은 그대로입니다.":
     "Keeps this much extra over the O2/coolant needed to get home, so science plans and the simulation's turn-back alert don't hug the walk-back boundary. Map colours (absolute limit) are unchanged.",
@@ -241,6 +242,7 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^즉시 복귀: 남은 계획을 멈추고 거점으로 \(남은 산소 ([\d,]+) g\)$/, "Return now: remaining plan stopped, heading to base ($1 g O2 left)"],
   [/^([A-C] \d+분.*)$/, (m, a) => a.replace(/(\d+)분/g, "$1 min").replace("지점 간 이동", "travel between sites").replace(/⚠ 한도 (.*) 초과/, "⚠ over the $1 limit")],
   [/^(Curiosity|Perseverance) 탐사 정지 지점 \((.*)\)$/, "$1 stop ($2)"],
   [/^가는 길 넘어짐 (높음|중간|낮음) · (높음|중간|낮음)$/, (m, a, b) => `Fall risk en route ${({ 높음: "high", 중간: "medium", 낮음: "low" })[a]} · ${({ 높음: "high", 중간: "medium", 낮음: "low" })[b]}`],

@@ -443,6 +443,7 @@
   .tripcard { display: none; }
   body.wide .tripcard { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 8; display: block; width: min(1060px, calc(100vw - 420px)); padding: 12px 16px 14px; box-sizing: border-box; max-height: 44vh; overflow: auto; }
   .tc-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+  #sim-return { color: #ffb4a8; border-color: #e0614f; } #sim-return:disabled { opacity: .35; cursor: default; }
   .tc-fold { font: inherit; font-size: 12px; font-weight: 600; color: var(--ink); background: #161b26; border: 1px solid var(--rule); border-radius: 7px; padding: 4px 10px; cursor: pointer; white-space: nowrap; }
   .tc-fold:hover { border-color: var(--accent); }
   .tripcard.folded .tc-body, .tripcard.folded .tc-more { display: none !important; }
@@ -797,6 +798,7 @@
         <div class="simrow">
           <button type="button" class="play" id="sim-play" aria-label="재생">▶</button>
           <button type="button" class="reset" id="sim-restart">처음으로</button>
+          <button type="button" class="reset ret" id="sim-return" disabled title="지금 위치에서 남은 계획을 멈추고 거점으로 돌아갑니다">⏎ 즉시 복귀</button>
           <input type="range" id="sim-t" min="0" max="0" step="1" value="0" aria-label="시뮬레이션 시각">
           <output id="sim-t-out" for="sim-t" class="mono"></output>
           <label class="speed" for="sim-speed">속도
@@ -1716,6 +1718,11 @@
                       tNext: phase === "work" ? dwellLeft : phase === "out" && plan && stopI < stops.length ? Math.max(0, stops[stopI].s - s) : NaN };
       frames.push(frame);
       if (phase === "home" || phase === "dead") break;
+      if (RETURN_AT >= 0 && m === RETURN_AT && (phase === "out" || phase === "work")) {   // 즉시 복귀 명령: 남은 계획을 멈추고 거점으로
+        phase = "back"; turnMin = m; frame.turn = true; dwellLeft = 0;
+        log.push({ m, cls: "warn", text: `즉시 복귀: 남은 계획을 멈추고 거점으로 (남은 산소 ${fmt(o2c, 0)} g)` });
+        tr = mkTr(pathToBase(here)); s = 0;
+      }
       if (phase === "out" && !fz.ok && !infeasLogged && m > 0) {
         infeasLogged = true;
         log.push({ m, cls: "bad", text: `여기부터는 지금 k(${fmt(k, 2)})로 귀환 불가: 필요 산소 ${fmt(fz.need, 0)} g${state.planMargin ? ` (+왕복 여유 ${state.planMargin}% = ${fmt(fz.need * (1 + state.planMargin / 100), 0)} g)` : ""} > 쓸 수 있는 ${fmt(o2c - O2RES(), 0)} g` });
@@ -1804,14 +1811,17 @@
     }
     return { ok: true, kind: plan ? state.mode : "sim", frames, log, out, outLen: outTr.lenM, turnMin, idx: 0, stops };
   }
+  let RETURN_AT = -1, SIMBASE = "";
   function ensureSim() {
     const sig = JSON.stringify([state.mode, state.mode === "eva" ? [EVASIG, EVA && EVA.ok ? EVA.path.length : 0, state.evaScn] : 0,
       state.mode === "rescue" ? [state.victim, state.here, state.vo2, state.vwater, state.vcarry] : 0,
       state.mode === "explore" ? [state.xT.map((x) => x.cell), state.xScn, state.xRover, JSON.stringify(state.xDwell), XS[state.xScn] ? Math.round(XS[state.xScn].dwell) : -1] : 0, state.simTarget, state.simScenario, state.simNoise, state.simAuto, state.simCustom, state.simSrc, state.simLeak, state.simPNoise, state.simTcomp, state.simLeakSub, modelKey(), state.o2, state.water,
       state.q, state.spe, state.mult, state.nofall, state.base, state.planMargin]);
-    if (sig === SIMSIG) return;
+    if (sig !== SIMBASE) { SIMBASE = sig; RETURN_AT = -1; }    // 계획이 바뀌면 즉시 복귀 명령은 지움
+    const sig2 = sig + "|" + RETURN_AT;
+    if (sig2 === SIMSIG) return;
     const keep = SIM && SIM.ok && SIM.kind === state.mode && SIMTARGET === state.simTarget ? SIM.idx : 0;
-    SIMSIG = sig; SIMTARGET = state.simTarget;
+    SIMSIG = sig2; SIMTARGET = state.simTarget;
     SIM = buildSim();
     if (SIM.ok) {
       SIM.idx = Math.min(keep, SIM.frames.length - 1);
@@ -3714,6 +3724,7 @@
     if (!SIM || !SIM.ok) return;
     SIM.idx = Math.max(0, Math.min(SIM.frames.length - 1, i));
     $("sim-t").value = SIM.idx; simLabel();
+    const ph = SIM.frames[SIM.idx].phase; $("sim-return").disabled = !(ph === "out" || ph === "work");
     recompute(); paintPoint();
   }
   function stopSim() { playing = false; $("sim-play").textContent = "▶"; $("sim-play").setAttribute("aria-label", "재생"); $("eva-play").textContent = "▶"; $("rs-play").textContent = "▶"; }
@@ -3758,7 +3769,15 @@
     $("sim-play").textContent = "⏸"; $("sim-play").setAttribute("aria-label", "일시정지"); $("eva-play").textContent = "⏸"; $("rs-play").textContent = "⏸";
     requestAnimationFrame(tick);
   });
-  $("sim-restart").addEventListener("click", () => { stopSim(); setSimIdx(0); });
+  $("sim-restart").addEventListener("click", () => { stopSim(); if (RETURN_AT >= 0) { RETURN_AT = -1; SIMSIG = ""; ensureSim(); } setSimIdx(0); });
+  $("sim-return").addEventListener("click", () => {   // 즉시 복귀: 지금 분에서 귀환 시작 (그 전까지 기록은 같음)
+    if (!SIM || !SIM.ok) return;
+    const f = SIM.frames[SIM.idx]; if (!f || !(f.phase === "out" || f.phase === "work")) return;
+    const at = SIM.idx, wasPlaying = playing;
+    RETURN_AT = at; SIMSIG = ""; ensureSim(); setSimIdx(Math.min(at, SIM.frames.length - 1));
+    if (wasPlaying && !playing) $("sim-play").click();
+    update(false);
+  });
   $("eva-play").addEventListener("click", () => $("sim-play").click());            // EVA 계획 탭에서 바로 재생
   $("rs-play").addEventListener("click", () => $("sim-play").click());             // 구조 탭에서 바로 재생
   $("rs-restart").addEventListener("click", () => { stopSim(); setSimIdx(0); });
