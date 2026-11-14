@@ -272,7 +272,7 @@ const I18N_RE = [
   [/^구조 출발: (현재 위치|거점) → 구조 대상 \(구조대원 산소 ([\d,]+) g, 냉각수 ([\d,]+) g\)$/, (m, a, b, c) => `Rescue start: ${a === "거점" ? "base" : "current position"} → stranded crew (rescuer O2 ${b} g, coolant ${c} g)`],
   [/^구조 대상에게 산소 ([\d,]+) g · 냉각수 ([\d,]+) g 전달 \(남는 몫을 반씩\) → 함께 귀환$/, "Handed $1 g O2 · $2 g coolant to the stranded crew (surplus split evenly) → returning together"],
   [/^지금 산소 ([\d,]+) g \/ 출발 ([\d,]+) g · 노랑 ([\d.,]+) · 빨강 ([\d.,]+) km²$/, "O2 now $1 g / start $2 g · yellow $3 · red $4 km²"],
-  [/^(.*)만$/, (m, a) => `${a} only`], [/^산소 ([\d,]+) g · (산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a, b) => `O2 ${a} g · limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[b]}`],
+  [/^(?!복귀 시)(.*)만$/, (m, a) => `${a} only`], [/^산소 ([\d,]+) g · (산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a, b) => `O2 ${a} g · limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[b]}`],
   [/^(\d+)시간 (\d+)분$/, "$1 h $2 min"], [/^복귀 시 (산소|냉각수|선량) (\d+)% 미만$/, (m, a, p) => `Under ${p}% ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose" })[a]} on return`],
   [/^(산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a) => `limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[a]}`],
   [/^출발 산소 ([\d,]+) g \(Apollo 15~17 PLSS급\) · 노랑 ([\d.,]+) · 빨강 ([\d.,]+) km²$/, "Start O2 $1 g (Apollo 15–17 PLSS) · yellow $2 · red $3 km²"],

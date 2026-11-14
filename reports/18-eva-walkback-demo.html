@@ -1268,7 +1268,7 @@ const I18N_RE = [
   [/^구조 출발: (현재 위치|거점) → 구조 대상 \(구조대원 산소 ([\d,]+) g, 냉각수 ([\d,]+) g\)$/, (m, a, b, c) => `Rescue start: ${a === "거점" ? "base" : "current position"} → stranded crew (rescuer O2 ${b} g, coolant ${c} g)`],
   [/^구조 대상에게 산소 ([\d,]+) g · 냉각수 ([\d,]+) g 전달 \(남는 몫을 반씩\) → 함께 귀환$/, "Handed $1 g O2 · $2 g coolant to the stranded crew (surplus split evenly) → returning together"],
   [/^지금 산소 ([\d,]+) g \/ 출발 ([\d,]+) g · 노랑 ([\d.,]+) · 빨강 ([\d.,]+) km²$/, "O2 now $1 g / start $2 g · yellow $3 · red $4 km²"],
-  [/^(.*)만$/, (m, a) => `${a} only`], [/^산소 ([\d,]+) g · (산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a, b) => `O2 ${a} g · limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[b]}`],
+  [/^(?!복귀 시)(.*)만$/, (m, a) => `${a} only`], [/^산소 ([\d,]+) g · (산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a, b) => `O2 ${a} g · limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[b]}`],
   [/^(\d+)시간 (\d+)분$/, "$1 h $2 min"], [/^복귀 시 (산소|냉각수|선량) (\d+)% 미만$/, (m, a, p) => `Under ${p}% ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose" })[a]} on return`],
   [/^(산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a) => `limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[a]}`],
   [/^출발 산소 ([\d,]+) g \(Apollo 15~17 PLSS급\) · 노랑 ([\d.,]+) · 빨강 ([\d.,]+) km²$/, "Start O2 $1 g (Apollo 15–17 PLSS) · yellow $2 · red $3 km²"],
@@ -2809,6 +2809,29 @@ const I18N_RE = [
       const tr = legDist(a, b) / ROVER_V;                   // 로버로 달린 시간, 탑승 대사량, 선량은 머문 시간에 비례
       return { o2: RIDE_W * C.o2_g_per_j * tr + dn.o2 + up.o2, t: tr + dn.t + up.t, dose: dose * tr / Math.max(1, t) + dn.dose + up.dose };
     };
+    // 고도 자료 밖 지점: 앞·뒤 지점에 맞춰 지형 띠 가장자리 칸을 고름 (A -> B로 바로 이어지게)
+    const vv = md().speed(0), gpm = md().mr(0, 1.2, vv) * C.o2_g_per_j / vv;
+    const vdist = (j, e) => { const V = T[j - 1].virt; return Math.hypot((e % W) + 0.5 - V.x, ((e / W) | 0) + 0.5 - V.y) * CELL; };
+    const edgeFor = (j, p, q) => {
+      const V = T[j - 1].virt, key = `${j}|${nodes[p]}|${nodes[q]}|${V.x.toFixed(2)},${V.y.toFixed(2)}|${modelKey()}|${state.base}|${state.nofall}`;
+      if (VEDGE.has(key)) return VEDGE.get(key);
+      if (VEDGE.size > 300) VEDGE.clear();
+      const Lp = L[p], Lq = L[q]; let best = -1, bc = Infinity;
+      for (let i = 0; i < N; i++) {
+        if (S.o2[i] < 0) continue;
+        const a = Lp.o2[i], b = Lq.o2[i]; if (!isFinite(a) || !isFinite(b)) continue;
+        const c = a + b + 2 * gpm * vdist(j, i); if (c < bc) { bc = c; best = i; }
+      }
+      VEDGE.set(key, best); return best;
+    };
+    const leg2 = (a, b, ea, eb) => {
+      if (ea < 0 && eb < 0) return leg(a, b);
+      if (ea >= 0 && eb >= 0) { const A = T[a - 1].virt, B = T[b - 1].virt, d = Math.hypot(A.x - B.x, A.y - B.y) * CELL; return { o2: gpm * d, t: d / vv, dose: 0 }; }
+      if (eb >= 0) { const x = L[a], dn = acc[a].down || { o2: 0, t: 0, dose: 0 }, d = vdist(b, eb);   // 앞 지점 -> 가장자리 -> 바깥 지점
+        return { o2: x.o2[eb] + gpm * d + dn.o2, t: x.t[eb] + d / vv + dn.t, dose: x.dose[eb] + dn.dose }; }
+      const x = L[b], up = acc[b].up || { o2: 0, t: 0, dose: 0 }, d = vdist(a, ea);                   // 바깥 지점 -> 가장자리 -> 다음 지점
+      return { o2: x.o2[ea] + gpm * d + up.o2, t: x.t[ea] + d / vv + up.t, dose: x.dose[ea] + up.dose };
+    };
     const perms = (arr) => (arr.length <= 1 ? [arr] : arr.flatMap((v, i) => perms([...arr.slice(0, i), ...arr.slice(i + 1)]).map((p) => [v, ...p])));
     const out = [];
     for (let mask = 1; mask < (1 << T.length); mask++) {
@@ -2816,10 +2839,12 @@ const I18N_RE = [
       let best = null;
       for (const ord of perms(idx)) {
         const seq = [0, ...ord, 0], legs = [];
-        for (let j = 0; j + 1 < seq.length; j++) legs.push(leg(seq[j], seq[j + 1]));
+        const E = seq.map((j, k) => (k > 0 && k < seq.length - 1 && T[j - 1].virt ? edgeFor(j, seq[k - 1], seq[k + 1]) : -1));
+        if (E.some((e, k) => k > 0 && k < seq.length - 1 && T[seq[k] - 1].virt && e < 0)) continue;
+        for (let j = 0; j + 1 < seq.length; j++) legs.push(leg2(seq[j], seq[j + 1], E[j], E[j + 1]));
         if (legs.some((l) => !isFinite(l.o2))) continue;
         const o2 = legs.reduce((a, l) => a + l.o2, 0);
-        if (!best || o2 < best.o2m) best = { ord, legs, o2m: o2 };
+        if (!best || o2 < best.o2m) best = { ord, legs, o2m: o2, E };
       }
       if (!best) { out.push({ ord: idx, ok: false, why: "갈 길 없음" }); continue; }
       const tt = best.legs.reduce((a, l) => a + l.t, 0), dd = best.legs.reduce((a, l) => a + l.dose, 0);
@@ -2852,7 +2877,7 @@ const I18N_RE = [
         best.ord.forEach((jj, n) => { up += best.legs[n].o2; cum += dwells[n]; const wo = S.o2[nodes[jj]] < 0 ? -1 : S.o2[nodes[jj]] + ((acc[jj].down || {}).o2 || 0);
           if (wo >= 0 && O2s - k * up - cum * rateO2 - k * wo < RES() * O2s - 0.5) over = true; });
       }
-      out.push({ ord: best.ord, legs: best.legs, ok: tmax > 0, dwell: Math.max(0, dwell), tmax: Math.max(0, tmax), dwells, over, endO2, endW, bind, useO2, useW, tt, dd,
+      out.push({ ord: best.ord, E: best.E, legs: best.legs, ok: tmax > 0, dwell: Math.max(0, dwell), tmax: Math.max(0, tmax), dwells, over, endO2, endW, bind, useO2, useW, tt, dd,
                  dist: best.legs.reduce((a, l, j) => a + 0, 0), why: dwell > 0 ? "" : `복귀 시 ${bind} ${state.planMargin}% 미만` });
     }
     out.sort((a, b) => a.ord.length - b.ord.length || a.ord[0] - b.ord[0]);
@@ -2862,11 +2887,22 @@ const I18N_RE = [
   const fmtDur = (sec) => { if (!isFinite(sec)) return "–"; return `${Math.round(sec / 60)}분`; };   // 분 단위로 통일
   function scnPath(sc, last = true) {     // 시나리오 경로 칸 목록 (거점 -> ... -> 거점). last=false: 마지막 지점까지만
     const acc = [{ node: state.base }, ...state.xT.map((x) => xAccess(x.cell, x))], seq = last ? [0, ...sc.ord, 0] : [0, ...sc.ord], path = [];
+    const E = sc.E || [];
     for (let j = 0; j + 1 < seq.length; j++) {
-      const A = acc[seq[j]], B = acc[seq[j + 1]], seg = [];
-      if (A.path) seg.push(...A.path.slice(0, -1));                         // 언덕 지점에서 경로망까지 내려오기
-      seg.push(...legPath(LEGS.get(legKey(A.node)), B.node));
-      if (B.path) seg.push(...[...B.path].reverse().slice(1));             // 경로망에서 언덕 지점까지 가장 완만한 길로 오르기
+      const A = acc[seq[j]], B = acc[seq[j + 1]], ea = E[j] ?? -1, eb = E[j + 1] ?? -1;
+      let seg = [];
+      if (ea >= 0 && eb >= 0) seg = [ea, eb];                                 // 바깥 -> 바깥 (평지 직선, 가장자리끼리)
+      else if (eb >= 0) {                                                       // -> 바깥 지점: 그 계획의 가장자리 칸까지
+        if (A.path) seg.push(...A.path.slice(0, -1));
+        seg.push(...legPath(LEGS.get(legKey(A.node)), eb));
+      } else if (ea >= 0) {                                                     // 바깥 지점 ->: 가장자리 칸에서 다음 지점으로
+        seg = legPath(LEGS.get(legKey(B.node)), ea).reverse();
+        if (B.path) seg.push(...[...B.path].reverse().slice(1));
+      } else {
+        if (A.path) seg.push(...A.path.slice(0, -1));                         // 언덕 지점에서 경로망까지 내려오기
+        seg.push(...legPath(LEGS.get(legKey(A.node)), B.node));
+        if (B.path) seg.push(...[...B.path].reverse().slice(1));             // 경로망에서 언덕 지점까지 가장 완만한 길로 오르기
+      }
       path.push(...(path.length ? seg.slice(1) : seg));
     }
     return path;
@@ -2893,11 +2929,14 @@ const I18N_RE = [
     const sc = XS[state.xScn];
     if (!sc || !sc.ok) return null;
     const nodes = [state.base, ...state.xT.map((x) => x.cell)], path = scnPath(sc, false);
-    const virt = sc.ord.map((j) => state.xT[j - 1].virt || null);
-    return { path, cells: sc.ord.map((j) => nodes[j]), names: sc.ord.map((j) => `${xName(j)} · ${state.xT[j - 1].name}`),
+    const vv = md().speed(0), gpm = md().mr(0, 1.2, vv) * C.o2_g_per_j / vv;
+    const virt = sc.ord.map((j, n) => { const V = state.xT[j - 1].virt; if (!V) return null; const e = sc.E && sc.E[n + 1] >= 0 ? sc.E[n + 1] : nodes[j];
+      const d = Math.hypot((e % W) + 0.5 - V.x, ((e / W) | 0) + 0.5 - V.y) * CELL; return { ...V, d, o2: gpm * d, t: d / vv }; });
+    return { path, cells: sc.ord.map((j, n) => (sc.E && sc.E[n + 1] >= 0 ? sc.E[n + 1] : nodes[j])), names: sc.ord.map((j) => `${xName(j)} · ${state.xT[j - 1].name}`),
              dwell: sc.dwells.map((d, n) => Math.round((d + (virt[n] ? 2 * virt[n].t : 0)) / 60)), virt, rover: state.xRover };   // 자료 밖 지점: 가장자리<->지점 왕복 보행 시간 포함
   }
   let XBEST = -1, XOPT_KEY = "", XMANUAL = false;
+  const VEDGE = new Map();                 // 바깥 지점 가장자리 칸 기억
   function renderExplore() {
     const T = state.xT;
     const sc = exploreScenarios();
@@ -3714,7 +3753,8 @@ const I18N_RE = [
     {                                      // 고도 자료 밖 지점: 가장자리에서 직선(점선) + 표지 (SVG, 격자 밖까지 그림)
       const sv = $("xsvg"); sv.setAttribute("viewBox", `0 0 ${W} ${R}`);
       sv.innerHTML = state.mode !== "explore" ? "" : state.xT.map((x, n) => { if (!x.virt) return "";
-        const ex = (x.cell % W) + 0.5, ey = ((x.cell / W) | 0) + 0.5, r = 10 * lw;
+        const sc0 = XS[state.xScn], k0 = sc0 && sc0.ok && sc0.E ? [0, ...sc0.ord, 0].indexOf(n + 1) : -1, ec = k0 > 0 && sc0.E[k0] >= 0 ? sc0.E[k0] : x.cell;
+        const ex = (ec % W) + 0.5, ey = ((ec / W) | 0) + 0.5, r = 10 * lw;
         const onPlan = XS[state.xScn] && XS[state.xScn].ok && XS[state.xScn].ord.includes(n + 1);   // 고른 계획에 들어 있으면 경로와 같은 모양으로 이어 그림
         return `<line x1="${ex}" y1="${ey}" x2="${x.virt.x}" y2="${x.virt.y}" stroke="#0d1016" stroke-width="${5.5 * lw}" stroke-linecap="round"/>`
           + (onPlan ? `<line x1="${ex}" y1="${ey}" x2="${x.virt.x}" y2="${x.virt.y}" stroke="#ffffff" stroke-width="${2.2 * lw}" stroke-linecap="round"/>`
