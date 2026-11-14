@@ -4527,7 +4527,7 @@ const I18N_RE = [
     if (before) before();
     siteTexts();
     if ($("site-sel")) $("site-sel").value = String(i);
-    if ($("w-globe-t")) $("w-globe-t").textContent = SITE_LIST[i].meta.site.short;
+    if ($("w-globe-t")) $("w-globe-t").textContent = siteShort(i);
     $("loading").hidden = true;
     syncInputs(); update();
   }
@@ -4536,6 +4536,7 @@ const I18N_RE = [
   bindVisorDrag($("visor"));
   // ---------- 3D 화성 지구본: 지역 고르기 (MOLA 음영 기복 텍스처, 정사영 구) ----------
   let GLOBE = null;
+  const siteShort = (i) => { const t = SITE_LIST[i].meta.site.short; return LANG === "en" ? t.replace("(가상 거점)", "(virtual base)") : t; };   // 지구본은 .app 밖이라 직접 번역
   function openGlobe() {
     const world = META0.world || (SITE_LIST[0].meta && SITE_LIST[0].meta.world);
     if (!world) return;
@@ -4552,7 +4553,7 @@ const I18N_RE = [
     const pins = SITE_LIST.map((s, i) => {
       const p = pinOf(s.meta.site.id); if (!p) return null;
       const b = document.createElement("button"); b.type = "button"; b.className = "gl-pin";
-      b.innerHTML = `<i></i><span><b>${s.meta.site.short}</b><small>${p.lat.toFixed(1)}°, ${p.lon.toFixed(1)}°</small></span>`;
+      b.innerHTML = `<i></i><span><b></b><small>${p.lat.toFixed(1)}°, ${p.lon.toFixed(1)}°</small></span>`;
       b.onclick = () => { d.close(); if (i !== SITE_I) { const r = document.querySelector(`#sites-seg input[value="${i}"]`); if (r) r.click(); } };
       pinsEl.append(b); return { ...p, b, i };
     }).filter(Boolean);
@@ -4585,6 +4586,7 @@ const I18N_RE = [
         const z = dot(V, B.f), x = cx + r * dot(V, B.r), y = cy - r * dot(V, B.u);
         p.b.hidden = z < 0.05; p.b.style.left = (x / W2 * 100) + "%"; p.b.style.top = (y / H2 * 100) + "%";
         p.b.classList.toggle("on", p.i === SITE_I); p.b.style.opacity = String(Math.min(1, 0.35 + z * 1.4));
+        p.b.querySelector("b").textContent = siteShort(p.i);
       }
       d.querySelector(".gl-sub").textContent = en() ? "Drag to rotate · wheel to zoom · click a site to open its map" : "끌어서 돌리기 · 휠로 확대 · 지역을 누르면 그 지도가 펼쳐집니다";
       d.querySelector(".gl-note").textContent = (en() ? "Relief: " : "기복: ") + world.source + (en() ? " (stylised colour, not true colour)" : " (실제 색이 아닌 표현용 색)");
@@ -4706,6 +4708,7 @@ const I18N_RE = [
       $("zvisor").title = en ? "Helmet visor: first-person view (heading, O2, coolant, comms, return margin)" : "헬멧 바이저: 1인칭 시점(방위·산소·냉각수·통신·귀환 여유)";
       $("zrv").title = en ? "Roadview: real rover photos (NASA/JPL Navcam) picked on the map" : "로드뷰: 로버가 실제로 찍은 사진(NASA/JPL Navcam)을 지도에서 골라 봅니다";
       $("w-globe").title = en ? "Pick a region on the Mars globe" : "화성 지구본에서 탐사 지역 고르기";
+      if (SITE_LIST[SITE_I]) $("w-globe-t").textContent = siteShort(SITE_I);
       if (state.mode === "base") document.body.classList.add("show-hint");
       else if (!$("q-explore").matches(":hover") && !$("zbase").matches(":hover")) document.body.classList.remove("show-hint");
       $("zbase").title = en ? "Move base: click this, then click the map to move the base (house); return routes, zones and comms are recomputed for the new base. Click again to go back to the exploration plan."
