@@ -479,6 +479,8 @@
   .tc-more { display: block; width: 100%; margin-top: 10px; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--accent); background: rgba(226,121,77,.1);
     border: 1px dashed var(--accent); border-radius: 8px; padding: 7px; cursor: pointer; }
   .tc-more[hidden] { display: none; }
+  .tc-more.pulse { animation: tcpulse 1.4s ease-in-out 4; }   /* 재생이 시작되면 아래 계측 구역이 생겼음을 알림 */
+  @keyframes tcpulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(226,121,77,0); background: rgba(226,121,77,.1); } 50% { box-shadow: 0 0 0 4px rgba(226,121,77,.35); background: rgba(226,121,77,.28); } }
   @media (max-width: 900px) { .below .tc-live { grid-template-columns: 1fr; } }
   body.wide .wbar .qbtns { display: flex; gap: 4px; }
   body.wide .wbar #modes, body.wide .wbar #mode-more { display: none; }
@@ -760,10 +762,6 @@
         </div>
         <select id="mode-more" class="mode-more" aria-label="다른 모드">
           <option value="">더보기 ▾</option>
-          <option value="inspect">경로 탐색</option>
-          <option value="eva">과학 EVA</option>
-          <option value="here">현재 위치</option>
-          <option value="base">거점 옮기기</option>
         </select>
         <div class="modeline"><p class="modehint" id="mode-hint"></p>
           <button type="button" class="reset feat" id="hud-btn" aria-pressed="false">🥽 헬멧 HUD (팝업)</button><button type="button" class="reset feat" id="rv-btn" aria-pressed="false">📷 1인칭 로드뷰</button></div>
@@ -3952,7 +3950,7 @@
     sel.innerHTML = SITE_LIST.map((s, i) => `<option value="${i}">${s.meta.site.short}</option>`).join("");
     sel.addEventListener("change", () => { const r = document.querySelector(`#sites-seg input[value="${sel.value}"]`); if (r) r.click(); });
     $("wslot-mode").append($("modes"), $("mode-more"));
-    $("mode-more").hidden = true;            // 경로 탐색·현재 위치·과학 EVA·조난 구조는 화면에서 뺌 (탐사 계획과 심박 시뮬에 집중)
+    $("mode-more").hidden = true; $("mode-more").querySelectorAll("option[value]:not([value=''])").forEach((o) => o.remove());   // 중복(거점 옮기기)·뺀 모드 항목 제거            // 경로 탐색·현재 위치·과학 EVA·조난 구조는 화면에서 뺌 (탐사 계획과 심박 시뮬에 집중)
     $("wslot-view").append($("hud-btn"), $("rv-btn"));
     $("hud-btn").textContent = "🥽 바이저"; $("rv-btn").textContent = "📷 로드뷰";
     $("wslot-doc").append($("notes-btn"), $("lang-btn"));
@@ -4019,7 +4017,10 @@
       const q = state.mode === "sim" ? "surge" : state.mode;
       document.querySelectorAll("#qbtns [data-q]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.q === q)));
       const live = !!(SIM && SIM.ok && (playing || SIM.idx > 0 || state.mode === "sim") && ["explore", "rescue", "sim"].includes(state.mode));
-      if (live !== document.body.classList.contains("has-live")) { document.body.classList.toggle("has-live", live); $("tc-more").hidden = !live; lastSim = null; }
+      if (live !== document.body.classList.contains("has-live")) {
+        document.body.classList.toggle("has-live", live); $("tc-more").hidden = !live; lastSim = null;
+        if (live) { $("tc-more").classList.remove("pulse"); void $("tc-more").offsetWidth; $("tc-more").classList.add("pulse"); }
+      }
       if (live && SIM !== lastSim) { lastSim = SIM; requestAnimationFrame(drawSimChart); }
       if (live && playing) drawSimChart();
       if (LANG === "en") applyLang();

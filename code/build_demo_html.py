@@ -95,7 +95,9 @@ def main():
     for k in ("model", "ist", "o2_reserve_g", "level_o2_g_h", "level_mr_w", "reserve_mr_w", "rest_mr_w",
               "edge_slope_cap", "max_edge_grade_pct", "heat_storage_water_eq_g", "walk_speed_m_s"):
         meta["const"][k] = vm["const"][k]
-    meta["const"]["o2_tank_g"] = 540.0          # 산소 잔량 % 기준: EMU 1차 탱크 수준(약 0.54 kg, 가정)
+    # 잔량 % 기준 = 출발량 기본값: Apollo 15~17 PLSS (산소 680 g, 냉각수 5.2 kg). 데모 코드는 TANK_G·WATER_FULL_G 상수를 쓰지만 메타도 같은 값으로 맞춤
+    meta["const"]["o2_tank_g"] = 680.0
+    meta["const"]["feedwater_full_g"] = 5200.0
     OFF16 = vm["offsets"]
     assert OFF16[:8] == meta["offsets"], "앞 8방향 순서가 같아야 미리 계산한 자료를 그대로 읽을 수 있음"
     meta["offsets"] = OFF16
@@ -112,7 +114,9 @@ def main():
         sm = json.load(open(f"{d}/meta.json", encoding="utf-8"))
         from sites import SITES
         sm["site"]["description_en"] = SITES[sid].get("description_en", "")
-        if "const" in sm: sm["const"]["cal"] = cal; sm["const"]["cal_status"] = CAL["_status"]
+        if "const" in sm:
+            sm["const"]["cal"] = cal; sm["const"]["cal_status"] = CAL["_status"]
+            sm["const"]["o2_tank_g"] = 680.0; sm["const"]["feedwater_full_g"] = 5200.0
         assert OFF16[:8] == sm["offsets"]; sm["offsets"] = OFF16
         sm["photos"] = photos(sid)
         sm["tir"] = tir(sid)
