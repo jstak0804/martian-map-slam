@@ -10,22 +10,52 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / 'code/map_app'
 
-def build():
-    modules = json.loads((APP / 'modules.json').read_text(encoding='utf-8'))
-    script = ''.join((APP / 'src' / name).read_text(encoding='utf-8') for name in modules)
+
+def read_modules(app):
+    modules = json.loads((app / 'modules.json').read_text(encoding='utf-8'))
+    if not isinstance(modules, list) or not modules:
+        raise ValueError('Module manifest must be a nonempty list')
+    if any(not isinstance(name, str) or not re.fullmatch(r'[a-z0-9_-]+\.js', name) for name in modules):
+        raise ValueError('Modules must be JavaScript filenames inside src')
+    if len(set(modules)) != len(modules):
+        raise ValueError('Duplicate module in manifest')
+    source = (app / 'src').resolve()
+    paths = [(source / name).resolve() for name in modules]
+    if any(path.parent != source for path in paths):
+        raise ValueError('Module resolves outside src')
+    return ''.join(path.read_text(encoding='utf-8') for path in paths)
+
+
+def read_asset(app, name, suffix):
+    return gzip.decompress((app / 'assets' / (name + suffix)).read_bytes()).decode('utf-8')
+
+
+def render(app):
+    script = read_modules(app)
+
     def inline_json(match):
-        return gzip.decompress((APP / 'assets' / (match[1]+'.json.gz')).read_bytes()).decode('utf-8')
+        raw = read_asset(app, match[1], '.json.gz')
+        json.loads(raw)  # Validate while preserving formatting of valid assets.
+        # JSON is embedded in an HTML script, where a closing tag ends JS parsing.
+        return raw.replace('<', r'\u003c')
+
     script = re.sub(r'@@JSON:([a-z_]+)@@', inline_json, script)
-    template = (APP / 'template.html').read_text(encoding='utf-8')
-    def inline_asset(match):
-        return gzip.decompress((APP / 'assets' / (match[1]+'.txt.gz')).read_bytes()).decode('utf-8')
-    html = re.sub(r'@@ASSET:([a-z0-9_-]+)@@', inline_asset, template)
+    template = (app / 'template.html').read_text(encoding='utf-8')
+    if template.count('@@APP_SCRIPT@@') != 1:
+        raise ValueError('Template must contain exactly one application script slot')
+    html = re.sub(r'@@ASSET:([a-z0-9_-]+)@@',
+                  lambda match: read_asset(app, match[1], '.txt.gz'), template)
     html = html.replace('@@APP_SCRIPT@@', script)
-    output = ROOT / 'reports/18-eva-walkback-demo.html'
-    output.write_text(html, encoding='utf-8', newline='\n')
-    standalone = ROOT / 'reports/18-eva-walkback-demo.standalone.html'
-    standalone.write_text(html, encoding='utf-8', newline='\n')
-    print(output)
+    if re.search(r'@@[A-Z_]+(?::[^@]+)?@@', html):
+        raise ValueError('Unresolved build placeholder')
+    return html
+
+
+def build():
+    html = render(APP)  # Validate every input before replacing either output.
+    for name in ('18-eva-walkback-demo.html', '18-eva-walkback-demo.standalone.html'):
+        (ROOT / 'reports' / name).write_text(html, encoding='utf-8', newline='\n')
+    print(ROOT / 'reports/18-eva-walkback-demo.html')
 
 if __name__ == '__main__':
     build()
