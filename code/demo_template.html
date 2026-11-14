@@ -85,6 +85,9 @@
   .xsel .chip .dwin input { width: 78px; }
   .xres { display: flex; align-items: center; gap: 6px; margin: 8px 0 2px; font-size: 12.5px; color: var(--ink-soft); }
   .xres input { width: 56px; }
+  .xrsrc { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0 2px; font-size: 12.5px; color: var(--ink-soft); }
+  .xrsrc label { display: inline-flex; align-items: center; gap: 5px; } .xrsrc input { width: 70px; }
+  .xbest { font-style: normal; font-size: 10.5px; font-weight: 700; color: #111; background: var(--accent); border-radius: 4px; padding: 1px 5px; margin-left: 6px; }
   .xsel .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 4px 3px 8px; border: 1px solid var(--rule); border-radius: 999px; background: var(--panel); }
   .xsel .chip b { color: #0d1016; background: var(--accent); border-radius: 50%; width: 18px; height: 18px; display: inline-grid; place-items: center; font-size: 11px; }
   .xsel .chip button { font: inherit; color: var(--ink-soft); background: none; border: 0; cursor: pointer; padding: 0 4px; }
@@ -307,7 +310,7 @@
   .visor .pov3d { position: absolute; inset: -3%; width: 106%; height: 106%; display: block; image-rendering: auto; transform-origin: 50% 50%; }
   .visor .povov { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
   .visor { cursor: grab; touch-action: none; } .visor.grab { cursor: grabbing; }
-  .hud .hp { display: grid; grid-template-columns: 2.6em auto auto; align-items: center; gap: .5em; margin: .15em 0; }
+  .hud .hp { display: grid; grid-template-columns: 5.2em auto auto; align-items: center; gap: .5em; margin: .15em 0; }
   .hud .hp > span:first-child { font-weight: 700; letter-spacing: .06em; }
   .hud .hpbar { position: relative; width: 9em; height: 1.35em; border: 1px solid currentColor; border-radius: .25em; transform: skewX(-14deg); background: rgba(0,0,0,.35); overflow: hidden;
     box-shadow: 0 0 .6em color-mix(in srgb, currentColor 45%, transparent); }
@@ -443,8 +446,8 @@
   .tc-head b { font-size: 12px; letter-spacing: .14em; } .tc-where { color: var(--ink-soft); font-size: 12px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .tc-body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; align-items: start; }
   .tc-left .group { border: 0; padding: 0; margin: 0; background: none; } .tc-left .group > h2 { display: none; }
-  .tc-left .xmode { display: inline-flex; } .tc-left .xres { display: inline-flex; margin: 0 0 0 10px; }
-  .tc-left .xsel { margin-top: 8px; } .tc-left .xscn { display: flex; gap: 8px; overflow-x: auto; margin-top: 8px; } .tc-left .xscn .xcard { min-width: 190px; }
+  .tc-left .xmode { display: inline-flex; } .tc-left .xres { display: inline-flex; margin: 0 0 0 12px; } .tc-left .xrsrc { display: inline-flex; margin: 0 0 0 12px; }
+  .tc-left .xsel { margin-top: 8px; } .tc-right .xscn { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; margin-top: 10px; } .tc-right .xscn .xcard.best { order: -1; } .tc-right .xscn .xcard { margin: 0; } .tc-right .xcard .t { display: block; white-space: nowrap; } .tc-right .xcard .t small { display: block; white-space: normal; margin-top: 2px; }
   .tc-right .xbig span b { font-size: clamp(20px, 2vw, 28px); white-space: nowrap; } .tc-right .xbig { gap: 0; } .tc-right .xbig > span { border-left: 1px solid var(--rule); padding-left: 14px; }
   .tc-right .xbig > span:first-child { border-left: 0; padding-left: 0; }
   .tc-right .meters { margin: 0; }
@@ -466,7 +469,7 @@
   .tc-more[hidden] { display: none; }
   @media (max-width: 900px) { .below .tc-live { grid-template-columns: 1fr; } }
   body.wide .wbar .qbtns { display: flex; gap: 4px; }
-  body.wide .wbar #modes { display: none; }
+  body.wide .wbar #modes, body.wide .wbar #mode-more { display: none; }
   body.wide .wbar .qbtns .wbtn[aria-pressed="true"] { background: var(--accent); color: #111; border-color: var(--accent); }
   body.wide #sim-note { display: none; }
   .tc-simnote { display: none; margin: 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
@@ -516,7 +519,7 @@
   <nav class="wbar float" id="wbar" aria-label="메뉴">
     <select id="site-sel" class="wsel" aria-label="지형"></select>
     <div class="qbtns" id="qbtns" role="group" aria-label="핵심 시나리오">
-      <button type="button" class="wbtn" data-q="explore">① 탐사 계획</button><button type="button" class="wbtn" data-q="surge">② 심박 급증 시뮬</button><button type="button" class="wbtn" data-q="rescue">③ 조난 구조</button>
+      <button type="button" class="wbtn" data-q="explore">① 탐사 계획</button><button type="button" class="wbtn" data-q="surge">② 심박 급증 시뮬</button><button type="button" class="wbtn" data-q="base">⌂ 거점 옮기기</button>
     </div>
     <span class="wslot" id="wslot-mode"></span>
     <span class="wsep" aria-hidden="true"></span>
@@ -546,6 +549,7 @@
           <label><input type="radio" name="xmode" value="walk" checked>🚶 도보</label>
           <label><input type="radio" name="xmode" value="rover">🚙 로버</label>
         </div>
+        <div class="xrsrc"><label>산소 <input type="number" id="x-o2" min="100" max="1200" step="10"> g</label><label>냉각수 <input type="number" id="x-w" min="0.5" max="8" step="0.1"> kg</label></div>
         <label class="xres" title="거점에 돌아왔을 때 출발량 대비 이만큼 이상 남깁니다. 지도 색 경계, 체류 시간, 귀환 경보, 구조 보급량에 모두 적용">복귀 때 남길 산소·냉각수 <input type="number" id="x-res" min="0" max="60" step="5" value="20">%</label>
         <div class="xsel" id="x-sel"></div>
         <div class="xscn" id="x-scn"></div>
@@ -984,7 +988,7 @@
 
   let PRESETS;
   const makePresets = () => [
-    { id: "base", label: "기준", s: { base: BASE0 } },
+    { id: "base", label: "기준", s: {} },          // 거점은 그대로 둠 (거점 옮기기 결과 유지)
     { id: "spe", label: "관측 SPE ×2.9", s: { spe: true, mult: C.spe_observed } },
     { id: "spe30", label: "대형 SPE ×30 (스트레스 테스트)", s: { spe: true, mult: 30 } },
     { id: "tired", label: "지친 대원 k 1.2", s: { k: 1.2 } },
@@ -2456,15 +2460,24 @@
     for (let j = 0; j + 1 < seq.length; j++) { const P = legPath(LEGS.get(legKey(nodes[seq[j]])), nodes[seq[j + 1]]); path.push(...(path.length ? P.slice(1) : P)); }
     return { path, cells: sc.ord.map((j) => nodes[j]), names: sc.ord.map((j) => `${xName(j)} · ${state.xT[j - 1].name}`), dwell: sc.dwells.map((d) => Math.round(d / 60)), rover: state.xRover };
   }
+  let XBEST = -1, XOPT_KEY = "", XMANUAL = false;
   function renderExplore() {
     const T = state.xT;
     const sc = exploreScenarios();
-    if (sc) { XS = sc; if (state.xScn < 0 || state.xScn >= XS.length) state.xScn = Math.max(0, XS.length - 1); }
+    if (sc) {
+      XS = sc;
+      let bi = -1; sc.forEach((c, i) => { if (c.ok && (bi < 0 || c.ord.length > sc[bi].ord.length || (c.ord.length === sc[bi].ord.length && c.dwell > sc[bi].dwell))) bi = i; });
+      XBEST = bi;
+      const k = JSON.stringify([T.map((x) => x.cell), state.o2, state.water, state.planMargin, state.xRover, state.k, state.q, state.base]);
+      if (k !== XOPT_KEY) { XOPT_KEY = k; XMANUAL = false; }
+      if (!XMANUAL && bi >= 0) state.xScn = bi;   // 자원을 넣으면 가장 좋은 계획(지점 가장 많이, 그다음 작업 시간 가장 길게)을 고름
+      if (state.xScn < 0 || state.xScn >= XS.length) state.xScn = Math.max(0, XS.length - 1);
+    }
     const cur = sc && sc[state.xScn];       // 자동 지점: 선택한 시나리오의 자동 배분(분)을 칸에 흐리게 보여 줌
     const auto = T.map((x, i) => { const n = cur && cur.ok ? cur.ord.indexOf(i + 1) : -1; return n >= 0 ? Math.round(cur.dwells[n] / 60) : null; });
     const selKey = JSON.stringify([T.map((x) => x.cell), state.xDwell, LANG, auto]);   // 바뀔 때만 다시 그림 (입력 중 커서 유지)
     const en = LANG === "en";
-    if ($("x-sel").dataset.key !== selKey) $("x-sel").dataset.key = selKey, $("x-sel").innerHTML = T.length ? T.map((x, i) => `<span class="chip"><b>${LETTERS[i]}</b>${x.name}<label class="dwin" title="${en ? "Stay (min). Leave blank for auto: (time left after travel) ÷ number of sites" : "체류 시간(분). 비우면 자동: 이동 뒤 남는 작업 시간 ÷ 지점 수"}">${en ? "Stay" : "체류"} <input type="number" min="0" step="5" data-dwc="${x.cell}" value="${state.xDwell[x.cell] ?? ""}" placeholder="${(en ? "auto" : "자동") + (auto[i] != null ? " " + auto[i] : "")}">${en ? "min" : "분"}</label><button type="button" data-xrm="${i}" aria-label="${en ? "Remove" : "빼기"}">✕</button></span>`).join("")
+    if ($("x-sel").dataset.key !== selKey) $("x-sel").dataset.key = selKey, $("x-sel").innerHTML = T.length ? T.map((x, i) => `<span class="chip"><b>${LETTERS[i]}</b>${x.name}<label class="dwin" title="${en ? "Work time at this site (min). Blank = optimised: time left after travel ÷ number of sites" : "이 지점 작업 시간(분). 비우면 최적값: 이동 뒤 남는 작업 시간 ÷ 지점 수"}">${en ? "Work" : "작업"} <input type="number" min="0" step="5" data-dwc="${x.cell}" value="${state.xDwell[x.cell] ?? ""}" placeholder="${(en ? "auto" : "자동") + (auto[i] != null ? " " + auto[i] : "")}">${en ? "min" : "분"}</label><button type="button" data-xrm="${i}" aria-label="${en ? "Remove" : "빼기"}">✕</button></span>`).join("")
       : '<span class="empty">지도에서 ◆ 탐사 지점을 누르세요 (최대 3곳)</span>';
     if (sc === null) { $("x-scn").innerHTML = '<span class="empty">경로 계산 중…</span>'; return; }
     if (state.xScn < 0 || state.xScn >= XS.length) state.xScn = Math.max(0, XS.length - 1);
@@ -2473,8 +2486,8 @@
       if (!c.ok) return `<button type="button" class="xcard bad${i === state.xScn ? " on" : ""}" data-xs="${i}"><span class="t">${title}<small>${c.why}</small></span></button>`;
       const back = c.legs[c.legs.length - 1].t, go = c.legs[0].t, mid = c.legs.slice(1, -1).reduce((a, l) => a + l.t, 0);
       const split = c.ord.length > 1 || c.over ? `<span class="split">${c.ord.map((j, n) => `${xName(j)} ${fmtDur(c.dwells[n])}`).join(" · ")}${mid > 0 ? ` · 지점 간 이동 ${fmtDur(mid)}` : ""}${c.over ? ` · ⚠ 한도 ${fmtDur(c.tmax)} 초과` : ""}</span>` : "";
-      return `<button type="button" class="xcard${i === state.xScn ? " on" : ""}" data-xs="${i}"><span class="t">${title}<small>산소 ${fmt(c.useO2, 0)} g · ${c.bind} 기준</small></span>
-        <span class="row3"><span>가는 시간<b>${fmtDur(go)}</b></span><span>복귀 시간<b>${fmtDur(back)}</b></span><span class="dw">체류 가능<b>${fmtDur(c.dwell)}</b></span></span>${split}</button>`;
+      return `<button type="button" class="xcard${i === state.xScn ? " on" : ""}${i === XBEST ? " best" : ""}" data-xs="${i}"><span class="t">${title}${i === XBEST ? `<em class="xbest">${LANG === "en" ? "OPTIMAL" : "최적"}</em>` : ""}<small>산소 ${fmt(c.useO2, 0)} g · ${c.bind} 기준</small></span>
+        <span class="row3"><span>가는 시간<b>${fmtDur(go)}</b></span><span>복귀 시간<b>${fmtDur(back)}</b></span><span class="dw">작업 가능<b>${fmtDur(c.dwell)}</b></span></span>${split}</button>`;
     }).join("");
   }
   function legPath(L, dst) { const p = [dst]; for (let c = dst; L.pred[c] >= 0; ) { c = L.pred[c]; p.push(c); } return p.reverse(); }
@@ -2561,15 +2574,15 @@
       const stayW = rateW > 0 ? (f.w - RES() * state.water * 1000 - (f.phase === "back" ? 0 : remW)) / rateW : Infinity;
       const stay = f.phase === "back" ? NaN : Math.max(0, Math.min(stayO2, stayW));
       const first = f.phase === "work" ? ["작업 남은 시간", f.tNext] : f.phase === "out" ? ["다음 지점까지", f.tNext] : ["거점까지", retT];
-      $("pt-meters").innerHTML = `<div class="xbig live"><span>${first[0]}<b>${fmtDur(first[1])}</b></span><span>지금 돌아서면 복귀<b>${fmtDur(retT)}</b></span><span class="dw">더 머물 수 있음<b>${isFinite(stay) ? fmtDur(stay) : "–"}</b></span></div>
+      $("pt-meters").innerHTML = `<div class="xbig live"><span>${first[0]}<b>${fmtDur(first[1])}</b></span><span>지금 돌아서면 복귀<b>${fmtDur(retT)}</b></span><span class="dw">더 작업할 수 있음<b>${isFinite(stay) ? fmtDur(stay) : "–"}</b></span></div>
         <div class="xlive">${f.m}분 · ${{ out: "이동 중", work: "작업 중", back: "돌아오는 중" }[f.phase] || ""}${f.stopName ? " · " + f.stopName : ""} · 산소 ${fmt(f.o2, 0)} g (${fmt(f.o2 / state.o2 * 100, 0)}%)</div>`;
     } else {
-      $("pt-meters").innerHTML = `<div class="xbig"><span>가는 시간<b>${fmtDur(go)}</b></span><span>복귀 시간<b>${fmtDur(back)}</b></span><span class="dw${sc.over ? " over" : ""}">체류 ${sc.over ? "계획" : "가능"}<b>${fmtDur(sc.dwell)}</b></span></div>`;
+      $("pt-meters").innerHTML = `<div class="xbig"><span>가는 시간<b>${fmtDur(go)}</b></span><span>복귀 시간<b>${fmtDur(back)}</b></span><span class="dw${sc.over ? " over" : ""}">작업 ${sc.over ? "계획" : "가능"}<b>${fmtDur(sc.dwell)}</b></span></div>`;
     }
     const dwRows = sc.ord.map((j, n) => { const c = state.xT[j - 1].cell, fx = state.xDwell[c];
       return `<span class="dwin"><b>${xName(j)}</b> <span>${fmtDur(sc.dwells[n])}</span>${fx == null ? (LANG === "en" ? " (auto)" : " (자동)") : ""}</span>`; }).join(" · ");
     $("pt-facts").innerHTML = `
-      <dt>지점별 체류</dt><dd class="dwrow">${dwRows}<button type="button" class="pipbtn" id="dw-auto" title="최대로 균등 분배">자동</button></dd>
+      <dt>지점별 작업 시간</dt><dd class="dwrow">${dwRows}<button type="button" class="pipbtn" id="dw-auto" title="최대로 균등 분배">자동</button></dd>
       ${sc.ord.length > 1 ? `<dt>지점 간 이동</dt><dd>${fmtDur(mid)}</dd>` : ""}
       <dt>거리 (왕복)</dt><dd>${fmt(ps.dist / 1000, 2)} km</dd>
       <dt>이동에 드는 산소 · 냉각수</dt><dd>${fmt(sc.useO2, 0)} g · ${fmt(sc.useW, 0)} g</dd>
@@ -2651,7 +2664,7 @@
     ko: { o2: "산소", h2o: "냉각수", margin: "귀환 여유", comm: "통신", link: "연결", nolink: "두절", dose: "선량률", base: "거점", dest: "목표",
           slope: "경사", fall: "넘어짐", lo: "낮음", mid: "중간", hi: "높음", turn: "⚠ 지금 돌아서세요", tight: "귀환 여유 적음", steep: "급경사 주의",
           dark: "통신 음영", fallhi: "넘어짐 위험 높음", noroute: "⚠ 귀환 경로 없음", left: "남음", need: "귀환 필요", min: "분", lang: "EN", work: "작업 중", tank: "탱크" },
-    en: { o2: "O2", h2o: "H2O", margin: "RETURN MARGIN", comm: "COMM", link: "LINK", nolink: "NO LINK", dose: "DOSE", base: "BASE", dest: "TGT",
+    en: { o2: "O2", h2o: "COOLANT", margin: "RETURN MARGIN", comm: "COMM", link: "LINK", nolink: "NO LINK", dose: "DOSE", base: "BASE", dest: "TGT",
           slope: "SLOPE", fall: "FALL", lo: "LOW", mid: "MED", hi: "HIGH", turn: "⚠ TURN BACK NOW", tight: "LOW RETURN MARGIN", steep: "STEEP GROUND",
           dark: "COMM SHADOW", fallhi: "HIGH FALL RISK", noroute: "⚠ NO RETURN ROUTE", left: "left", need: "need", min: "min", lang: "KO", work: "WORKING", tank: "TANK" },
   };
@@ -2750,25 +2763,6 @@
       const ix = Math.max(0, Math.min(W - 1, x | 0)), iy = Math.max(0, Math.min(R - 1, y | 0)), hh = H[iy * W + ix] + 0.15;
       return [ox + (P.w / 2 + r * P.focal / z) * s, oy + (P.horizon + (P.camH - hh) / (z * CELL) * P.focal) * sy, z];
     };
-    const pts = povAhead(P.fx, P.fy).map((p) => proj(p[0], p[1])).filter(Boolean);
-    if (pts.length >= 2) {
-      pts.unshift([cx, H2 * 1.02, 0]);
-      g.save(); g.shadowColor = glow; g.shadowBlur = 12; g.strokeStyle = cyan; g.globalAlpha = .9;
-      g.beginPath(); g.moveTo(pts[0][0], pts[0][1]);
-      for (let i = 0; i < pts.length - 1; i++) {   // Catmull-Rom -> 베지어
-        const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
-        g.bezierCurveTo(p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6, p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6, p2[0], p2[1]);
-      }
-      g.lineWidth = Math.max(2, W2 * 0.006); g.stroke();
-      g.setLineDash([2, W2 * 0.02]); g.lineWidth = Math.max(4, W2 * 0.012); g.globalAlpha = .35; g.stroke(); g.setLineDash([]);
-      g.restore();
-      for (let i = 1; i < pts.length; i += 3) {    // 진행 방향 갈매기표
-        const a = pts[i], b = pts[Math.min(pts.length - 1, i + 1)]; if (a === b) continue;
-        const ang = Math.atan2(b[1] - a[1], b[0] - a[0]), sz = Math.max(4, 14 - a[2] * 0.25);
-        g.save(); g.translate(a[0], a[1]); g.rotate(ang); g.strokeStyle = cyan; g.lineWidth = 2; g.globalAlpha = .85;
-        g.beginPath(); g.moveTo(-sz * .5, -sz * .5); g.lineTo(0, 0); g.lineTo(-sz * .5, sz * .5); g.stroke(); g.restore();
-      }
-    }
     const dest = povDest();
     if (dest >= 0) {
       const dx = (dest % W) + 0.5, dy = ((dest / W) | 0) + 0.5, q = proj(dx, dy), km = Math.hypot(dx - P.fx, dy - P.fy) * CELL / 1000;
@@ -2933,7 +2927,7 @@
     else if (sl > 15) alert = `<div class="alert warn">${L.steep}</div>`;
     else if (sg.lv <= 1) alert = `<div class="alert warn">${L.dark}</div>`;
     el.innerHTML = `${alert}
-      <div class="c tl">${hpBar(L.o2, o2pct, o2min)}${hpBar(L.h2o, wpct, wmin)}<span>${fmt(o2, 0)} g O2 · ${fmt(Math.max(0, w), 0)} g H2O</span></div>
+      <div class="c tl">${hpBar(L.o2, o2pct, o2min)}${hpBar(L.h2o, wpct, wmin)}<span>${fmt(o2, 0)} g O2 · ${state.hudLang === "en" ? "coolant" : "냉각수"} ${fmt(Math.max(0, w), 0)} g</span></div>
       <div class="c tr"><span>${L.comm}</span><span class="v gauge ${sigCls(sg.lv)}">${signalSvg(sg.lv)}${SIG[state.hudLang][sg.lv]}</span><span>${L.dose} ${fmt(dose, 1)} µSv/h</span></div>
       <div class="c bl"><span>${L.margin}</span><span class="v ${isFinite(margin) ? cls(margin, 80, 0) : "bad"}">${isFinite(margin) ? fmt(margin, 0) + " g" : "—"}</span><span>${L.need} ${isFinite(need) ? fmt(need, 0) : "—"} g</span></div>
       <div class="c br"><span>${L.slope} <b class="${sl > 15 ? "warn" : "ok"}">${fmt(sl, 0)}°</b></span><span>${L.fall} <b class="${fc === 2 ? "bad" : fc === 1 ? "warn" : "ok"}">${[L.lo, L.mid, L.hi][fc]}</b></span></div>
@@ -3520,7 +3514,7 @@
       const nm = best >= 0 ? META.targets[best].name.replace(/ (시료 채취 지점|드릴 지점)$/, "") : `지점 (${fmt(distKm(cell, state.base), 1)} km)`;
       state.xT.push({ cell, ti: best, name: nm });
     }
-    state.sel = cell; state.xScn = -1; stopSim(); activePreset = ""; update();
+    state.sel = cell; state.xScn = -1; XMANUAL = false; stopSim(); activePreset = ""; update();
   }
   vec.addEventListener("mousemove", (ev) => {
     const i = cellAt(ev); if (i < 0 || !H || !VIS) return;
@@ -3575,6 +3569,8 @@
     $("k-out").textContent = `${fmt(state.k, 2)}`;
     $("pm-out").textContent = `${state.planMargin}%`;
     if (document.activeElement !== $("x-res")) $("x-res").value = state.planMargin;
+    if (document.activeElement !== $("x-o2")) $("x-o2").value = Math.round(state.o2);
+    if (document.activeElement !== $("x-w")) $("x-w").value = (+state.water).toFixed(2);
     $("q-out").textContent = `${state.q > 0 ? "+" : ""}${state.q} W`;
     $("mult-out").textContent = `×${fmt(state.mult, 1)}${Math.abs(state.mult - C.spe_observed) < 0.05 ? " (관측)" : state.mult > 3 ? " (시나리오)" : ""}`;
     $("speblock").dataset.off = String(!state.spe);
@@ -3685,6 +3681,8 @@
     const v = Math.max(0, Number(inp.value) || 0); state.xDwell[Number(inp.dataset.dwc)] = v; stopSim(); update();
   });
   $("pt-facts").addEventListener("click", (e) => { if (e.target.id === "dw-auto") { state.xDwell = {}; stopSim(); update(); } });
+  for (const [id, key, lo, hi] of [["x-o2", "o2", 100, 1200], ["x-w", "water", 0.5, 8]])   // 계획 카드에서 바로 자원 설정
+    $(id).addEventListener("change", (e) => { state[key] = Math.max(lo, Math.min(hi, Number(e.target.value) || lo)); activePreset = ""; syncInputs(); stopSim(); update(); });
   $("x-res").addEventListener("change", (e) => {
     state.planMargin = Math.max(0, Math.min(60, Math.round(Number(e.target.value) || 0))); e.target.value = state.planMargin;
     $("pm").value = state.planMargin; stopSim(); update();
@@ -3697,7 +3695,7 @@
     stopSim(); update();
   });
   $("x-sel").addEventListener("click", (e) => { const b = e.target.closest("[data-xrm]"); if (!b) return; state.xT.splice(Number(b.dataset.xrm), 1); state.xScn = 0; stopSim(); update(); });
-  $("x-scn").addEventListener("click", (e) => { const b = e.target.closest("[data-xs]"); if (!b) return; state.xScn = Number(b.dataset.xs); stopSim(); update(); });
+  $("x-scn").addEventListener("click", (e) => { const b = e.target.closest("[data-xs]"); if (!b) return; state.xScn = Number(b.dataset.xs); XMANUAL = Number(b.dataset.xs) !== XBEST; stopSim(); update(); });
   $("eva-scn").addEventListener("change", (e) => { state.evaScn = e.target.value; stopSim(); update(); });
   $("eva-dwell").addEventListener("input", (e) => { state.evaDwell = Number(e.target.value); activePreset = ""; update(); });
   for (const id of ["showfall", "showcomm"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
@@ -3906,11 +3904,12 @@
     sel.innerHTML = SITE_LIST.map((s, i) => `<option value="${i}">${s.meta.site.short}</option>`).join("");
     sel.addEventListener("change", () => { const r = document.querySelector(`#sites-seg input[value="${sel.value}"]`); if (r) r.click(); });
     $("wslot-mode").append($("modes"), $("mode-more"));
+    $("mode-more").hidden = true;            // 경로 탐색·현재 위치·과학 EVA·조난 구조는 화면에서 뺌 (탐사 계획과 심박 시뮬에 집중)
     $("wslot-view").append($("hud-btn"), $("rv-btn"));
     $("hud-btn").textContent = "🥽 바이저"; $("rv-btn").textContent = "📷 로드뷰";
     $("wslot-doc").append($("notes-btn"), $("lang-btn"));
     $("tc-left").append($("explore-ctl"), $("rescue-ctl"));
-    $("tc-right").append($("pt-meters"));
+    $("tc-right").append($("pt-meters"), $("x-scn"));   // 시나리오 카드는 오른쪽, 최적 계획이 맨 앞
     $("tc-verdict").append($("pt-verdict"));
     $("tc-chart").append($("sim-chart")); $("tc-gauges").append($("glance"));
     $("tripcard").insertBefore($("simbar"), $("tripcard").firstChild);   // 재생 막대는 계획 카드 맨 위
@@ -3924,6 +3923,7 @@
       if (b.dataset.q !== "surge") {         // 기준 상황(산소 680 g 등)으로 되돌린 뒤 모드 전환
         const base = PRESETS.find((q) => q.id === "base"); if (base) { Object.assign(state, DEFAULTS, base.s); activePreset = "base"; syncInputs(); }
       }
+      if (b.dataset.q === "base") { state.mode = "base"; syncInputs(); update(); setTimeout(sync, 0); return; }
       if (b.dataset.q === "explore") { const r = document.querySelector('#modes input[value="explore"]'); r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true })); }
       else if (b.dataset.q === "rescue") {
         const r = document.querySelector('#modes input[value="rescue"]'); r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true }));
@@ -3947,7 +3947,7 @@
       document.body.style.setProperty("--tc-h", h + "px"); document.body.style.setProperty("--lg-h", lg + "px");
       $("tc-title").textContent = state.mode === "rescue" ? (LANG === "en" ? "RESCUE PLAN" : "구조 계획") : (LANG === "en" ? "TRIP PLAN" : "탐사 계획");
       $("tc-where").textContent = $("pt-where").textContent === "–" ? "" : $("pt-where").textContent;
-      $("tripcard").hidden = !(state.mode === "explore" || state.mode === "rescue" || state.mode === "sim");
+      $("tripcard").hidden = !(state.mode === "explore" || state.mode === "sim");
       if (state.mode === "sim") $("tc-title").textContent = LANG === "en" ? "HEART-RATE SURGE SIM" : "심박 급증 시뮬레이션";
       document.body.classList.toggle("mode-sim", state.mode === "sim");
       const q = state.mode === "sim" ? "surge" : state.mode;

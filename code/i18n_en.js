@@ -110,7 +110,7 @@ const I18N = {
   "계획 재생": "Play the plan", "계획을 세우면 재생할 수 있습니다": "Play becomes available once a plan is ready", "처음으로": "Restart",
   "여기서 갔다가 거점으로 돌아올 수 있음": "Reachable from here with a way back to base", "귀환하고 남는 산소": "O2 left after returning",
   "방법·한계": "Methods & limits", "탐사 계획": "Exploration plan", "🚶 도보": "🚶 On foot", "🚙 로버": "🚙 Rover", "① 탐사 계획": "① Exploration plan", "② 실시간 시뮬레이션": "② Live simulation", "③ 조난 구조": "③ Rescue", "② 조난 구조": "② Rescue", "경로 탐색": "Route check", "과학 EVA": "Science EVA",
-  "가는 시간": "Go", "복귀 시간": "Return", "체류 가능": "Can stay", "다녀올 수 있음": "Feasible", "지점별 체류": "Stay per site", "지점 간 이동": "Between sites", "거리 (왕복)": "Distance (round trip)", "이동에 드는 산소 · 냉각수": "O2 · coolant for travel", "복귀 때 남는 산소": "O2 left on return",
+  "가는 시간": "Go", "복귀 시간": "Return", "체류 가능": "Work time", "작업 가능": "Work time", "작업 계획": "Planned work", "지점별 작업 시간": "Work time per site", "다녀올 수 있음": "Feasible", "지점별 체류": "Stay per site", "지점 간 이동": "Between sites", "거리 (왕복)": "Distance (round trip)", "이동에 드는 산소 · 냉각수": "O2 · coolant for travel", "복귀 때 남는 산소": "O2 left on return",
   "왕복 뒤 산소 20% 넘게 남는 곳": "Round trip leaves >20% O2", "선택한 시나리오 체류 가능": "Stay time (selected scenario)", "지도의 ◆ 탐사 지점을 누르세요": "Click a ◆ site on the map", "지도에서 ◆ 탐사 지점을 누르세요 (최대 3곳)": "Click ◆ sites on the map (up to 3)", "경로 계산 중…": "Computing routes…",
   "거점 → 그곳 → 거점 왕복 뒤 남는 산소": "O2 left after base → there → base", "20% 초과": ">20%", "10~20%": "10–20%", "0~10%": "0–10%", "다녀올 수 있는 곳 윤곽": "Outline of reachable area",
   "1인칭 시점: HiRISE 지형(10 m 격자)과 위성 사진으로 그린 눈높이 1.7 m 화면": "First-person view rendered from HiRISE terrain (10 m grid) and satellite imagery at 1.7 m eye height",
@@ -222,6 +222,8 @@ const I18N = {
   "구조 대상 칸": "Casualty cell",
   "경사 20°를 넘는 칸으로 막혀 있음. 로버·장비 필요": "Blocked by slopes over 20°. Rover or equipment needed",
   "실시간 계측": "Live telemetry", "심박 · 보정계수 k · 남은 산소 vs 귀환에 필요한 산소 · 생존 게이지": "Heart rate · correction k · usable O2 vs O2 needed to return · survival gauges", "▼ 실시간 그래프 · 게이지 (아래로 스크롤)": "▼ Live chart & gauges (scroll down)",
+  "⌂ 거점 옮기기": "⌂ Move base", "산소": "O2", "냉각수": "Coolant",
+  "더 작업할 수 있음": "Can still work",
   "왕복 계획 여유": "Round-trip planning margin", "복귀 여유": "Return reserve", "고도 자료 밖: 평지 가정 추정": "Outside elevation data: level-ground estimate", "복귀 때 남길 산소·냉각수 ": "Keep at return (O2 & coolant) ", "복귀 때 남길 산소·냉각수": "Keep at return (O2 & coolant)", "두 사람이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소 (덜 남는 쪽)": "O2 left if both walked home from there now (the lower of the two)", "구조 대상이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 the stranded crew would have left walking home from there now",
   "과학 EVA 계획과 EVA 시뮬레이션의 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 산소·냉각수의 이만큼을 더 남깁니다. 지도 색(절대 한계)은 그대로입니다.":
     "Keeps this much extra over the O2/coolant needed to get home, so science plans and the simulation's turn-back alert don't hug the walk-back boundary. Map colours (absolute limit) are unchanged.",
@@ -238,6 +240,8 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^([A-C] \d+분.*)$/, (m, a) => a.replace(/(\d+)분/g, "$1 min").replace("지점 간 이동", "travel between sites").replace(/⚠ 한도 (.*) 초과/, "⚠ over the $1 limit")],
+  [/^(Curiosity|Perseverance) 탐사 정지 지점 \((.*)\)$/, "$1 stop ($2)"],
   [/^가는 길 넘어짐 (높음|중간|낮음) · (높음|중간|낮음)$/, (m, a, b) => `Fall risk en route ${({ 높음: "high", 중간: "medium", 낮음: "low" })[a]} · ${({ 높음: "high", 중간: "medium", 낮음: "low" })[b]}`],
   [/^구조 대상: (.*) · 구조대원 출발: (거점|현재 위치)$/, (m, a, b) => `Casualty: ${I18N_SUB(a)} · rescuer starts at ${b === "거점" ? "base" : "current position"}`],
   [/^(\d+) \/ (\d+) 분$/, "$1 / $2 min"],
@@ -256,7 +260,7 @@ const I18N_RE = [
   [/^구조 대상에게 산소 ([\d,]+) g · 냉각수 ([\d,]+) g 전달 \(남는 몫을 반씩\) → 함께 귀환$/, "Handed $1 g O2 · $2 g coolant to the stranded crew (surplus split evenly) → returning together"],
   [/^지금 산소 ([\d,]+) g \/ 출발 ([\d,]+) g · 노랑 ([\d.,]+) · 빨강 ([\d.,]+) km²$/, "O2 now $1 g / start $2 g · yellow $3 · red $4 km²"],
   [/^(.*)만$/, (m, a) => `${a} only`], [/^산소 ([\d,]+) g · (산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a, b) => `O2 ${a} g · limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[b]}`],
-  [/^(\d+)시간 (\d+)분$/, "$1 h $2 min"], [/^복귀 시 (산소|냉각수|선량) 20% 미만$/, (m, a) => `Under 20% ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose" })[a]} on return`],
+  [/^(\d+)시간 (\d+)분$/, "$1 h $2 min"], [/^복귀 시 (산소|냉각수|선량) (\d+)% 미만$/, (m, a, p) => `Under ${p}% ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose" })[a]} on return`],
   [/^(산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a) => `limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[a]}`],
   [/^출발 산소 ([\d,]+) g \(Apollo 15~17 PLSS급\) · 노랑 ([\d.,]+) · 빨강 ([\d.,]+) km²$/, "Start O2 $1 g (Apollo 15–17 PLSS) · yellow $2 · red $3 km²"],
   [/^([\d,]+) g \((\d+)%\) · (.*) 기준$/, (m, a, b, c) => `${a} g (${b}%) · limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[c] || c}`],
@@ -326,4 +330,5 @@ const I18N_RE = [
   [/^예비분 ([\d.,]+) g\(평지 30분\)을 빼고 ([\d.,]+) g으로 다녀야 함$/, "After the $1 g reserve (30 min level walk): $2 g usable"],
   [/^만충 3\.6 kg · 예비분 ([\d,]+) g을 빼고 ([\d,]+) g$/, "Full 3.6 kg · after the $1 g reserve: $2 g"],
   [/^구조 예시: (.*)$/, "Rescue example: $1"],
+  [/^(.*)탐사 정지 지점(.*)$/, (m, a, b) => `${a}stop${b}`],
 ];
