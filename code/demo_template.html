@@ -476,7 +476,14 @@
   .below-h { font-size: 15px; margin: 0 0 12px; display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
   .below-h small { color: var(--ink-soft); font-weight: 400; font-size: 12px; }
   .below .tc-live { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr); gap: 16px; max-height: none; opacity: 1; overflow: visible; margin: 0; border: 0; padding: 0; }
-  .below .tc-gauges .glance { grid-template-columns: 1fr 1fr; }
+  .below .tc-live { grid-template-columns: 1fr; } .below .tc-gauges { display: none; }
+  .statuscard { display: none; }
+  body.wide .statuscard { display: block; position: absolute; z-index: 7; right: 76px; top: 64px; width: 300px; padding: 10px; box-sizing: border-box; }
+  body.wide .statuscard[hidden] { display: none; }
+  .statuscard .sc-h { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 6px 2px; font-weight: 700; }
+  .statuscard .glance { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .statuscard .glance .gc { padding: 7px 9px; }
+  body.wide .modebar { right: 392px; }
   .tc-more { display: block; width: 100%; margin-top: 10px; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--accent); background: rgba(226,121,77,.1);
     border: 1px dashed var(--accent); border-radius: 8px; padding: 7px; cursor: pointer; }
   .tc-more[hidden] { display: none; }
@@ -500,7 +507,7 @@
   body.wide .legend > span:first-child { font-size: 11px; }
   body.wide .scale { left: 16px; right: auto; bottom: calc(var(--lg-h, 120px) + 26px); }
   body.wide .rv.drawer { left: 50%; right: auto; transform: translateX(-50%); width: min(900px, calc(100vw - 420px)); bottom: calc(var(--tc-h, 200px) + 24px); }
-  body.wide .visor-wrap.pip { right: 76px; top: 64px; bottom: auto; width: min(620px, 44vw, calc((100vh - var(--tc-h, 200px) - 150px) * 1.65)); }
+  body.wide .visor-wrap.pip { right: 388px; top: 64px; bottom: auto; width: min(620px, 44vw, calc((100vh - var(--tc-h, 200px) - 150px) * 1.65)); }
   body.wide .tripcard .simbar { position: static; transform: none; width: auto; max-width: none; margin: 0 0 10px; padding: 0 0 10px; background: none; box-shadow: none; border: 0; border-bottom: 1px solid var(--rule); border-radius: 0; }
   body.wide.show-status .visor-wrap.pip { right: 404px; }
   @media (max-width: 900px) {
@@ -543,10 +550,11 @@
     <button type="button" class="wbtn" id="w-settings" aria-pressed="false" aria-controls="leftcol">설정</button>
     <span class="wslot" id="wslot-doc"></span>
   </nav>
+  <section class="statuscard float" id="statuscard" aria-label="지금 상태"><div class="sc-h">상태</div></section>
   <section class="tripcard float" id="tripcard" aria-label="탐사 계획">
     <div class="tc-head"><b id="tc-title">TRIP PLAN</b><span class="tc-where" id="tc-where"></span><span class="tc-slot" id="tc-verdict"></span><button type="button" class="tc-fold" id="tc-clear" title="고른 탐사 지점과 작업 시간을 모두 지웁니다">↺ 계획 초기화</button><button type="button" class="tc-fold" id="tc-fold" aria-expanded="true" aria-label="계획 카드 접기" title="계획 카드 접기">▾</button></div>
     <div class="tc-body"><div class="tc-left" id="tc-left"><p class="tc-simnote" id="tc-simnote">심박 급증 시나리오: 60분부터 대사량 +25%, 산소 450 g으로 목적지 왕복. 매분 "1분 더 가도 돌아올 수 있나"를 따져 자동 회항 경보를 냅니다.</p></div><div class="tc-right" id="tc-right"></div></div>
-    <button type="button" class="tc-more" id="tc-more" hidden>▼ 실시간 그래프 · 게이지 (아래로 스크롤)</button>
+    <button type="button" class="tc-more" id="tc-more" hidden>▼ 실시간 그래프 (아래로 스크롤)</button>
   </section>
   <section class="sitebar float" aria-label="지형 선택">
     <div class="seg" id="sites-seg" role="radiogroup" aria-label="지형"></div>
@@ -914,7 +922,7 @@
 </div>
 <section class="below" id="below" aria-label="실시간 계측">
   <div class="below-in">
-    <h2 class="below-h"><span id="below-title">실시간 계측</span><small id="below-sub">심박 · 보정계수 k · 남은 산소 vs 귀환에 필요한 산소 · 생존 게이지</small></h2>
+    <h2 class="below-h"><span id="below-title">실시간 계측</span><small id="below-sub">심박 · 보정계수 k · 남은 산소 vs 귀환에 필요한 산소</small></h2>
     <div class="tc-live" id="tc-live"><div class="tc-chart" id="tc-chart"></div><div class="tc-gauges" id="tc-gauges"></div></div>
   </div>
 </section>
@@ -3439,7 +3447,8 @@
     const ww = wrap.clientWidth, wh = wrap.clientHeight;
     if (!W || !R || !ww || !wh) return;
     const WUI = document.body.classList.contains("wide");
-    const wide = ww > 1100, L = WUI ? 16 : wide ? 340 : 0, Rr = WUI ? 76 : wide ? 352 : 0, T = WUI ? 64 : 56,
+    const SC = WUI && $("statuscard") && !$("statuscard").hidden ? 312 : 0;   // 오른쪽 위 상태 카드 폭만큼 비움
+    const wide = ww > 1100, L = WUI ? 16 : wide ? 340 : 0, Rr = WUI ? 76 + SC : wide ? 352 : 0, T = WUI ? 64 : 56,
       B = WUI ? ($("tripcard").offsetHeight || 200) + 24 : 40;   // 덮는 카드 폭·높이는 빼고 맞춤
     const aw = Math.max(200, ww - L - Rr), ah = Math.max(200, wh - T - B), sc = Math.min(aw / W, ah / R);
     FIT = { w: W * sc, h: R * sc, x: L + (aw - W * sc) / 2, y: T + (ah - R * sc) / 2 };
@@ -3956,7 +3965,7 @@
     $("tc-left").append($("explore-ctl"), $("rescue-ctl"));
     $("tc-right").append($("pt-meters"), $("x-scn"));   // 시나리오 카드는 오른쪽, 최적 계획이 맨 앞
     $("tc-verdict").append($("pt-verdict"));
-    $("tc-chart").append($("sim-chart")); $("tc-gauges").append($("glance"));
+    $("tc-chart").append($("sim-chart")); $("statuscard").append($("glance"));   // 산소·냉각수·선량·통신 게이지는 오른쪽 위 상태 카드
     $("tripcard").insertBefore($("simbar"), $("tripcard").firstChild);   // 재생 막대는 계획 카드 맨 위
     $("tc-more").addEventListener("click", () => $("below").scrollIntoView({ behavior: "smooth" }));
     $("tc-fold").classList.add("tab"); $("tripcard").after($("tc-fold"));   // 접기 버튼은 카드 위쪽 바깥 탭으로
