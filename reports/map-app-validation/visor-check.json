@@ -1,0 +1,14 @@
+{
+  "before": {
+    "route": 76,
+    "heading": 0,
+    "time": 1951
+  },
+  "after": {
+    "heading": 60,
+    "time": 1951,
+    "pitch": 12
+  },
+  "updated": 7106.39999999851,
+  "errors": []
+}
