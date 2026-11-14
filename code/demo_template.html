@@ -304,13 +304,24 @@
     background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px),
                 radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,12,8,.6) 100%),
                 linear-gradient(160deg, rgba(255,255,255,.08), rgba(255,255,255,0) 40%); }
-  .visor .pov3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: auto; }
+  .visor .pov3d { position: absolute; inset: -3%; width: 106%; height: 106%; display: block; image-rendering: auto; transform-origin: 50% 50%; }
+  .visor .povov { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+  .visor { cursor: grab; touch-action: none; } .visor.grab { cursor: grabbing; }
+  .hud .hp { display: grid; grid-template-columns: 2.6em auto auto; align-items: center; gap: .5em; margin: .15em 0; }
+  .hud .hp > span:first-child { font-weight: 700; letter-spacing: .06em; }
+  .hud .hpbar { position: relative; width: 9em; height: 1.35em; border: 1px solid currentColor; border-radius: .25em; transform: skewX(-14deg); background: rgba(0,0,0,.35); overflow: hidden;
+    box-shadow: 0 0 .6em color-mix(in srgb, currentColor 45%, transparent); }
+  .hud .hpbar i { position: absolute; inset: 0 auto 0 0; background: repeating-linear-gradient(90deg, currentColor 0 9px, transparent 9px 11px); opacity: .55; }
+  .hud .hpbar b { position: absolute; inset: 0; display: grid; place-items: center; transform: skewX(14deg); color: #fff; font-size: .95em; text-shadow: 0 0 3px #000, 0 0 6px #000; }
+  .hud .hp .t { font-weight: 700; font-variant-numeric: tabular-nums; }
   .visor .brackets { position: absolute; inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); pointer-events: none; filter: drop-shadow(0 0 3px rgba(125,255,176,.6)); }
   .visor .hud { background: none; }
   .visor .hud .c { font-size: clamp(9px, 2.2cqw, 13px); padding: .4em .7em; }
   .visor .hud .v { font-size: clamp(12px, 3.6cqw, 20px); }
   .visor .hud .tl { top: 8%; left: 4%; } .visor .hud .tr { top: 8%; right: 4%; } .visor .hud .bl { bottom: 22%; left: 4%; } .visor .hud .br { bottom: 22%; right: 4%; }
-  .visor .hud .alert { top: 7%; font-size: clamp(10px, 2.8cqw, 15px); } .visor .hud .compass { bottom: 4%; left: 18%; right: 18%; height: 3.2em; font-size: clamp(8px, 2cqw, 12px); }
+  .visor .hud .compass { display: none; }
+  .visor .hud .tl, .visor .hud .tr { top: 17%; }
+  .visor .hud .alert { top: 30%; font-size: clamp(10px, 2.8cqw, 15px); } .visor .hud .compass { bottom: 4%; left: 18%; right: 18%; height: 3.2em; font-size: clamp(8px, 2cqw, 12px); }
   .visor .hud .compass span { font-size: 1em; } .visor .hud .compass .mk { font-size: 1.15em; top: 1.3em; }
   .hud .gauge { display: inline-flex; align-items: center; gap: .35em; }
   .hud .gauge svg { width: 2.1em; height: 1em; flex: none; }
@@ -389,6 +400,86 @@
   .visor-wrap.pip { right: 356px; bottom: 96px; }
   details.notes { position: fixed; inset: 60px 18% auto 18%; max-height: calc(100vh - 120px); overflow: auto; z-index: 20; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
   details.notes.closed { display: none; }
+  /* ===== 넓은 화면 인터페이스: 지도 전체 + 위 메뉴 막대 + 오른쪽 도구 + 아래 계획 카드 + 서랍 ===== */
+  body.wide .wbar .seg label { white-space: nowrap; }
+  body.wide header.top { width: auto; max-width: 270px; padding: 10px 14px 10px 54px; min-height: 44px; }
+  body.wide header.top .wlogo { position: absolute; left: 14px; top: 13px; width: 26px; height: 26px; transform: rotate(45deg); border: 3px solid var(--accent); border-radius: 4px; box-sizing: border-box; }
+  body.wide header.top .wlogo::after { content: ""; position: absolute; inset: 4px; background: var(--accent); border-radius: 1px; opacity: .55; }
+  body.wide header.top .eyebrow { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+  body.wide header.top h1 { font-size: 15px; letter-spacing: .02em; margin: 2px 0 0; }
+  body.wide header.top h1 .reset { display: none; }
+  body.wide .sitebar { display: none; }
+  .wbar { display: none; }
+  body.wide .wbar { position: fixed; top: 10px; right: 16px; z-index: 8; display: flex; align-items: center; gap: 6px; padding: 6px; flex-wrap: wrap; justify-content: flex-end; max-width: calc(100vw - 360px); }
+  .wslot { display: contents; }
+  .wsep { width: 1px; height: 24px; background: var(--rule); margin: 0 2px; }
+  body.wide .wbar .wsel, body.wide .wbar .wbtn, body.wide .wbar .mode-more, body.wide .wbar .reset, body.wide .wbar .feat {
+    font: inherit; font-size: 12.5px; font-weight: 600; color: var(--ink); background: #161b26; border: 1px solid var(--rule); border-radius: 8px;
+    padding: 7px 10px; cursor: pointer; white-space: nowrap; line-height: 1.2; margin: 0; box-shadow: none; }
+  body.wide .wbar { gap: 5px; } body.wide .wbar .wsel { max-width: 170px; }
+  @media (max-width: 1500px) { body.wide header.top .eyebrow { display: none; } body.wide header.top { max-width: 190px; } body.wide .wbar { max-width: calc(100vw - 230px); }
+    body.wide .wbar .wsel, body.wide .wbar .wbtn, body.wide .wbar .mode-more, body.wide .wbar .reset, body.wide .wbar .feat { font-size: 11.5px; padding: 7px 8px; } }
+  body.wide .wbar .wbtn:hover, body.wide .wbar .reset:hover, body.wide .wbar .wsel:hover { border-color: var(--accent); }
+  body.wide .wbar [aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: rgba(226,121,77,.14); }
+  body.wide .wbar .seg { background: #161b26; border-radius: 8px; box-shadow: none; }
+  body.wide .wbar .seg label { font-size: 12.5px; padding: 7px 11px; font-weight: 600; }
+  body.wide .modebar { left: 330px; right: 16px; top: 64px; justify-items: end; }
+  body.wide .modebar .modeline { max-width: 560px; }
+  body.wide .modebar .modehint { font-size: 11.5px; }
+  /* 서랍: 설정(왼쪽) · 상태(오른쪽) */
+  body.wide .leftcol, body.wide .rightcol { top: 64px; bottom: 16px; transition: transform .22s ease, opacity .22s; z-index: 9; }
+  body.wide .leftcol { left: 12px; bottom: calc(var(--tc-h, 200px) + 28px); } body.wide .rightcol { right: 12px; top: 112px; bottom: calc(var(--tc-h, 200px) + 28px); }
+  body.wide:not(.show-settings) .leftcol { transform: translateX(calc(-100% - 24px)); opacity: 0; pointer-events: none; }
+  body.wide:not(.show-status) .rightcol { transform: translateX(calc(100% + 24px)); opacity: 0; pointer-events: none; }
+  /* 오른쪽 도구 기둥 */
+  body.wide .zoomctl { position: fixed; right: 16px; left: auto; top: 112px; bottom: auto; gap: 8px; z-index: 7; }
+  body.wide.show-status .zoomctl { right: 356px; }
+  body.wide .zoomctl button { width: 44px; height: 44px; border-radius: 10px; font-size: 20px; background: rgba(11,14,21,.92); box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+  body.wide .zoomctl svg { width: 24px; height: 24px; }
+  /* 아래 계획 카드 */
+  .tripcard { display: none; }
+  body.wide .tripcard { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 8; display: block; width: min(1060px, calc(100vw - 420px)); padding: 12px 16px 14px; box-sizing: border-box; max-height: 44vh; overflow: auto; }
+  .tc-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+  .tc-head b { font-size: 12px; letter-spacing: .14em; } .tc-where { color: var(--ink-soft); font-size: 12px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tc-body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .tc-left .group { border: 0; padding: 0; margin: 0; background: none; } .tc-left .group > h2 { display: none; }
+  .tc-left .xmode { display: inline-flex; } .tc-left .xres { display: inline-flex; margin: 0 0 0 10px; }
+  .tc-left .xsel { margin-top: 8px; } .tc-left .xscn { display: flex; gap: 8px; overflow-x: auto; margin-top: 8px; } .tc-left .xscn .xcard { min-width: 190px; }
+  .tc-right .xbig span b { font-size: clamp(20px, 2vw, 28px); white-space: nowrap; } .tc-right .xbig { gap: 0; } .tc-right .xbig > span { border-left: 1px solid var(--rule); padding-left: 14px; }
+  .tc-right .xbig > span:first-child { border-left: 0; padding-left: 0; }
+  .tc-right .meters { margin: 0; }
+  .tc-slot .verdict { font-size: 12px; }
+  body.wide .wbar .qbtns { display: flex; gap: 4px; }
+  body.wide .wbar #modes { display: none; }
+  body.wide .wbar .qbtns .wbtn[aria-pressed="true"] { background: var(--accent); color: #111; border-color: var(--accent); }
+  body.wide #sim-note { display: none; }
+  .tc-simnote { display: none; margin: 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+  body.mode-sim .tc-simnote { display: block; }
+  .tc-live { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 14px; max-height: 0; overflow: hidden; opacity: 0; transition: max-height .45s ease, opacity .35s ease, margin .35s; }
+  .tripcard.live .tc-live { max-height: 300px; opacity: 1; margin-top: 12px; border-top: 1px solid var(--rule); padding-top: 10px; }
+  body.wide .tripcard.live { max-height: 72vh; }
+  .tc-live #sim-chart { height: 220px; }
+  .tc-gauges .glance { grid-template-columns: 1fr 1fr; }
+  /* 재생 막대는 카드 바로 위, 범례·축척은 왼쪽 아래 */
+  body.wide .simbar { left: 50%; right: auto; transform: translateX(-50%); width: min(760px, calc(100vw - 420px)); bottom: calc(var(--tc-h, 200px) + 24px); }
+  body.wide .legend { left: 16px; right: auto; bottom: 16px; max-width: 190px; display: grid; gap: 3px; font-size: 11px; }
+  body.wide .legend > span:first-child { font-size: 11px; }
+  body.wide .scale { left: 16px; right: auto; bottom: calc(var(--lg-h, 120px) + 26px); }
+  body.wide .rv.drawer { left: 50%; right: auto; transform: translateX(-50%); width: min(900px, calc(100vw - 420px)); bottom: calc(var(--tc-h, 200px) + 24px); }
+  body.wide .visor-wrap.pip { right: 76px; top: 64px; bottom: auto; width: min(620px, 44vw, calc((100vh - var(--tc-h, 200px) - 150px) * 1.65)); }
+  body.wide .tripcard .simbar { position: static; transform: none; width: auto; max-width: none; margin: 0 0 10px; padding: 0 0 10px; background: none; box-shadow: none; border: 0; border-bottom: 1px solid var(--rule); border-radius: 0; }
+  body.wide.show-status .visor-wrap.pip { right: 404px; }
+  @media (max-width: 900px) {
+    body.wide .wbar { left: 12px; right: 12px; top: 64px; max-width: none; justify-content: flex-start; }
+    body.wide header.top { right: 12px; max-width: none; }
+    body.wide .tripcard { width: calc(100vw - 24px); max-height: 46vh; }
+    body.wide .tc-body { grid-template-columns: 1fr; }
+    body.wide .zoomctl { top: 160px; right: 12px; }
+    body.wide .simbar, body.wide .rv.drawer { width: calc(100vw - 24px); }
+    body.wide .legend { display: none; } body.wide .scale { bottom: calc(var(--tc-h, 200px) + 24px); }
+    body.wide .modebar { display: none; }
+    body.wide .leftcol, body.wide .rightcol { top: 120px; width: calc(100vw - 24px); }
+  }
   @media (max-width: 1100px) {
     .leftcol, .rightcol { width: 280px; } .rightcol { top: auto; height: 46vh; } .modebar, .legend, .simbar, .rv.drawer { left: 300px; right: 12px; }
     .zoomctl { right: 12px; bottom: calc(46vh + 24px); } .scale { right: 58px; bottom: calc(46vh + 26px); } header.top, .sitebar { width: 280px; }
@@ -399,12 +490,30 @@
 <div class="app">
   <header class="top float">
     <div class="brand">
+      <div class="wlogo" aria-hidden="true"></div>
       <div class="eyebrow">Mars EVA Walkback &amp; Survival Planner</div>
       <h1><span id="site-title">Gale 크레이터</span> EVA 귀환 반경 <button type="button" class="reset" id="lang-btn" style="font-size:12px;vertical-align:middle">EN</button> <button type="button" class="reset" id="notes-btn" style="font-size:12px;vertical-align:middle">자료 구분·방법</button></h1>
       <p class="sub">HiRISE 지형·로버 관측·RAD 선량 자료를 한 격자에 겹친 <b>10 m 단위 귀환 가능 지역·최적 귀환 경로 시뮬레이터</b>. 고장이 난 순간 남은 산소·냉각수·선량 여유로 거점까지 걸어 돌아올 수 있는 곳을 그리고, 지도를 누르면 그 지점에서 돌아오는 길을 따져 봅니다.</p>
     </div>
   </header>
 
+  <nav class="wbar float" id="wbar" aria-label="메뉴">
+    <select id="site-sel" class="wsel" aria-label="지형"></select>
+    <div class="qbtns" id="qbtns" role="group" aria-label="핵심 시나리오">
+      <button type="button" class="wbtn" data-q="explore">① 탐사 계획</button><button type="button" class="wbtn" data-q="surge">② 심박 급증 시뮬</button><button type="button" class="wbtn" data-q="rescue">③ 조난 구조</button>
+    </div>
+    <span class="wslot" id="wslot-mode"></span>
+    <span class="wsep" aria-hidden="true"></span>
+    <span class="wslot" id="wslot-view"></span>
+    <button type="button" class="wbtn" id="w-status" aria-pressed="false" aria-controls="rightcol">상태</button>
+    <button type="button" class="wbtn" id="w-settings" aria-pressed="false" aria-controls="leftcol">설정</button>
+    <span class="wslot" id="wslot-doc"></span>
+  </nav>
+  <section class="tripcard float" id="tripcard" aria-label="탐사 계획">
+    <div class="tc-head"><b id="tc-title">TRIP PLAN</b><span class="tc-where" id="tc-where"></span><span class="tc-slot" id="tc-verdict"></span></div>
+    <div class="tc-body"><div class="tc-left" id="tc-left"><p class="tc-simnote" id="tc-simnote">심박 급증 시나리오: 60분부터 대사량 +25%, 산소 450 g으로 목적지 왕복. 매분 "1분 더 가도 돌아올 수 있나"를 따져 자동 회항 경보를 냅니다.</p></div><div class="tc-right" id="tc-right"></div></div>
+    <div class="tc-live" id="tc-live"><div class="tc-chart" id="tc-chart"></div><div class="tc-gauges" id="tc-gauges"></div></div>
+  </section>
   <section class="sitebar float" aria-label="지형 선택">
     <div class="seg" id="sites-seg" role="radiogroup" aria-label="지형"></div>
     <p class="site-desc" id="site-desc"></p>
@@ -638,7 +747,7 @@
           <div class="walker" id="walker" hidden aria-hidden="true"></div>
         </div>
         <div class="zoomctl" role="group" aria-label="지도 조작">
-          <button type="button" id="compass" aria-label="정북 위 / 진행 방향 위" aria-pressed="false" title="정북 위 ↔ 진행 방향 위"><svg id="compass-needle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l4 10h-8z" fill="#ef6b5e"/><path d="M12 22l-4-10h8z" fill="#c9d1e0"/><text x="12" y="9.6" font-size="5" text-anchor="middle" fill="#0d1016" font-weight="700">N</text></svg></button>
+          <button type="button" id="compass" aria-label="정북 위 / 목표 방향 위" aria-pressed="false" title="정북 위 ↔ 목표 방향 위 (목표 지점 쪽을 화면 위로)"><svg id="compass-needle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l4 10h-8z" fill="#ef6b5e"/><path d="M12 22l-4-10h8z" fill="#c9d1e0"/><text x="12" y="9.6" font-size="5" text-anchor="middle" fill="#0d1016" font-weight="700">N</text></svg></button>
           <button type="button" id="zin" aria-label="확대">+</button><button type="button" id="zout" aria-label="축소">−</button><button type="button" id="zreset" aria-label="원래대로" hidden>⟲</button>
         </div>
         <div class="scale" id="scale" aria-label="축척"><div class="bar" id="scale-bar"></div><span id="scale-txt"></span></div>
@@ -652,6 +761,7 @@
           <div class="pip-head"><b>🥽 헬멧 바이저 HUD</b><span class="rv-nav"><button type="button" class="pipbtn" id="visor-pop" aria-label="팝업 창으로 열기">⧉</button><button type="button" class="pipbtn" id="visor-move" aria-label="다른 모서리로">⇱</button><button type="button" class="pipbtn" id="visor-big" aria-label="크게 보기">⤢</button><button type="button" class="pipbtn" id="visor-close" aria-label="닫기">✕</button></span></div>
           <div class="visor" id="visor">
             <canvas class="pov3d" id="pov3d"></canvas>
+            <canvas class="povov" id="povov"></canvas>
             <svg class="brackets" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1 12V1H9M91 1H99V12M99 88V99H91M9 99H1V88" fill="none" stroke="#7dffb0" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>
             <div class="hud" id="hud"></div>
           </div>
@@ -809,7 +919,7 @@
   // ---------- 영어 전환: 정적 문구는 사전, 숫자가 든 문구는 패턴 (긴 설명 문단은 한국어로 둠) ----------
   /*__I18N__*/
   // 처음 언어: 주소에 #...-en / -ko가 있으면 그것, 아니면 브라우저 언어(한국어가 아니면 영어. 대회 제출물은 영어가 원칙)
-  let LANG = /(^|[-#])en\b/.test(location.hash) ? "en" : /(^|[-#])ko\b/.test(location.hash) ? "ko" : /^ko/i.test(navigator.language || "") ? "ko" : "en";
+  let LANG = /(^|[-#])ko\b/.test(location.hash) ? "ko" : "en";   // 제출용: 기본 영어, #ko 또는 언어 버튼으로 한국어
   const TRN = new WeakMap();                 // 텍스트 노드 -> {ko, en}
   function trText(raw) {
     const t = raw.trim();
@@ -1915,7 +2025,7 @@
   }
 
   const fmt = (v, d = 1) => v.toLocaleString("ko-KR", { minimumFractionDigits: d, maximumFractionDigits: d });
-  const hm = (h) => { if (!isFinite(h) || h < 0) return "–"; const m = Math.round(h * 60); return `${Math.floor(m / 60)}시간 ${String(m % 60).padStart(2, "0")}분`; };
+  const hm = (h) => { if (!isFinite(h) || h < 0) return "–"; return `${Math.round(h * 60)}분`; };   // 남은 시간은 분 단위로 통일
 
   function paintSummary() {
     const s = summary;
@@ -1999,7 +2109,7 @@
       comm: '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M16 15v14M12 29h8"/><circle cx="16" cy="13" r="2.2" fill="currentColor"/><path d="M10.5 7.5a8 8 0 0 0 0 11M21.5 7.5a8 8 0 0 1 0 11M6.5 3.8a13 13 0 0 0 0 18.4M25.5 3.8a13 13 0 0 1 0 18.4"/></svg>',
     };
     const who = s.mode === "rescue" ? "구조대원 · " : "";
-    const hmS = (h) => { if (!isFinite(h) || h < 0) return "–"; const m = Math.round(h * 60); return m < 60 ? `${m}분` : `${Math.floor(m / 60)}시간 ${m % 60}분`; };
+    const hmS = (h) => { if (!isFinite(h) || h < 0) return "–"; return `${Math.round(h * 60)}분`; };
     const o2pct = EO2() / TANK_G * 100, wpct = EW() * 1000 / WATER_FULL_G * 100;
     const sg = signalAt(focusPos());
     const cards = [
@@ -2292,7 +2402,7 @@
     return out;
   }
   const xName = (j) => `${LETTERS[j - 1]}`;
-  const fmtDur = (sec) => { if (!isFinite(sec)) return "–"; const m = Math.round(sec / 60); return m < 60 ? `${m}분` : `${Math.floor(m / 60)}시간 ${String(m % 60).padStart(2, "0")}분`; };
+  const fmtDur = (sec) => { if (!isFinite(sec)) return "–"; return `${Math.round(sec / 60)}분`; };   // 분 단위로 통일
   function scnPath(sc) {                  // 시나리오 경로 칸 목록 (거점 -> ... -> 거점)
     const nodes = [state.base, ...state.xT.map((x) => x.cell)], seq = [0, ...sc.ord, 0], path = [];
     for (let j = 0; j + 1 < seq.length; j++) { const P = legPath(LEGS.get(legKey(nodes[seq[j]])), nodes[seq[j + 1]]); path.push(...(path.length ? P.slice(1) : P)); }
@@ -2539,21 +2649,21 @@
     const cx = cv.getContext("2d"); cx.drawImage(im, 0, 0, W, R);
     COLMAP = cx.getImageData(0, 0, W, R).data; COLMAP_SITE = SITE_I; return COLMAP;
   }
-  function drawPOV(cv, fx, fy, hd) {
-    if (!cv || !H) return;
-    const col = colMap(); if (!col) return;
+  function drawPOV(cv, fx, fy, hd, bob = 0) {
+    if (!cv || !H) return null;
+    const col = colMap(); if (!col) return null;
     const cw0 = cv.clientWidth || 640, ch0 = cv.clientHeight || 360, sc = Math.min(1, 640 / cw0);
     const w = Math.max(160, Math.round(cw0 * sc)), h = Math.max(90, Math.round(ch0 * sc));
     if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
     const g = cv.getContext("2d"), img = g.createImageData(w, h), d32 = new Uint32Array(img.data.buffer);
-    const horizon = Math.round(h * 0.46), sky0 = [150, 112, 88], sky1 = [214, 178, 140];
+    const horizon = Math.round(h * 0.46 + bob * h * 0.006), sky0 = [150, 112, 88], sky1 = [214, 178, 140];
     for (let y = 0; y < h; y++) {          // 화성 하늘: 위는 짙은 버터스카치, 지평선 쪽은 밝게
       const t = Math.min(1, y / horizon), r = sky0[0] + (sky1[0] - sky0[0]) * t, gg = sky0[1] + (sky1[1] - sky0[1]) * t, b = sky0[2] + (sky1[2] - sky0[2]) * t;
       const c = (255 << 24) | (b << 16) | (gg << 8) | r;
       d32.fill(c, y * w, y * w + w);
     }
     const ix = Math.max(0, Math.min(W - 1, fx | 0)), iy = Math.max(0, Math.min(R - 1, fy | 0));
-    const camH = H[iy * W + ix] + 1.7;
+    const camH = H[iy * W + ix] + 1.7 + bob * 0.035;      // 걸음마다 머리 높이가 조금 오르내림 (바디캠)
     const th = hd * Math.PI / 180, fwx = Math.sin(th), fwy = -Math.cos(th), rtx = Math.cos(th), rty = Math.sin(th);
     const tanh = Math.tan(35 * Math.PI / 180), focal = (w / 2) / tanh;
     const ybuf = new Int32Array(w).fill(h);
@@ -2578,6 +2688,148 @@
       z += dz; dz *= 1.013;
     }
     g.putImageData(img, 0, 0);
+    return { w, h, horizon, focal, camH, fx, fy, fwx, fwy, rtx, rty, hd };
+  }
+  // ---------- 바이저: 바디캠처럼 실시간 1인칭 + 자세계 격자 + 방위 + 경로 곡선 ----------
+  let POV_YAW = 0, POV_LAST = null, WP = { t: 0, key: "", pts: [] };
+  function povAhead(px, py) {             // 앞으로 걸을 길 (5초마다 새로 뽑음): 재생 중이면 시뮬레이션 프레임, 아니면 계획 경로
+    const key = `${SITE_I}|${SIM && SIM.ok ? SIM.kind + SIM.frames.length : "-"}|${state.xScn}|${state.mode}`;
+    const now = performance.now();
+    if (key === WP.key && now - WP.t < 5000 && WP.pts.length) return WP.pts;
+    const pts = [];
+    let len = 0, lx = px, ly = py;
+    const push = (c) => { const x = (c % W) + 0.5, y = ((c / W) | 0) + 0.5; const d = Math.hypot(x - lx, y - ly); if (d < 1.5) return true; len += d; lx = x; ly = y; pts.push([x, y, c]); return len < 120; };
+    const f = simFrame();
+    if (f && SIM && SIM.ok) { for (let i = Math.max(0, SIM.idx); i < SIM.frames.length; i++) if (!push(SIM.frames[i].pos)) break; }
+    else if (state.mode === "explore" && XS[state.xScn] && XS[state.xScn].ok) { for (const c of scnPath(XS[state.xScn])) if (!push(c)) break; }
+    WP = { t: now, key, pts };
+    return pts;
+  }
+  function povDest() {
+    const f = simFrame();
+    if (f && f.dest >= 0) return f.dest;
+    if (state.mode === "explore" && XS[state.xScn] && XS[state.xScn].ok) return state.xT[XS[state.xScn].ord[0] - 1].cell;
+    return -1;
+  }
+  function drawPOVOverlay(ov, P, roll) {
+    if (!ov || !P) return;
+    const W2 = ov.clientWidth, H2 = ov.clientHeight;
+    if (!W2 || !H2) return;
+    if (ov.width !== W2 || ov.height !== H2) { ov.width = W2; ov.height = H2; }
+    const g = ov.getContext("2d"), s = W2 / P.w * 1.06, sy = H2 / P.h * 1.06, ox = -W2 * 0.03, oy = -H2 * 0.03;   // 바탕 캔버스는 6% 크게(흔들림 여유)
+    g.clearRect(0, 0, W2, H2);
+    const cx = W2 / 2, hz = oy + P.horizon * sy, cyan = "#5ef2ff", glow = "rgba(94,242,255,.55)";
+    g.lineCap = "round"; g.lineJoin = "round";
+    // 1) 경로 곡선(스플라인) + 목표 표지
+    const proj = (x, y) => {
+      const dx = x - P.fx, dy = y - P.fy, z = dx * P.fwx + dy * P.fwy, r = dx * P.rtx + dy * P.rty;
+      if (z < 0.4) return null;
+      const ix = Math.max(0, Math.min(W - 1, x | 0)), iy = Math.max(0, Math.min(R - 1, y | 0)), hh = H[iy * W + ix] + 0.15;
+      return [ox + (P.w / 2 + r * P.focal / z) * s, oy + (P.horizon + (P.camH - hh) / (z * CELL) * P.focal) * sy, z];
+    };
+    const pts = povAhead(P.fx, P.fy).map((p) => proj(p[0], p[1])).filter(Boolean);
+    if (pts.length >= 2) {
+      pts.unshift([cx, H2 * 1.02, 0]);
+      g.save(); g.shadowColor = glow; g.shadowBlur = 12; g.strokeStyle = cyan; g.globalAlpha = .9;
+      g.beginPath(); g.moveTo(pts[0][0], pts[0][1]);
+      for (let i = 0; i < pts.length - 1; i++) {   // Catmull-Rom -> 베지어
+        const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+        g.bezierCurveTo(p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6, p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6, p2[0], p2[1]);
+      }
+      g.lineWidth = Math.max(2, W2 * 0.006); g.stroke();
+      g.setLineDash([2, W2 * 0.02]); g.lineWidth = Math.max(4, W2 * 0.012); g.globalAlpha = .35; g.stroke(); g.setLineDash([]);
+      g.restore();
+      for (let i = 1; i < pts.length; i += 3) {    // 진행 방향 갈매기표
+        const a = pts[i], b = pts[Math.min(pts.length - 1, i + 1)]; if (a === b) continue;
+        const ang = Math.atan2(b[1] - a[1], b[0] - a[0]), sz = Math.max(4, 14 - a[2] * 0.25);
+        g.save(); g.translate(a[0], a[1]); g.rotate(ang); g.strokeStyle = cyan; g.lineWidth = 2; g.globalAlpha = .85;
+        g.beginPath(); g.moveTo(-sz * .5, -sz * .5); g.lineTo(0, 0); g.lineTo(-sz * .5, sz * .5); g.stroke(); g.restore();
+      }
+    }
+    const dest = povDest();
+    if (dest >= 0) {
+      const dx = (dest % W) + 0.5, dy = ((dest / W) | 0) + 0.5, q = proj(dx, dy), km = Math.hypot(dx - P.fx, dy - P.fy) * CELL / 1000;
+      const lab = `${state.hudLang === "en" ? "WAYPOINT" : "목표"} ${km < 1 ? Math.round(km * 1000) + " m" : fmt(km, 2) + " km"}`;
+      g.font = `600 ${Math.max(10, W2 * 0.016)}px "IBM Plex Mono", monospace`; g.fillStyle = cyan; g.strokeStyle = cyan; g.lineWidth = 2;
+      if (q && q[0] > 0 && q[0] < W2 && q[1] > 0 && q[1] < H2) {
+        const y0 = Math.min(q[1], H2 * 0.8) - W2 * 0.03, r = Math.max(6, W2 * 0.012);
+        g.save(); g.shadowColor = glow; g.shadowBlur = 10;
+        g.beginPath(); g.moveTo(q[0], y0 - r); g.lineTo(q[0] + r, y0); g.lineTo(q[0], y0 + r); g.lineTo(q[0] - r, y0); g.closePath(); g.stroke();
+        g.beginPath(); g.moveTo(q[0], y0 + r); g.lineTo(q[0], Math.min(q[1], H2 * 0.8)); g.stroke();
+        g.textAlign = "center"; g.fillText(lab, q[0], y0 - r - 6); g.restore();
+      } else {                             // 화면 밖: 가장자리 화살표
+        const rel = ((bearingTo(Math.round(P.fy - 0.5) * W + Math.round(P.fx - 0.5), dest) - P.hd + 540) % 360) - 180, right = rel > 0;
+        const ex = right ? W2 * 0.94 : W2 * 0.06, ey = H2 * 0.5, a = W2 * 0.025;
+        g.save(); g.shadowColor = glow; g.shadowBlur = 10; g.beginPath();
+        g.moveTo(ex + (right ? a : -a), ey); g.lineTo(ex, ey - a); g.lineTo(ex, ey + a); g.closePath(); g.fill();
+        g.textAlign = right ? "right" : "left"; g.fillText(`${lab} ${right ? "▶" : "◀"} ${Math.abs(Math.round(rel))}°`, right ? ex - 6 : ex + 6, ey + a * 2.2); g.restore();
+      }
+    }
+    // 2) 자세계 격자 (자비스풍): 수평선 · 피치 사다리 · 가운데 조준원 · 기울기 호
+    g.save(); g.translate(cx, hz); g.rotate(roll * Math.PI / 180); g.strokeStyle = "rgba(150,245,255,.75)"; g.fillStyle = "rgba(150,245,255,.8)";
+    g.shadowColor = glow; g.shadowBlur = 6; g.lineWidth = 1.4; g.font = `${Math.max(9, W2 * 0.012)}px "IBM Plex Mono", monospace`;
+    const fs = P.focal * sy;
+    g.beginPath(); g.moveTo(-W2 * 0.46, 0); g.lineTo(-W2 * 0.07, 0); g.moveTo(W2 * 0.07, 0); g.lineTo(W2 * 0.46, 0); g.stroke();
+    for (const deg of [-15, -10, -5, 5, 10, 15]) {
+      const y = -Math.tan(deg * Math.PI / 180) * fs, half = W2 * (Math.abs(deg) % 10 ? 0.05 : 0.09);
+      g.globalAlpha = .55; g.setLineDash(deg < 0 ? [6, 5] : []);
+      g.beginPath(); g.moveTo(-half, y); g.lineTo(-W2 * 0.035, y); g.moveTo(W2 * 0.035, y); g.lineTo(half, y); g.stroke();
+      if (Math.abs(deg) % 10 === 0) { g.fillText(String(Math.abs(deg)), -half - W2 * 0.025, y + 4); g.fillText(String(Math.abs(deg)), half + 6, y + 4); }
+    }
+    g.setLineDash([]); g.globalAlpha = .9; g.restore();
+    g.save(); g.strokeStyle = "rgba(150,245,255,.85)"; g.lineWidth = 1.4; g.shadowColor = glow; g.shadowBlur = 6;
+    const rr = W2 * 0.035, ccy = hz;
+    g.beginPath(); g.arc(cx, ccy, rr, 0, Math.PI * 2); g.stroke();
+    for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2; g.beginPath(); g.moveTo(cx + Math.cos(a) * rr * 0.6, ccy + Math.sin(a) * rr * 0.6); g.lineTo(cx + Math.cos(a) * rr * 1.5, ccy + Math.sin(a) * rr * 1.5); g.stroke(); }
+    g.beginPath(); g.arc(cx, ccy, 2, 0, Math.PI * 2); g.fillStyle = "rgba(150,245,255,.9)"; g.fill();
+    // 기울기 호 (위쪽): ±30°, 지금 기울기 표시
+    const ar = H2 * 0.36, ay = ccy + ar * 0.15;
+    g.globalAlpha = .6; g.beginPath(); g.arc(cx, ay, ar, -Math.PI / 2 - 0.52, -Math.PI / 2 + 0.52); g.stroke();
+    for (const t of [-30, -20, -10, 0, 10, 20, 30]) { const a = -Math.PI / 2 + t * Math.PI / 180, l = t === 0 ? 10 : 6;
+      g.beginPath(); g.moveTo(cx + Math.cos(a) * ar, ay + Math.sin(a) * ar); g.lineTo(cx + Math.cos(a) * (ar - l), ay + Math.sin(a) * (ar - l)); g.stroke(); }
+    const ra = -Math.PI / 2 - roll * Math.PI / 180; g.globalAlpha = 1;
+    g.beginPath(); g.moveTo(cx + Math.cos(ra) * (ar + 2), ay + Math.sin(ra) * (ar + 2)); g.lineTo(cx + Math.cos(ra - 0.02) * (ar + 10), ay + Math.sin(ra - 0.02) * (ar + 10)); g.lineTo(cx + Math.cos(ra + 0.02) * (ar + 10), ay + Math.sin(ra + 0.02) * (ar + 10)); g.closePath(); g.fill();
+    g.restore();
+    // 3) 방위 띠 (위쪽 가운데): 0~360°
+    const tw = W2 * 0.5, tx0 = cx - tw / 2, ty = H2 * 0.05, span = 90, hd = (P.hd + 360) % 360;
+    g.save(); g.fillStyle = "rgba(4,14,18,.55)"; g.fillRect(tx0, ty, tw, H2 * 0.075);
+    g.strokeStyle = "rgba(150,245,255,.8)"; g.fillStyle = "rgba(190,250,255,.95)"; g.lineWidth = 1.2; g.textAlign = "center";
+    g.font = `${Math.max(9, W2 * 0.013)}px "IBM Plex Mono", monospace`;
+    g.beginPath(); g.rect(tx0, ty, tw, H2 * 0.075); g.clip();
+    for (let d = Math.ceil((hd - span / 2) / 5) * 5; d <= hd + span / 2; d += 5) {
+      const x = cx + (d - hd) / span * tw, dd = ((d % 360) + 360) % 360, big = dd % 15 === 0;
+      g.beginPath(); g.moveTo(x, ty + H2 * 0.075); g.lineTo(x, ty + H2 * 0.075 - (big ? H2 * 0.025 : H2 * 0.012)); g.stroke();
+      if (dd % 30 === 0) g.fillText({ 0: "N", 90: "E", 180: "S", 270: "W" }[dd] ?? String(dd), x, ty + H2 * 0.032);
+    }
+    const mark = (cell, txt, col) => { if (cell < 0) return; const b = bearingTo(Math.round(P.fy - 0.5) * W + Math.round(P.fx - 0.5), cell), r = ((b - hd + 540) % 360) - 180;
+      const x = cx + Math.max(-span / 2, Math.min(span / 2, r)) / span * tw; g.fillStyle = col; g.fillText(txt, x, ty + H2 * 0.058); };
+    mark(state.base, "★", "#9dffbf"); mark(dest, "◆", cyan);
+    g.restore();
+    g.save(); g.fillStyle = "rgba(4,14,18,.85)"; g.strokeStyle = cyan; g.lineWidth = 1.5;
+    const bw = W2 * 0.075, bh = H2 * 0.05; g.fillRect(cx - bw / 2, ty + H2 * 0.077, bw, bh); g.strokeRect(cx - bw / 2, ty + H2 * 0.077, bw, bh);
+    g.fillStyle = "#dffbff"; g.textAlign = "center"; g.font = `700 ${Math.max(10, W2 * 0.017)}px "IBM Plex Mono", monospace`;
+    g.fillText(`${String(Math.round(hd) % 360).padStart(3, "0")}°`, cx, ty + H2 * 0.077 + bh * 0.72);
+    g.beginPath(); g.moveTo(cx, ty + H2 * 0.075); g.lineTo(cx - 5, ty + H2 * 0.075 - 7); g.lineTo(cx + 5, ty + H2 * 0.075 - 7); g.closePath(); g.fill();
+    g.restore();
+  }
+  function povRender(x, y, heading, walking) {   // 바이저 모든 화면에 그림. walking: 걸음 흔들림(바디캠)
+    POV_LAST = { x, y, heading, walking };
+    const t = performance.now() / 1000, bob = walking ? Math.sin(t * Math.PI * 2 * 1.7) : 0, roll = walking ? Math.sin(t * Math.PI * 1.7) * 1.4 : 0;
+    const hd = (heading + POV_YAW + (walking ? Math.sin(t * Math.PI * 1.7) * 0.8 : 0) + 720) % 360;
+    for (const cv of povTargets()) {
+      const P = drawPOV(cv, x, y, hd, bob);
+      cv.style.transform = `rotate(${roll.toFixed(2)}deg)`;
+      drawPOVOverlay(cv.parentElement.querySelector(".povov"), P, roll);
+    }
+  }
+  function bindVisorDrag(el) {            // 바이저를 마우스로 끌면 360° 둘러보기, 두 번 누르면 진행 방향으로
+    if (!el || el.dataset.drag) return; el.dataset.drag = "1";
+    let d = null;
+    el.addEventListener("pointerdown", (e) => { if (e.target.closest("button")) return; d = { x: e.clientX, yaw: POV_YAW }; el.classList.add("grab"); el.setPointerCapture(e.pointerId); });
+    el.addEventListener("pointermove", (e) => { if (!d) return; POV_YAW = (d.yaw - (e.clientX - d.x) * 0.35 + 720) % 360; if (!playing && POV_LAST) povRender(POV_LAST.x, POV_LAST.y, POV_LAST.heading, false); });
+    const end = () => { d = null; el.classList.remove("grab"); };
+    el.addEventListener("pointerup", end); el.addEventListener("pointercancel", end);
+    el.addEventListener("dblclick", () => { POV_YAW = 0; if (!playing && POV_LAST) povRender(POV_LAST.x, POV_LAST.y, POV_LAST.heading, false); });
   }
   const povTargets = () => { const out = []; if (state.hud) { if (hudPopupOpen()) out.push(HUDWIN.document.getElementById("pov3d")); else out.push($("pov3d")); } return out.filter(Boolean); };
   function povHeading(pos) {              // 재생 중이 아니면: 거점에서 그 지점을 바라보는 방향(도착하는 방향)
@@ -2601,8 +2853,9 @@
       .pop .visor{width:min(100vw, calc(100vh * 16 / 9));aspect-ratio:16/9;border-radius:0}
       .pop .pip-cap{position:absolute;left:10px;bottom:6px;margin:0}
       .pop .live{position:absolute;right:12px;top:8px;font:600 11px/1 system-ui;color:#7dffb0;letter-spacing:.06em}
-    </style></head><body><div class="pop"><div class="visor" id="visor"><canvas class="pov3d" id="pov3d"></canvas>${br}<div class="hud" id="hud"></div></div><span class="live">● LIVE</span><p class="pip-cap" id="visor-cap"></p></div></body></html>`);
+    </style></head><body><div class="pop"><div class="visor" id="visor"><canvas class="pov3d" id="pov3d"></canvas><canvas class="povov" id="povov"></canvas>${br}<div class="hud" id="hud"></div></div><span class="live">● LIVE</span><p class="pip-cap" id="visor-cap"></p></div></body></html>`);
     HUDWIN.document.close();
+    bindVisorDrag(HUDWIN.document.getElementById("visor"));
     const w = HUDWIN;
     const watch = setInterval(() => { if (w.closed) { clearInterval(watch); if (HUDWIN === w) { HUDWIN = null; state.hud = false; $("hud-btn").setAttribute("aria-pressed", "false"); renderHud(); } } }, 500);
     return true;
@@ -2633,11 +2886,13 @@
     const sg = signalAt(pos), dose = RATE1[pos] * multNow() * 1000;
     const sl = slopeAt(pos), fc = CLS[pos];
     const cls = (v, a, b) => (v >= a ? "ok" : v >= b ? "warn" : "bad");
-    const tmin = (m) => (m >= 60 ? `${Math.floor(m / 60)}:${String(Math.round(m % 60)).padStart(2, "0")}` : `${Math.round(m)} ${L.min}`);
+    const tmin = (m) => `${Math.round(m)} ${L.min}`;   // 분 단위
+    const hpBar = (lab, pct, mins) => { const c = pctCls(pct), p = Math.max(0, Math.min(100, pct));
+      return `<div class="hp ${c}"><span>${lab}</span><span class="hpbar${p < 35 ? " low" : ""}"><i style="width:${p}%"></i><b>${fmt(p, 0)}%</b></span><span class="t">${tmin(mins)}</span></div>`; };
     let heading = 0;                        // 진행 방향 (시뮬레이션 재생 중), 아니면 북쪽 위
     if (simF && SIM.idx > 0) { const pv = SIM.frames[Math.max(0, SIM.idx - 1)].pos; if (pv !== pos) heading = bearingTo(pv, pos); }
     if (!simF) heading = povHeading(pos);
-    if (!playing) drawPOV(doc.getElementById("pov3d"), (pos % W) + 0.5, ((pos / W) | 0) + 0.5, simF && SIM.idx > 0 ? heading : povHeading(pos));
+    if (!playing) povRender((pos % W) + 0.5, ((pos / W) | 0) + 0.5, simF && SIM.idx > 0 ? heading : povHeading(pos), false);
     const marks = [{ b: bearingTo(pos, state.base), t: "★" + L.base, c: "ok", d: distKm(pos, state.base) }];
     const dest = simF && simF.dest >= 0 ? simF.dest : state.mode === "sim" ? state.simTarget : state.mode === "eva" && EVA && EVA.ok && EVA.order.length ? tCell(META.targets[EVA.order[0]]) : -1;
     if (dest >= 0 && dest !== pos) marks.push({ b: bearingTo(pos, dest), t: "◆" + L.dest, c: "warn", d: distKm(pos, dest) });
@@ -2655,8 +2910,7 @@
     else if (sl > 15) alert = `<div class="alert warn">${L.steep}</div>`;
     else if (sg.lv <= 1) alert = `<div class="alert warn">${L.dark}</div>`;
     el.innerHTML = `${alert}
-      <div class="c tl"><span>${L.o2}</span><span class="v gauge ${pctCls(o2pct)}">${batterySvg(o2pct)}${fmt(o2pct, 0)}%</span><span>${tmin(o2min)} ${L.left} · ${fmt(o2, 0)} g</span>
-        <span class="gauge sm ${pctCls(wpct)}">${L.h2o} ${batterySvg(wpct)}<b>${fmt(Math.max(0, wpct), 0)}%</b> · ${tmin(wmin)}</span></div>
+      <div class="c tl">${hpBar(L.o2, o2pct, o2min)}${hpBar(L.h2o, wpct, wmin)}<span>${fmt(o2, 0)} g O2 · ${fmt(Math.max(0, w), 0)} g H2O</span></div>
       <div class="c tr"><span>${L.comm}</span><span class="v gauge ${sigCls(sg.lv)}">${signalSvg(sg.lv)}${SIG[state.hudLang][sg.lv]}</span><span>${L.dose} ${fmt(dose, 1)} µSv/h</span></div>
       <div class="c bl"><span>${L.margin}</span><span class="v ${isFinite(margin) ? cls(margin, 80, 0) : "bad"}">${isFinite(margin) ? fmt(margin, 0) + " g" : "—"}</span><span>${L.need} ${isFinite(need) ? fmt(need, 0) : "—"} g</span></div>
       <div class="c br"><span>${L.slope} <b class="${sl > 15 ? "warn" : "ok"}">${fmt(sl, 0)}°</b></span><span>${L.fall} <b class="${fc === 2 ? "bad" : fc === 1 ? "warn" : "ok"}">${[L.lo, L.mid, L.hi][fc]}</b></span></div>
@@ -2825,7 +3079,8 @@
   }
   function drawSimChart() {
     const cv = $("sim-chart"); if (cv.offsetParent === null) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2), cw = cv.clientWidth, ch = cw < 520 ? 362 : cw < 760 ? 346 : 330;
+    const compact = !!cv.closest(".tripcard"), dpr = Math.min(window.devicePixelRatio || 1, 2), cw = cv.clientWidth, ch = compact ? 220 : cw < 520 ? 362 : cw < 760 ? 346 : 330;
+    const fy = compact ? 220 / 340 : 1;   // 계획 카드 안에서는 세로를 줄여 그림
     cv.style.height = ch + "px";
     cv.width = Math.round(cw * dpr); cv.height = Math.round(ch * dpr);
     const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -2834,18 +3089,19 @@
     const F = SIM.frames, T = Math.max(1, F.length - 1), L = 44, Rp = 10, X = (m) => L + (cw - L - Rp) * m / T;
     const press = state.simSrc === "press";
     const panels = [
-      press ? { title: "탱크 압력 (MPa, 센서 값)", y0: 6, h: 82, series: [
+      press ? { title: LANG === "en" ? "Tank pressure (MPa, sensor)" : "탱크 압력 (MPa, 센서 값)", y0: 6, h: 82, series: [
           { v: (f) => f.P / 1e6, c: "#ff8a65", w: 1.2 }] }
-      : { title: "심박 (bpm)", y0: 6, h: 82, series: [
+      : { title: LANG === "en" ? "Heart rate (bpm) · measured vs model" : "심박 (bpm) · 측정 vs 모델", y0: 6, h: 82, series: [
           { v: (f) => f.hr, c: "#ff8a65", w: 1.4 }, { v: (f) => f.hrExp, c: "#9aa3b5", w: 1.2, dash: [4, 3] }] },
-      { title: press ? "k (측정 소모율 ÷ 모델 산소)" : "k (심박 ÷ 모델 대사량)", y0: 104, h: 70, ref: 1, series: [
+      { title: LANG === "en" ? (press ? "k (measured use ÷ model)" : "k (heart rate ÷ model metabolism)") : press ? "k (측정 소모율 ÷ 모델 산소)" : "k (심박 ÷ 모델 대사량)", y0: 104, h: 70, ref: 1, series: [
           { v: (f) => f.k, c: "#7fd0ff", w: 1.8 }, { v: (f) => f.kTrue, c: "#a6e07a", w: 1.2, dash: [4, 3] }] },
-      { title: "산소 (g): 쓸 수 있는 양 vs 귀환에 필요한 양", y0: 190, h: 86, zero: true, series: [
+      { title: LANG === "en" ? "O2 (g): usable (blue) vs needed to return (red)" : "산소 (g): 쓸 수 있는 양(파랑) vs 귀환에 필요한 양(빨강)", y0: 190, h: 86, zero: true, series: [
           { v: (f) => f.o2True - O2RES(), c: "#9aa3b5", w: 1, dash: [2, 3] },
           { v: (f) => f.o2 - O2RES(), c: "#3fc1cc", w: 1.8 }, { v: (f) => (isFinite(f.need) ? f.need : NaN), c: "#ef6b5e", w: 1.8 },
           ...(press ? [{ v: (f) => f.naive, c: "#ffb74d", w: 1.2, dash: [5, 3] }] : [])] },
     ];
     g.font = '11px "IBM Plex Sans KR", system-ui, sans-serif';
+    if (fy !== 1) for (const p of panels) { p.y0 *= fy; p.h *= fy; }
     for (const p of panels) {
       let lo = Infinity, hi = -Infinity;
       for (const f of F) for (const sr of p.series) { const v = sr.v(f); if (isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }
@@ -2869,14 +3125,15 @@
       g.fillStyle = "#e7eaf0"; g.textAlign = "left"; g.textBaseline = "top"; g.fillText(p.title, L + 6, p.y0 + 4);
     }
     g.fillStyle = "#9aa3b5"; g.textAlign = "center"; g.textBaseline = "top";
-    for (let m = 0; m <= T; m += T > 240 ? 60 : 30) g.fillText(`${m}분`, X(m), 282);
-    if (SIM.turnMin >= 0) { g.strokeStyle = "#ffd23f"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(X(SIM.turnMin), 6); g.lineTo(X(SIM.turnMin), 276); g.stroke(); }
-    g.strokeStyle = "#ffffff"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(X(SIM.idx), 6); g.lineTo(X(SIM.idx), 276); g.stroke();
+    for (let m = 0; m <= T; m += T > 240 ? 60 : 30) g.fillText(LANG === "en" ? `${m} min` : `${m}분`, X(m), 282 * fy);
+    if (SIM.turnMin >= 0) { g.strokeStyle = "#ffd23f"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(X(SIM.turnMin), 6); g.lineTo(X(SIM.turnMin), 276 * fy); g.stroke(); }
+    g.strokeStyle = "#ffffff"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(X(SIM.idx), 6); g.lineTo(X(SIM.idx), 276 * fy); g.stroke();
     g.textAlign = "left"; g.textBaseline = "alphabetic";
     const lg = press
       ? [["#ff8a65", "압력"], ["#7fd0ff", "k 추정"], ["#a6e07a", "실제 k"], ["#3fc1cc", "측정 산소"], ["#9aa3b5", "실제 산소"], ["#ef6b5e", "지형 모델 귀환 필요"], ["#ffb74d", "단순 외삽"], ["#ffd23f", "경보"]]
       : [["#ff8a65", "측정 심박"], ["#9aa3b5", "모델 기대 심박"], ["#7fd0ff", "k 추정"], ["#a6e07a", "실제 k"], ["#3fc1cc", "쓸 수 있는 산소"], ["#ef6b5e", "귀환 필요 산소"], ["#ffd23f", "귀환 경보"]];
-    let lx = L, ly = 312;
+    let lx = L, ly = compact ? 214 : 312;
+    if (compact) return;                   // 카드 안: 범례 생략 (선 색은 제목에)
     for (const [c, t] of lg) {
       const wd = g.measureText(t).width + 26;
       if (lx + wd > cw - Rp && lx > L) { lx = L; ly += 15; }
@@ -3127,7 +3384,9 @@
   function fitStage() {
     const ww = wrap.clientWidth, wh = wrap.clientHeight;
     if (!W || !R || !ww || !wh) return;
-    const wide = ww > 1100, L = wide ? 340 : 0, Rr = wide ? 352 : 0, T = 56, B = 40;   // 양옆 카드가 덮는 폭은 빼고 맞춤
+    const WUI = document.body.classList.contains("wide");
+    const wide = ww > 1100, L = WUI ? 16 : wide ? 340 : 0, Rr = WUI ? 76 : wide ? 352 : 0, T = WUI ? 64 : 56,
+      B = WUI ? ($("tripcard").offsetHeight || 200) + 24 : 40;   // 덮는 카드 폭·높이는 빼고 맞춤
     const aw = Math.max(200, ww - L - Rr), ah = Math.max(200, wh - T - B), sc = Math.min(aw / W, ah / R);
     FIT = { w: W * sc, h: R * sc, x: L + (aw - W * sc) / 2, y: T + (ah - R * sc) / 2 };
     stage.style.width = `${FIT.w}px`; stage.style.height = `${FIT.h}px`;
@@ -3175,9 +3434,17 @@
   $("zin").addEventListener("click", () => zoomAt(1.6, wrap.clientWidth / 2, wrap.clientHeight / 2));
   $("zout").addEventListener("click", () => zoomAt(1 / 1.6, wrap.clientWidth / 2, wrap.clientHeight / 2));
   $("zreset").addEventListener("click", resetZoom);
-  $("compass").addEventListener("click", () => {  // 정북 위 <-> 진행 방향 위
+  $("compass").addEventListener("click", () => {  // 정북 위 <-> 목표 방향 위 (탐사자 위치에서 목표 지점 쪽이 화면 위로)
     headingUp = !headingUp;
-    if (!headingUp) rotateTo(0); else { applyZoom(); if (SIM && SIM.ok && simFrame()) placeWalker(SIM.idx); }
+    if (!headingUp) { rotateTo(0); return; }
+    if (SIM && SIM.ok && simFrame()) {
+      const f = simFrame(), tgt = f.dest >= 0 && f.dest !== f.pos ? f.dest : state.base;
+      targetHeading = tgt !== f.pos ? bearingTo(f.pos, tgt) : walkerHeading; placeWalker(SIM.idx);
+    } else {                               // 재생 전: 거점(또는 현재 위치)에서 첫 목표 쪽을 위로
+      const from = state.here >= 0 ? state.here : state.base, tgt = povDest() >= 0 ? povDest() : state.sel;
+      targetHeading = tgt >= 0 && tgt !== from ? bearingTo(from, tgt) : 0;
+      followWalker((from % W) + 0.5, ((from / W) | 0) + 0.5, targetHeading);
+    }
   });
   stage.addEventListener("pointerdown", (e) => { if (e.button !== 0) return; drag = { x: e.clientX, y: e.clientY, m: M }; dragMoved = false; });
   window.addEventListener("pointermove", (e) => {
@@ -3296,7 +3563,7 @@
     $("eva-ctl").hidden = state.mode !== "eva";
     $("explore-ctl").hidden = state.mode !== "explore";
     $("eva-dwell-out").textContent = `${state.evaDwell}분`;
-    $("sim-chart").hidden = $("sim-note").hidden = state.mode !== "sim";
+    $("sim-note").hidden = state.mode !== "sim"; $("sim-chart").hidden = state.mode !== "sim" && !document.body.classList.contains("wide");
     $("simbar").hidden = !(state.mode === "sim" || (state.mode === "rescue" && SIM && SIM.ok && SIM.kind === "rescue") || (state.mode === "eva" && EVA && EVA.ok) || (state.mode === "explore" && XS.length > 0));
     $("k-ctl").dataset.off = String(state.mode === "sim");
     $("sim-custom-ctl").hidden = state.simScenario !== "custom";
@@ -3333,7 +3600,7 @@
     cancelAnimationFrame(raf);
     ensureTrees(() => {
       if (state.mode === "sim") ensureSim();
-      raf = requestAnimationFrame(() => { if (full) recompute(); else { paintCells(); paintOuter(); paintLegend(); } paintPoint(); });
+      raf = requestAnimationFrame(() => { if (full) recompute(); else { paintCells(); paintOuter(); paintLegend(); } paintPoint(); if (LANG === "en") applyLang(); });
       scheduleMO();
     });
   }
@@ -3422,7 +3689,7 @@
   }
   function stopSim() { playing = false; $("sim-play").textContent = "▶"; $("sim-play").setAttribute("aria-label", "재생"); $("eva-play").textContent = "▶"; $("rs-play").textContent = "▶"; }
   // 재생 중 사람 아이콘은 분과 분 사이를 매 화면 보간해 부드럽게 (지도·HUD는 1분마다 다시 그림)
-  let walkerHeading = 0;
+  let walkerHeading = 0, targetHeading = 0;
   function placeWalker(fi) {
     const el = $("walker");
     if (!simFrame()) { el.hidden = true; return; }
@@ -3432,8 +3699,12 @@
     el.style.left = `${x / W * 100}%`; el.style.top = `${y / R * 100}%`;
     const pa = F[Math.max(0, i0 - 1)].pos, nb = F[Math.min(F.length - 1, i0 + 2)].pos;   // 진행 방향: 앞 프레임 -> 다음 프레임
     if (pa !== nb && distKm(pa, nb) > 0.025) walkerHeading = walkerHeading + ((((bearingTo(pa, nb) - walkerHeading) % 360) + 540) % 360 - 180) * 0.15;
-    if (headingUp) followWalker(x, y, walkerHeading);
-    if (playing) for (const cv of povTargets()) drawPOV(cv, x, y, walkerHeading);
+    if (headingUp) {                       // N: 지금 가는 목표(지점, 귀환 중이면 거점) 방향을 화면 위로
+      const cur = Math.max(0, Math.min(N - 1, Math.floor(y) * W + Math.floor(x))), tgt = F[i0].dest >= 0 && F[i0].dest !== cur ? F[i0].dest : state.base;
+      if (tgt !== cur) { const b = bearingTo(cur, tgt); targetHeading = targetHeading + ((((b - targetHeading) % 360) + 540) % 360 - 180) * 0.2; }
+      followWalker(x, y, targetHeading);
+    }
+    if (playing) povRender(x, y, walkerHeading, F[i0].phase === "out" || F[i0].phase === "back");
     el.classList.toggle("back", F[i0].phase === "back" || F[i0].phase === "home");
     el.classList.toggle("work", F[i0].phase === "work");
     el.classList.toggle("pair", !!F[i0].together);           // 구조: 두 사람이 함께
@@ -3596,11 +3867,77 @@
     $("presets").innerHTML = presetsHtml();
     if (before) before();
     siteTexts();
+    if ($("site-sel")) $("site-sel").value = String(i);
     $("loading").hidden = true;
     syncInputs(); update();
   }
   $("sites-seg").innerHTML = SITE_LIST.map((s, i) => `<label><input type="radio" name="site" value="${i}"${i === 0 ? " checked" : ""}>${s.meta.site.short}</label>`).join("");
   $("sites-seg").addEventListener("change", (e) => { activePreset = "base"; loadSite(Number(e.target.value)); });
+  bindVisorDrag($("visor"));
+  (function wideUI() {                     // 넓은 화면 인터페이스: 기존 요소를 메뉴 막대·계획 카드로 옮김 (id·동작은 그대로)
+    document.body.classList.add("wide");
+    const sel = $("site-sel");
+    sel.innerHTML = SITE_LIST.map((s, i) => `<option value="${i}">${s.meta.site.short}</option>`).join("");
+    sel.addEventListener("change", () => { const r = document.querySelector(`#sites-seg input[value="${sel.value}"]`); if (r) r.click(); });
+    $("wslot-mode").append($("modes"), $("mode-more"));
+    $("wslot-view").append($("hud-btn"), $("rv-btn"));
+    $("hud-btn").textContent = "🥽 바이저"; $("rv-btn").textContent = "📷 로드뷰";
+    $("wslot-doc").append($("notes-btn"), $("lang-btn"));
+    $("tc-left").append($("explore-ctl"), $("rescue-ctl"));
+    $("tc-right").append($("pt-meters"));
+    $("tc-verdict").append($("pt-verdict"));
+    $("tc-chart").append($("sim-chart")); $("tc-gauges").append($("glance"));
+    $("tripcard").insertBefore($("simbar"), $("tripcard").firstChild);   // 재생 막대는 계획 카드 맨 위
+    // 핵심 시나리오 버튼: ① 탐사 계획 ② 심박 급증 시뮬(실시간) ③ 조난 구조 — 한 번에 바꾸고 바로 재생
+    const whenReady = (fn, tries = 60) => { if (SIM && SIM.ok && SIM.frames.length > 1) fn(); else if (tries > 0) setTimeout(() => whenReady(fn, tries - 1), 150); };
+    const autoplay = () => whenReady(() => { if (!playing) { setSimIdx(0); $("sim-play").click(); } });
+    $("qbtns").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-q]"); if (!b) return;
+      stopSim();
+      if (b.dataset.q !== "surge") {         // 기준 상황(산소 680 g 등)으로 되돌린 뒤 모드 전환
+        const base = PRESETS.find((q) => q.id === "base"); if (base) { Object.assign(state, DEFAULTS, base.s); activePreset = "base"; syncInputs(); }
+      }
+      if (b.dataset.q === "explore") { const r = document.querySelector('#modes input[value="explore"]'); r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true })); }
+      else if (b.dataset.q === "rescue") {
+        const r = document.querySelector('#modes input[value="rescue"]'); r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true }));
+        if (state.victim < 0) {            // 시연: 거점에서 약 3 km 떨어진 과학 지점에 구조 대상
+          let best = GOAL, bd = Infinity;
+          for (const t of META.targets || []) { const c = tCell(t); if (c < 0 || !(FLAGS[c] & 1)) continue; const d = Math.abs(distKm(c, state.base) - 3); if (d < bd) { bd = d; best = c; } }
+          state.victim = best; update();
+        }
+        autoplay();
+      } else {
+        const p = PRESETS.find((q) => q.id === "simhr"); Object.assign(state, DEFAULTS, p.s); activePreset = p.id; syncInputs(); update(); autoplay();
+      }
+      setTimeout(sync, 0);
+    });
+    const drawer = (btn, cls) => $(btn).addEventListener("click", () => {
+      const on = document.body.classList.toggle(cls); $(btn).setAttribute("aria-pressed", String(on));
+    });
+    drawer("w-settings", "show-settings"); drawer("w-status", "show-status");
+    const sync = () => {                   // 카드·범례 높이에 맞춰 재생 막대·축척 위치와 지도 맞춤을 갱신
+      const h = $("tripcard").offsetHeight, lg = $("legend").offsetHeight;
+      document.body.style.setProperty("--tc-h", h + "px"); document.body.style.setProperty("--lg-h", lg + "px");
+      $("tc-title").textContent = state.mode === "rescue" ? (LANG === "en" ? "RESCUE PLAN" : "구조 계획") : (LANG === "en" ? "TRIP PLAN" : "탐사 계획");
+      $("tc-where").textContent = $("pt-where").textContent === "–" ? "" : $("pt-where").textContent;
+      $("tripcard").hidden = !(state.mode === "explore" || state.mode === "rescue" || state.mode === "sim");
+      if (state.mode === "sim") $("tc-title").textContent = LANG === "en" ? "HEART-RATE SURGE SIM" : "심박 급증 시뮬레이션";
+      document.body.classList.toggle("mode-sim", state.mode === "sim");
+      const q = state.mode === "sim" ? "surge" : state.mode;
+      document.querySelectorAll("#qbtns [data-q]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.q === q)));
+      const live = !!(SIM && SIM.ok && (playing || SIM.idx > 0 || state.mode === "sim") && ["explore", "rescue", "sim"].includes(state.mode));
+      if (live !== $("tripcard").classList.contains("live")) $("tripcard").classList.toggle("live", live);
+      if (live && SIM !== lastSim) { lastSim = SIM; requestAnimationFrame(drawSimChart); }
+      if (live && playing) drawSimChart();
+      if (LANG === "en") applyLang();
+    };
+    setInterval(sync, 400);
+    let lastH = 0, lastSim = null;
+    new ResizeObserver(() => { sync(); const h = $("tripcard").offsetHeight; if (Math.abs(h - lastH) > 24) { lastH = h; fitStage(); applyZoom(); } }).observe($("tripcard"));
+    new MutationObserver(sync).observe($("pt-where"), { childList: true, characterData: true, subtree: true });
+    document.addEventListener("change", (e) => { if (e.target.name === "mode" || e.target.id === "mode-more") setTimeout(sync, 0); });
+    sync();
+  })();
   // 주소 끝 #jezero, #aram (또는 #aram-sim-demo 처럼 뒤에 개발 확인용 이름)으로 그 지형부터 열기
   const HID = location.hash.slice(1);
   const START = Math.max(0, SITE_LIST.findIndex((s) => HID === s.meta.site.id || HID.startsWith(s.meta.site.id + "-")));
