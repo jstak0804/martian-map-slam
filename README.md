@@ -7,7 +7,7 @@
 A 10 m map of Mars that shows **where an EVA crew can still get home alive** with the oxygen, coolant
 and radiation margin they have left, and **the safest way back** from any point.
 
-**▶ Demo:** [`reports/18-eva-walkback-demo.html`](reports/18-eva-walkback-demo.html) — one HTML file, open it in a desktop browser.
+**▶ Demo:** [`reports/18-eva-walkback-demo.html`](reports/18-eva-walkback-demo.html) — one HTML file, open it in a desktop browser (best at 1440 px wide or more).
 
 ---
 
@@ -31,6 +31,17 @@ and radiation margin they have left, and **the safest way back** from any point.
 HiRISE 1 m DTMs and orthoimages · Curiosity and Perseverance traverses and Navcam images ·
 Mars 2020 sample list · JPL Mars Trek THEMIS · Curiosity RAD.
 Sites: **Gale**, **Jezero delta**, **Aram Chaos**.
+
+### Observed data vs. models
+
+| Observed / published data (NASA) | Models and scenarios (computed or chosen by us) |
+|---|---|
+| HiRISE 1 m DTMs and orthoimages | Walking metabolism (regression on NASA IST tests, extrapolated to Mars gravity) |
+| Curiosity / Perseverance traverses, stops, Navcam raw images | Return routes, walk-back areas, stay times (Dijkstra results) |
+| Mars 2020 sample list | Heart-rate and tank-pressure telemetry (synthetic scenarios or CSV input) |
+| Curiosity RAD background dose, observed SPE ×2.9 | 1 mSv dose budget, terrain shielding proxy, large SPE multipliers |
+| Apollo 15–17 PLSS consumables (680 g O2, 5.2 kg water) | Rover speed and riding metabolism; fall-risk and comm-bar proxies |
+| JPL Mars Trek THEMIS night IR | First-person visor rendered from the 10 m terrain (not a photograph) |
 
 ### Limitations
 
