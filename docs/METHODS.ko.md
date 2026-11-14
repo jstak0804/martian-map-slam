@@ -1,7 +1,7 @@
 # 계산 방법 — 지형을 "산소 몇 분"으로 바꾸는 식
 
 Mars EVA Walkback & Survival Planner · NASA Space Apps 2026
-영어판: [METHODS.md](METHODS.md)
+영어판: [METHODS.md](METHODS.md) · 지형계수 η 자세히: [TERRAIN.ko.md](TERRAIN.ko.md)
 
 아래 식은 데모(`code/demo_template.html`)가 실제로 쓰는 식입니다. *기울임*은 계산 예시입니다.
 

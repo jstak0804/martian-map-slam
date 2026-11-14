@@ -1,7 +1,7 @@
 # Methods — how the planner turns terrain into minutes of oxygen
 
 Mars EVA Walkback & Survival Planner · NASA Space Apps 2026
-Korean version: [METHODS.ko.md](METHODS.ko.md)
+Korean version: [METHODS.ko.md](METHODS.ko.md) · Terrain factor η in detail: [TERRAIN.md](TERRAIN.md)
 
 All formulas below are the ones the demo actually runs (`code/demo_template.html`). Numbers in
 *italics* are worked examples.
