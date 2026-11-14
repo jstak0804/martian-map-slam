@@ -354,11 +354,15 @@
   .modebar { position: fixed; top: 10px; left: 344px; right: 356px; z-index: 6; display: grid; justify-items: center; gap: 6px; pointer-events: none; }
   .modebar > * { pointer-events: auto; }
   .modebar .seg { background: rgba(11,14,21,.9); box-shadow: 0 6px 20px rgba(0,0,0,.4); }
+  .modebar { grid-template-columns: auto auto; justify-content: center; align-items: center; column-gap: 8px; }
+  .modebar .modeline { grid-column: 1 / -1; }
+  .mode-more { font: inherit; font-size: 12.5px; color: var(--ink); background: rgba(11,14,21,.9); border: 1px solid var(--rule); border-radius: 8px; padding: 6px 8px; cursor: pointer; }
+  .mode-more.on { border-color: var(--accent); color: var(--accent); }
   .modebar .seg label { font-size: 12.5px; padding: 6px 10px; white-space: nowrap; }
   .modeline { background: rgba(11,14,21,.82); border-radius: 8px; padding: 4px 8px; gap: 6px 10px; }
   .modehint { font-size: 12px; }
-  .zoomctl { left: auto; right: 356px; top: 96px; }
-  .scale { right: 356px; bottom: 16px; }
+  .zoomctl { left: auto; right: 356px; top: auto; bottom: 16px; }
+  .scale { right: 402px; bottom: 18px; }
   .legend { position: fixed; left: 344px; bottom: 12px; z-index: 5; max-width: calc(100vw - 840px); padding: 6px 10px; font-size: 11.5px; background: rgba(11,14,21,.82); border-radius: 8px; }
   .hover { display: none; }
   .simbar { position: fixed; left: 344px; right: 356px; bottom: 54px; z-index: 6; margin: 0 auto; max-width: 720px; padding: 8px 10px; background: rgba(11,14,21,.92); box-shadow: 0 8px 28px rgba(0,0,0,.45); }
@@ -369,7 +373,8 @@
   details.notes.closed { display: none; }
   @media (max-width: 1100px) {
     .leftcol, .rightcol { width: 280px; } .rightcol { top: auto; height: 46vh; } .modebar, .legend, .simbar, .rv.drawer { left: 300px; right: 12px; }
-    .zoomctl, .scale { right: 12px; } header.top, .sitebar { width: 280px; }
+    .zoomctl { right: 12px; bottom: calc(46vh + 24px); } .scale { right: 58px; bottom: calc(46vh + 26px); } header.top, .sitebar { width: 280px; }
+    .rv.drawer, .visor-wrap.pip { bottom: calc(46vh + 24px); } .simbar { bottom: calc(46vh + 24px); right: 304px; } .legend { bottom: 12px; left: 300px; max-width: calc(100vw - 600px); }
   }
 </style>
 
@@ -593,11 +598,14 @@
           <label><input type="radio" name="mode" value="explore" checked>① 탐사 계획</label>
           <label><input type="radio" name="mode" value="sim">② 실시간 시뮬레이션</label>
           <label><input type="radio" name="mode" value="rescue">③ 조난 구조</label>
-          <label class="sub"><input type="radio" name="mode" value="inspect">경로 탐색</label>
-          <label class="sub"><input type="radio" name="mode" value="eva">과학 EVA</label>
-          <label class="sub"><input type="radio" name="mode" value="here">현재 위치</label>
-          <label class="sub"><input type="radio" name="mode" value="base">거점 옮기기</label>
         </div>
+        <select id="mode-more" class="mode-more" aria-label="다른 모드">
+          <option value="">더보기 ▾</option>
+          <option value="inspect">경로 탐색</option>
+          <option value="eva">과학 EVA</option>
+          <option value="here">현재 위치</option>
+          <option value="base">거점 옮기기</option>
+        </select>
         <div class="modeline"><p class="modehint" id="mode-hint"></p>
           <button type="button" class="reset feat" id="hud-btn" aria-pressed="false">🥽 헬멧 HUD (팝업)</button><button type="button" class="reset feat" id="rv-btn" aria-pressed="false">📷 1인칭 로드뷰</button></div>
       </div>
@@ -612,7 +620,6 @@
         <div class="zoomctl" role="group" aria-label="지도 조작">
           <button type="button" id="compass" aria-label="정북 위 / 진행 방향 위" aria-pressed="false" title="정북 위 ↔ 진행 방향 위"><svg id="compass-needle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l4 10h-8z" fill="#ef6b5e"/><path d="M12 22l-4-10h8z" fill="#c9d1e0"/><text x="12" y="9.6" font-size="5" text-anchor="middle" fill="#0d1016" font-weight="700">N</text></svg></button>
           <button type="button" id="zin" aria-label="확대">+</button><button type="button" id="zout" aria-label="축소">−</button><button type="button" id="zreset" aria-label="원래대로" hidden>⟲</button>
-          <button type="button" id="visor-open" aria-label="1인칭 바이저 화면 열기" title="1인칭 바이저 화면">🥽</button>
         </div>
         <div class="scale" id="scale" aria-label="축척"><div class="bar" id="scale-bar"></div><span id="scale-txt"></span></div>
         <div class="loading" id="loading">지형 격자를 푸는 중…</div>
@@ -684,14 +691,14 @@
       <li>산소(보행 대사): NASA IST-1·IST-2 감중 우주복 보행 실측 회귀(NASA/TP-2010-216115, 216125). 평지 0.92 m/s에서 444 W(Apollo 15 비상 귀환 계획 속도), 오르막은 평지와 같은 노력이 되는 속도(Waligora &amp; Horrigan 1975), 내리막은 Looney et al. 2019 경사 비용 비율을 우주복 경사 민감도로 줄여 적용하고 Tobler 보행 함수로 감속. 하한은 짐 진 채 서 있는 대사량 222 W. 대사량은 Weir 식(20.1 kJ/L)으로 산소로 환산. 예비분은 NASA PLSS 설계 평균 1200 BTU/h(352 W) 30분 = 산소 45 g. IST는 0.12~0.32 g 지상 감중 실험이라 화성 0.378 g·90 kg 우주복 조건의 직접 검증은 아님.</li>
       <li>귀환 경로: 16방향 격자(나이트 이동은 걸쳐 지나는 두 칸도 통행 가능해야 함, 간선 경사 20° 상한)에서 칸마다 산소가 가장 적게 드는 길을 역방향 다익스트라로 계산하고, 같은 길 위에서 선량·냉각수를 따짐. SPE를 켜면 아래 다목적 경로를 함께 봄.</li>
       <li>선량: Curiosity RAD 배경 0.655 mSv/일, 골짜기 지형 차폐로 최대 50% 감소(근사), 귀환 1회 예산 1.0 mSv(시나리오 예산).</li>
-      <li>냉각수: 대사열 + 환경·PLSS 열을 물 증발(2.477 MJ/kg)로 버림. 만충 3.6 kg(Nabity et al. 2007). 물이 떨어진 뒤에는 체온 비상한계 2.0 BTU/lb까지 버팀 = 냉각수 141 g어치(ICES-2026-170). 환경 열이 음수일 때 구간별 0 하한은 경로 전체 합에만 적용.</li>
+      <li>냉각수: 대사열 + 환경·PLSS 열을 물 증발(2.477 MJ/kg)로 버림. 만충 5.2 kg(Apollo 15~17 PLSS 냉각수 11.5 lb). 물이 떨어진 뒤에는 체온 비상한계 2.0 BTU/lb까지 버팀 = 냉각수 141 g어치(ICES-2026-170). 환경 열이 음수일 때 구간별 0 하한은 경로 전체 합에만 적용.</li>
       <li>통신: 거점 안테나 3 m, 우주복 2 m, 중계기 3 m. 지형과 화성 곡률만 반영한 가시선. SPE 때 UHF 감쇠는 자료가 없어 넣지 않음.</li>
       <li>넘어짐: 1 m 지형에서 3 m 안 높이차 0.5 m 이상 또는 1 m 경사 20° 이상인 화소가 칸의 25% 이상이면 높음, 5% 이상이면 중간. 기준값은 설계 파라미터인 대리 지표이고, 2~15 cm 걸림 장애물은 DTM 오차보다 작아 보이지 않음.</li>
       <li>현재 위치·구조 모드: 찍은 지점에서 출발하는 길(또는 그 지점으로 가는 길)을 브라우저에서 바로 계산함(산소 최소 경로, 같은 Pandolf 식). 현재 위치 모드의 면적 = 거기서 그 칸까지 갔다가 거점으로 돌아올 수 있는 곳. 구조 모드의 면적 = 그 칸에서 출발한 구조대원이 구조 대상에게 갈 수 있는 곳(왕복은 구조 대상 지점에서 거점까지 혼자 돌아오는 것까지 포함). 구조 대상을 업고 오는 부담은 넣지 않음.</li>
       <li>심박 시뮬레이션: 분당 심박을 Hoffmann 2021 회귀식(대사량 BTU/h = 284.55 + 5.984 × 심박)으로 대사량으로 바꿔 산소·냉각수를 뺌. k = 최근 10분 심박 대사량 ÷ 같은 구간 Pandolf 예측. 매분 "1분 더 가면 지금 k로 돌아올 수 없는가"를 보고 경보. 시나리오의 심박은 k × 모델 대사량에서 거꾸로 만든 합성값(잡음은 고정 시드). 회귀식은 무중력 EVA 자료라 화성 보행에 그대로 맞는지는 검증되지 않음.</li>
       <li>이전 모델 비교(왼쪽 "안전 운용 · 문헌 기반 보정"): Pandolf 식 전체에 화성 중력비를 곱한 모델(평지 301 W)로 다시 계산. 이 모델에서만 쓰는 문헌 보정: ① 경사별 속도 V = 0.75 − 0.01 × 오르막 경사(°), 0.3~0.75 m/s(Peña-Asensio et al. 2024, Kim et al. 2025 식 (2)) ② 내리막 Santee 2003 보정(질량 항마다 중력비). 두 모델 공통: ③ 표토 지형계수 +0.2(Richmond, Potter &amp; Santee 2015 표 11) ④ 모래 η = 1.5 + 1.3/V²(Richmond 2015 식 16, 0.85 m/s 미만은 0.85 값). 모래언덕 후보는 HiRISE 정사영상 밝기에 Otsu 문턱을 두 번 적용한 추정 영역이며, 지구 모래 자료를 화성 중력에 그대로 적용한 시나리오.</li>
       <li>칸별 대사량 지도: 각 칸의 가장 가파른 경사를 오른다고 보고 계산한 대사량(W). NASA Kim 2025의 "local metabolic rate" 지도처럼 경사 20° 초과 칸은 흰색(금지). 경로 방향을 모르는 상태의 최악값이라 실제 경로 비용과 다름.</li>
-      <li>탱크 압력 방식: 남은 산소 m = PVM/(ZRT), Z = 1. 탱크 부피는 6.2 MPa·21 °C에서 540 g이 되도록 잡은 설계 파라미터(ISS EMU 1차 탱크 900 psia 수준). 탱크 온도는 21 °C에서 1 °C로 90분 시상수로 식는 시나리오. 센서 잡음은 매분 정규분포(고정 시드). 최근 10분 표본에 직선을 맞춰 남은 양과 소모율을 구하고, k = (소모율 − 알려진 누설) ÷ 같은 구간 Pandolf 예측. 귀환 판단은 측정한 남은 양과 지형 모델(k × 귀환 경로 산소)로 하며, "지금 소모율 × 귀환 시간" 단순 외삽은 비교용으로만 그림. ISS도 압력 감소로 소모를 근사하며 잡음·누설을 오차 원인으로 꼽음(NASA ISS RDC 2024).</li>
+      <li>탱크 압력 방식: 남은 산소 m = PVM/(ZRT), Z = 1. 탱크 부피는 9.9 MPa(1,430 psi)·21 °C에서 680 g이 되도록 잡은 설계 파라미터(Apollo 15~17 PLSS 1차 산소 수준). 탱크 온도는 21 °C에서 1 °C로 90분 시상수로 식는 시나리오. 센서 잡음은 매분 정규분포(고정 시드). 최근 10분 표본에 직선을 맞춰 남은 양과 소모율을 구하고, k = (소모율 − 알려진 누설) ÷ 같은 구간 Pandolf 예측. 귀환 판단은 측정한 남은 양과 지형 모델(k × 귀환 경로 산소)로 하며, "지금 소모율 × 귀환 시간" 단순 외삽은 비교용으로만 그림. ISS도 압력 감소로 소모를 근사하며 잡음·누설을 오차 원인으로 꼽음(NASA ISS RDC 2024).</li>
       <li>거점 옮기기: 새 거점까지의 귀환 경로와 거점 안테나의 가시권을 브라우저에서 다시 계산함(같은 광선 추적 방식). 중계기는 원래 자리에 두고, 새 거점과 가시선이 닿을 때만 중계로 침. 선량률·넘어짐 등급은 거점과 무관함.</li>
       <li>보급 계산: 구조 대상 필요량 = 구조대원을 기다리는 동안(정지 대사량) + 거점까지 귀환(부축 보행이면 보행 대사량 k = 1, 이송이면 정지 대사량) + 30분 예비분. 가진 양을 넘는 만큼이 줘야 할 최소량. 구조대원 출발 시 최소량 = 자기 왕복 + 그 보급량 + 자기 예비분. 냉각수는 같은 열을 버리는 데 드는 물로 환산한 값이라, 실제로는 물을 옮겨 담거나 동료 냉각 회로에 연결(Apollo BSLSS 방식, 화성 PLSS에서 검토 중)하는 방식이 됨. 옮기는 동안의 손실은 넣지 않음.</li>
       <li>구조 대상이 버티는 시간: 짐 진 채 서 있는 대사량(222 W)으로 산소와 냉각수가 떨어지는 시간 중 짧은 쪽. 다친 사람의 실제 대사량은 이보다 높을 수 있음.</li>
@@ -701,7 +708,7 @@
       <li>지형 위험 지표의 뜻: "넘어짐 위험"은 1 m DTM의 3×3 고도차(최대−최소) 0.5 m·경사 20° 화소 비율로 만든 미세 기복 후보다. 연속 경사면도 잡히므로 턱 전용 검출이 아니고, 실제 낙상 확률이 아니다. 20° 보행 한도도 화성 우주인 안전 임계값으로 검증된 값이 아니다.</li>
       <li>로버 사진·로드뷰: 경로 정지 지점(sol)의 Navcam 원본 사진을 붙인 "인근 로버 관측"이다. 같은 sol·다음 sol 사진이 같은 좌표에 붙을 수 있고, 250 m 안의 사진도 그 칸의 정밀 지상 관측은 아니다.</li>
       <li>모델 검증: 같은 Gale 지형·산소 150 g에서 IST 모델 귀환 면적 9.72 km²는 독립 구현(Python, 16방향)과 일치한다. 이전 모델(Pandolf × 중력비)로는 19.95 km²로, 대사 모델 선택만으로 면적이 약 2배 달라진다. 속도·VO₂는 경사 0.01% 간격 표로 미리 계산해 보간한다.</li>
-      <li>잔량 표시: 산소는 EMU 1차 탱크 수준 540 g(설계 파라미터)을, 냉각수는 만충 3.6 kg을 100%로 둔 비율과, 예비분을 빼고 평지 보행으로 버티는 시간. 통신 신호 단계는 지형 가시선과 거리로 나눈 것(강함 ≤2 km, 양호 ≤5 km, 약함 그 이상·중계기 경유, "50 m 안 연결" = 음영이지만 50 m 안에 가시선)으로, 송신 출력·주파수·안테나 방향을 넣은 링크 예산이 아니다.</li>
+      <li>잔량 표시: 산소는 Apollo 15~17 PLSS 1차 산소 680 g(1,430 psi급)을, 냉각수는 같은 PLSS 냉각수 5.2 kg을 100%로 둔 비율과, 예비분을 빼고 평지 보행으로 버티는 시간. 통신 신호 단계는 지형 가시선과 거리로 나눈 것(강함 ≤2 km, 양호 ≤5 km, 약함 그 이상·중계기 경유, "50 m 안 연결" = 음영이지만 50 m 안에 가시선)으로, 송신 출력·주파수·안테나 방향을 넣은 링크 예산이 아니다.</li>
       <li>과학 EVA 실시간 시뮬레이션: 계획 경로를 따라 1분 단위로 걷고 목표마다 작업(작업 대사량 = 평지 보행)하며, 심박 시나리오로 실제 대사량을 바꾼다. 매분 이동·작업을 1분 더 했을 때 왕복 여유(+20%)를 지킬 수 있는지 보고, 못 지키면 남은 목표를 건너뛰고 귀환 트리로 돌아선다. 계획 단계는 각 칸 귀환 냉각수 여유를 따로 검사하지 않으므로 재생 중 경보가 계획보다 조금 일찍 울릴 수 있다.</li>
     </ul>
   </details>
@@ -711,15 +718,15 @@
     <ul>
       <li>Data: HiRISE 1 m DTMs and orthoimages (NASA PDS) for Gale (DTEEC_018854_1755_018920_1755_U01), Jezero (DTEEC_045994_1985_046060_1985_U01) and Aram Chaos (DTEEC_054753_1825_055452_1825_A01), resampled to 10 m cells; MSL and Mars 2020 traverses and Navcam raw images; JPL Mars Trek THEMIS night IR (reference layer only); Curiosity RAD dose rates.</li>
       <li>Walking metabolism: regression on NASA IST-1/IST-2 reduced-gravity suited walking data (NASA/TP-2010-216115, 216125). Level walking at 0.92 m/s (Apollo 15 emergency walk-back speed) costs 444 W; uphill speed keeps the same effort as level walking (Waligora &amp; Horrigan 1975); downhill uses the Looney et al. 2019 grade cost ratio scaled to suit grade sensitivity, slowed by Tobler's hiking function; floor = 222 W standing with load. Converted to O2 with 20.1 kJ/L. IST was run at 0.12–0.32 g on Earth, so it is not a direct validation at Mars 0.378 g with a 90 kg suit.</li>
-      <li>Reserve: 30 min at the NASA PLSS design average of 1200 BTU/h (352 W) = 45 g O2. Gauges: O2 as % of a 540 g tank (EMU primary-tank level, assumed) and coolant as % of 3.6 kg, plus the time left walking on level ground after the reserve.</li>
+      <li>Reserve: 30 min at the NASA PLSS design average of 1200 BTU/h (352 W) = 45 g O2. Gauges: O2 as % of the 680 g Apollo 15–17 PLSS primary O2 (1,430 psi class) and coolant as % of its 5.2 kg feedwater, plus the time left walking on level ground after the reserve.</li>
       <li>Return routes: reverse Dijkstra on a 16-direction grid (knight moves require both crossed cells to be passable; 20° edge-slope cap), minimising O2; dose and coolant are evaluated along the same route. Same Gale area at 150 g O2 as an independent Python implementation (9.72 km²). The previous model (whole Pandolf equation × gravity ratio, 301 W) is available as a comparison switch: 19.95 km², i.e. the model choice alone changes the area about twofold.</li>
       <li>Multi-objective routes (when an SPE is on): a second tree with edge cost k·ΔO₂/B<sub>O₂</sub> + ΔH₂O/B<sub>H₂O</sub> + multiplier·ΔDose/B<sub>Dose</sub> (B = budget left after the reserve). A cell is returnable if either route fits every budget. Terrain shielding (up to 50%) is a proxy from local relief, not a measured shield, so it is not used to certify shelters.</li>
-      <li>Coolant: metabolic plus environment/PLSS heat rejected by water evaporation (2.477 MJ/kg), full 3.6 kg (Nabity et al. 2007); after the water runs out, the body-heat emergency limit of 2.0 BTU/lb (≈141 g of water) applies.</li>
+      <li>Coolant: metabolic plus environment/PLSS heat rejected by water evaporation (2.477 MJ/kg), full 5.2 kg (Apollo 15–17 PLSS feedwater, 11.5 lb); after the water runs out, the body-heat emergency limit of 2.0 BTU/lb (≈141 g of water) applies.</li>
       <li>Radiation: Curiosity RAD background 0.655 mSv/day (Gale), observed SPE ×2.9, 1.0 mSv per return (scenario budget). Not a Jezero-specific forecast.</li>
       <li>Communications: line of sight over terrain and Mars curvature with 3 m base, 2 m suit and 3 m relay antennas. Signal bars (strong ≤2 km, good ≤5 km, weak beyond or via relay, "link within 50 m") are geometric steps, not a link budget with power, frequency or antenna pointing.</li>
       <li>Terrain risk: share of 1 m pixels with ≥0.5 m 3×3 relief or ≥20° slope per cell. A micro-relief proxy, not a step detector or a fall probability; the 20° walking limit is not a validated astronaut safety threshold.</li>
       <li>Heart-rate simulation: per-minute heart rate is converted with the Hoffmann 2021 regression (Shuttle/ISS EVA data); k = heart-rate metabolic rate ÷ model over the last 10 minutes. Every minute the crew asks "would one more minute still let me get home with a +20% round-trip margin?" and turns back if not. Heart rates in the scenarios are synthetic.</li>
-      <li>Tank-pressure simulation: O2 left from m = PVM/(ZRT) with a tank sized to hold 540 g at 6.2 MPa and 21 °C, tank cooling and sensor noise; k from the pressure-drop slope minus known leaks.</li>
+      <li>Tank-pressure simulation: O2 left from m = PVM/(ZRT) with a tank sized to hold 680 g at 9.9 MPa (1,430 psi) and 21 °C, tank cooling and sensor noise; k from the pressure-drop slope minus known leaks.</li>
       <li>Science EVA: targets are rover dwell and sampling sites (NASA Mars 2020 sample list for Jezero). The planner enumerates visit orders with O2 pruning (up to 400 candidates) and checks the return margin at every cell; the live simulation walks the plan minute by minute, works at each target (work metabolic rate = level walking) and skips the remaining targets when the turn-back alarm fires.</li>
       <li>Rescue: the immobilised crew member's needs = waiting (standing metabolic rate) + return (assisted walking or carried) + reserve; the shortfall is what the rescuer must carry. Transfer losses are not modelled.</li>
       <li>Telemetry: heart rate and tank pressure are designed to arrive as per-minute telemetry; in this demo they come from synthetic scenarios or CSV input. k and environment heat are scenario inputs.</li>
@@ -881,6 +888,7 @@ const I18N = {
   "지금 남은 산소로 돌아와도 20% 넘게 남는 곳": "Return now still leaves >20% O2", "지금 남은 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 left if you return to base from there with the O2 you have now",
   "구조 재생": "Play rescue", "구조 대상을 찍으면 재생할 수 있습니다": "Set the stranded crew member to play", "작업 남은 시간": "Work left", "다음 지점까지": "To next site", "거점까지": "To base", "지금 돌아서면 복귀": "Return if turning now", "더 머물 수 있음": "Can still stay", "체류 계획": "Planned stay", "자동": "Auto",
   "구조 대상": "Stranded crew member",
+  "더보기 ▾": "More ▾", "탱크 부피는 9.9 MPa(1,430 psi)·21 °C에서 680 g이 되도록 잡은 설계 파라미터(Apollo 15~17 PLSS 1차 산소 수준).": "Tank volume sized to hold 680 g at 9.9 MPa (1,430 psi) and 21 °C (Apollo 15–17 PLSS primary O2 level).",
   "상황 설정": "Situation", "지금 상황": "Status", "지도 표시": "Map layers",
   "기준": "Baseline", "관측 SPE ×2.9": "Observed SPE ×2.9", "대형 SPE ×30 (스트레스 테스트)": "Large SPE ×30 (stress test)", "지친 대원 k 1.2": "Tired crew k 1.2",
   "냉각수 누수 0.6 kg": "Coolant leak 0.6 kg", "누수 + 더운 오후": "Leak + hot afternoon", "안전 우선 운용": "Safety-first ops",
@@ -1069,7 +1077,7 @@ const I18N_RE = [
   const APOLLO_O2 = 680;                   // g, Apollo 15~17 PLSS 1차 산소 (1,430 psi 급)
   const APOLLO_W = 5200;                   // g, Apollo 15~17 PLSS 냉각수 11.5 lb
   const ROVER_V = 2.2, RIDE_W = 147;       // 로버: 운행 속도 m/s(약 8 km/h, Apollo LRV 평균 운행 수준), 탑승 대사량 W(약 500 BTU/h)
-  const BASE_O2 = 250;                     // 기본·기준 산소(g): 탱크 540 g의 약 46%. 귀환 가능 영역의 경계가 지도 안에 보이는 양
+  const BASE_O2 = 250;                     // 기준 면적용 산소(g): 지형 칩의 "산소 250 g 귀환 면적". 귀환 가능 영역의 경계가 지도 안에 보이는 양
   const state = { o2: APOLLO_O2, water: APOLLO_W / 1000, xRover: false, xDwell: {}, xT: [], xScn: 0, k: 1, q: 0, spe: false, mult: C.spe_observed, nofall: false, relay: false,
                   showfall: false, showcomm: true, showtrav: true,
                   mode: "explore", sel: GOAL, here: -1, victim: -1, vo2: 150, vwater: 1, vcarry: "walk", base: BASE0,
@@ -1702,8 +1710,8 @@ const I18N_RE = [
     const ok = need * f <= o2 - O2RES() && needW * f <= w - waterReserve(state.q) && multNow() * r.dose <= C.dose_budget_msv;
     return { ok, need, needW, tRet: r.t };
   }
-  // 탱크 압력 -> 남은 산소: m = P V M / (Z R T). Z = 1(이상기체)로 둠. 6.2 MPa·21 °C에서 540 g이 되도록 V를 잡음(EMU 1차 탱크 수준, 가정)
-  const TK = { M: 0.032, R: 8.314, V: 0.54 * 8.314 * 294.15 / (6.2e6 * 0.032), T0: 294.15, Tend: 274.15, tau: 90 };
+  // 탱크 압력 -> 남은 산소: m = P V M / (Z R T). Z = 1(이상기체)로 둠. 9.9 MPa(1,430 psi)·21 °C에서 680 g이 되도록 V를 잡음(Apollo 15~17 PLSS 수준)
+  const TK = { M: 0.032, R: 8.314, V: 0.68 * 8.314 * 294.15 / (9.86e6 * 0.032), T0: 294.15, Tend: 274.15, tau: 90 };
   const tankT = (m) => TK.Tend + (TK.T0 - TK.Tend) * Math.exp(-m / TK.tau);      // 탱크가 화성 주변 온도로 식음 (가정)
   const pFromG = (g, T) => g / 1000 * TK.R * T / (TK.V * TK.M);                   // Pa
   const gFromP = (P, T) => P * TK.V * TK.M / (TK.R * T) * 1000;                   // g
@@ -3387,6 +3395,8 @@ const I18N_RE = [
     $("sim-tcomp").checked = state.simTcomp; $("sim-leaksub").checked = state.simLeakSub;
     document.querySelectorAll('#vcarry input').forEach((r) => { r.checked = r.value === state.vcarry; });
     document.querySelectorAll('#modes input').forEach((r) => { r.checked = r.value === state.mode; });
+    const sub = ["inspect", "eva", "here", "base"].includes(state.mode);
+    $("mode-more").value = sub ? state.mode : ""; $("mode-more").classList.toggle("on", sub);
     labels();
   }
   function labels() {
@@ -3421,7 +3431,7 @@ const I18N_RE = [
     $("sim-leak-out").textContent = `${state.simLeak} g/h`;
     $("sim-pnoise-out").textContent = `±${state.simPNoise} kPa`;
     $("sim-src-hint").textContent = press
-      ? `남은 양은 탱크 압력으로 재고(m = PV·M/ZRT, ${fmt(TK.V * 1000, 2)} L, 6.2 MPa에 540 g), 최근 10분 감소 기울기를 모델 예측으로 나눠 k를 구합니다. 심박 데이터는 실제 소모를 만드는 데만 씁니다.`
+      ? `남은 양은 탱크 압력으로 재고(m = PV·M/ZRT, ${fmt(TK.V * 1000, 2)} L, 9.9 MPa에 680 g), 최근 10분 감소 기울기를 모델 예측으로 나눠 k를 구합니다. 심박 데이터는 실제 소모를 만드는 데만 씁니다.`
       : "심박을 대사량으로 바꿔 소모를 셉니다. 누설은 심박에 안 나타나므로 대원은 남은 산소를 실제보다 많게 봅니다.";
     $("sim-note").textContent = press
       ? "초록 점선(실제 k)은 시나리오가 정한 값, 파란 선(k 추정)은 압력 감소 기울기로 구한 값입니다. 하늘색(측정 산소)과 빨강(지형 모델 귀환 필요)이 만나면 돌아서야 합니다. 주황 점선은 '지금 소모율 × 귀환 시간'으로 단순 외삽한 값으로, 귀환길이 내리막이면 너무 많이, 오르막이면 너무 적게 잡습니다."
@@ -3477,7 +3487,6 @@ const I18N_RE = [
     const el = $("visor-wrap"), cur = PIP_POS.findIndex((c) => el.classList.contains(c));
     el.classList.remove(...PIP_POS); el.classList.add(PIP_POS[(Math.max(0, cur) + 1) % PIP_POS.length]);
   });
-  $("visor-open").addEventListener("click", () => { if (!state.hud) $("hud-btn").click(); else if (!hudPopupOpen() && openHudPopup()) renderHud(); });
   $("visor-big").addEventListener("click", () => $("visor-wrap").classList.toggle("big"));
   $("visor-close").addEventListener("click", () => { state.hud = false; if (hudPopupOpen()) { HUDWIN.close(); HUDWIN = null; } $("hud-btn").setAttribute("aria-pressed", "false"); renderHud(); });
   $("rv-btn").addEventListener("click", () => {           // 로드뷰 모드 켜기/끄기: 켜면 지도에 카메라 아이콘, 아이콘을 누르면 사진
@@ -3514,7 +3523,8 @@ const I18N_RE = [
   $("eva-dwell").addEventListener("input", (e) => { state.evaDwell = Number(e.target.value); activePreset = ""; update(); });
   for (const id of ["showfall", "showcomm"]) $(id).addEventListener("change", (e) => { state[id] = e.target.checked; update(false); });
   $("showtrav").addEventListener("change", (e) => { state.showtrav = e.target.checked; drawVec(); });
-  $("modes").addEventListener("change", (e) => { state.mode = e.target.value; stopSim(); update(); });
+  $("modes").addEventListener("change", (e) => { state.mode = e.target.value; stopSim(); syncInputs(); update(); });
+  $("mode-more").addEventListener("change", (e) => { if (!e.target.value) return; state.mode = e.target.value; stopSim(); syncInputs(); update(); });
 
   // 심박 시뮬레이션 조작
   let playing = false, lastTs = 0, acc = 0;

@@ -117,6 +117,7 @@ const I18N = {
   "지금 남은 산소로 돌아와도 20% 넘게 남는 곳": "Return now still leaves >20% O2", "지금 남은 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 left if you return to base from there with the O2 you have now",
   "구조 재생": "Play rescue", "구조 대상을 찍으면 재생할 수 있습니다": "Set the stranded crew member to play", "작업 남은 시간": "Work left", "다음 지점까지": "To next site", "거점까지": "To base", "지금 돌아서면 복귀": "Return if turning now", "더 머물 수 있음": "Can still stay", "체류 계획": "Planned stay", "자동": "Auto",
   "구조 대상": "Stranded crew member",
+  "더보기 ▾": "More ▾", "탱크 부피는 9.9 MPa(1,430 psi)·21 °C에서 680 g이 되도록 잡은 설계 파라미터(Apollo 15~17 PLSS 1차 산소 수준).": "Tank volume sized to hold 680 g at 9.9 MPa (1,430 psi) and 21 °C (Apollo 15–17 PLSS primary O2 level).",
   "상황 설정": "Situation", "지금 상황": "Status", "지도 표시": "Map layers",
   "기준": "Baseline", "관측 SPE ×2.9": "Observed SPE ×2.9", "대형 SPE ×30 (스트레스 테스트)": "Large SPE ×30 (stress test)", "지친 대원 k 1.2": "Tired crew k 1.2",
   "냉각수 누수 0.6 kg": "Coolant leak 0.6 kg", "누수 + 더운 오후": "Leak + hot afternoon", "안전 우선 운용": "Safety-first ops",
