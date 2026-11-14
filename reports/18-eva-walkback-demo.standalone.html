@@ -322,8 +322,7 @@
     <section class="panel" aria-labelledby="h-ctl">
       <div class="modectl" id="modectl">
       <div class="group" id="eva-ctl" hidden>
-        <h2>과학 EVA 계획</h2>
-        <div class="hint">들를 과학 목표를 고르세요. 거점에서 출발해 들렀다 돌아오는, 산소가 가장 덜 드는 순서를 찾습니다. 경로의 모든 지점에서 "지금 돌아서도 거점까지 갈 수 있는가"(귀환 반경)를 확인하고, 다 못 들르면 들를 수 있는 가장 많은 조합을 고릅니다.</div>
+        <h2>과학 EVA 계획<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">들를 과학 목표를 고르세요. 거점에서 출발해 들렀다 돌아오는, 산소가 가장 덜 드는 순서를 찾습니다. 경로의 모든 지점에서 "지금 돌아서도 거점까지 갈 수 있는가"(귀환 반경)를 확인하고, 다 못 들르면 들를 수 있는 가장 많은 조합을 고릅니다.</span></span></span></h2>
         <div class="evalist" id="eva-targets"></div>
         <div class="evaplay">
           <button type="button" class="play" id="eva-play" aria-label="계획 재생">▶</button>
@@ -331,36 +330,32 @@
           <button type="button" class="reset" id="eva-restart">처음으로</button>
         </div>
         <div class="ctl">
-          <label for="eva-scn">실시간 시뮬레이션 상황</label>
+          <label for="eva-scn">실시간 시뮬레이션 상황<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">계획이 서면 이 칸의 ▶ 계획 재생으로 재생합니다(지도 아래 재생 막대와 같음). 대원이 계획 경로를 따라 목표마다 작업하고, 매분 "지금 돌아서도 거점까지 갈 수 있는가"를 확인해 모자라면 남은 목표를 건너뛰고 돌아섭니다. 헬멧 HUD도 재생 시각을 따라갑니다.</span></span></span></label>
           <select id="eva-scn">
             <option value="model">계획대로 (k = 1.0)</option>
             <option value="high">처음부터 20% 더 씀 (k = 1.2)</option>
             <option value="surge">60분부터 25% 급증</option>
             <option value="fatigue">점점 지침 (3시간에 k 1.0 → 1.4)</option>
           </select>
-          <div class="hint">계획을 세운 뒤 지도 아래 ▶로 재생합니다. 대원이 계획 경로를 따라 목표마다 작업하고, 매분 "지금 돌아서도 거점까지 갈 수 있는가"를 확인해 모자라면 남은 목표를 건너뛰고 돌아섭니다. 헬멧 HUD도 재생 시각을 따라갑니다.</div>
         </div>
         <div class="ctl">
-          <div class="row"><label for="eva-dwell">목표마다 작업 시간</label><output id="eva-dwell-out" for="eva-dwell"></output></div>
+          <div class="row"><label for="eva-dwell">목표마다 작업 시간<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">작업 대사량 기준치: 평지 보행 수준 (시료 채취·관찰)</span></span></span></label><output id="eva-dwell-out" for="eva-dwell"></output></div>
           <input type="range" id="eva-dwell" min="10" max="120" step="5" value="45">
-          <div class="hint">작업 대사량 기준치: 평지 보행 수준 (시료 채취·관찰)</div>
         </div>
       </div>
 
       <div class="group" id="here-ctl" hidden>
-        <h2>현재 위치</h2>
-        <div class="hint">대원이 이미 거점 밖에 나와 있을 때 씁니다. 지도에서 지금 서 있는 곳을 찍으면, 거기서 더 가서 탐사하고도 거점까지 돌아올 수 있는 곳만 초록으로 칠합니다. 언덕 위라면 가장 완만한 하산길로 내려온다고 보고 계산합니다.</div>
+        <h2>현재 위치<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">대원이 이미 거점 밖에 나와 있을 때 씁니다. 지도에서 지금 서 있는 곳을 찍으면, 거기서 더 가서 탐사하고도 거점까지 돌아올 수 있는 곳만 초록으로 칠합니다. 언덕 위라면 가장 완만한 하산길로 내려온다고 보고 계산합니다.</span></span></span></h2>
         <dl class="facts" id="here-info"></dl>
         <button type="button" class="reset" id="here-clear">현재 위치 지우기</button>
       </div>
       <div class="group" id="base-ctl" hidden>
-        <h2>거점 옮기기</h2>
-        <div class="hint">지도에서 새 거점(착륙선·이동 기지)을 찍으면 모든 칸의 귀환 경로와 거점 안테나의 가시권을 새 거점 기준으로 다시 계산합니다. 점선 원은 원래 거점입니다. 기지 후보지를 비교할 때 씁니다.</div>
+        <h2>거점 옮기기<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">지도에서 새 거점(착륙선·이동 기지)을 찍으면 모든 칸의 귀환 경로와 거점 안테나의 가시권을 새 거점 기준으로 다시 계산합니다. 점선 원은 원래 거점입니다. 기지 후보지를 비교할 때 씁니다.</span></span></span></h2>
         <dl class="facts" id="base-info"></dl>
         <button type="button" class="reset" id="base-reset2">원래 거점으로 되돌리기</button>
       </div>
       <div class="group" id="rescue-ctl" hidden>
-        <h2>구조 대상 (움직일 수 없는 대원)</h2>
+        <h2>구조 대상 (움직일 수 없는 대원)<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">위의 산소·냉각수·k·열 설정은 <strong>구조대원</strong>의 값으로 씁니다. 구조대원은 "현재 위치"에서 찍은 곳에서, 찍지 않았으면 거점에서 출발합니다.</span></span></span></h2>
         <div class="ctl">
           <div class="row"><label for="vo2">구조 대상의 남은 산소</label><output id="vo2-out" for="vo2"></output></div>
           <input type="range" id="vo2" min="20" max="600" step="10" value="150">
@@ -373,17 +368,14 @@
         <div class="ctl">
           <span style="font-size:13.5px;font-weight:500">구조 대상의 귀환 방식</span>
           <div class="seg" id="vcarry" role="radiogroup" aria-label="구조 대상의 귀환 방식">
-            <label><input type="radio" name="vcarry" value="walk" checked>부축받아 걷기</label>
+            <label><input type="radio" name="vcarry" value="walk" checked>부축받아 걷기<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">걷기는 구조대원과 같은 보행 대사량, 이송은 가만히 있는 대사량으로 귀환 시간 동안 소모</span></span></span></label>
             <label><input type="radio" name="vcarry" value="carried">들것·로버 이송</label>
           </div>
-          <div class="hint">걷기는 구조대원과 같은 보행 대사량, 이송은 가만히 있는 대사량으로 귀환 시간 동안 소모</div>
         </div>
-        <div class="hint">위의 산소·냉각수·k·열 설정은 <strong>구조대원</strong>의 값으로 씁니다. 구조대원은 "현재 위치"에서 찍은 곳에서, 찍지 않았으면 거점에서 출발합니다.</div>
       </div>
 
       <div class="group" id="sim-ctl" hidden>
-        <h2>EVA 시뮬레이션</h2>
-        <div class="hint">대원이 거점에서 출발해 지도에서 찍은 목적지(★가 아닌 주황 깃발)까지 갔다가 돌아옵니다. 출발할 때 산소·냉각수는 위 슬라이더 값이고, k는 아래에서 고른 방법으로 매분 추정합니다.</div>
+        <h2>EVA 시뮬레이션<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">대원이 거점에서 출발해 지도에서 찍은 목적지(★가 아닌 주황 깃발)까지 갔다가 돌아옵니다. 출발할 때 산소·냉각수는 위 슬라이더 값이고, k는 아래에서 고른 방법으로 매분 추정합니다.</span></span></span></h2>
         <div class="ctl" hidden>
           <label for="sim-src">k 추정 근거</label>
           <select id="sim-src">
@@ -401,8 +393,8 @@
             <div class="row"><label for="sim-pnoise">압력 센서 잡음</label><output id="sim-pnoise-out" for="sim-pnoise"></output></div>
             <input type="range" id="sim-pnoise" min="0" max="30" step="1" value="10">
           </div>
-          <label class="sw"><input type="checkbox" id="sim-tcomp" checked><span>탱크 온도 보정 (P/T로 계산)<small>끄면 충전 온도 21 °C로 고정해 계산합니다. 탱크가 식는 것을 산소 소모로 착각합니다</small></span></label>
-          <label class="sw"><input type="checkbox" id="sim-leaksub"><span>알려진 누설률을 빼고 k 계산<small>끄면 누설이 대사량으로 섞여 k가 커집니다(보수적)</small></span></label>
+          <label class="sw"><input type="checkbox" id="sim-tcomp" checked><span>탱크 온도 보정 (P/T로 계산)<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>끄면 충전 온도 21 °C로 고정해 계산합니다. 탱크가 식는 것을 산소 소모로 착각합니다</small></span></span></span></label>
+          <label class="sw"><input type="checkbox" id="sim-leaksub"><span>알려진 누설률을 빼고 k 계산<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>끄면 누설이 대사량으로 섞여 k가 커집니다(보수적)</small></span></span></span></label>
         </div>
         <div class="ctl">
           <label for="sim-scn">심박 데이터</label>
@@ -427,7 +419,7 @@
           </div>
           <div class="hint" id="sim-custom-hint">입력이 경로보다 짧으면 마지막 값을 계속 씁니다.</div>
         </div>
-        <label class="sw"><input type="checkbox" id="sim-auto" checked><span>귀환 경보가 뜨면 바로 돌아서기<small>끄면 목적지까지 간 뒤에야 돌아섭니다</small></span></label>
+        <label class="sw"><input type="checkbox" id="sim-auto" checked><span>귀환 경보가 뜨면 바로 돌아서기<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>끄면 목적지까지 간 뒤에야 돌아섭니다</small></span></span></span></label>
       </div>
 
       </div>
@@ -445,48 +437,43 @@
         <div class="hint" id="water-hint"></div>
       </div>
       <div class="group speblock" id="speblock" data-off="true">
-        <label class="sw"><input type="checkbox" id="spe"><span>태양입자사건(SPE)<small>배경 대비 선량률 배율. 화성 표면 관측값은 ×2~3 (Curiosity RAD)</small></span></label>
+        <label class="sw"><input type="checkbox" id="spe"><span>태양입자사건(SPE)<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>배경 대비 선량률 배율. 화성 표면 관측값은 ×2~3 (Curiosity RAD)</small></span></span></span></label>
         <div class="ctl">
-          <div class="row"><label for="mult">SPE 배율</label><output id="mult-out" for="mult"></output></div>
+          <div class="row"><label for="mult">SPE 배율<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">선량 예산 기준치: 귀환 1회 1.0 mSv</span></span></span></label><output id="mult-out" for="mult"></output></div>
           <input type="range" id="mult" min="0" max="100" step="1" value="27">
-          <div class="hint">선량 예산 기준치: 귀환 1회 1.0 mSv</div>
         </div>
       </div>
       <details class="adv"><summary>고급 물리·생리학 모델 설정</summary>
       <div class="ctl" id="k-ctl">
-        <div class="row"><label for="k">심박 보정계수 k</label><output id="k-out" for="k"></output></div>
+        <div class="row"><label for="k">심박 보정계수 k<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">심박으로 추정한 실제 대사량 ÷ 모델 대사량. 1.2면 모델보다 20% 더 씀 (Hoffmann 2021 심박 회귀식)</span></span></span></label><output id="k-out" for="k"></output></div>
         <input type="range" id="k" min="0.8" max="1.6" step="0.05" value="1">
-        <div class="hint">심박으로 추정한 실제 대사량 ÷ 모델 대사량. 1.2면 모델보다 20% 더 씀 (Hoffmann 2021 심박 회귀식)</div>
       </div>
       <div class="ctl">
-        <div class="row"><label for="q">환경·PLSS 열</label><output id="q-out" for="q"></output></div>
+        <div class="row"><label for="q">환경·PLSS 열<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">+는 햇빛·장비 발열로 열을 더 버려야 함, −는 추위로 열을 잃음 (시뮬레이션 파라미터)</span></span></span></label><output id="q-out" for="q"></output></div>
         <input type="range" id="q" min="-150" max="150" step="10" value="0">
-        <div class="hint">+는 햇빛·장비 발열로 열을 더 버려야 함, −는 추위로 열을 잃음 (시뮬레이션 파라미터)</div>
       </div>
       <div class="ctl">
-        <div class="row"><label for="pm">왕복 계획 여유</label><output id="pm-out" for="pm"></output></div>
+        <div class="row"><label for="pm">왕복 계획 여유<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">과학 EVA 계획과 EVA 시뮬레이션의 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 산소·냉각수의 이만큼을 더 남깁니다. 지도 색(절대 한계)은 그대로입니다.</span></span></span></label><output id="pm-out" for="pm"></output></div>
         <input type="range" id="pm" min="0" max="50" step="5" value="20">
-        <div class="hint">과학 EVA 계획과 EVA 시뮬레이션의 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 산소·냉각수의 이만큼을 더 남깁니다. 지도 색(절대 한계)은 그대로입니다.</div>
       </div>
       </details>
 
       <details class="adv"><summary>안전 운용 · 문헌 기반 보정</summary>
 
       <div class="group">
-        <label class="sw"><input type="checkbox" id="nofall"><span>미세 기복 "높음" 칸 통행 금지<small>1 m 지형에서 3×3 고도차 0.5 m 이상·경사 20° 이상 화소가 많은 칸을 돌아감. 턱 전용 검출이 아닌 기복 후보 지표</small></span></label>
-        <label class="sw"><input type="checkbox" id="relay"><span id="relay-t">Mt. Sharp 비탈에 중계기 설치<small id="relay-d">거점에서 6.7 km, 거점과 가시선이 닿는 자리</small></span></label>
+        <label class="sw"><input type="checkbox" id="nofall"><span>미세 기복 "높음" 칸 통행 금지<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>1 m 지형에서 3×3 고도차 0.5 m 이상·경사 20° 이상 화소가 많은 칸을 돌아감. 턱 전용 검출이 아닌 기복 후보 지표</small></span></span></span></label>
+        <label class="sw"><input type="checkbox" id="relay"><span id="relay-t">Mt. Sharp 비탈에 중계기 설치<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small id="relay-d">거점에서 6.7 km, 거점과 가시선이 닿는 자리</small></span></span></span></label>
       </div>
 
       <div class="group" id="legacy-ctl">
-        <label class="sw"><input type="checkbox" id="legacy"><span>비교: 이전 대사 모델 (Pandolf × 화성 중력비)<small>기본 모델은 NASA IST-1·2 감중 우주복 보행 실측 회귀(평지 0.92 m/s에서 444 W). 이 스위치를 켜면 Pandolf 식 전체에 중력비를 곱한 이전 모델(301 W)로 다시 계산해, 모델 선택이 귀환 가능 면적을 얼마나 바꾸는지 비교합니다. 아래의 경사별 속도·내리막 보정은 이전 모델에서만 쓰입니다(IST 모델에는 같은 노력 속도·Looney 내리막이 이미 들어 있음).</small></span></label>
+        <label class="sw"><input type="checkbox" id="legacy"><span>비교: 이전 대사 모델 (Pandolf × 화성 중력비)<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>기본 모델은 NASA IST-1·2 감중 우주복 보행 실측 회귀(평지 0.92 m/s에서 444 W). 이 스위치를 켜면 Pandolf 식 전체에 중력비를 곱한 이전 모델(301 W)로 다시 계산해, 모델 선택이 귀환 가능 면적을 얼마나 바꾸는지 비교합니다. 아래의 경사별 속도·내리막 보정은 이전 모델에서만 쓰입니다(IST 모델에는 같은 노력 속도·Looney 내리막이 이미 들어 있음).</small></span></span></span></label>
       </div>
       <div class="group" id="model-ctl">
-        <h2>대사량 모델 보정 (문헌 반영)</h2>
-        <div class="hint">켜면 귀환 경로를 브라우저에서 다시 계산합니다(1초 안팎). 기본은 모두 끔 = 기준 모델(Pandolf, 화성 중력 보정).</div>
-        <label class="sw"><input type="checkbox" id="m-speed"><span>경사에 따라 걷는 속도 줄이기<small id="m-speed-d">V = 0.75 − 0.01 × 오르막 경사(°), 최저 0.3 m/s. 달 보행 모델(Peña-Asensio 2024, NASA Kim 2025 인용). 끄면 0.92 m/s 고정</small></span></label>
-        <label class="sw"><input type="checkbox" id="m-eta"><span id="m-eta-t">표토 지형계수 1.2 (자갈·비포장길)<small id="m-eta-d">Richmond 2015 표 11 권장값. 끄면 매끈한 곳은 트레드밀 1.0</small></span></label>
-        <label class="sw"><input type="checkbox" id="m-down"><span>내리막 Santee 보정<small>NASA 이동 모델이 쓰는 내리막 보정(Santee 2003). 완만한 내리막은 덜, 가파른 내리막은 더 듦. 끄면 내리막 = 평지</small></span></label>
-        <label class="sw"><input type="checkbox" id="m-sand"><span id="m-sand-t">모래언덕 지형계수 1.5 + 1.3/V²<small id="m-sand-d">Bagnold 사구 후보 8.6 km²(위성 사진 밝기로 추정)에 적용. 0.92 m/s에서 약 3.0, 식의 자료 범위 밖인 0.85 m/s 미만은 0.85 값(3.3)</small></span></label>
+        <h2>대사량 모델 보정 (문헌 반영)<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">켜면 귀환 경로를 브라우저에서 다시 계산합니다(1초 안팎). 기본은 모두 끔 = 기준 모델(Pandolf, 화성 중력 보정).</span></span></span></h2>
+        <label class="sw"><input type="checkbox" id="m-speed"><span>경사에 따라 걷는 속도 줄이기<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small id="m-speed-d">V = 0.75 − 0.01 × 오르막 경사(°), 최저 0.3 m/s. 달 보행 모델(Peña-Asensio 2024, NASA Kim 2025 인용). 끄면 0.92 m/s 고정</small></span></span></span></label>
+        <label class="sw"><input type="checkbox" id="m-eta"><span id="m-eta-t">표토 지형계수 1.2 (자갈·비포장길)<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small id="m-eta-d">Richmond 2015 표 11 권장값. 끄면 매끈한 곳은 트레드밀 1.0</small></span></span></span></label>
+        <label class="sw"><input type="checkbox" id="m-down"><span>내리막 Santee 보정<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>NASA 이동 모델이 쓰는 내리막 보정(Santee 2003). 완만한 내리막은 덜, 가파른 내리막은 더 듦. 끄면 내리막 = 평지</small></span></span></span></label>
+        <label class="sw"><input type="checkbox" id="m-sand"><span id="m-sand-t">모래언덕 지형계수 1.5 + 1.3/V²<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small id="m-sand-d">Bagnold 사구 후보 8.6 km²(위성 사진 밝기로 추정)에 적용. 0.92 m/s에서 약 3.0, 식의 자료 범위 밖인 0.85 m/s 미만은 0.85 값(3.3)</small></span></span></span></label>
         <div class="hint" id="m-hint"></div>
       </div>
       </details>
@@ -499,15 +486,15 @@
         </div>
         <label class="sw"><input type="checkbox" id="showcomm" checked><span>통신 음영 (빗금)</span></label>
         <label class="sw" id="showtrav-l"><input type="checkbox" id="showtrav" checked><span id="showtrav-t">Curiosity 실제 주행 경로</span></label>
-        <label class="sw" id="showtargets-l"><input type="checkbox" id="showtargets" checked><span>과학 목표 지점<small>로버가 오래 머물며 조사한 곳(Gale·Jezero), 열관성 높은 노출 암반 후보(Aram)</small></span></label>
-        <label class="sw" id="showphoto-l"><input type="checkbox" id="showphoto" checked><span>로버 1인칭 사진 위치<small>지도를 누르면 250 m 안의 가장 가까운 로버 사진이 오른쪽에 뜹니다 (NASA 원본 사진)</small></span></label>
+        <label class="sw" id="showtargets-l"><input type="checkbox" id="showtargets" checked><span>과학 목표 지점<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>로버가 오래 머물며 조사한 곳(Gale·Jezero), 열관성 높은 노출 암반 후보(Aram)</small></span></span></span></label>
+        <label class="sw" id="showphoto-l"><input type="checkbox" id="showphoto" checked><span>로버 1인칭 사진 위치<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>지도를 누르면 250 m 안의 가장 가까운 로버 사진이 오른쪽에 뜹니다 (NASA 원본 사진)</small></span></span></span></label>
         <details class="adv"><summary>더 많은 레이어</summary>
         <div class="ctl">
           <div class="row"><label for="alpha">판정 색 진하기</label><output id="alpha-out" for="alpha"></output></div>
           <input type="range" id="alpha" min="0" max="100" step="5" value="80">
         </div>
-        <label class="sw"><input type="checkbox" id="showmr"><span>칸별 대사량 지도<small>각 칸을 가장 가파른 방향으로 오를 때의 대사량. 파랑 낮음 → 노랑 높음, 흰색은 20° 넘는 금지 구역 (NASA Kim 2025 방식)</small></span></label>
-        <label class="sw" id="showtir-l" hidden><input type="checkbox" id="showtir"><span>THEMIS 야간 적외선 상대 밝기<small>JPL Mars Trek 모자이크(약 100 m)의 8비트 밝기를 격자에 보간한 참고 층. 정량 열관성·지반 강도 자료가 아니며 계산에 쓰지 않음</small></span></label>
+        <label class="sw"><input type="checkbox" id="showmr"><span>칸별 대사량 지도<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>각 칸을 가장 가파른 방향으로 오를 때의 대사량. 파랑 낮음 → 노랑 높음, 흰색은 20° 넘는 금지 구역 (NASA Kim 2025 방식)</small></span></span></span></label>
+        <label class="sw" id="showtir-l" hidden><input type="checkbox" id="showtir"><span>THEMIS 야간 적외선 상대 밝기<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>JPL Mars Trek 모자이크(약 100 m)의 8비트 밝기를 격자에 보간한 참고 층. 정량 열관성·지반 강도 자료가 아니며 계산에 쓰지 않음</small></span></span></span></label>
         <label class="sw"><input type="checkbox" id="showsand"><span>모래언덕 후보 영역</span></label>
         <label class="sw"><input type="checkbox" id="showfall"><span>넘어짐 위험 등급</span></label>
         </details>
@@ -525,7 +512,7 @@
           <label class="sub"><input type="radio" name="mode" value="here">현재 위치</label>
           <label class="sub"><input type="radio" name="mode" value="base">거점 옮기기</label>
         </div>
-        <div class="modeline"><p class="modehint" id="mode-hint"></p><button type="button" class="reset" id="base-reset" hidden>거점을 원래 자리로 되돌리기</button>
+        <div class="modeline"><p class="modehint" id="mode-hint"></p>
           <button type="button" class="reset feat" id="hud-btn" aria-pressed="false">🥽 헬멧 HUD (팝업)</button><button type="button" class="reset feat" id="rv-btn" aria-pressed="false">📷 1인칭 로드뷰</button></div>
       </div>
       <div class="mapwrap" id="mapwrap">
@@ -574,14 +561,13 @@
     <!-- 결과 -->
     <div style="display:grid;gap:16px;min-width:0">
       <section class="panel" aria-labelledby="h-sum">
-        <h2 id="h-sum">지금 상황</h2>
+        <h2 id="h-sum">지금 상황<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">산소·냉각수는 예비분을 빼고 평지를 걸을 때 남은 시간, 선량은 거점 선량률로 귀환 예산을 다 쓰기까지의 시간, 통신은 귀환 가능 영역 중 가시선이 안 닿는 비율. 초록 여유 · 노랑 주의 · 빨강 위험 (산소·냉각수 60분/20분, 선량 8시간/2시간, 통신 15%/40%, 기준치는 시뮬레이션 파라미터)</span></span></span></h2>
         <div class="tiles">
           <div class="tile wide" id="t-area"><div class="k">귀환 가능 면적</div><div class="v" id="v-area">–</div><div class="d" id="d-area"></div></div>
           <div class="tile wide" id="t-bind"><div class="k">가장 먼저 막는 것</div><div class="v" id="v-bind" style="font-size:18px">–</div><div class="d" id="d-bind"></div></div>
         </div>
         <div class="cuts" id="cuts"></div>
         <div class="glance" id="glance" role="list" aria-label="소모품과 통신 상태 한눈에 보기"></div>
-        <p class="gnote">산소·냉각수는 예비분을 빼고 평지를 걸을 때 남은 시간, 선량은 거점 선량률로 귀환 예산을 다 쓰기까지의 시간, 통신은 귀환 가능 영역 중 가시선이 안 닿는 비율. 초록 여유 · 노랑 주의 · 빨강 위험 (산소·냉각수 60분/20분, 선량 8시간/2시간, 통신 15%/40%, 기준치는 시뮬레이션 파라미터)</p>
       </section>
 
       <section class="panel" aria-labelledby="h-pt">
@@ -714,8 +700,8 @@ const I18N = {
   "이전 모델 + 문헌 보정 모두": "Previous model + all literature corrections", "비교: 이전 대사 모델": "Compare: previous metabolic model",
   "실시간 시뮬레이션 상황": "Live simulation scenario", "계획대로 (k = 1.0)": "As planned (k = 1.0)", "처음부터 20% 더 씀 (k = 1.2)": "20% more from the start (k = 1.2)",
   "60분부터 25% 급증": "25% surge from minute 60", "점점 지침 (3시간에 k 1.0 → 1.4)": "Growing fatigue (k 1.0 → 1.4 over 3 h)",
-  "계획을 세운 뒤 지도 아래 ▶로 재생합니다. 대원이 계획 경로를 따라 목표마다 작업하고, 매분 \"지금 돌아서도 거점까지 갈 수 있는가\"를 확인해 모자라면 남은 목표를 건너뛰고 돌아섭니다. 헬멧 HUD도 재생 시각을 따라갑니다.":
-    "Once the plan is ready, press ▶ below the map. The crew follows the planned route and works at each target; every minute it checks \"could I still get home if I turned back now?\" and, if not, skips the remaining targets and turns back. The helmet HUD follows the playback time.",
+  "계획이 서면 이 칸의 ▶ 계획 재생으로 재생합니다(지도 아래 재생 막대와 같음). 대원이 계획 경로를 따라 목표마다 작업하고, 매분 \"지금 돌아서도 거점까지 갈 수 있는가\"를 확인해 모자라면 남은 목표를 건너뛰고 돌아섭니다. 헬멧 HUD도 재생 시각을 따라갑니다.":
+    "Once the plan is ready, press ▶ Play the plan in this panel (same as the playback bar under the map). The crew follows the planned route and works at each target; every minute it checks \"could I still get home if I turned back now?\" and, if not, skips the remaining targets and turns back. The helmet HUD follows the playback time.",
   "실시간 시뮬레이션": "Live simulation", "남은 산소 · 지금 귀환에 필요": "O2 left · needed to return now", "귀환 경보": "Turn-back alarm", "울리지 않음": "Not triggered",
   "두절": "No link", "50 m 안 연결": "Link within 50 m", "약함": "Weak", "양호": "Good", "강함": "Strong", "중계기 경유": "via relay",
   "이동 중": "Walking", "작업 중": "Working", "거점 도착": "Back at base", "귀환 실패": "Return failed", "돌아오는 중": "Returning",
@@ -794,6 +780,7 @@ const I18N = {
   "귀환 가능 면적": "Walk-back area",
   "돌아올 길 없음": "No way back",
   "계획 재생": "Play the plan", "계획을 세우면 재생할 수 있습니다": "Play becomes available once a plan is ready", "처음으로": "Restart",
+  "여기서 갔다가 거점으로 돌아올 수 있음": "Reachable from here with a way back to base", "귀환하고 남는 산소": "O2 left after returning",
   "상황 설정": "Situation", "지금 상황": "Status", "지도 표시": "Map layers",
   "기준": "Baseline", "관측 SPE ×2.9": "Observed SPE ×2.9", "대형 SPE ×30 (스트레스 테스트)": "Large SPE ×30 (stress test)", "지친 대원 k 1.2": "Tired crew k 1.2",
   "냉각수 누수 0.6 kg": "Coolant leak 0.6 kg", "누수 + 더운 오후": "Leak + hot afternoon", "안전 우선 운용": "Safety-first ops",
@@ -871,6 +858,8 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^([\d,−-]+) g \(평지 (\d+)분어치\)$/, "$1 g ($2 min of level walking)"],
+  [/^거점을 옮김 \(원래 거점의 기준 상황은 ([\d.,]+) km²\) · 산소만 보면 ([\d.,]+) km²$/, "Base moved (original base baseline $1 km²) · O2 alone $2 km²"],
   [/^(\d+) \/ (\d+)분$/, "$1 / $2 min"],
   [/^직선 ([\d.,]+) km$/, "$1 km straight-line"], [/^원래 거점에서 ([\d.,]+) km$/, "$1 km from the original base"],
   [/^산소 ([\d,]+) g · (\d+)시간 (\d+)분( \(하산 포함\))?$/, (m, a, b, c, d) => `O2 ${a} g · ${b} h ${c} min${d ? " (incl. descent)" : ""}`],
@@ -2995,13 +2984,12 @@ const I18N_RE = [
     const on = [state.mSpeed && "속도", state.mEta && "η 1.2", state.mDown && "내리막", state.mSand && "모래"].filter(Boolean);
     $("m-hint").textContent = `평지 보행: ${fmt(speedAt(0), 2)} m/s, ${fmt(levelMR(), 0)} W, 시간당 산소 ${fmt(levelO2gh(), 0)} g · 1 km에 ${fmt(levelO2gh() / speedAt(0) / 3.6, 1)} g` +
       (on.length ? ` (보정: ${on.join(", ")})` : " (기본 모델)") + ` · 파라미터: ${C.cal_status || "문헌값"}`;
-    $("base-reset").hidden = state.base === BASE0;
     document.querySelectorAll("#presets button").forEach((bt) => bt.setAttribute("aria-pressed", String(bt.dataset.id === activePreset)));
   }
 
   let activePreset = "base", raf = 0;
   function update(full = true) {
-    labels();
+    labels(); applyLang();                // 계산을 기다리는 동안에도 영어 화면에 한글이 비치지 않게
     if (!H) return;                       // 자료를 푸는 중
     cancelAnimationFrame(raf);
     ensureTrees(() => {
@@ -3141,7 +3129,6 @@ const I18N_RE = [
     rd.readAsText(file);
   });
   new ResizeObserver(() => requestAnimationFrame(() => { if (state.mode === "sim" || state.mode === "eva") drawSimChart(); })).observe($("simbar"));
-  $("base-reset").addEventListener("click", () => { state.base = BASE0; activePreset = ""; update(); });
   $("base-reset2").addEventListener("click", () => { state.base = BASE0; activePreset = ""; update(); });
   $("here-clear").addEventListener("click", () => { state.here = -1; activePreset = ""; update(); });
   $("vcarry").addEventListener("change", (e) => { state.vcarry = e.target.value; activePreset = ""; update(); });

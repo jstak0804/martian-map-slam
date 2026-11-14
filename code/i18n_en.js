@@ -28,8 +28,8 @@ const I18N = {
   "이전 모델 + 문헌 보정 모두": "Previous model + all literature corrections", "비교: 이전 대사 모델": "Compare: previous metabolic model",
   "실시간 시뮬레이션 상황": "Live simulation scenario", "계획대로 (k = 1.0)": "As planned (k = 1.0)", "처음부터 20% 더 씀 (k = 1.2)": "20% more from the start (k = 1.2)",
   "60분부터 25% 급증": "25% surge from minute 60", "점점 지침 (3시간에 k 1.0 → 1.4)": "Growing fatigue (k 1.0 → 1.4 over 3 h)",
-  "계획을 세운 뒤 지도 아래 ▶로 재생합니다. 대원이 계획 경로를 따라 목표마다 작업하고, 매분 \"지금 돌아서도 거점까지 갈 수 있는가\"를 확인해 모자라면 남은 목표를 건너뛰고 돌아섭니다. 헬멧 HUD도 재생 시각을 따라갑니다.":
-    "Once the plan is ready, press ▶ below the map. The crew follows the planned route and works at each target; every minute it checks \"could I still get home if I turned back now?\" and, if not, skips the remaining targets and turns back. The helmet HUD follows the playback time.",
+  "계획이 서면 이 칸의 ▶ 계획 재생으로 재생합니다(지도 아래 재생 막대와 같음). 대원이 계획 경로를 따라 목표마다 작업하고, 매분 \"지금 돌아서도 거점까지 갈 수 있는가\"를 확인해 모자라면 남은 목표를 건너뛰고 돌아섭니다. 헬멧 HUD도 재생 시각을 따라갑니다.":
+    "Once the plan is ready, press ▶ Play the plan in this panel (same as the playback bar under the map). The crew follows the planned route and works at each target; every minute it checks \"could I still get home if I turned back now?\" and, if not, skips the remaining targets and turns back. The helmet HUD follows the playback time.",
   "실시간 시뮬레이션": "Live simulation", "남은 산소 · 지금 귀환에 필요": "O2 left · needed to return now", "귀환 경보": "Turn-back alarm", "울리지 않음": "Not triggered",
   "두절": "No link", "50 m 안 연결": "Link within 50 m", "약함": "Weak", "양호": "Good", "강함": "Strong", "중계기 경유": "via relay",
   "이동 중": "Walking", "작업 중": "Working", "거점 도착": "Back at base", "귀환 실패": "Return failed", "돌아오는 중": "Returning",
@@ -108,6 +108,7 @@ const I18N = {
   "귀환 가능 면적": "Walk-back area",
   "돌아올 길 없음": "No way back",
   "계획 재생": "Play the plan", "계획을 세우면 재생할 수 있습니다": "Play becomes available once a plan is ready", "처음으로": "Restart",
+  "여기서 갔다가 거점으로 돌아올 수 있음": "Reachable from here with a way back to base", "귀환하고 남는 산소": "O2 left after returning",
   "상황 설정": "Situation", "지금 상황": "Status", "지도 표시": "Map layers",
   "기준": "Baseline", "관측 SPE ×2.9": "Observed SPE ×2.9", "대형 SPE ×30 (스트레스 테스트)": "Large SPE ×30 (stress test)", "지친 대원 k 1.2": "Tired crew k 1.2",
   "냉각수 누수 0.6 kg": "Coolant leak 0.6 kg", "누수 + 더운 오후": "Leak + hot afternoon", "안전 우선 운용": "Safety-first ops",
@@ -185,6 +186,8 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^([\d,−-]+) g \(평지 (\d+)분어치\)$/, "$1 g ($2 min of level walking)"],
+  [/^거점을 옮김 \(원래 거점의 기준 상황은 ([\d.,]+) km²\) · 산소만 보면 ([\d.,]+) km²$/, "Base moved (original base baseline $1 km²) · O2 alone $2 km²"],
   [/^(\d+) \/ (\d+)분$/, "$1 / $2 min"],
   [/^직선 ([\d.,]+) km$/, "$1 km straight-line"], [/^원래 거점에서 ([\d.,]+) km$/, "$1 km from the original base"],
   [/^산소 ([\d,]+) g · (\d+)시간 (\d+)분( \(하산 포함\))?$/, (m, a, b, c, d) => `O2 ${a} g · ${b} h ${c} min${d ? " (incl. descent)" : ""}`],
