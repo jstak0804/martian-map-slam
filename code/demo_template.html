@@ -504,9 +504,11 @@
   .tc-gauges .glance { grid-template-columns: 1fr 1fr; }
   /* 재생 막대는 카드 바로 위, 범례·축척은 왼쪽 아래 */
   body.wide .simbar { left: 50%; right: auto; transform: translateX(-50%); width: min(760px, calc(100vw - 420px)); bottom: calc(var(--tc-h, 200px) + 24px); }
-  body.wide .legend { left: 16px; right: auto; bottom: 16px; max-width: 190px; display: grid; gap: 3px; font-size: 11px; }
+  body.wide .legend { left: 20px; right: auto; top: 112px; bottom: auto; max-width: 360px; width: max-content; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 3px 12px; font-size: 11px; }
+  body.wide .legend > span:not(:first-child) { white-space: nowrap; }
+  body.wide .legend > span:first-child { flex: 1 0 100%; }
   body.wide .legend > span:first-child { font-size: 11px; }
-  body.wide .scale { left: 16px; right: auto; bottom: calc(var(--lg-h, 120px) + 26px); }
+  body.wide .scale { left: 16px; right: auto; bottom: 18px; }
   body.wide .rv.drawer { left: 50%; right: auto; transform: translateX(-50%); width: min(900px, calc(100vw - 420px)); bottom: calc(var(--tc-h, 200px) + 24px); }
   body.wide .visor-wrap.pip { right: 388px; top: 64px; bottom: auto; width: min(620px, 44vw, calc((100vh - var(--tc-h, 200px) - 150px) * 1.65)); }
   body.wide .tripcard .simbar { position: static; transform: none; width: auto; max-width: none; margin: 0 0 10px; padding: 0 0 10px; background: none; box-shadow: none; border: 0; border-bottom: 1px solid var(--rule); border-radius: 0; }
@@ -584,7 +586,7 @@
         <div class="evaplay">
           <button type="button" class="play" id="eva-play" aria-label="계획 재생">▶</button>
           <span><b>계획 재생</b><small id="eva-play-t">계획을 세우면 재생할 수 있습니다</small></span>
-          <button type="button" class="reset" id="eva-restart">처음으로</button>
+          <button type="button" class="reset icon" id="eva-restart" aria-label="처음으로" title="처음으로">↻</button>
         </div>
         <div class="ctl">
           <label for="eva-scn">실시간 시뮬레이션 상황<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">계획이 서면 이 칸의 ▶ 계획 재생으로 재생합니다(지도 아래 재생 막대와 같음). 대원이 계획 경로를 따라 목표마다 작업하고, 매분 "지금 돌아서도 거점까지 갈 수 있는가"를 확인해 모자라면 남은 목표를 건너뛰고 돌아섭니다. 헬멧 HUD도 재생 시각을 따라갑니다.</span></span></span></label>
@@ -615,7 +617,7 @@
         <div class="evaplay">
           <button type="button" class="play" id="rs-play" aria-label="구조 재생">▶</button>
           <span><b>구조 재생</b><small id="rs-play-t">구조 대상을 찍으면 재생할 수 있습니다</small></span>
-          <button type="button" class="reset" id="rs-restart">처음으로</button>
+          <button type="button" class="reset icon" id="rs-restart" aria-label="처음으로" title="처음으로">↻</button>
         </div>
         <h2>구조 대상 (움직일 수 없는 대원)<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">위의 산소·냉각수·k·열 설정은 <strong>구조대원</strong>의 값으로 씁니다. 구조대원은 "현재 위치"에서 찍은 곳에서, 찍지 않았으면 거점에서 출발합니다.</span></span></span></h2>
         <div class="ctl">
@@ -1888,7 +1890,7 @@
       : !modeReady() || state.mode === "base" || state.mode === "sim" || state.mode === "eva" ? "inspect" : state.mode;
     let xb = 0, xy = 0, xr = 0;
     const xf = simFrame(), xLive = mode === "explore" && !!xf && SIM.idx > 0, xNow = xf ? xf.o2 : state.o2;   // 재생이 시작되면 그 순간의 산소로
-    const vh = victimHours(), vSec = Math.min(vh.o2, vh.water) * 3600, xR = RES();
+    const vh = victimHours(), vSec = Math.min(vh.o2, vh.water) * 3600, xR = BAND;   // 색 띠는 고정(20/10/0%), 복귀 여유는 회항 시점에만
     // 구조 재생 중: 구조 대상(보급 뒤에는 두 사람 중 덜 남는 쪽)이 지금 산소로 그 칸에서 거점까지 돌아오면 남는 몫
     const rLive = mode === "rescue" && !!xf && SIM && SIM.kind === "rescue" && SIM.idx > 0 && xf.vO2 != null;
     // 구조 모드: 구조 대상 지점에서 거점까지(혼자 돌아오는 구조대원)
@@ -2019,7 +2021,7 @@
     if (cv.width !== CW || cv.height !== CH) { cv.width = CW; cv.height = CH; XOUT.img = null; }
     const g = cv.getContext("2d");
     if (!XOUT.img) XOUT.img = g.createImageData(CW, CH);
-    const out = new Uint32Array(XOUT.img.data.buffer), xR = RES(), k = state.k, live = summary.xLive;
+    const out = new Uint32Array(XOUT.img.data.buffer), xR = BAND, k = state.k, live = summary.xLive;
     const hb = rgba("#3d8bfd", 0.30), hy = rgba("#ffd23f", 0.42), hr = rgba("#ef3b2c", 0.46);
     for (let y = 0; y < CH; y++) for (let x = 0; x < CW; x++) {
       const p = y * CW + x;
@@ -2133,9 +2135,9 @@
     }
     if (s.mode === "explore") {
       const sc = XS[state.xScn];
-      const P = state.planMargin;
-      $("t-area").querySelector(".k").textContent = LANG === "en" ? (s.xLive ? `Return now still leaves >${P}% O2` : `Round trip leaves >${P}% O2`)
-        : s.xLive ? `지금 남은 산소로 돌아와도 ${P}% 넘게 남는 곳` : `왕복 뒤 산소 ${P}% 넘게 남는 곳`;
+      const P = state.planMargin, PB = BAND * 100;
+      $("t-area").querySelector(".k").textContent = LANG === "en" ? (s.xLive ? `Return now still leaves >${PB}% O2` : `Round trip leaves >${PB}% O2`)
+        : s.xLive ? `지금 남은 산소로 돌아와도 ${PB}% 넘게 남는 곳` : `왕복 뒤 산소 ${PB}% 넘게 남는 곳`;
       $("v-area").innerHTML = `${fmt(s.xb, 2)} <small>km²</small>`;
       $("d-area").textContent = s.xLive ? `지금 산소 ${fmt(EO2(), 0)} g / 출발 ${fmt(state.o2, 0)} g · 노랑 ${fmt(s.xy, 2)} · 빨강 ${fmt(s.xr, 2)} km²`
         : `출발 산소 ${fmt(state.o2, 0)} g (Apollo 15~17 PLSS급) · 노랑 ${fmt(s.xy, 2)} · 빨강 ${fmt(s.xr, 2)} km²`;
@@ -2210,7 +2212,7 @@
     }
   }
   function xSegs(s) {                     // 파랑 / 노랑 / 빨강 구간 이름 (복귀 여유 % 따라)
-    const P = state.planMargin, h = P / 2, en = LANG === "en";
+    const P = BAND * 100, h = P / 2, en = LANG === "en";
     return [{ n: en ? `>${P}%` : `${P}% 초과`, v: s.xb, c: "#3d8bfd" }, { n: `${h}–${P}%`, v: s.xy, c: "#ffd23f" }, { n: `0–${h}%`, v: s.xr, c: "#ef3b2c" }];
   }
   function paintLegend() {
@@ -2406,7 +2408,8 @@
   // 체류 가능 시간 = 거점에 돌아왔을 때 산소·냉각수가 출발량의 20% 이상 남는 최대 시간 (선량 예산도 넘지 않음). 체류 대사량 = 평지 보행
   let XS = [];
   const LETTERS = "ABC";
-  const RES = () => state.planMargin / 100;           // 복귀 때 남길 몫 (출발량 대비)
+  const RES = () => state.planMargin / 100;
+  const BAND = 0.2;                                  // 지도 색 띠 경계: 파랑 >20%, 노랑 10~20%, 빨강 0~10% (복귀 여유 설정과 무관)           // 복귀 때 남길 몫 (출발량 대비)
   function exploreScenarios() {
     const T = state.xT;
     if (!T.length) return [];

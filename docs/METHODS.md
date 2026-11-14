@@ -102,7 +102,7 @@ level-walking metabolism ($\dot m_{O_2}^{stay}$, $\dot m_w^{stay}$):
 $$T_{stay} = \min\!\left(\frac{0.8\,O_s - U}{\dot m^{stay}_{O_2}},\ \frac{0.8\,W_s - U_w}{\dot m^{stay}_w},\ \frac{1\,\mathrm{mSv} - \mathrm{Dose}_{travel}}{\dot D_{site}}\right)$$
 
 i.e. **the crew must reach base with at least the return reserve R (20 % by default, adjustable) of the
-starting O2 and water**; 0.8 above is $1-R$ and 0.2 is $R$. Map colours follow R: blue > R, yellow R/2–R, red 0–R/2.
+starting O2 and water**; 0.8 above is $1-R$ and 0.2 is $R$. Map colours stay fixed (blue > 20 %, yellow 10–20 %, red 0–10 %); R only changes how long the crew can work and when it turns back.
 Sites left on auto share $T_{stay}$ equally ($T_{stay}/n$); if minutes are typed for some sites, the remaining time
 is split among the auto sites. Reported times: go = base → first site, return = last site → base, stay = $T_{stay}$.
 
