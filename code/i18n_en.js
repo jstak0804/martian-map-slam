@@ -180,7 +180,10 @@ const I18N = {
   "심박 (Hoffmann 회귀식으로 대사량 추정)": "Heart rate (Hoffmann regression)", "탱크 압력 (산소 소모를 직접 측정)": "Tank pressure (direct O2 use)",
   "우주복 누설": "Suit leak", "압력 센서 잡음": "Pressure sensor noise", "처음으로": "Restart",
   "계산 방법과 한계": "Methods and limitations",
-  "왕복 계획 여유": "Round-trip planning margin",
+  "탐사 계획·구조: 거점에 돌아왔을 때 출발량 대비 이 % 이상 남깁니다(탐사 계획 칸의 숫자와 같은 값). 더보기의 과학 EVA: 귀환에 필요한 산소·냉각수에 이 %를 더 얹어 남깁니다.": "Exploration and rescue: arrive at base with at least this % of the starting amount (same value as the box in the exploration plan). Science EVA (More): keep this % on top of the O2 and coolant needed to return.",
+  "지도의 ◆ 탐사 지점(로버가 조사한 곳)이나 원하는 곳을 눌러 최대 3곳을 고릅니다. 출발 산소는 Apollo 15~17 PLSS 기준 680 g(1.5 lb, 1,430 psi급). 체류 가능 시간 = (출발 산소 × (1 − 복귀 여유%) − 이동에 쓰는 산소) ÷ 작업 중 소모율. 즉 거점에 돌아왔을 때 산소·냉각수가 복귀 여유(기본 20%) 이상 남는 조건이고, 작업 중 대사량은 평지 보행과 같다고 봅니다. 지점마다 체류를 비워 두면(자동) 이 시간을 지점 수로 똑같이 나누고(1/n), 직접 넣은 지점이 있으면 나머지 시간을 자동 지점끼리 나눕니다.": "Click ◆ sites (places a rover surveyed) or anywhere on the map, up to 3. Start O2 is 680 g, Apollo 15–17 PLSS (1.5 lb at ~1,430 psi). Stay time = (start O2 × (1 − return reserve %) − O2 used travelling) ÷ work-rate O2 use, i.e. O2 and coolant at base stay above the reserve (20% by default); work metabolism equals level walking. Sites left blank (auto) share this time equally (1/n); if you type minutes for some sites, the rest is split among the auto sites.",
+  "거점에 돌아왔을 때 출발량 대비 이만큼 이상 남깁니다. 지도 색 경계, 체류 시간, 귀환 경보, 구조 보급량에 모두 적용": "Keep at least this share of the starting amount when back at base. Applies to map colours, stay times, the turn-back alarm and rescue supply.",
+  "왕복 계획 여유": "Round-trip planning margin", "복귀 여유": "Return reserve", "복귀 때 남길 산소·냉각수 ": "Keep at return (O2 & coolant) ", "복귀 때 남길 산소·냉각수": "Keep at return (O2 & coolant)", "두 사람이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소 (덜 남는 쪽)": "O2 left if both walked home from there now (the lower of the two)", "구조 대상이 지금 산소로 그곳에서 거점까지 돌아왔을 때 남는 산소": "O2 the stranded crew would have left walking home from there now",
   "과학 EVA 계획과 EVA 시뮬레이션의 귀환 경보가 귀환 반경 경계에 붙지 않도록, 귀환에 필요한 산소·냉각수의 이만큼을 더 남깁니다. 지도 색(절대 한계)은 그대로입니다.":
     "Keeps this much extra over the O2/coolant needed to get home, so science plans and the simulation's turn-back alert don't hug the walk-back boundary. Map colours (absolute limit) are unchanged.",
   "헬멧 바이저에는 이렇게 표시할 예정입니다. 배경은 지금 위치 근처에서 로버가 찍은 실제 사진(바이저 너머 풍경 대신), 값은 지도에서 고른 지점·현재 위치·EVA 시뮬레이션 재생 시각 기준으로 바뀝니다.":
@@ -200,7 +203,7 @@ const I18N_RE = [
   [/^(\d+)분 · (이동 중|작업 중|돌아오는 중)(?: · (.*))? · 산소 ([\d,]+) g \((\d+)%\)$/, (m, a, b, c, d, e) => `min ${a} · ${({ "이동 중": "walking", "작업 중": "working", "돌아오는 중": "returning" })[b]}${c ? " · " + c : ""} · O2 ${d} g (${e}%)`],
   [/^([\d,]+) g \((\d+)%\) · 체류 한도 (.*) 초과$/, (m, a, b, c) => `${a} g (${b}%) · over the ${I18N_SUB(c)} stay limit`],
   [/^구조 출발: (현재 위치|거점) → 구조 대상 \(구조대원 산소 ([\d,]+) g, 냉각수 ([\d,]+) g\)$/, (m, a, b, c) => `Rescue start: ${a === "거점" ? "base" : "current position"} → stranded crew (rescuer O2 ${b} g, coolant ${c} g)`],
-  [/^구조 대상에게 산소 ([\d,]+) g · 냉각수 ([\d,]+) g 전달 → 함께 귀환$/, "Handed $1 g O2 · $2 g coolant to the stranded crew → returning together"],
+  [/^구조 대상에게 산소 ([\d,]+) g · 냉각수 ([\d,]+) g 전달 \(남는 몫을 반씩\) → 함께 귀환$/, "Handed $1 g O2 · $2 g coolant to the stranded crew (surplus split evenly) → returning together"],
   [/^지금 산소 ([\d,]+) g \/ 출발 ([\d,]+) g · 노랑 ([\d.,]+) · 빨강 ([\d.,]+) km²$/, "O2 now $1 g / start $2 g · yellow $3 · red $4 km²"],
   [/^(.*)만$/, (m, a) => `${a} only`], [/^산소 ([\d,]+) g · (산소|냉각수|선량|로버 고장 시 도보 귀환) 기준$/, (m, a, b) => `O2 ${a} g · limited by ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose", "로버 고장 시 도보 귀환": "walk-back if rover fails" })[b]}`],
   [/^(\d+)시간 (\d+)분$/, "$1 h $2 min"], [/^복귀 시 (산소|냉각수|선량) 20% 미만$/, (m, a) => `Under 20% ${({ "산소": "O2", "냉각수": "coolant", "선량": "dose" })[a]} on return`],
