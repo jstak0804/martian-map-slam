@@ -77,6 +77,9 @@
   .modectl .group { border: 1px solid var(--rule); border-left: 4px solid var(--accent); background: var(--panel-2); border-radius: 10px; padding: 12px; animation: fadein .35s ease-out; }
   .modectl .group h2 { color: var(--accent); }
   .xsel { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12.5px; }
+  .xsel { flex-direction: column; align-items: stretch; }
+  .xsel .chip .dwin { margin-left: auto; font-size: 11.5px; color: var(--ink-soft); }
+  .xsel .chip .dwin input { width: 52px; }
   .xsel .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 4px 3px 8px; border: 1px solid var(--rule); border-radius: 999px; background: var(--panel); }
   .xsel .chip b { color: #0d1016; background: var(--accent); border-radius: 50%; width: 18px; height: 18px; display: inline-grid; place-items: center; font-size: 11px; }
   .xsel .chip button { font: inherit; color: var(--ink-soft); background: none; border: 0; cursor: pointer; padding: 0 4px; }
@@ -128,6 +131,7 @@
   .walker { position: absolute; width: 18px; height: 18px; border-radius: 50%; pointer-events: none; z-index: 2;
     transform: translate(-50%, -50%) scale(calc(1 / var(--zk, 1))); background: #ffd23f; border: 2.5px solid #0d1016; box-shadow: 0 0 0 3px rgba(255,210,63,.35); }
   .walker.back { background: #7fd0ff; box-shadow: 0 0 0 3px rgba(127,208,255,.4); }
+  .walker.pair { box-shadow: 0 0 0 3px rgba(127,208,255,.4), 13px 0 0 -3px #ef6b5e, 13px 0 0 -1px #0d1016; }
   .walker.work { background: #e2794d; box-shadow: 0 0 0 4px rgba(226,121,77,.4); }
   .zoomctl { position: absolute; top: 10px; left: 10px; z-index: 4; display: grid; gap: 4px; }
   .zoomctl button { font: inherit; font-size: 16px; line-height: 1; width: 30px; height: 30px; color: var(--ink); background: rgba(11,14,21,.85); border: 1px solid var(--rule); border-radius: 6px; cursor: pointer; }
@@ -603,8 +607,7 @@
       <div class="modebar">
         <div class="seg" id="modes" role="radiogroup" aria-label="지도 모드">
           <label><input type="radio" name="mode" value="explore" checked>① 탐사 계획</label>
-          <label><input type="radio" name="mode" value="sim">② 실시간 시뮬레이션</label>
-          <label><input type="radio" name="mode" value="rescue">③ 조난 구조</label>
+          <label><input type="radio" name="mode" value="rescue">② 조난 구조</label>
         </div>
         <select id="mode-more" class="mode-more" aria-label="다른 모드">
           <option value="">더보기 ▾</option>
@@ -903,7 +906,7 @@ const I18N = {
   "돌아올 길 없음": "No way back",
   "계획 재생": "Play the plan", "계획을 세우면 재생할 수 있습니다": "Play becomes available once a plan is ready", "처음으로": "Restart",
   "여기서 갔다가 거점으로 돌아올 수 있음": "Reachable from here with a way back to base", "귀환하고 남는 산소": "O2 left after returning",
-  "방법·한계": "Methods & limits", "탐사 계획": "Exploration plan", "🚶 도보": "🚶 On foot", "🚙 로버": "🚙 Rover", "① 탐사 계획": "① Exploration plan", "② 실시간 시뮬레이션": "② Live simulation", "③ 조난 구조": "③ Rescue", "경로 탐색": "Route check", "과학 EVA": "Science EVA",
+  "방법·한계": "Methods & limits", "탐사 계획": "Exploration plan", "🚶 도보": "🚶 On foot", "🚙 로버": "🚙 Rover", "① 탐사 계획": "① Exploration plan", "② 실시간 시뮬레이션": "② Live simulation", "③ 조난 구조": "③ Rescue", "② 조난 구조": "② Rescue", "경로 탐색": "Route check", "과학 EVA": "Science EVA",
   "가는 시간": "Go", "복귀 시간": "Return", "체류 가능": "Can stay", "다녀올 수 있음": "Feasible", "지점별 체류": "Stay per site", "지점 간 이동": "Between sites", "거리 (왕복)": "Distance (round trip)", "이동에 드는 산소 · 냉각수": "O2 · coolant for travel", "복귀 때 남는 산소": "O2 left on return",
   "왕복 뒤 산소 20% 넘게 남는 곳": "Round trip leaves >20% O2", "선택한 시나리오 체류 가능": "Stay time (selected scenario)", "지도의 ◆ 탐사 지점을 누르세요": "Click a ◆ site on the map", "지도에서 ◆ 탐사 지점을 누르세요 (최대 3곳)": "Click ◆ sites on the map (up to 3)", "경로 계산 중…": "Computing routes…",
   "거점 → 그곳 → 거점 왕복 뒤 남는 산소": "O2 left after base → there → base", "20% 초과": ">20%", "10~20%": "10–20%", "0~10%": "0–10%", "다녀올 수 있는 곳 윤곽": "Outline of reachable area",
@@ -1127,7 +1130,7 @@ const I18N_RE = [
     { id: "rescue", label: `구조 예시: ${goalShort()}`, s: { mode: "rescue", victim: GOAL, here: -1, o2: 680, vo2: 150, vwater: 1, vcarry: "walk" } },
   ];
   PRESETS = makePresets();
-  const MAIN_PRESETS = ["base", "hot", "simhr", "eva"], HIDDEN_PRESETS = ["simpress"];   // 간소화판: 기본 4개, 나머지는 접기
+  const MAIN_PRESETS = ["base", "hot", "eva"], HIDDEN_PRESETS = ["simpress", "simhr"];   // 간소화판: 기본 4개, 나머지는 접기
   const presetsHtml = () => {
     const b = (p) => `<button type="button" data-id="${p.id}">${p.label}</button>`;
     return PRESETS.filter((p) => MAIN_PRESETS.includes(p.id)).map(b).join("")
@@ -1791,7 +1794,7 @@ const I18N_RE = [
     const stops = [];
     if (plan) { let from = 0; plan.cells.forEach((c, n) => { const j = out.indexOf(c, from); if (j >= 0) { from = j; stops.push({ s: outTr.cd[j], min: plan.dwell ? plan.dwell[n] : state.evaDwell, name: plan.names[n], cell: c }); } }); }
     const workO2PerMin = levelMR() * C.o2_g_per_j * 60;                  // 작업 대사량 = 평지 보행 기준치 (계획과 같은 가정)
-    let stopI = 0, dwellLeft = 0, stopName = "", trav = 0;    // trav: 지금까지 이동에 쓴 모델 산소(g, 작업 제외)
+    let stopI = 0, dwellLeft = 0, stopName = "", trav = 0, together = false;   // together: 구조 대상과 함께 걷는 중    // trav: 지금까지 이동에 쓴 모델 산소(g, 작업 제외)
     const knownGs = press && state.simLeakSub ? leakGs : 0;               // 대원이 알고 귀환 계산에 넣는 누설
     const prnd = mulberry(11); let pspare = null;
     const pgauss = () => {
@@ -1830,7 +1833,7 @@ const I18N_RE = [
       const frame = { m, pos: here, o2: o2c, o2True: o2, w, k, phase, need: fz.need, needW: fz.needW, ok: fz.ok,
                       hr: NaN, hrExp: NaN, kTrue: NaN, P, T, naive,
                       dest: phase === "out" || phase === "work" ? (plan ? (stops[phase === "work" ? stopI - 1 : stopI] || {}).cell ?? state.base : state.simTarget) : state.base,
-                      stopName: phase === "work" ? stopName : "", trav,
+                      stopName: phase === "work" ? stopName : "", trav, together,
                       tNext: phase === "work" ? dwellLeft : phase === "out" && plan && stopI < stops.length ? Math.max(0, stops[stopI].s - s) : NaN };
       frames.push(frame);
       if (phase === "home" || phase === "dead") break;
@@ -1871,6 +1874,7 @@ const I18N_RE = [
             if (plan && plan.give && stopI >= stops.length) {     // 구조: 구조 대상에게 산소·냉각수를 건넴
               o2 -= plan.give.o2; o2Seen -= plan.give.o2; w -= plan.give.w;
               log.push({ m: m + 1, cls: "warn", text: `구조 대상에게 산소 ${fmt(plan.give.o2, 0)} g · 냉각수 ${fmt(plan.give.w, 0)} g 전달 → 함께 귀환` });
+              together = true;
             }
             if (stopI >= stops.length) {        // 마지막 목표 끝: 귀환 트리로 거점까지
               phase = "back"; if (!plan.give) log.push({ m: m + 1, cls: "", text: `${stopName} 작업 끝 → 마지막 목표, 귀환 시작` });
@@ -1987,7 +1991,7 @@ const I18N_RE = [
       if (mode === "explore") {              // 거점 -> 이 칸 -> 거점 왕복 뒤 남는 산소 (출발량 대비)
         const f = FWDB.o2[i];               // 칸마다 하산 탐색을 돌리지 않도록 귀환 경로망 값만 씀
         if (!isFinite(f) || S.o2[i] < 0) s = 1;
-        else if (xLive) { o2tot = S.o2[i]; const rem = (xNow - EK() * S.o2[i]) / state.o2; s = rem > 0.2 ? 8 : rem > 0.1 ? 9 : rem >= 0 ? 10 : 1; }   // 재생 중: 지금 남은 산소로 거기서 돌아오면
+        else if (xLive) { o2tot = S.o2[i]; const rem = (xNow - state.k * S.o2[i]) / state.o2; s = rem > 0.2 ? 8 : rem > 0.1 ? 9 : rem >= 0 ? 10 : 1; }   // 재생 중: 지금 남은 산소로 거기서 돌아오면
         else { o2tot = f + S.o2[i]; const rem = (state.o2 - state.k * o2tot) / state.o2; s = rem > 0.2 ? 8 : rem > 0.1 ? 9 : rem >= 0 ? 10 : 1; }
         if (s === 8) xb++; else if (s === 9) xy++; else if (s === 10) xr++;
       } else if (mode === "inspect") {
@@ -2479,7 +2483,8 @@ const I18N_RE = [
   }
   function renderExplore() {
     const T = state.xT;
-    $("x-sel").innerHTML = T.length ? T.map((x, i) => `<span class="chip"><b>${LETTERS[i]}</b>${x.name}<button type="button" data-xrm="${i}" aria-label="빼기">✕</button></span>`).join("")
+    const selKey = JSON.stringify([T.map((x) => x.cell), state.xDwell, LANG]);   // 바뀔 때만 다시 그림 (입력 중 커서 유지)
+    if ($("x-sel").dataset.key !== selKey) $("x-sel").dataset.key = selKey, $("x-sel").innerHTML = T.length ? T.map((x, i) => `<span class="chip"><b>${LETTERS[i]}</b>${x.name}<label class="dwin" title="${LANG === "en" ? "Stay (min). Leave blank for auto" : "체류 시간(분). 비우면 자동"}">${LANG === "en" ? "Stay" : "체류"} <input type="number" min="0" step="5" data-dwc="${x.cell}" value="${state.xDwell[x.cell] ?? ""}" placeholder="${LANG === "en" ? "auto" : "자동"}">${LANG === "en" ? "min" : "분"}</label><button type="button" data-xrm="${i}" aria-label="${LANG === "en" ? "Remove" : "빼기"}">✕</button></span>`).join("")
       : '<span class="empty">지도에서 ◆ 탐사 지점을 누르세요 (최대 3곳)</span>';
     const sc = exploreScenarios();
     if (sc === null) { $("x-scn").innerHTML = '<span class="empty">경로 계산 중…</span>'; return; }
@@ -2584,7 +2589,7 @@ const I18N_RE = [
       $("pt-meters").innerHTML = `<div class="xbig"><span>가는 시간<b>${fmtDur(go)}</b></span><span>복귀 시간<b>${fmtDur(back)}</b></span><span class="dw${sc.over ? " over" : ""}">체류 ${sc.over ? "계획" : "가능"}<b>${fmtDur(sc.dwell)}</b></span></div>`;
     }
     const dwRows = sc.ord.map((j, n) => { const c = state.xT[j - 1].cell, fx = state.xDwell[c];
-      return `<label class="dwin"><b>${xName(j)}</b><input type="number" min="0" step="5" data-dwc="${c}" value="${Math.round(sc.dwells[n] / 60)}" class="${fx == null ? "auto" : ""}" aria-label="${xName(j)} 체류(분)">분</label>`; }).join("");
+      return `<span class="dwin"><b>${xName(j)}</b> ${fmtDur(sc.dwells[n])}${fx == null ? (LANG === "en" ? " (auto)" : " (자동)") : ""}</span>`; }).join(" · ");
     $("pt-facts").innerHTML = `
       <dt>지점별 체류</dt><dd class="dwrow">${dwRows}<button type="button" class="pipbtn" id="dw-auto" title="최대로 균등 분배">자동</button></dd>
       ${sc.ord.length > 1 ? `<dt>지점 간 이동</dt><dd>${fmtDur(mid)}</dd>` : ""}
@@ -3227,7 +3232,8 @@ const I18N_RE = [
     if (state.base !== BASE0) { g.strokeStyle = "#0d1016"; g.lineWidth = 4 * lw; g.beginPath(); g.arc(...xy(BASE0), 9 * lw, 0, 7); g.stroke(); g.strokeStyle = "#a7e8a0"; g.lineWidth = 2 * lw; g.setLineDash([4 * lw, 3 * lw]); g.stroke(); g.setLineDash([]); }
     if (state.mode === "inspect" && lastVec.path) ring(g, ...xy(state.sel), 7 * lw, "#ffffff", lw);
     if (state.here >= 0 && state.mode !== "inspect") person(g, ...xy(state.here), 8 * lw, "#7fd0ff", lw);
-    if (state.victim >= 0 && state.mode === "rescue") cross(g, ...xy(state.victim), 9 * lw, lw);
+    const fr = simFrame();
+    if (state.victim >= 0 && state.mode === "rescue" && !(fr && fr.together)) cross(g, ...xy(state.victim), 9 * lw, lw);
     // 축척은 지도 위 DOM(#scale)으로
   }
   const dot = (g, x, y, r, c, lw) => { g.fillStyle = c; g.strokeStyle = "#0d1016"; g.lineWidth = 1.5 * lw; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.stroke(); };
@@ -3497,7 +3503,7 @@ const I18N_RE = [
   $("lang-btn").addEventListener("click", () => {
     LANG = LANG === "ko" ? "en" : "ko"; state.hudLang = LANG;
     $("lang-btn").textContent = LANG === "ko" ? "EN" : "한국어";
-    siteTexts(); renderHud(); applyLang(); notesLang();
+    siteTexts(); renderHud(); if (state.mode === "explore") update(false); applyLang(); notesLang();
   });
   $("hud-btn").addEventListener("click", () => {        // 켜면 팝업 창으로(막히면 지도 위 PIP), 다시 누르면 닫음
     state.hud = !state.hud;
@@ -3541,6 +3547,12 @@ const I18N_RE = [
   });
   $("pt-facts").addEventListener("click", (e) => { if (e.target.id === "dw-auto") { state.xDwell = {}; stopSim(); update(); } });
   $("x-mode").addEventListener("change", (e) => { state.xRover = e.target.value === "rover"; stopSim(); update(); });
+  $("x-sel").addEventListener("change", (e) => {
+    const inp = e.target.closest("[data-dwc]"); if (!inp) return;
+    const c = Number(inp.dataset.dwc);
+    if (inp.value === "") delete state.xDwell[c]; else state.xDwell[c] = Math.max(0, Number(inp.value) || 0);
+    stopSim(); update();
+  });
   $("x-sel").addEventListener("click", (e) => { const b = e.target.closest("[data-xrm]"); if (!b) return; state.xT.splice(Number(b.dataset.xrm), 1); state.xScn = 0; stopSim(); update(); });
   $("x-scn").addEventListener("click", (e) => { const b = e.target.closest("[data-xs]"); if (!b) return; state.xScn = Number(b.dataset.xs); stopSim(); update(); });
   $("eva-scn").addEventListener("change", (e) => { state.evaScn = e.target.value; stopSim(); update(); });
@@ -3569,11 +3581,12 @@ const I18N_RE = [
     const x = ((a % W) + 0.5) * (1 - u) + ((b % W) + 0.5) * u, y = (((a / W) | 0) + 0.5) * (1 - u) + (((b / W) | 0) + 0.5) * u;
     el.style.left = `${x / W * 100}%`; el.style.top = `${y / R * 100}%`;
     const pa = F[Math.max(0, i0 - 1)].pos, nb = F[Math.min(F.length - 1, i0 + 2)].pos;   // 진행 방향: 앞 프레임 -> 다음 프레임
-    if (pa !== nb) walkerHeading = walkerHeading + ((((bearingTo(pa, nb) - walkerHeading) % 360) + 540) % 360 - 180) * 0.25;
+    if (pa !== nb && distKm(pa, nb) > 0.025) walkerHeading = walkerHeading + ((((bearingTo(pa, nb) - walkerHeading) % 360) + 540) % 360 - 180) * 0.15;
     if (headingUp) followWalker(x, y, walkerHeading);
     if (playing) for (const cv of povTargets()) drawPOV(cv, x, y, walkerHeading);
     el.classList.toggle("back", F[i0].phase === "back" || F[i0].phase === "home");
     el.classList.toggle("work", F[i0].phase === "work");
+    el.classList.toggle("pair", !!F[i0].together);           // 구조: 두 사람이 함께
     el.hidden = false;
   }
   function tick(ts) {

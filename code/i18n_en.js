@@ -109,7 +109,7 @@ const I18N = {
   "돌아올 길 없음": "No way back",
   "계획 재생": "Play the plan", "계획을 세우면 재생할 수 있습니다": "Play becomes available once a plan is ready", "처음으로": "Restart",
   "여기서 갔다가 거점으로 돌아올 수 있음": "Reachable from here with a way back to base", "귀환하고 남는 산소": "O2 left after returning",
-  "방법·한계": "Methods & limits", "탐사 계획": "Exploration plan", "🚶 도보": "🚶 On foot", "🚙 로버": "🚙 Rover", "① 탐사 계획": "① Exploration plan", "② 실시간 시뮬레이션": "② Live simulation", "③ 조난 구조": "③ Rescue", "경로 탐색": "Route check", "과학 EVA": "Science EVA",
+  "방법·한계": "Methods & limits", "탐사 계획": "Exploration plan", "🚶 도보": "🚶 On foot", "🚙 로버": "🚙 Rover", "① 탐사 계획": "① Exploration plan", "② 실시간 시뮬레이션": "② Live simulation", "③ 조난 구조": "③ Rescue", "② 조난 구조": "② Rescue", "경로 탐색": "Route check", "과학 EVA": "Science EVA",
   "가는 시간": "Go", "복귀 시간": "Return", "체류 가능": "Can stay", "다녀올 수 있음": "Feasible", "지점별 체류": "Stay per site", "지점 간 이동": "Between sites", "거리 (왕복)": "Distance (round trip)", "이동에 드는 산소 · 냉각수": "O2 · coolant for travel", "복귀 때 남는 산소": "O2 left on return",
   "왕복 뒤 산소 20% 넘게 남는 곳": "Round trip leaves >20% O2", "선택한 시나리오 체류 가능": "Stay time (selected scenario)", "지도의 ◆ 탐사 지점을 누르세요": "Click a ◆ site on the map", "지도에서 ◆ 탐사 지점을 누르세요 (최대 3곳)": "Click ◆ sites on the map (up to 3)", "경로 계산 중…": "Computing routes…",
   "거점 → 그곳 → 거점 왕복 뒤 남는 산소": "O2 left after base → there → base", "20% 초과": ">20%", "10~20%": "10–20%", "0~10%": "0–10%", "다녀올 수 있는 곳 윤곽": "Outline of reachable area",

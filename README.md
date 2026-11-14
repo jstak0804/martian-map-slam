@@ -15,7 +15,7 @@ and radiation margin they have left, and **the safest way back** from any point.
 
 - **Walk-back zone:** every 10 m cell is checked for O2, coolant, dose and comms on the real return route.
 - **Science EVA planner:** visits real rover sampling sites and **turns back automatically** before the margin runs out.
-- **Live telemetry simulation:** heart rate or tank pressure drives a minute-by-minute **turn-back alarm**.
+- **Playback:** exploration and rescue plans play minute by minute with a shrinking walk-back zone and a **turn-back alarm**.
 - **Rescue planning:** shows where a rescuer can reach a stranded crew member in time, and how much O2 to carry.
 - **Helmet HUD:** a popup visor view with O2 and coolant battery gauges, comm signal bars and alarms.
 
