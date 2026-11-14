@@ -138,6 +138,9 @@ A geometric indicator, not a link budget.
 
 - The demo reproduces an independent Python implementation (`walkback_verification/`): Gale, 150 g O2,
   walk-back area **9.72 km²**. The older Pandolf × gravity model gives 19.95 km² (comparison switch).
+- Outside the HiRISE DTM strip the exploration colours are a **level-ground estimate** (hatched): the round-trip O2 of the
+  nearest strip cell plus level walking at η = 1.2 outward (16-direction distance on a 40 m grid). Rough or steep ground
+  (e.g. Mt. Sharp) makes the real cost higher, so treat it as optimistic until a surrounding DEM is added.
 - IST tests ran at 0.12–0.32 g on Earth, not Mars 0.378 g with a 90 kg suit; downhill costs are scaled
   extrapolations; rover speed and riding metabolism are assumptions; terrain shielding and fall risk are proxies.
 
