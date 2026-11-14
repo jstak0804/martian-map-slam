@@ -3737,7 +3737,7 @@ const I18N_RE = [
     drawPath(lastVec.path, lastVec.color || "#ffffff");
     if (passedTrail) passedTrail();          // 지나온 길은 계획 경로 위에 흐리게
     const xy = (i) => [(i % W) + 0.5, ((i / W) | 0) + 0.5];
-    dot(g, ...xy(GOAL), 4.5 * lw, "#f2d430", lw);
+    // 예시 목적지(GOAL) 점은 그리지 않음: 뺀 모드(경로 탐색·심박 시뮬·구조)에서만 쓰던 표시
     if (state.relay) diamond(g, ...xy(META.relay[1] * W + META.relay[0]), 7 * lw, "#e2794d", lw);
     star(g, ...xy(state.base), (state.mode === "base" ? 12 : 9) * lw, "#a7e8a0", lw);
     if (state.base !== BASE0) { g.strokeStyle = "#0d1016"; g.lineWidth = 4 * lw; g.beginPath(); g.arc(...xy(BASE0), 9 * lw, 0, 7); g.stroke(); g.strokeStyle = "#a7e8a0"; g.lineWidth = 2 * lw; g.setLineDash([4 * lw, 3 * lw]); g.stroke(); g.setLineDash([]); }
