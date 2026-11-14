@@ -444,6 +444,7 @@
   .tripcard { display: none; }
   body.wide .tripcard { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 8; display: block; width: min(1060px, calc(100vw - 420px)); padding: 12px 16px 14px; box-sizing: border-box; max-height: 44vh; overflow: auto; }
   .tc-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+  #sim-restart.icon { font-size: 17px; line-height: 1; padding: 4px 10px; }
   #sim-return { color: #ffb4a8; border-color: #e0614f; } #sim-return:disabled { opacity: .35; cursor: default; }
   .tc-fold { font: inherit; font-size: 12px; font-weight: 600; color: var(--ink); background: #161b26; border: 1px solid var(--rule); border-radius: 7px; padding: 4px 10px; cursor: pointer; white-space: nowrap; }
   .tc-fold:hover { border-color: var(--accent); } .tc-fold:disabled { opacity: .4; cursor: default; } .tc-fold[hidden] { display: none; }
@@ -810,7 +811,7 @@
       <div class="simbar" id="simbar" hidden>
         <div class="simrow">
           <button type="button" class="play" id="sim-play" aria-label="재생">▶</button>
-          <button type="button" class="reset" id="sim-restart">처음으로</button>
+          <button type="button" class="reset icon" id="sim-restart" aria-label="처음으로" title="처음으로">↻</button>
           <button type="button" class="reset ret" id="sim-return" disabled title="지금 위치에서 남은 계획을 멈추고 거점으로 돌아갑니다">⏎ 즉시 복귀</button>
           <input type="range" id="sim-t" min="0" max="0" step="1" value="0" aria-label="시뮬레이션 시각">
           <output id="sim-t-out" for="sim-t" class="mono"></output>
@@ -4361,6 +4362,7 @@ const I18N_RE = [
       $("tripcard").hidden = !(state.mode === "explore" || state.mode === "sim");
       $("tc-clear").hidden = state.mode !== "explore"; $("tc-clear").disabled = !state.xT.length;
       $("tc-fold").hidden = $("tripcard").hidden;
+      $("sim-restart").title = $("sim-restart").ariaLabel = LANG === "en" ? "Restart" : "처음으로";
       const cr = $("tripcard").getBoundingClientRect(), ar = document.querySelector(".app").getBoundingClientRect();   // 탭은 카드 오른쪽 끝 위
       document.body.style.setProperty("--tc-r", Math.max(8, ar.right - cr.right + 16) + "px");
       if (state.mode === "sim") $("tc-title").textContent = LANG === "en" ? "HEART-RATE SURGE SIM" : "심박 급증 시뮬레이션";
