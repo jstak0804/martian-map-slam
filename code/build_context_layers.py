@@ -52,6 +52,14 @@ def tile(z, y, x):
     return np.zeros((TILE, TILE), np.float32)
 
 
+# 사용자가 받아 둔 로컬 CTX 모자이크 (ISIS 등장방형, 라벨의 Mapping 그룹 값)
+LOCAL = {
+    "jezero": {"path": "../data/ctx_jezero/JEZ_ctx_B_soc_008_orthoMosaic_6m_Eqc_latTs0_lon0.tif",
+               "lon0": 77.1604654592236727, "lat0": 18.7211944818728036, "ppd": 9879.11625388436914,
+               "source": "CTX orthomosaic 6 m (Jezero, Mars 2020 project / MRO CTX, NASA/JPL-Caltech/MSSS)"},
+}
+
+
 def build(site):
     lon, lat, meta = cell_lonlat(site)
     lon = np.where(lon > 180, lon - 360, lon)
@@ -67,6 +75,14 @@ def build(site):
     gx, gy = -mx + (xx + 0.5) / SCALE, -my + (yy + 0.5) / SCALE
     LON = clon[0] + clon[1] * gx + clon[2] * gy
     LAT = clat[0] + clat[1] * gx + clat[2] * gy
+    loc = LOCAL.get(site)
+    if loc and os.path.exists(loc["path"]):
+        Image.MAX_IMAGE_PIXELS = None
+        mosaic = np.asarray(Image.open(loc["path"]).convert("L"), np.float32)
+        print(f"[{site}] 로컬 CTX {mosaic.shape[1]}x{mosaic.shape[0]}")
+        px = (LON - loc["lon0"]) * loc["ppd"] - 0.5
+        py = (loc["lat0"] - LAT) * loc["ppd"] - 0.5
+        return finish(site, map_coordinates(mosaic, [py, px], order=1, mode="constant", cval=0), mx, my, C, R, w, h, loc["source"])
     dpt = 180 / 2 ** Z
     x0, x1 = int((LON.min() + 180) // dpt), int((LON.max() + 180) // dpt)
     y0, y1 = int((90 - LAT.max()) // dpt), int((90 - LAT.min()) // dpt)
@@ -76,6 +92,10 @@ def build(site):
     px = (LON + 180 - x0 * dpt) * ppd - 0.5
     py = (90 - LAT - y0 * dpt) * ppd - 0.5
     g = map_coordinates(mosaic, [py, px], order=1, mode="nearest")
+    return finish(site, g, mx, my, C, R, w, h, "CTX mosaic (MRO Context Camera, Caltech Murray Lab / Esri OnMars via JPL Mars Trek)")
+
+
+def finish(site, g, mx, my, C, R, w, h, source):
     valid = g > 1
     lo, hi = np.percentile(g[valid], [0.5, 99.5]) if valid.any() else (0, 255)
     t = np.clip((g - lo) / max(1, hi - lo), 0, 1) ** 0.9
@@ -88,11 +108,33 @@ def build(site):
     os.makedirs(out, exist_ok=True)
     Image.fromarray(rgb.astype(np.uint8)).save(f"{out}/{site}.jpg", quality=78, optimize=True, progressive=True)
     json.dump({"x": -mx, "y": -my, "w": C + 2 * mx, "h": R + 2 * my,
-               "source": "CTX mosaic (MRO Context Camera, Caltech Murray Lab / Esri OnMars via JPL Mars Trek)"},
+               "source": source},
               open(f"{out}/{site}.json", "w"))
     print(f"  saved {w}x{h} px, {os.path.getsize(f'{out}/{site}.jpg') / 1e6:.2f} MB")
+
+
+def register(site, search=25):
+    """CTX(무기준 모자이크)와 HiRISE 바탕 사진의 어긋남을 상관계수 최대 이동으로 맞춰 json의 x, y에 반영."""
+    base = "../outputs/demo/basemap.jpg" if site == "gale" else f"../outputs/demo/sites/{site}/basemap.jpg"
+    jp = f"../outputs/demo/context/{site}.json"
+    j = json.load(open(jp)); ctx = np.asarray(Image.open(f"../outputs/demo/context/{site}.jpg").convert("L"), float)
+    s = ctx.shape[1] / j["w"]; y0, x0 = int(-j["y"] * s), int(-j["x"] * s)
+    w, h = int(round((j["w"] + 2 * j["x"]) * s)), int(round((j["h"] + 2 * j["y"]) * s))
+    b = np.asarray(Image.open(base).convert("L").resize((w, h)), float); m = b > 5
+    best = (-2, 0, 0)
+    for dy in range(-search, search + 1):
+        for dx in range(-search, search + 1):
+            a = ctx[y0 - dy:y0 - dy + h, x0 - dx:x0 - dx + w]; mm = m & (a > 5)
+            u, v = a[mm] - a[mm].mean(), b[mm] - b[mm].mean()
+            c = (u * v).sum() / np.sqrt((u * u).sum() * (v * v).sum())
+            if c > best[0]: best = (c, dy, dx)
+    c, dy, dx = best
+    j["x"] += dx / s; j["y"] += dy / s; j["registered_shift_cells"] = [dx / s, dy / s]; j["registered_corr"] = round(float(c), 3)
+    json.dump(j, open(jp, "w"))
+    print(f"  {site}: 정합 이동 {dx / s:+.0f}, {dy / s:+.0f} 칸 (상관 {c:.3f})")
 
 
 if __name__ == "__main__":
     for s in (sys.argv[1:] or ["gale", "jezero", "aram"]):
         build(s)
+        register(s)

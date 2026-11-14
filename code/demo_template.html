@@ -130,6 +130,7 @@
   .map-stage { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
   .map-stage > img, .map-stage > canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   .map-stage.grab .vec { cursor: grabbing; }
+  .map-stage > img#ctx { inset: auto; max-width: none; filter: brightness(.72) saturate(.85); pointer-events: none; }   /* 둘레 CTX 배경: 계획 영역보다 어둡게 */
   .walker { position: absolute; width: 18px; height: 18px; border-radius: 50%; pointer-events: none; z-index: 2;
     transform: translate(-50%, -50%) scale(calc(1 / var(--zk, 1))); background: #ffd23f; border: 2.5px solid #0d1016; box-shadow: 0 0 0 3px rgba(255,210,63,.35); }
   .walker.back { background: #7fd0ff; box-shadow: 0 0 0 3px rgba(127,208,255,.4); }
@@ -624,6 +625,7 @@
       </div>
       <div class="mapwrap" id="mapwrap">
         <div class="map-stage" id="stage">
+          <img id="ctx" alt="" aria-hidden="true" hidden>
           <img id="ortho" alt="HiRISE 정사영상: Gale 크레이터 착륙지(오른쪽 위)에서 Mt. Sharp 기슭의 Bagnold 모래언덕(아래)까지">
           <img id="shade" alt="같은 지역의 HiRISE DTM 음영 기복도" hidden>
           <canvas class="cells" id="cells"></canvas>
@@ -767,6 +769,7 @@
 <script type="application/json" id="meta">__META__</script>
 <script type="application/octet-stream" id="blob">__DATA__</script>
 <script type="application/json" id="sites">__SITES__</script>
+<script type="application/json" id="ctxs">__CTXS__</script>
 <script>
 (() => {
   "use strict";
@@ -780,6 +783,7 @@
   const C = META0.const;
   const NONE = META0.none16;
   // 지형 목록: Gale(미리 계산한 귀환 트리 포함) + build_site_data.py로 만든 지역들(귀환 트리는 여기서 계산)
+  const CTXS = (() => { try { return JSON.parse(document.getElementById("ctxs").textContent); } catch (e) { return {}; } })();
   const SITE_LIST = [{ meta: META0, b64: () => document.getElementById("blob").textContent.trim(), shade: "__SHADE__", ortho: "__ORTHO__" }];
   for (const s of JSON.parse(document.getElementById("sites").textContent.trim() || "[]"))
     SITE_LIST.push({ meta: s.meta, b64: () => s.data, shade: s.shade, ortho: s.ortho });
@@ -3071,7 +3075,7 @@
     stage.style.transform = fullM().toString();
     stage.style.setProperty("--zk", String(ZK));
     cells.style.imageRendering = ZK >= 2 ? "auto" : "pixelated";   // 크게 확대하면 10 m 칸이 블록처럼 보이지 않게
-    $("zreset").hidden = ZK < 1.01 && Math.abs(mapAngle) < 0.5 && Math.abs(M.e) < 1 && Math.abs(M.f) < 1;
+    $("zreset").hidden = Math.abs(ZK - 1) < 0.01 && Math.abs(mapAngle) < 0.5 && Math.abs(M.e) < 1 && Math.abs(M.f) < 1;
     $("compass-needle").style.transform = `rotate(${mapAngle}deg)`;
     $("compass").setAttribute("aria-pressed", String(headingUp));
     paintScale();
@@ -3086,7 +3090,7 @@
   }
   const around = (cx, cy, m) => new DOMMatrix().translate(cx, cy).multiply(m).multiply(new DOMMatrix().translate(-cx, -cy));
   function zoomAt(f, cx, cy) {
-    const k = Math.min(12, Math.max(1, ZK * f)) / ZK;
+    const k = Math.min(12, Math.max(0.4, ZK * f)) / ZK;   // 0.4배까지 줄이면 둘레 CTX 지형이 보임
     M = around(cx, cy, new DOMMatrix().scale(k)).multiply(M); applyZoom();
   }
   function rotateTo(deg, cx = wrap.clientWidth / 2, cy = wrap.clientHeight / 2) {
@@ -3518,6 +3522,11 @@
     M = new DOMMatrix(); headingUp = false;
     fitStage(); applyZoom(false);
     $("shade").src = site.shade; $("ortho").src = site.ortho;
+    {                                      // 둘레 배경 (CTX, 격자 칸 단위 배치)
+      const cx = CTXS[META.site.id], im = $("ctx");
+      im.hidden = !cx;
+      if (cx) { im.src = cx.img; Object.assign(im.style, { left: `${cx.x / W * 100}%`, top: `${cx.y / R * 100}%`, width: `${cx.w / W * 100}%`, height: `${cx.h / R * 100}%` }); }
+    }
     for (const id of ["ortho", "shade"]) $(id).decode().then(() => maskNoData($(id), SITE_I)).catch(() => {});
     Object.assign(state, { base: BASE0, sel: GOAL, here: -1, victim: -1, simTarget: GOAL, evaSel: (site.meta.targets || []).map(() => true) });
     PRESETS = makePresets();

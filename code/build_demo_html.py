@@ -121,7 +121,13 @@ def main():
         sites.append({"meta": sm, "data": b64(f"{d}/data.bin.gz"),
                       "shade": "data:image/png;base64," + b64(f"{d}/hillshade.png"),
                       "ortho": "data:image/jpeg;base64," + b64(f"{d}/basemap.jpg")})
-    rep = {"__META__": json.dumps(meta, ensure_ascii=False).replace("</", "<\\/"),
+    ctxs = {}
+    for sid in ["gale", *DEMO_SITES]:            # 둘레 배경: python build_context_layers.py
+        cj = f"../outputs/demo/context/{sid}.json"
+        if os.path.exists(cj):
+            ctxs[sid] = {**json.load(open(cj, encoding="utf-8")), "img": "data:image/jpeg;base64," + b64(f"../outputs/demo/context/{sid}.jpg")}
+    rep = {"__CTXS__": json.dumps(ctxs),
+           "__META__": json.dumps(meta, ensure_ascii=False).replace("</", "<\\/"),
            "__DATA__": b64("../outputs/demo/demo_data.bin.gz"),
            "__SITES__": json.dumps(sites, ensure_ascii=False).replace("</", "<\\/"),
            "__SHADE__": "data:image/png;base64," + b64("../outputs/demo/hillshade.png"),

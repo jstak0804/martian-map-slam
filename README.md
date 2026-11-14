@@ -28,7 +28,7 @@ and radiation margin they have left, and **the safest way back** from any point.
 
 ### NASA data
 
-HiRISE 1 m DTMs and orthoimages · Curiosity and Perseverance traverses and Navcam images ·
+HiRISE 1 m DTMs and orthoimages · MRO CTX mosaics (surroundings) · Curiosity and Perseverance traverses and Navcam images ·
 Mars 2020 sample list · JPL Mars Trek THEMIS · Curiosity RAD.
 Sites: **Gale**, **Jezero delta**, **Aram Chaos**.
 
