@@ -547,9 +547,10 @@
   .tc-gauges .glance { grid-template-columns: 1fr 1fr; }
   /* 재생 막대는 카드 바로 위, 범례·축척은 왼쪽 아래 */
   body.wide .simbar { left: 50%; right: auto; transform: translateX(-50%); width: min(760px, calc(100vw - 420px)); bottom: calc(var(--tc-h, 200px) + 24px); }
-  body.wide .legend { left: 16px; right: auto; top: auto; bottom: 16px; width: fit-content; max-width: calc((100vw - var(--tc-w, 940px)) / 2 - 28px); box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 3px 8px; font-size: 10.5px; }
-  body.wide .legend > span:first-child, body.wide .legend > span:nth-child(n+5) { flex: 1 0 100%; }
-  body.wide .legend > span:nth-child(-n+4):not(:first-child) { white-space: nowrap; }
+  body.wide .legend { left: 16px; right: auto; top: auto; bottom: 16px; width: max-content; max-width: calc((100vw - var(--tc-w, 940px)) / 2 - 28px); box-sizing: border-box;
+    display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 3px 10px; font-size: 10.5px; padding: 6px 10px; }   /* 글자 폭에 맞춘 범례 */
+  body.wide .legend > span { white-space: nowrap; }
+  body.wide .legend > span:first-child, body.wide .legend > span:nth-child(n+5) { grid-column: 1 / -1; }
   body.wide .legend > span:first-child { font-size: 11px; }
   body.wide .scale { left: 16px; right: auto; bottom: calc(var(--lg-h, 120px) + 46px); }
   body.wide .rv.drawer { left: 50%; right: auto; transform: translateX(-50%); width: min(900px, calc(100vw - 420px)); bottom: calc(var(--tc-h, 200px) + 24px); }
