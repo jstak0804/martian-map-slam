@@ -11,7 +11,6 @@ at the sites they want to study.
 **▶ Demo:** [`reports/18-eva-walkback-demo.html`](reports/18-eva-walkback-demo.html) — one self-contained HTML file (no install, works offline).
 GitHub shows the source of HTML files, so open the link, press **Download raw file**, then double-click the file
 (desktop Chrome/Edge, best at 1440 px wide or more).
-The presentation page with the planner embedded is [`submission/Martian-Map-NASAJOIM.html`](submission/Martian-Map-NASAJOIM.html).
 
 ### Try it in 60 seconds
 
