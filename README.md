@@ -25,7 +25,7 @@ The presentation page with the planner embedded is [`submission/Martian-Map-NASA
 | Challenge asks for | In this planner |
 |---|---|
 | A map or tool an astronaut could use on a surface mission | Full-screen planner, trip plan card and a helmet visor view |
-| At least three kinds of NASA data, layered | Topographic (HiRISE DTM), optical (HiRISE, CTX, Viking globe), thermal (THEMIS), radiation (Curiosity RAD), rover traverses and Navcam images |
+| At least three kinds of NASA data, layered | Topographic (HiRISE DTM), optical (HiRISE, CTX, Viking globe), thermal (THEMIS, Aram site selection), radiation (Curiosity RAD), rover traverses and Navcam images |
 | Astronaut safety first | Every 10 m cell is checked for O2, coolant, dose and comms on the actual walk home; a turn-back alarm and **Return now** |
 | Mobility in a suit, with equipment | Walking cost from NASA suited-walking tests (IST); slopes over 20° are impassable; terrain roughness and sand raise the cost |
 | A route that avoids obstacles | Lowest-O2 routes over the terrain; impassable sites are reached by the gentlest route |
@@ -115,25 +115,30 @@ During playback, scroll below the map for the live chart (heart rate, correction
 ### NASA data
 
 HiRISE 1 m DTMs and orthoimages · MRO CTX mosaics (surroundings) · Curiosity and Perseverance traverses and Navcam images ·
-Mars 2020 sample list · JPL Mars Trek THEMIS night IR and Viking MDIM 2.1 colour mosaic (globe) · Curiosity RAD.
+Mars 2020 sample list · JPL Mars Trek THEMIS night IR (Aram sites) and Viking MDIM 2.1 colour mosaic (globe) · Curiosity RAD.
 Sites: **Gale**, **Jezero delta**, **Aram Chaos**.
 
 ### Data and how each is used
 
-| Data (source) | Product / detail | How the planner uses it |
-|---|---|---|
-| HiRISE DTMs (NASA PDS, U. Arizona) | Gale `DTEEC_018854_1755_018920_1755`, Jezero `DTEEC_045994_1985_046060_1985`, Aram Chaos `DTEEC_054753_1825_055452_1825`; 1 m | Averaged to a 10 m grid → slope between cells (16 directions, >20° impassable), roughness factor η from 1 m relief, comms line of sight, first-person visor terrain |
-| HiRISE orthoimages | Same strips, red band | Map base image, visor ground colour, dune candidates (Gale: dark basaltic sand found by brightness) for the optional sand factor |
-| MRO CTX mosaics (Mars Trek / Esri OnMars; Jezero 6 m orthomosaic) | Area around each strip | Context background only, aligned to HiRISE by image correlation; no routing there |
-| Curiosity & Perseverance traverses (NASA MMGIS waypoints) | Rover positions and stays by sol | Traverse line on the map; science sites = places the rover stayed longest and drilled or sampled |
-| Mars 2020 sample list | Sample numbers, names, sols | Names and descriptions of the Jezero sites (flag tooltips) |
-| Navcam raw images (NASA/JPL) | Photos near each stop | Roadview: real ground photos at the stops |
-| THEMIS night IR (JPL Mars Trek) | Thermal inertia, ~100 m | Aram Chaos science candidates (high-thermal-inertia bedrock); optional map layer |
-| Curiosity RAD (Hassler et al. 2014) | 0.655 mSv/day surface dose, observed SPE ×2.9 | Dose along each route (with a terrain-shielding proxy) against a 1 mSv budget; SPE situations |
-| Viking MDIM 2.1 colour mosaic (JPL Mars Trek) | Global, 2048 × 1024 | 3D globe for choosing the region |
-| NASA IST-1/2 suited-walking tests (TP-2010-216115/-216125) | VO2 vs speed and grade | Walking speed and O2 per step at Mars gravity; coolant from the heat to reject |
-| Apollo 15–17 PLSS | 680 g O2, 5.2 kg water | Default starting consumables |
-| Shuttle/ISS EVA heart-rate data (Hoffmann et al. 2021) | Heart rate → metabolic rate | Correction factor k in the live chart (synthetic heart-rate scenario) |
+Checked against what is embedded in the planner file. "Gale / Jezero / Aram" marks where each item is available.
+
+| Data (source) | Product / detail | How the planner uses it | Sites |
+|---|---|---|---|
+| HiRISE DTMs (NASA PDS, U. Arizona) | Gale `DTEEC_018854_1755_018920_1755`, Jezero `DTEEC_045994_1985_046060_1985`, Aram Chaos `DTEEC_054753_1825_055452_1825`; 1 m | Averaged to a 10 m grid → slope of each move (16 directions; moves steeper than 20° are impassable), roughness factor η from 1 m relief, terrain-shielding proxy for dose, comms line of sight, first-person visor terrain | All three |
+| HiRISE orthoimages (same observations, RED) | 1 m-class image | Map base image and visor ground colour; dark basaltic sand found by brightness → optional dune factor | Base image: all; dune factor: Gale only |
+| MRO CTX mosaics | Global CTX mosaic (Caltech Murray Lab, via Esri OnMars) for Gale and Aram; Mars 2020 CTX 6 m orthomosaic for Jezero | Background around the HiRISE strip only, aligned to HiRISE by image correlation; not used for routes | All three |
+| Rover traverses (NASA MMGIS `MSL_waypoints`, `M20_waypoints`, `M20_traverse`) | Positions and stays by sol | Traverse line on the map; science sites = places the rover stayed longest (Gale also with drill sols from NASA releases) | Gale, Jezero |
+| Mars 2020 rock-sample list (NASA science.nasa.gov) | Sample number, name, sol sealed | Matched to Perseverance stays by sol → names and descriptions of the Jezero sites | Jezero |
+| Navcam raw images (Mars 2020 and MSL raw-image API, NASA/JPL-Caltech) | Left Navcam full frames | Camera markers and Roadview photos at rover stops (Jezero grouped by camera azimuth) | Gale, Jezero |
+| THEMIS night IR (JPL Mars Trek) | Thermal inertia mosaic, ~100 m | Picks the Aram Chaos science sites (top 8 % thermal inertia = consolidated bedrock); not shown as a map layer | Aram |
+| Curiosity RAD (Hassler et al. 2014; Zeitlin et al. 2018) | 0.655 mSv/day surface background; SPE ×2.9 observed in Sept 2017 | Dose along each route (reduced up to 50 % by the terrain-shielding proxy) against a 1 mSv per-return budget; SPE situations. Gale value applied to all sites | All three |
+| Viking MDIM 2.1 colour mosaic (JPL Mars Trek) | Global, 2048 × 1024 | 3D globe for choosing the region | — |
+| NASA IST-1/2 suited-walking tests (TP-2010-216115 / -216125) | VO2 vs speed and grade | Walking speed and O2 per step at Mars gravity (444 W level); downhill scaled with Looney et al. 2019; coolant from the heat to reject | All three |
+| Apollo 15–17 PLSS; Waligora & Horrigan (NASA) | 680 g O2, 5.2 kg water; 352 W design average | Starting consumables and the 30-min O2 reserve | All three |
+| Shuttle/ISS EVA heart rate (Hoffmann et al. 2021, NASA) | Heart rate → metabolic rate | Correction factor k in the live chart; the heart-rate trace itself is a synthetic scenario | All three |
+
+Reviewed during research but **not used in the final planner**: Mars 2020 PIXL / SuperCam / SHERLOC (PDS Geosciences), Navcam meshes,
+MSL REMS weather, MOLA global basemap, Apollo 15–16 time-and-motion studies.
 
 ### Observed data vs. models
 

@@ -24,7 +24,7 @@ GitHub는 HTML을 실행하지 않고 소스로 보여 주므로, 링크에서 *
 | 챌린지가 요구한 것 | 이 플래너에서 |
 |---|---|
 | 지표 탐사 중 우주인이 쓸 수 있는 지도·도구 | 전체 화면 플래너, 탐사 계획 카드, 헬멧 바이저 화면 |
-| 3종 이상의 NASA 자료를 겹쳐 쓰기 | 지형(HiRISE DTM), 광학(HiRISE·CTX·Viking 지구본), 열(THEMIS), 방사선(Curiosity RAD), 로버 이동 경로·Navcam 사진 |
+| 3종 이상의 NASA 자료를 겹쳐 쓰기 | 지형(HiRISE DTM), 광학(HiRISE·CTX·Viking 지구본), 열(THEMIS, Aram 지점 선정), 방사선(Curiosity RAD), 로버 이동 경로·Navcam 사진 |
 | 우주인 안전 최우선 | 10 m 칸마다 실제 귀환 경로로 산소·냉각수·선량·통신 확인, 회항 경보와 **Return now** |
 | 우주복·장비를 갖춘 이동성 | NASA 우주복 보행 시험(IST)으로 보행 비용 계산, 경사 20° 초과는 통행 불가, 지형 기복·모래는 비용 증가 |
 | 장애물을 피하는 경로 | 지형 위 산소 최소 경로, 통행 불가 지점은 가장 완만한 길로 |
@@ -114,25 +114,30 @@ GitHub는 HTML을 실행하지 않고 소스로 보여 주므로, 링크에서 *
 ### NASA 자료
 
 HiRISE 1 m DTM과 정사영상 · MRO CTX 모자이크(둘레) · Curiosity·Perseverance 이동 경로와 Navcam 사진 ·
-Mars 2020 시료 목록 · JPL Mars Trek THEMIS 야간 적외선과 Viking MDIM 2.1 컬러 모자이크(지구본) · Curiosity RAD.
+Mars 2020 시료 목록 · JPL Mars Trek THEMIS 야간 적외선(Aram 지점)과 Viking MDIM 2.1 컬러 모자이크(지구본) · Curiosity RAD.
 지역: **Gale**, **Jezero 삼각주**, **Aram Chaos**.
 
 ### 사용한 자료와 쓰는 방법
 
-| 자료 (출처) | 제품·내용 | 플래너에서 쓰는 방법 |
-|---|---|---|
-| HiRISE DTM (NASA PDS, 애리조나대) | Gale `DTEEC_018854_1755_018920_1755`, Jezero `DTEEC_045994_1985_046060_1985`, Aram Chaos `DTEEC_054753_1825_055452_1825`, 1 m | 10 m 격자로 평균 → 칸 사이 경사(16방향, 20° 초과 통행 불가), 1 m 기복으로 지형계수 η, 통신 가시선, 바이저 1인칭 지형 |
-| HiRISE 정사영상 | 같은 띠, 적색 밴드 | 지도 바탕 사진, 바이저 지면 색, 모래언덕 후보(Gale: 밝기로 찾은 어두운 현무암질 모래) → 선택형 모래 계수 |
-| MRO CTX 모자이크 (Mars Trek / Esri OnMars, Jezero 6 m 정사 모자이크) | 각 띠의 둘레 | 배경 전용, 영상 상관으로 HiRISE에 위치 맞춤. 경로 계산에는 쓰지 않음 |
-| Curiosity·Perseverance 이동 경로 (NASA MMGIS waypoint) | sol별 로버 위치·체류 | 지도의 이동 경로 선, 과학 지점 = 로버가 가장 오래 머물며 드릴·시료 채취한 곳 |
-| Mars 2020 시료 목록 | 시료 번호·이름·sol | Jezero 지점의 이름과 설명(깃발 툴팁) |
-| Navcam 원본 사진 (NASA/JPL) | 정지 지점 근처 사진 | 로드뷰: 실제 지상 사진 |
-| THEMIS 야간 적외선 (JPL Mars Trek) | 열관성, 약 100 m | Aram Chaos 과학 후보(열관성 높은 노출 암반), 선택형 지도 레이어 |
-| Curiosity RAD (Hassler 외 2014) | 지표 선량 0.655 mSv/일, 관측된 SPE ×2.9 | 경로별 선량(지형 차폐 대리값 포함)을 1 mSv 예산과 비교, SPE 상황 |
-| Viking MDIM 2.1 컬러 모자이크 (JPL Mars Trek) | 전구, 2048 × 1024 | 지역을 고르는 3D 지구본 |
-| NASA IST-1/2 우주복 보행 시험 (TP-2010-216115/-216125) | 속도·경사별 VO2 | 화성 중력에서 걷는 속도와 걸음마다 산소, 버릴 열에서 냉각수 |
-| Apollo 15–17 PLSS | 산소 680 g, 물 5.2 kg | 기본 출발 소모품 |
-| 셔틀·ISS EVA 심박 자료 (Hoffmann 외 2021) | 심박 → 대사량 | 실시간 그래프의 보정계수 k(합성 심박 시나리오) |
+플래너 파일에 실제로 들어 있는 자료와 대조해 정리했습니다. "지역"은 그 자료를 쓰는 곳입니다.
+
+| 자료 (출처) | 제품·내용 | 플래너에서 쓰는 방법 | 지역 |
+|---|---|---|---|
+| HiRISE DTM (NASA PDS, 애리조나대) | Gale `DTEEC_018854_1755_018920_1755`, Jezero `DTEEC_045994_1985_046060_1985`, Aram Chaos `DTEEC_054753_1825_055452_1825`, 1 m | 10 m 격자로 평균 → 이동마다 경사(16방향, 20°보다 가파르면 통행 불가), 1 m 기복으로 지형계수 η, 선량의 지형 차폐 대리값, 통신 가시선, 바이저 1인칭 지형 | 세 곳 모두 |
+| HiRISE 정사영상 (같은 관측, RED) | 1 m급 영상 | 지도 바탕 사진과 바이저 지면 색, 밝기로 찾은 어두운 현무암질 모래 → 선택형 모래언덕 계수 | 바탕: 세 곳, 모래 계수: Gale만 |
+| MRO CTX 모자이크 | Gale·Aram: 전구 CTX 모자이크(Caltech Murray Lab, Esri OnMars), Jezero: Mars 2020 CTX 6 m 정사 모자이크 | HiRISE 띠 둘레의 배경 전용, 영상 상관으로 위치 맞춤. 경로 계산에는 쓰지 않음 | 세 곳 모두 |
+| 로버 이동 경로 (NASA MMGIS `MSL_waypoints`, `M20_waypoints`, `M20_traverse`) | sol별 위치와 체류 | 지도의 이동 경로 선, 과학 지점 = 로버가 가장 오래 머문 곳(Gale은 NASA 발표 드릴 sol 포함) | Gale, Jezero |
+| Mars 2020 암석 시료 목록 (NASA science.nasa.gov) | 시료 번호·이름·밀봉 sol | 밀봉 sol로 Perseverance 체류와 맞춰 Jezero 지점 이름·설명 | Jezero |
+| Navcam 원본 사진 (Mars 2020·MSL 원본 사진 API, NASA/JPL-Caltech) | 왼쪽 Navcam 전체 화면 | 정지 지점의 카메라 표시와 로드뷰 사진(Jezero는 카메라 방위각별로 묶음) | Gale, Jezero |
+| THEMIS 야간 적외선 (JPL Mars Trek) | 열관성 모자이크, 약 100 m | Aram Chaos 과학 지점 선정(열관성 상위 8% = 굳은 암반). 지도 레이어로는 표시하지 않음 | Aram |
+| Curiosity RAD (Hassler 외 2014; Zeitlin 외 2018) | 지표 배경 0.655 mSv/일, 2017년 9월 관측 SPE ×2.9 | 경로별 선량(지형 차폐 대리값으로 최대 50% 감소)을 귀환 1회 1 mSv 예산과 비교, SPE 상황. Gale 값을 세 지역에 공통 적용 | 세 곳 모두 |
+| Viking MDIM 2.1 컬러 모자이크 (JPL Mars Trek) | 전구, 2048 × 1024 | 지역을 고르는 3D 지구본 | — |
+| NASA IST-1/2 우주복 보행 시험 (TP-2010-216115 / -216125) | 속도·경사별 VO2 | 화성 중력에서 걷는 속도와 걸음마다 산소(평지 444 W), 내리막은 Looney 외 2019로 환산, 버릴 열에서 냉각수 | 세 곳 모두 |
+| Apollo 15–17 PLSS, Waligora & Horrigan (NASA) | 산소 680 g, 물 5.2 kg, 설계 평균 352 W | 출발 소모품과 30분 산소 예비분 | 세 곳 모두 |
+| 셔틀·ISS EVA 심박 (Hoffmann 외 2021, NASA) | 심박 → 대사량 | 실시간 그래프의 보정계수 k. 심박 곡선 자체는 합성 시나리오 | 세 곳 모두 |
+
+연구 단계에서 검토했지만 **최종 플래너에는 쓰지 않은 자료**: Mars 2020 PIXL·SuperCam·SHERLOC(PDS Geosciences), Navcam 메시,
+MSL REMS 기상, MOLA 전구 기본 지도, Apollo 15·16 시간·동작 연구.
 
 ### 실측 자료와 모델의 구분
 
