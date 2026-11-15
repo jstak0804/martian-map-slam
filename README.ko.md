@@ -117,6 +117,23 @@ HiRISE 1 m DTM과 정사영상 · MRO CTX 모자이크(둘레) · Curiosity·Per
 Mars 2020 시료 목록 · JPL Mars Trek THEMIS 야간 적외선과 Viking MDIM 2.1 컬러 모자이크(지구본) · Curiosity RAD.
 지역: **Gale**, **Jezero 삼각주**, **Aram Chaos**.
 
+### 사용한 자료와 쓰는 방법
+
+| 자료 (출처) | 제품·내용 | 플래너에서 쓰는 방법 |
+|---|---|---|
+| HiRISE DTM (NASA PDS, 애리조나대) | Gale `DTEEC_018854_1755_018920_1755`, Jezero `DTEEC_045994_1985_046060_1985`, Aram Chaos `DTEEC_054753_1825_055452_1825`, 1 m | 10 m 격자로 평균 → 칸 사이 경사(16방향, 20° 초과 통행 불가), 1 m 기복으로 지형계수 η, 통신 가시선, 바이저 1인칭 지형 |
+| HiRISE 정사영상 | 같은 띠, 적색 밴드 | 지도 바탕 사진, 바이저 지면 색, 모래언덕 후보(Gale: 밝기로 찾은 어두운 현무암질 모래) → 선택형 모래 계수 |
+| MRO CTX 모자이크 (Mars Trek / Esri OnMars, Jezero 6 m 정사 모자이크) | 각 띠의 둘레 | 배경 전용, 영상 상관으로 HiRISE에 위치 맞춤. 경로 계산에는 쓰지 않음 |
+| Curiosity·Perseverance 이동 경로 (NASA MMGIS waypoint) | sol별 로버 위치·체류 | 지도의 이동 경로 선, 과학 지점 = 로버가 가장 오래 머물며 드릴·시료 채취한 곳 |
+| Mars 2020 시료 목록 | 시료 번호·이름·sol | Jezero 지점의 이름과 설명(깃발 툴팁) |
+| Navcam 원본 사진 (NASA/JPL) | 정지 지점 근처 사진 | 로드뷰: 실제 지상 사진 |
+| THEMIS 야간 적외선 (JPL Mars Trek) | 열관성, 약 100 m | Aram Chaos 과학 후보(열관성 높은 노출 암반), 선택형 지도 레이어 |
+| Curiosity RAD (Hassler 외 2014) | 지표 선량 0.655 mSv/일, 관측된 SPE ×2.9 | 경로별 선량(지형 차폐 대리값 포함)을 1 mSv 예산과 비교, SPE 상황 |
+| Viking MDIM 2.1 컬러 모자이크 (JPL Mars Trek) | 전구, 2048 × 1024 | 지역을 고르는 3D 지구본 |
+| NASA IST-1/2 우주복 보행 시험 (TP-2010-216115/-216125) | 속도·경사별 VO2 | 화성 중력에서 걷는 속도와 걸음마다 산소, 버릴 열에서 냉각수 |
+| Apollo 15–17 PLSS | 산소 680 g, 물 5.2 kg | 기본 출발 소모품 |
+| 셔틀·ISS EVA 심박 자료 (Hoffmann 외 2021) | 심박 → 대사량 | 실시간 그래프의 보정계수 k(합성 심박 시나리오) |
+
 ### 실측 자료와 모델의 구분
 
 | 실측·공개 자료 (NASA) | 모델·시나리오 (우리가 계산하거나 정한 값) |
