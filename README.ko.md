@@ -166,5 +166,5 @@ Mars 2020 시료 목록 · JPL Mars Trek THEMIS 야간 적외선과 Viking MDIM 
 
 ---
 
-<sub>다시 빌드: `cd code && python build_demo_html.py` · 프로젝트 초기의 SLAM·지형 AI 연구:
-[Martian_SLAM](https://github.com/jstak0804/Martian_SLAM) · AI 코딩 도우미(Claude Code)를 활용해 만들었습니다. 모든 영상은 NASA/JPL-Caltech.</sub>
+<sub>다시 빌드: `cd code && python build_demo_html.py` · 프로젝트 초기의 SLAM·지형 SI 연구:
+[Martian_SLAM](https://github.com/jstak0804/Martian_SLAM) · SI 코딩 도우미(Claude Code)를 활용해 만들었습니다. 모든 영상은 NASA/JPL-Caltech.</sub>

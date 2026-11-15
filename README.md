@@ -167,5 +167,5 @@ Sites: **Gale**, **Jezero delta**, **Aram Chaos**.
 
 ---
 
-<sub>Rebuild: `cd code && python build_demo_html.py` · SLAM and terrain-AI research from earlier in the project:
-[Martian_SLAM](https://github.com/jstak0804/Martian_SLAM) · Built with an AI coding assistant (Claude Code); all imagery is NASA/JPL-Caltech.</sub>
+<sub>Rebuild: `cd code && python build_demo_html.py` · SLAM and terrain-SI research from earlier in the project:
+[Martian_SLAM](https://github.com/jstak0804/Martian_SLAM) · Built with an SI coding assistant (Claude Code); all imagery is NASA/JPL-Caltech.</sub>
