@@ -1,6 +1,7 @@
 // 데모 영어 전환 사전 (build_demo_html.py가 demo_template.html의 __I18N__ 자리에 넣는다)
 // 정확히 같은 문구 -> 영어. 숫자가 들어간 문구는 아래 I18N_RE 패턴으로.
 const I18N = {
+  "흐린 두 항목(경사에 따라 걷는 속도 줄이기, 내리막 Santee 보정)은": "The two greyed items (slow down on slopes, Santee downhill correction) apply only with the", "이전 모델(Pandolf)": "previous (Pandolf) model", "을 켰을 때만 씁니다. 지금 쓰는 NASA IST 모델은 우주복 보행 실측으로 경사별 속도와 내리막 비용을 이미 계산하므로, 겹쳐 적용하지 않습니다. 위의 \"비교: 이전 대사 모델\"을 켜면 활성화됩니다.": ". The NASA IST model in use already sets slope speed and downhill cost from suited-walking measurements, so they are not applied twice. Turn on \"Compare: previous metabolic model\" above to enable them.",
   "거점에 돌아왔을 때 출발량 대비 이만큼 이상 남깁니다. 작업 시간과 돌아서는 시점에 적용 (지도 색 띠는 고정: 왕복 뒤 남는 산소 20%·10% 경계)": "Keep at least this share of the starting amount when back at base. Changes work time and the turn-back moment; the map colour bands stay fixed (20 % and 10 % O2 left after a round trip).",
   "원래대로": "Reset view",
   "언어": "Language", "화면 언어": "Interface language",
@@ -278,6 +279,7 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^도착 (\d+)분 · 그때까지 산소 ([\d,]+) g$/, "arrive at $1 min · O2 used by then $2 g"],
   [/^(구조대원 · )?탱크 ([\d,]+) g 중 ([\d,]+) g · 예비분 ([\d,]+) g 빼고 평지 보행\(시간당 ([\d,]+) g\)으로 버티는 시간$/, (m, a, b, c, d, e) => `${a ? "Rescuer · " : ""}${c} g of ${b} g in the tank · time left walking on level ground (${e} g/h), keeping the ${d} g reserve`],
   [/^(구조대원 · )?만충 ([\d.,]+) kg 중 ([\d,]+) g · 시간당 ([\d,]+) g$/, (m, a, b, c, d) => `${a ? "Rescuer · " : ""}${c} g of ${b} kg full · ${d} g/h`],
   [/^예산 ([\d.,]+) mSv까지 · (?:배경|SPE ×([\d.,]+))$/, (m, a, b) => `Up to the ${a} mSv budget · ${b ? "SPE ×" + b : "background"}`],
@@ -381,4 +383,5 @@ const I18N_RE = [
   [/^구조 예시: (.*)$/, "Rescue example: $1"],
   [/^(.*)탐사 정지 지점(.*)$/, (m, a, b) => `${a}stop${b}`],
   [/^(.*)고도 자료 밖 지점(.*)$/, (m, a, b) => `${a}site outside elevation data${b}`],
+  [/^(.*\S) 드릴 지점$/, "$1 drill site"], [/^(.*\S) 시료 채취 지점$/, "$1 sampling site"],
 ];

@@ -487,7 +487,11 @@
   .rot180 { display: inline-block; transform: rotate(180deg); }
   #sim-return { color: #ffb4a8; border-color: #e0614f; } #sim-return:disabled { opacity: .35; cursor: default; }
   .tc-fold { font: inherit; font-size: 12px; font-weight: 600; color: var(--ink); background: #161b26; border: 1px solid var(--rule); border-radius: 7px; padding: 4px 10px; cursor: pointer; white-space: nowrap; }
-  .tc-fold:hover { border-color: var(--accent); } .tc-fold:disabled { opacity: .4; cursor: default; } .tc-fold[hidden] { display: none; }
+  .tc-fold:hover { border-color: var(--accent); }
+  .tc-close { font-size: 14px; padding: 3px 10px; } .tc-close:hover { color: #ff8a7a; border-color: #ff8a7a; }
+  body.mode-eva .tc-head .xmode { display: none; }   /* 과학 EVA는 도보 기준 */
+  body.mode-eva .tc-left .group > h2 { display: none; } body.mode-eva #eva-ctl .evaplay { display: none; }   /* 재생은 위 재생 막대로 */
+  .tc-right .evabox { margin-top: 10px; max-height: 210px; overflow: auto; } .tc-fold:disabled { opacity: .4; cursor: default; } .tc-fold[hidden] { display: none; }
   .tripcard.folded .tc-body, .tripcard.folded .tc-more { display: none !important; }
   /* 접기 손잡이: 카드 바깥 위쪽 가운데 탭 */
   body.wide .tc-fold.tab { position: absolute; z-index: 8; left: auto; right: var(--tc-r, 200px); bottom: calc(var(--tc-h, 200px) + 14px); font-size: 17px; line-height: 1; padding: 5px 18px 6px;
@@ -540,6 +544,8 @@
   .below-h small { color: var(--ink-soft); font-weight: 400; font-size: 12px; }
   .below .tc-live { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr); gap: 16px; max-height: none; opacity: 1; overflow: visible; margin: 0; border: 0; padding: 0; }
   .below .tc-live { grid-template-columns: 1fr; } .below .tc-gauges { display: none; }
+  .lit-why { font-size: 11.5px; color: var(--ink-soft); background: rgba(255,210,63,.06); border: 1px dashed rgba(255,210,63,.35); border-radius: 7px; padding: 6px 8px; margin: 4px 0; }
+  .lit-why[hidden] { display: none; }
   .statuscard { display: none; }
   body.wide .statuscard { display: block; position: absolute; z-index: 7; right: 76px; top: 64px; width: 300px; padding: 10px; box-sizing: border-box; }
   body.wide .statuscard[hidden] { display: none; }
@@ -576,10 +582,12 @@
   /* 재생 막대는 카드 바로 위, 범례·축척은 왼쪽 아래 */
   body.wide .simbar { left: 50%; right: auto; transform: translateX(-50%); width: min(760px, calc(100vw - 420px)); bottom: calc(var(--tc-h, 200px) + 24px); }
   body.wide .legend { left: 16px; right: auto; top: auto; bottom: 16px; width: max-content; max-width: calc((100vw - var(--tc-w, 940px)) / 2 - 28px); box-sizing: border-box;
-    display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 3px 10px; font-size: 10.5px; padding: 6px 10px; }   /* 글자 폭에 맞춘 범례 */
+    display: grid; grid-template-columns: auto; justify-content: start; gap: 3px 10px; font-size: 10.5px; padding: 6px 10px; }   /* 글자 폭에 맞춘 범례 (항목이 늘면 세로로) */
+  body.wide .legend.lg-x { grid-template-columns: repeat(3, auto); }
+  body.wide .legend:not(.lg-x) > span { white-space: normal; }
   body.wide .legend > span { white-space: nowrap; }
-  body.wide .legend > span:first-child, body.wide .legend > span:nth-child(n+5) { grid-column: 1 / -1; }
-  body.wide .legend > span:first-child { white-space: normal; width: 0; min-width: 100%; }   /* 제목은 줄바꿈, 박스 폭은 색 띠 줄에 맞춤 */
+  body.wide .legend.lg-x > span:first-child, body.wide .legend.lg-x > span:nth-child(n+5) { grid-column: 1 / -1; }
+  body.wide .legend.lg-x > span:first-child { white-space: normal; width: 0; min-width: 100%; }   /* 제목은 줄바꿈, 박스 폭은 색 띠 줄에 맞춤 */
   body.wide .legend > span:first-child { font-size: 11px; }
   body.wide .scale { left: 16px; right: auto; bottom: calc(var(--lg-h, 120px) + 46px); }
   body.wide .rv.drawer { left: 50%; right: auto; transform: translateX(-50%); width: min(900px, calc(100vw - 420px)); bottom: calc(var(--tc-h, 200px) + 24px); }
@@ -628,7 +636,7 @@
   <div class="ftip" id="ftip" role="tooltip" hidden></div>
   <section class="statuscard float" id="statuscard" aria-label="지금 상태"><button type="button" class="sc-h" id="sc-fold" aria-expanded="true" title="상태 접기/펼치기"><span>상태</span><i aria-hidden="true">▾</i></button></section>
   <section class="tripcard float" id="tripcard" aria-label="탐사 계획">
-    <div class="tc-head"><b id="tc-title">TRIP PLAN</b><span class="tc-where" id="tc-where"></span><span class="tc-slot" id="tc-verdict"></span><button type="button" class="tc-fold" id="tc-clear" title="고른 탐사 지점과 작업 시간을 모두 지웁니다"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px;margin-right:4px"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span>계획 초기화</span></button><button type="button" class="tc-fold" id="tc-fold" aria-expanded="true" aria-label="계획 카드 접기" title="계획 카드 접기">▾</button></div>
+    <div class="tc-head"><b id="tc-title">TRIP PLAN</b><span class="tc-where" id="tc-where"></span><span class="tc-slot" id="tc-verdict"></span><button type="button" class="tc-fold tc-close" id="tc-close" hidden aria-label="과학 EVA 끝내기" title="과학 EVA 끝내기: 탐사 계획으로 돌아갑니다">✕</button><button type="button" class="tc-fold" id="tc-clear" title="고른 탐사 지점과 작업 시간을 모두 지웁니다"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px;margin-right:4px"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span>계획 초기화</span></button><button type="button" class="tc-fold" id="tc-fold" aria-expanded="true" aria-label="계획 카드 접기" title="계획 카드 접기">▾</button></div>
     <div class="tc-body"><div class="tc-left" id="tc-left"><p class="tc-simnote" id="tc-simnote">심박 급증 시나리오: 60분부터 대사량 +25%, 산소 450 g으로 목적지 왕복. 매분 "1분 더 가도 돌아올 수 있나"를 따져 자동 회항 경보를 냅니다.</p></div><div class="tc-right" id="tc-right"></div></div>
     <button type="button" class="tc-more" id="tc-more" hidden>▼ 실시간 그래프 (아래로 스크롤)</button>
   </section>
@@ -811,6 +819,7 @@
       </div>
       <div class="group" id="model-ctl">
         <h2>대사량 모델 보정 (문헌 반영)<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><span class="hint">켜면 귀환 경로를 브라우저에서 다시 계산합니다(1초 안팎). 기본은 모두 끔 = 기준 모델(Pandolf, 화성 중력 보정).</span></span></span></h2>
+        <p class="hint lit-why" id="lit-why">흐린 두 항목(경사에 따라 걷는 속도 줄이기, 내리막 Santee 보정)은 <b>이전 모델(Pandolf)</b>을 켰을 때만 씁니다. 지금 쓰는 NASA IST 모델은 우주복 보행 실측으로 경사별 속도와 내리막 비용을 이미 계산하므로, 겹쳐 적용하지 않습니다. 위의 "비교: 이전 대사 모델"을 켜면 활성화됩니다.</p>
         <label class="sw"><input type="checkbox" id="m-speed"><span>경사에 따라 걷는 속도 줄이기<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small id="m-speed-d">V = 0.75 − 0.01 × 오르막 경사(°), 최저 0.3 m/s. 달 보행 모델(Peña-Asensio 2024, NASA Kim 2025 인용). 끄면 0.92 m/s 고정</small></span></span></span></label>
         <label class="sw"><input type="checkbox" id="m-eta"><span id="m-eta-t">표토 지형계수 1.2 (자갈·비포장길)<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small id="m-eta-d">Richmond 2015 표 11 권장값. 끄면 매끈한 곳은 트레드밀 1.0</small></span></span></span></label>
         <label class="sw"><input type="checkbox" id="m-down"><span>내리막 Santee 보정<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>NASA 이동 모델이 쓰는 내리막 보정(Santee 2003). 완만한 내리막은 덜, 가파른 내리막은 더 듦. 끄면 내리막 = 평지</small></span></span></span></label>
@@ -1054,6 +1063,7 @@
   // 데모 영어 전환 사전 (build_demo_html.py가 demo_template.html의 __I18N__ 자리에 넣는다)
 // 정확히 같은 문구 -> 영어. 숫자가 들어간 문구는 아래 I18N_RE 패턴으로.
 const I18N = {
+  "흐린 두 항목(경사에 따라 걷는 속도 줄이기, 내리막 Santee 보정)은": "The two greyed items (slow down on slopes, Santee downhill correction) apply only with the", "이전 모델(Pandolf)": "previous (Pandolf) model", "을 켰을 때만 씁니다. 지금 쓰는 NASA IST 모델은 우주복 보행 실측으로 경사별 속도와 내리막 비용을 이미 계산하므로, 겹쳐 적용하지 않습니다. 위의 \"비교: 이전 대사 모델\"을 켜면 활성화됩니다.": ". The NASA IST model in use already sets slope speed and downhill cost from suited-walking measurements, so they are not applied twice. Turn on \"Compare: previous metabolic model\" above to enable them.",
   "거점에 돌아왔을 때 출발량 대비 이만큼 이상 남깁니다. 작업 시간과 돌아서는 시점에 적용 (지도 색 띠는 고정: 왕복 뒤 남는 산소 20%·10% 경계)": "Keep at least this share of the starting amount when back at base. Changes work time and the turn-back moment; the map colour bands stay fixed (20 % and 10 % O2 left after a round trip).",
   "원래대로": "Reset view",
   "언어": "Language", "화면 언어": "Interface language",
@@ -1331,6 +1341,7 @@ function I18N_SUB(x) {
   return t;
 }
 const I18N_RE = [
+  [/^도착 (\d+)분 · 그때까지 산소 ([\d,]+) g$/, "arrive at $1 min · O2 used by then $2 g"],
   [/^(구조대원 · )?탱크 ([\d,]+) g 중 ([\d,]+) g · 예비분 ([\d,]+) g 빼고 평지 보행\(시간당 ([\d,]+) g\)으로 버티는 시간$/, (m, a, b, c, d, e) => `${a ? "Rescuer · " : ""}${c} g of ${b} g in the tank · time left walking on level ground (${e} g/h), keeping the ${d} g reserve`],
   [/^(구조대원 · )?만충 ([\d.,]+) kg 중 ([\d,]+) g · 시간당 ([\d,]+) g$/, (m, a, b, c, d) => `${a ? "Rescuer · " : ""}${c} g of ${b} kg full · ${d} g/h`],
   [/^예산 ([\d.,]+) mSv까지 · (?:배경|SPE ×([\d.,]+))$/, (m, a, b) => `Up to the ${a} mSv budget · ${b ? "SPE ×" + b : "background"}`],
@@ -1434,6 +1445,7 @@ const I18N_RE = [
   [/^구조 예시: (.*)$/, "Rescue example: $1"],
   [/^(.*)탐사 정지 지점(.*)$/, (m, a, b) => `${a}stop${b}`],
   [/^(.*)고도 자료 밖 지점(.*)$/, (m, a, b) => `${a}site outside elevation data${b}`],
+  [/^(.*\S) 드릴 지점$/, "$1 drill site"], [/^(.*\S) 시료 채취 지점$/, "$1 sampling site"],
 ];
 
   // 처음 언어: 주소에 #...-en / -ko가 있으면 그것, 아니면 브라우저 언어(한국어가 아니면 영어. 대회 제출물은 영어가 원칙)
@@ -3227,7 +3239,7 @@ const I18N_RE = [
       meter("산소 (예비분 제외 예산)", k * EVA.o2, b.o2, "g", 0) +
       meter("냉각수 (예비분 제외 예산)", waterOf(EVA.o2, EVA.t, k, state.q), b.water, "g", 0) +
       meter("선량", multNow() * EVA.dose * 1000, C.dose_budget_msv * 1000, "µSv", 1);
-    const items = EVA.marks.map((mk) => `<li><b>${T[mk.ti].name}</b><small>도착 ${hm(mk.arrive / 3600)} · 그때까지 산소 ${fmt(k * (mk.o2 - levelMR() * C.o2_g_per_j * 60 * state.evaDwell), 0)} g</small></li>`).join("")
+    const items = EVA.marks.map((mk) => `<li><b>${T[mk.ti].name}</b><small>도착 ${Math.round(mk.arrive / 60)}분 · 그때까지 산소 ${fmt(k * (mk.o2 - levelMR() * C.o2_g_per_j * 60 * state.evaDwell), 0)} g</small></li>`).join("")
       + EVA.dropped.map((ti) => `<li class="drop">${T[ti].name}<small>넣으면 어느 순간 귀환 반경을 벗어남</small></li>`).join("");
     $("eva-order").innerHTML = `<h3>들르는 순서 (지도의 번호)</h3><ol class="evaorder">${items}</ol>`;
     $("eva-order").hidden = false;
@@ -4361,7 +4373,11 @@ const I18N_RE = [
     $("nofall").checked = state.nofall; $("relay").checked = state.relay; $("showfall").checked = state.showfall;
     $("m-speed").checked = state.mSpeed; $("m-eta").checked = state.mEta; $("m-down").checked = state.mDown; $("m-sand").checked = state.mSand;
     $("legacy").checked = !!state.legacy;
-    for (const id of ["m-speed", "m-down"]) { $(id).disabled = !state.legacy; $(id).closest("label").style.opacity = state.legacy ? "" : ".45"; }
+    for (const id of ["m-speed", "m-down"]) {
+      $(id).disabled = !state.legacy; const lb = $(id).closest("label"); lb.style.opacity = state.legacy ? "" : ".45";
+      lb.title = state.legacy ? "" : (LANG === "en" ? "Only for the previous (Pandolf) model: the NASA IST model already sets walking speed on slopes and the downhill cost from suited-walking measurements." : "이전 모델(Pandolf)에서만 씁니다. 지금 쓰는 NASA IST 모델은 우주복 보행 실측으로 경사별 속도와 내리막 비용을 이미 계산합니다.");
+    }
+    if ($("lit-why")) $("lit-why").hidden = !!state.legacy;
     $("showmr").checked = state.showmr; $("showsand").checked = state.showsand;
     $("vo2").value = state.vo2; $("vwater").value = state.vwater;
     $("sim-scn").value = state.simScenario; $("sim-noise").value = state.simNoise; $("sim-auto").checked = state.simAuto;
@@ -4868,8 +4884,8 @@ const I18N_RE = [
     // 바이저·로드뷰는 오른쪽 지도 도구 아이콘으로 (위 메뉴 버튼은 CSS로 숨김)
     $("zvisor").addEventListener("click", () => $("hud-btn").click()); $("zrv").addEventListener("click", () => $("rv-btn").click());
     $("wslot-doc").append($("lang-btn")); $("notes-btn").hidden = true;   // 간소화: 상태 서랍·자료 구분 버튼 뺌
-    $("tc-left").append($("explore-ctl"), $("rescue-ctl"));
-    $("tc-right").append($("pt-meters"), $("x-scn"));   // 시나리오 카드는 오른쪽, 최적 계획이 맨 앞
+    $("tc-left").append($("explore-ctl"), $("rescue-ctl"), $("eva-ctl"));   // 과학 EVA 계획도 아래 카드에서 (설정 서랍을 닫아도 보이게)
+    $("tc-right").append($("pt-meters"), $("x-scn"), $("eva-order"));   // 시나리오 카드는 오른쪽, 최적 계획이 맨 앞
     $("tc-verdict").append($("pt-verdict"));
     $("tc-where").after($("x-mode"));        // 도보·로버는 카드를 접어도 보이도록 머리줄에
     $("tc-chart").append($("sim-chart")); $("statuscard").append($("glance"));   // 산소·냉각수·선량·통신 게이지는 오른쪽 위 상태 카드
@@ -4904,6 +4920,9 @@ const I18N_RE = [
     }
     $("sc-fold").addEventListener("click", () => scFold(!$("statuscard").classList.contains("folded")));
     try { if (localStorage.getItem("eva-status-folded") === "1") scFold(true); } catch (e) {}
+    $("tc-close").addEventListener("click", () => {   // 과학 EVA 끝내기 -> 탐사 계획
+      stopSim(); state.mode = "explore"; activePreset = ""; syncInputs(); update(); setTimeout(sync, 0);
+    });
     $("tc-clear").addEventListener("click", () => {   // 탐사 계획 초기화: 고른 지점·작업 시간·즉시 복귀 명령 지움
       stopSim(); state.xT = []; state.xDwell = {}; state.xScn = 0; XMANUAL = false; RETURN_AT = -1; activePreset = "";
       if (SIM && SIM.ok) setSimIdx(0); update();
@@ -4944,7 +4963,11 @@ const I18N_RE = [
       document.body.style.setProperty("--tc-h", h + "px"); document.body.style.setProperty("--lg-h", lg + "px");
       $("tc-title").textContent = state.mode === "rescue" ? (LANG === "en" ? "RESCUE PLAN" : "구조 계획") : (LANG === "en" ? "TRIP PLAN" : "탐사 계획");
       $("tc-where").textContent = $("pt-where").textContent === "–" ? "" : $("pt-where").textContent;
-      $("tripcard").hidden = !(state.mode === "explore" || state.mode === "sim");
+      $("tripcard").hidden = !(state.mode === "explore" || state.mode === "sim" || state.mode === "eva");
+      if (state.mode === "eva") $("tc-title").textContent = LANG === "en" ? "SCIENCE EVA PLAN" : "과학 EVA 계획";
+      $("tc-close").hidden = state.mode !== "eva"; document.body.classList.toggle("mode-eva", state.mode === "eva");
+      $("tc-close").title = $("tc-close").ariaLabel = LANG === "en" ? "Close Science EVA (back to the exploration plan)" : "과학 EVA 끝내기 (탐사 계획으로 돌아가기)";
+      $("legend").classList.toggle("lg-x", state.mode === "explore");
       $("tc-clear").hidden = state.mode !== "explore"; $("tc-clear").disabled = !state.xT.length;
       $("tc-fold").hidden = $("tripcard").hidden;
       $("sim-restart").title = $("sim-restart").ariaLabel = LANG === "en" ? "Restart" : "처음으로";
@@ -4978,7 +5001,7 @@ const I18N_RE = [
     };
     setInterval(sync, 400);
     let lastH = 0, lastSim = null;
-    new ResizeObserver(() => { sync(); const h = $("tripcard").offsetHeight; if (Math.abs(h - lastH) > 24) { lastH = h; fitStage(); applyZoom(); drawVec(); } }).observe($("tripcard"));
+    new ResizeObserver(() => requestAnimationFrame(() => { sync(); const h = $("tripcard").offsetHeight; if (Math.abs(h - lastH) > 24) { lastH = h; fitStage(); applyZoom(); drawVec(); } })).observe($("tripcard"));
     new MutationObserver(sync).observe($("pt-where"), { childList: true, characterData: true, subtree: true });
     document.addEventListener("change", (e) => { if (e.target.name === "mode" || e.target.id === "mode-more") setTimeout(sync, 0); });
     sync();
