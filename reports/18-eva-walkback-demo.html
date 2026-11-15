@@ -150,6 +150,7 @@
   .walker.back { color: #7fd0ff; }
   .walker.pair { box-shadow: 0 0 0 3px rgba(127,208,255,.4), 13px 0 0 -3px #ef6b5e, 13px 0 0 -1px #0d1016; }
   .walker.work { color: #e2794d; }
+  .walker.home { transform: translate(-50%, -50%) scale(calc(0.7 / var(--zk, 1))) rotate(var(--hd, 0deg)); }   /* 출발 전: 거점 위에 (작게, 집이 보이게) */
   .zoomctl { position: absolute; top: 10px; left: 10px; z-index: 4; display: grid; gap: 4px; }
   .zoomctl button { font: inherit; font-size: 16px; line-height: 1; width: 30px; height: 30px; color: var(--ink); background: rgba(11,14,21,.85); border: 1px solid var(--rule); border-radius: 6px; cursor: pointer; }
   .zoomctl button:hover { border-color: var(--accent); }
@@ -545,7 +546,9 @@
   .below .tc-live { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr); gap: 16px; max-height: none; opacity: 1; overflow: visible; margin: 0; border: 0; padding: 0; }
   .below .tc-live { grid-template-columns: 1fr; } .below .tc-gauges { display: none; }
   .lit-why { font-size: 11.5px; color: var(--ink-soft); background: rgba(255,210,63,.06); border: 1px dashed rgba(255,210,63,.35); border-radius: 7px; padding: 6px 8px; margin: 4px 0; }
-  .lit-why[hidden] { display: none; }
+  .lit-why[hidden], .lit-why { display: none !important; }
+  #legacy-ctl, label.sw:has(#m-speed), label.sw:has(#m-down) { display: none !important; }   /* 이전 모델 전용 보정은 화면에서 뺌 */
+  label.sw.na { display: none !important; }   /* 이 지역에서 쓸 수 없는 항목은 숨김 (비활성 대신) */
   .statuscard { display: none; }
   body.wide .statuscard { display: block; position: absolute; z-index: 7; right: 76px; top: 64px; width: 300px; padding: 10px; box-sizing: border-box; }
   body.wide .statuscard[hidden] { display: none; }
@@ -814,7 +817,7 @@
         <label class="sw"><input type="checkbox" id="relay"><span id="relay-t">Mt. Sharp 비탈에 중계기 설치<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small id="relay-d">거점에서 6.7 km, 거점과 가시선이 닿는 자리</small></span></span></span></label>
       </div>
 
-      <div class="group" id="legacy-ctl">
+      <div class="group" id="legacy-ctl" hidden>
         <label class="sw"><input type="checkbox" id="legacy"><span>비교: 이전 대사 모델 (Pandolf × 화성 중력비)<span class="info" tabindex="0" role="button" aria-label="설명">i<span class="tip" role="tooltip"><small>기본 모델은 NASA IST-1·2 감중 우주복 보행 실측 회귀(평지 0.92 m/s에서 444 W). 이 스위치를 켜면 Pandolf 식 전체에 중력비를 곱한 이전 모델(301 W)로 다시 계산해, 모델 선택이 귀환 가능 면적을 얼마나 바꾸는지 비교합니다. 아래의 경사별 속도·내리막 보정은 이전 모델에서만 쓰입니다(IST 모델에는 같은 노력 속도·Looney 내리막이 이미 들어 있음).</small></span></span></span></label>
       </div>
       <div class="group" id="model-ctl">
@@ -1526,7 +1529,7 @@ const I18N_RE = [
     { id: "rescue", label: `구조 예시: ${goalShort()}`, s: { mode: "rescue", victim: GOAL, here: -1, o2: 680, vo2: 150, vwater: 1, vcarry: "walk" } },
   ];
   PRESETS = makePresets();
-  const MAIN_PRESETS = ["base", "hot", "eva"], HIDDEN_PRESETS = ["simpress", "simhr"];   // 간소화판: 기본 4개, 나머지는 접기
+  const MAIN_PRESETS = ["base", "hot", "eva"], HIDDEN_PRESETS = ["simpress", "simhr", "lit", "legacy", "rescue"];   // 이전 모델·뺀 모드 상황은 숨김   // 간소화판: 기본 4개, 나머지는 접기
   const presetsHtml = () => {
     const b = (p) => `<button type="button" data-id="${p.id}">${p.label}</button>`;
     return PRESETS.filter((p) => MAIN_PRESETS.includes(p.id)).map(b).join("")
@@ -3296,7 +3299,11 @@ const I18N_RE = [
   }
   const sigCls = (lv) => (lv >= 3 ? "ok" : lv === 2 ? "warn" : "bad");
   // 지금 따지는 위치: 시뮬레이션 재생 위치 > 현재 위치 > 고른 지점
-  const focusPos = () => { const f = simFrame(); return f ? f.pos : state.mode === "here" && state.here >= 0 ? state.here : state.sel; };
+  const focusPos = () => {                // 지금 대원 위치: 재생 중이면 그 프레임, 아니면 거점(출발 전에는 거점에 있음)
+    const f = simFrame();
+    if (f && (playing || SIM.idx > 0)) return f.pos;
+    return state.mode === "here" && state.here >= 0 ? state.here : state.base;
+  };
 
   const HL = {
     ko: { o2: "산소", h2o: "냉각수", margin: "귀환 여유", comm: "통신", link: "연결", nolink: "두절", dose: "선량률", base: "거점", dest: "목표",
@@ -3892,6 +3899,7 @@ const I18N_RE = [
   // ---------- vector overlay ----------
   let lastVec = { path: null };
   function drawVec(v) {
+    if (!playing) requestAnimationFrame(() => placeWalker(SIM && SIM.ok ? SIM.idx : 0));   // 대원 표시를 거점·재생 위치에 맞춤
     queueMicrotask(renderHud);
     queueMicrotask(applyLang);
     if (v) lastVec = v;
@@ -4110,11 +4118,35 @@ const I18N_RE = [
     const k = Math.min(12, Math.max(0.4, ZK * f)) / ZK;   // 0.4배까지 줄이면 둘레 CTX 지형이 보임
     M = around(cx, cy, new DOMMatrix().scale(k)).multiply(M); applyZoom();
   }
+  let ANIM = 0, ANIM_UNTIL = 0;
+  function myStagePt() {                  // 대원(재생 중) 또는 거점의 지도 무대 좌표
+    const el = $("walker");
+    let fx, fy;
+    if (!el.hidden && el.style.left) { fx = parseFloat(el.style.left) / 100 * W; fy = parseFloat(el.style.top) / 100 * R; }
+    else { fx = (state.base % W) + 0.5; fy = ((state.base / W) | 0) + 0.5; }
+    return { x: FIT.x + fx / W * FIT.w, y: FIT.y + fy / R * FIT.h, fx, fy };
+  }
+  function animateView(toDeg, toK, toC, ms = 650) {   // 대원 위치를 축으로 회전·확대를 부드럽게 (ease-in-out)
+    cancelAnimationFrame(ANIM);
+    const s0 = myStagePt(), c0 = M.transformPoint(new DOMPoint(s0.x, s0.y)), k0 = Math.hypot(M.a, M.b), a0 = Math.atan2(M.b, M.a) * 180 / Math.PI;
+    let da = ((toDeg - a0) % 360 + 540) % 360 - 180;
+    const c1 = toC || { x: c0.x, y: c0.y }, k1 = toK || k0, t0 = performance.now();
+    ANIM_UNTIL = t0 + ms + 30;
+    const step = (t) => {
+      const u = Math.min(1, (t - t0) / ms), e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+      const k = k0 + (k1 - k0) * e, a = a0 + da * e, cx = c0.x + (c1.x - c0.x) * e, cy = c0.y + (c1.y - c0.y) * e;
+      M = new DOMMatrix().translate(cx, cy).rotate(a).scale(k).translate(-s0.x, -s0.y);
+      applyZoom(u >= 1);
+      if (u < 1) ANIM = requestAnimationFrame(step);
+    };
+    ANIM = requestAnimationFrame(step);
+  }
   function rotateTo(deg, cx = wrap.clientWidth / 2, cy = wrap.clientHeight / 2) {
     M = around(cx, cy, new DOMMatrix().rotate(deg - mapAngle)).multiply(M); applyZoom();
   }
   const resetZoom = () => { M = new DOMMatrix(); headingUp = false; applyZoom(); };
   function followWalker(fx, fy, headingDeg) {     // 진행 방향 위: 대원을 화면 가운데, 진행 방향을 위로
+    if (performance.now() < ANIM_UNTIL) return;    // 나침반 전환 애니메이션 중에는 덮어쓰지 않음
     const k = Math.max(ZK, 3), cx = wrap.clientWidth / 2, cy = wrap.clientHeight * 0.58;
     const sx = FIT.x + fx / W * FIT.w, sy = FIT.y + fy / R * FIT.h;
     M = new DOMMatrix().translate(cx, cy).rotate(-headingDeg).scale(k).translate(-sx, -sy);
@@ -4131,15 +4163,11 @@ const I18N_RE = [
   $("zreset").addEventListener("click", resetZoom);
   $("compass").addEventListener("click", () => {  // 정북 위 <-> 목표 방향 위 (탐사자 위치에서 목표 지점 쪽이 화면 위로)
     headingUp = !headingUp;
-    if (!headingUp) { rotateTo(0); return; }
-    if (SIM && SIM.ok && simFrame()) {
-      const f = simFrame(), tgt = f.dest >= 0 && f.dest !== f.pos ? f.dest : state.base;
-      targetHeading = tgt !== f.pos ? bearingTo(f.pos, tgt) : walkerHeading; placeWalker(SIM.idx);
-    } else {                               // 재생 전: 거점(또는 현재 위치)에서 첫 목표 쪽을 위로
-      const from = state.here >= 0 ? state.here : state.base, tgt = povDest() >= 0 ? povDest() : state.sel;
-      targetHeading = tgt >= 0 && tgt !== from ? bearingTo(from, tgt) : 0;
-      followWalker((from % W) + 0.5, ((from / W) | 0) + 0.5, targetHeading);
-    }
+    if (!headingUp) { animateView(0); $("compass").setAttribute("aria-pressed", "false"); return; }   // 정북 위로 부드럽게 (대원 위치 기준)
+    const f = simFrame(), from = f && (playing || SIM.idx > 0) ? f.pos : state.base;
+    const tgt = f && f.dest >= 0 && f.dest !== from ? f.dest : povDest() >= 0 ? povDest() : -1;
+    targetHeading = tgt >= 0 && tgt !== from ? bearingTo(from, tgt) : walkerHeading;
+    animateView(-targetHeading, Math.max(ZK, 3), { x: wrap.clientWidth / 2, y: wrap.clientHeight * 0.58 });   // 목표 방향 위로 부드럽게
   });
   // ---------- 지도 포인터: 한 손가락/마우스 끌기 = 이동, 두 손가락 = 이동·확대·회전, 탐사 임의 지점 끌기·× 삭제 ----------
   // 클릭(탭) 판정은 pointerup에서 이동 거리로 한다 (브라우저마다 다른 click 대상·끌기 뒤 click 처리에 기대지 않음)
@@ -4373,6 +4401,7 @@ const I18N_RE = [
     $("nofall").checked = state.nofall; $("relay").checked = state.relay; $("showfall").checked = state.showfall;
     $("m-speed").checked = state.mSpeed; $("m-eta").checked = state.mEta; $("m-down").checked = state.mDown; $("m-sand").checked = state.mSand;
     $("legacy").checked = !!state.legacy;
+    if (state.legacy || state.mSpeed || state.mDown) { state.legacy = false; state.mSpeed = false; state.mDown = false; }   // 이전 모델은 더 이상 쓰지 않음
     for (const id of ["m-speed", "m-down"]) {
       $(id).disabled = !state.legacy; const lb = $(id).closest("label"); lb.style.opacity = state.legacy ? "" : ".45";
       lb.title = state.legacy ? "" : (LANG === "en" ? "Only for the previous (Pandolf) model: the NASA IST model already sets walking speed on slopes and the downhill cost from suited-walking measurements." : "이전 모델(Pandolf)에서만 씁니다. 지금 쓰는 NASA IST 모델은 우주복 보행 실측으로 경사별 속도와 내리막 비용을 이미 계산합니다.");
@@ -4558,7 +4587,15 @@ const I18N_RE = [
   let walkerHeading = 0, targetHeading = 0;
   function placeWalker(fi) {
     const el = $("walker");
-    if (!simFrame()) { el.hidden = true; return; }
+    if (!H) { el.hidden = true; return; }
+    if (!simFrame() || (!playing && SIM.idx === 0)) {   // 출발 전: 대원은 거점에 (거점을 끄는 중이면 그 자리)
+      const bx = BDRAG ? BDRAG.x : (state.base % W) + 0.5, by = BDRAG ? BDRAG.y : ((state.base / W) | 0) + 0.5;
+      el.style.left = `${bx / W * 100}%`; el.style.top = `${by / R * 100}%`;
+      const t = povDest(); if (t >= 0 && t !== state.base) walkerHeading = bearingTo(state.base, t);
+      el.style.setProperty("--hd", `${walkerHeading}deg`); el.classList.remove("back", "work", "pair"); el.classList.add("home"); el.hidden = false;
+      return;
+    }
+    el.classList.remove("home");
     const F = SIM.frames, i0 = Math.max(0, Math.min(F.length - 1, Math.floor(fi))), i1 = Math.min(F.length - 1, i0 + 1), u = Math.max(0, Math.min(1, fi - i0));
     const a = F[i0].pos, b = F[i1].pos;
     let x = ((a % W) + 0.5) * (1 - u) + ((b % W) + 0.5) * u, y = (((a / W) | 0) + 0.5) * (1 - u) + (((b / W) | 0) + 0.5) * u;
@@ -4698,6 +4735,7 @@ const I18N_RE = [
     renderRv();
     const sandOk = st.dune_km2 > 0.01;
     $("m-sand").disabled = !sandOk; $("showsand").disabled = !sandOk;
+    for (const id of ["m-sand", "showsand"]) { const lb = $(id).closest("label"); if (lb) lb.classList.toggle("na", !sandOk); }
     if (!sandOk) { state.mSand = false; state.showsand = false; $("m-sand-d").textContent = "이 지형에는 모래언덕 후보를 넣지 않았습니다 (위성 사진 밝기로 뽑으면 급사면 그늘이 잡혀서)."; }
     else if (!C.cal_status || C.cal_status === "문헌값") $("m-sand-d").textContent = `모래언덕 후보 ${fmt(st.dune_km2, 1)} km²(위성 사진 밝기로 추정)에 적용. 0.92 m/s에서 약 3.0, 식의 자료 범위 밖인 0.85 m/s 미만은 0.85 값(3.3)`;
     $("ortho").alt = `HiRISE 정사영상: ${SITE().name}`;
