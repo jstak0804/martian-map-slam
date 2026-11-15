@@ -106,10 +106,6 @@ starting O2 and water**; 0.8 above is $1-R$ and 0.2 is $R$. Map colours stay fix
 Sites left on auto share $T_{stay}$ equally ($T_{stay}/n$); if minutes are typed for some sites, the remaining time
 is split among the auto sites. Reported times: go = base → first site, return = last site → base, stay = $T_{stay}$.
 
-**Rescue playback supply:** at least the minimum (the stranded crew member's walk home + 30 min reserve), and the
-rescuer's surplus is split in half so **both arrive with the same amount**. During playback the map shows, in the same
-three colours, what the stranded crew member (after hand-over: the lower of the two) would have left walking home
-from each cell, so the zone grows again at the moment of resupply.
 
 *Example (Jezero, on foot, site A only): (0.8 × 680 − 191) g ÷ 114 g/h = 3.1 h → "can stay 3 h 06 min".*
 
@@ -137,7 +133,7 @@ A geometric indicator, not a link budget.
 ## 9. Validation and limits
 
 - The demo reproduces an independent Python implementation (`walkback_verification/`): Gale, 150 g O2,
-  walk-back area **9.72 km²**. The older Pandolf × gravity model gives 19.95 km² (comparison switch).
+  walk-back area **9.72 km²**. The older Pandolf × gravity model gives 19.95 km² on the same check (no longer offered in the planner).
 - Outside the HiRISE DTM strip the exploration colours are a **level-ground estimate** (hatched): the round-trip O2 of the
   nearest strip cell plus level walking at η = 1.2 outward (16-direction distance on a 40 m grid). Rough or steep ground
   (e.g. Mt. Sharp) makes the real cost higher, so treat it as optimistic until a surrounding DEM is added.

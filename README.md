@@ -25,10 +25,10 @@ and radiation margin they have left, and **the safest way back** from any point.
 
 **Header and right tool column**
 1. **Current region** — the region shown on the map.
-2. **Settings** (gear) — language, scenarios, O2 and coolant sliders, solar particle event, model corrections (regolith, dune factor), map layers. Opens from the right.
+2. **Settings** (gear) — language, situations (incl. Science EVA), O2 and coolant sliders, solar particle event, safety options (regolith, dune factor where dune data exist), map layers. Opens from the right.
 3. **Globe** — opens the Mars globe (below) to pick Gale, Jezero or Aram Chaos. Switching clears the picked sites.
 4. **Roadview** — real rover photos (NASA/JPL Navcam) taken near each stop.
-5. **N** — north up ↔ target up (the current destination points to the top).
+5. **N** — north up ↔ target up (the current destination points to the top); the map turns smoothly around the crew position.
 6. **Zoom** — or the mouse wheel; drag anywhere (also outside the elevation data) to pan.
 7. **Reset view**.
 8. **Visor** (bottom-right) — helmet first-person view (see below).
@@ -36,7 +36,7 @@ and radiation margin they have left, and **the safest way back** from any point.
 
 **Map**
 
-10. **Base** (house) — drag it to move the base; routes and zones are recomputed.
+10. **Base** (house) — the crew (arrow) starts here. Drag the house to move the base; the crew moves with it and routes and zones are recomputed. Settings › Situation can return it to the landing site.
 11. **Science sites** (flags) — places the rovers actually studied. Hover a flag for what was done there; click to add it to the plan (up to three: A, B, C). Any other point with elevation data can be picked too; areas outside the data cannot be picked, because no slope means no route or O2 can be computed there.
 12. **Crew** — the arrow points in the walking direction during playback.
 13. **Legend** — colour = O2 left after a round trip from base (>20 %, 10–20 %, 0–10 %); hatched = level-ground estimate outside the HiRISE strip.
@@ -51,6 +51,8 @@ and radiation margin they have left, and **the safest way back** from any point.
 19. **Playback** — ▶ play / pause, ↺ restart, **Return now** (stop the plan and walk back from here), speed.
 20. **Fold** the card to see more of the map.
 21. **Clear plan** (trash) — remove all picked sites.
+
+**Science EVA** (Settings › Situation): the bottom card becomes *SCIENCE EVA PLAN* (rover-studied targets, work time, visit order); ✕ at its top right returns to the exploration plan.
 
 During playback, scroll below the map for the live chart (heart rate, correction factor k, usable O2 vs O2 needed to return).
 
@@ -75,7 +77,7 @@ During playback, scroll below the map for the live chart (heart rate, correction
 - **Measured suit data:** walking cost comes from NASA IST-1/2 reduced-gravity suited walking tests (444 W on level ground).
 - **All formulas, with worked examples:** [docs/METHODS.md](docs/METHODS.md) · [한국어](docs/METHODS.ko.md); terrain factor η: [docs/TERRAIN.md](docs/TERRAIN.md) · [한국어](docs/TERRAIN.ko.md).
 - **Independently verified:** the model was re-derived in [`walkback_verification/`](walkback_verification/), and the demo matches it (**Gale, 150 g O2 → 9.72 km²**).
-- **Model choice matters:** the older Pandolf model gives **2× the area**, so the comparison switch is built into the demo.
+- **Model choice matters:** the older Pandolf × gravity model gives **2× the area** on the same check, which is why the planner uses the IST suited-walking data.
 
 ### NASA data
 
