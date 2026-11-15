@@ -509,7 +509,9 @@
   details.sset > :last-child { margin-bottom: 10px; }
   #lang-sel { width: 100%; margin-top: 10px; }
   body.wide .wbar { display: none !important; }   /* 위쪽 메뉴는 비움: 설정·지구본은 오른쪽 도구 막대로 */
-  body.wide .zoomctl { top: 16px; display: flex; flex-direction: column; align-items: flex-end; }
+  body.wide .zoomctl { top: 16px; display: flex; flex-direction: column; align-items: center; }
+  body.wide .zoomctl > button { display: grid; place-items: center; padding: 0; width: 44px; height: 44px; box-sizing: border-box; }   /* 아이콘 가운데 정렬 */
+  body.wide .zoomctl > button svg { margin: 0 !important; vertical-align: 0 !important; display: block; width: 22px; height: 22px; }
   body.wide .zoomctl #zvisor { position: fixed; right: 16px; bottom: 16px; width: 66px; height: 66px; margin: 0; border-radius: 14px; z-index: 9; }   /* 바이저: 화면 오른쪽 아래 구석 */
   body.wide .zoomctl #zvisor svg { width: 36px; height: 36px; }
   body.wide .zoomctl #w-settings[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
@@ -647,7 +649,7 @@
           <label><input type="radio" name="xmode" value="rover"><svg class="ico" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16.5V12l2.2-5h11.6L20 12v4.5zM4 12h16M7 19.5v-3M17 19.5v-3"/><circle cx="7.5" cy="14.3" r=".6"/><circle cx="16.5" cy="14.3" r=".6"/></svg><span>로버</span></label>
         </div>
         <div class="xrsrc"><label>산소 <input type="number" id="x-o2" min="100" max="1200" step="10"> g</label><label>냉각수 <input type="number" id="x-w" min="0.5" max="8" step="0.1"> kg</label></div>
-        <label class="xres" title="거점에 돌아왔을 때 출발량 대비 이만큼 이상 남깁니다. 지도 색 경계, 체류 시간, 귀환 경보, 구조 보급량에 모두 적용">복귀 때 남길 산소·냉각수 <input type="number" id="x-res" min="0" max="50" step="5" value="20">%</label>
+        <label class="xres" title="거점에 돌아왔을 때 출발량 대비 이만큼 이상 남깁니다. 작업 시간과 돌아서는 시점에 적용 (지도 색 띠는 고정: 왕복 뒤 남는 산소 20%·10% 경계)">복귀 때 남길 산소·냉각수 <input type="number" id="x-res" min="0" max="50" step="5" value="20">%</label>
         <div class="xsel" id="x-sel"></div>
         <div class="xscn" id="x-scn"></div>
       </div>
@@ -1052,6 +1054,7 @@
   // 데모 영어 전환 사전 (build_demo_html.py가 demo_template.html의 __I18N__ 자리에 넣는다)
 // 정확히 같은 문구 -> 영어. 숫자가 들어간 문구는 아래 I18N_RE 패턴으로.
 const I18N = {
+  "거점에 돌아왔을 때 출발량 대비 이만큼 이상 남깁니다. 작업 시간과 돌아서는 시점에 적용 (지도 색 띠는 고정: 왕복 뒤 남는 산소 20%·10% 경계)": "Keep at least this share of the starting amount when back at base. Changes work time and the turn-back moment; the map colour bands stay fixed (20 % and 10 % O2 left after a round trip).",
   "원래대로": "Reset view",
   "언어": "Language", "화면 언어": "Interface language",
   "메뉴": "Menu",
@@ -4498,7 +4501,13 @@ const I18N_RE = [
   });
   $("pt-facts").addEventListener("click", (e) => { if (e.target.id === "dw-auto") { state.xDwell = {}; stopSim(); update(); } });
   for (const [id, key, lo, hi] of [["x-o2", "o2", 100, 1200], ["x-w", "water", 0.5, 8]])   // 계획 카드에서 바로 자원 설정
-    $(id).addEventListener("change", (e) => { state[key] = Math.max(lo, Math.min(hi, Number(e.target.value) || lo)); activePreset = ""; syncInputs(); stopSim(); update(); });
+    { const el = $(id); let t = 0;
+      el.addEventListener("input", () => { clearTimeout(t); t = setTimeout(() => { if (el.value !== "") el.dispatchEvent(new Event("change")); }, 450); });
+      el.addEventListener("change", (e) => { state[key] = Math.max(lo, Math.min(hi, Number(e.target.value) || lo)); activePreset = ""; syncInputs(); stopSim(); update(); }); }
+  let RES_T = 0;
+  $("x-res").addEventListener("input", (e) => {   // 입력하는 대로 반영 (칸을 벗어나지 않아도)
+    clearTimeout(RES_T); RES_T = setTimeout(() => { if (e.target.value !== "") e.target.dispatchEvent(new Event("change")); }, 350);
+  });
   $("x-res").addEventListener("change", (e) => {
     state.planMargin = Math.max(0, Math.min(Number($("pm").max), Math.round(Number(e.target.value) || 0))); e.target.value = state.planMargin;
     $("pm").value = state.planMargin; stopSim(); update();

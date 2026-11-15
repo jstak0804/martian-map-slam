@@ -23,45 +23,41 @@ and radiation margin they have left, and **the safest way back** from any point.
 
 ![Planner screen with numbered controls](docs/img/guide-planner.jpg)
 
-**Top bar**
-1. **Region** — opens the 3D Mars globe (below) to pick Gale, Jezero or Aram Chaos. Switching clears the picked sites.
-2. **Exploration plan** — hover to see how to pick sites.
-3. **Settings** (gear) — scenarios, O2 and coolant sliders, solar particle event, model corrections (regolith, dune factor), map layers. Opens from the right.
-4. **Language** — English / Korean.
+**Header and right tool column**
+1. **Current region** — the region shown on the map.
+2. **Settings** (gear) — language, scenarios, O2 and coolant sliders, solar particle event, model corrections (regolith, dune factor), map layers. Opens from the right.
+3. **Globe** — opens the Mars globe (below) to pick Gale, Jezero or Aram Chaos. Switching clears the picked sites.
+4. **Roadview** — real rover photos (NASA/JPL Navcam) taken near each stop.
+5. **N** — north up ↔ target up (the current destination points to the top).
+6. **Zoom** — or the mouse wheel; drag anywhere (also outside the elevation data) to pan.
+7. **Reset view**.
+8. **Visor** (bottom-right) — helmet first-person view (see below).
+9. **Status** — O2, coolant, dose and comms right now. Drag the title to move the card (double-click puts it back); a short click folds it.
 
 **Map**
 
-5. **Science sites** (flags) — places the rovers actually studied. Hover a flag for what was done there; click it to add it to the plan (up to three: A, B, C). Any other point can be picked too.
-6. **Site outside the elevation data** — joins the route at the best strip-edge cell (level-ground estimate). Click it or its × to remove it.
-7. **Crew position** — the arrow points in the walking direction during playback.
-8. **Legend** — colour = O2 left after base → site → base (>20 %, 10–20 %, 0–10 %); hatched = level-ground estimate outside the HiRISE strip.
-
-**Right tool column**
-
-9. **N** — north up ↔ target up (the current destination points to the top).
-10. **Move base** (house) — click, then click the map. A spot cut off by slopes over 20° is moved to the nearest walkable cell by the gentlest route.
-11. **Visor** — helmet first-person view (see below).
-12. **Roadview** — real rover photos (NASA/JPL Navcam) taken near each stop.
-13. **Zoom** — or the mouse wheel; drag to pan.
-14. **Status** — O2, coolant, dose and comms right now. Click the title to fold it.
+10. **Base** (house) — drag it to move the base; routes and zones are recomputed.
+11. **Science sites** (flags) — places the rovers actually studied. Hover a flag for what was done there; click to add it to the plan (up to three: A, B, C). Any other point with elevation data can be picked too; areas outside the data cannot be picked, because no slope means no route or O2 can be computed there.
+12. **Crew** — the arrow points in the walking direction during playback.
+13. **Legend** — colour = O2 left after a round trip from base (>20 %, 10–20 %, 0–10 %); hatched = level-ground estimate outside the HiRISE strip.
 
 **Trip plan card**
 
-15. **On foot / Rover** — stays visible when the card is folded.
-16. **Resources** — O2 (g), coolant (kg) and the reserve (%) to keep on return. The reserve changes work time and the turn-back moment, not the map colours.
-17. **Sites and work time** — type minutes per site, or leave blank for the optimal value (shown faintly). × removes the site.
-18. **Times** — go, return and work time; during playback: time to the next site, return time from here, work time still possible.
-19. **Scenarios** — every subset and order of the picked sites. The one marked **OPTIMAL** (most sites, then longest work time) is used unless you pick another.
-20. **Playback** — ▶ play / pause, ↺ restart, **Return now** (stop the plan and walk back from here), speed.
-21. **Fold** the card to see more of the map.
-22. **Clear plan** (trash) — remove all picked sites.
+14. **On foot / Rover** — stays visible when the card is folded.
+15. **Resources** — O2 (g), coolant (kg) and the reserve (%) to keep on return. The reserve changes work time and when the crew turns back (1 % → work 140 min, back with about 8 g), not the map colours.
+16. **Sites and work time** — type minutes per site, or leave blank for the optimal value (shown faintly). × removes the site.
+17. **Times** — go, return and work time; during playback: time to the next site, return time from here, work time still possible.
+18. **Scenarios** — every subset and order of the picked sites. The one marked **OPTIMAL** (most sites, then longest work time) is used unless you pick another.
+19. **Playback** — ▶ play / pause, ↺ restart, **Return now** (stop the plan and walk back from here), speed.
+20. **Fold** the card to see more of the map.
+21. **Clear plan** (trash) — remove all picked sites.
 
 During playback, scroll below the map for the live chart (heart rate, correction factor k, usable O2 vs O2 needed to return).
 
-![3D Mars globe for picking a region](docs/img/guide-globe.jpg)
+![Mars globe for picking a region](docs/img/guide-globe.jpg)
 
-1. **Region pins** — Gale (Curiosity), Jezero (Perseverance) and Aram Chaos, at their latitude and longitude; click one to open its map.
-2. **Globe** — drag to rotate, wheel to zoom. Relief is NASA/JPL Mars Trek MGS MOLA shaded relief (stylised colour, not true colour).
+1. **Region pins** — Gale (Curiosity), Jezero (Perseverance) and Aram Chaos at their latitude and longitude; click one to open its map.
+2. **Globe** — drag to rotate, wheel to zoom. Imagery: NASA/JPL Mars Trek, Viking MDIM 2.1 colour mosaic.
 3. **Close**.
 
 ![Helmet visor with numbered elements](docs/img/guide-visor.jpg)

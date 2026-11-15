@@ -1,6 +1,7 @@
 // 데모 영어 전환 사전 (build_demo_html.py가 demo_template.html의 __I18N__ 자리에 넣는다)
 // 정확히 같은 문구 -> 영어. 숫자가 들어간 문구는 아래 I18N_RE 패턴으로.
 const I18N = {
+  "거점에 돌아왔을 때 출발량 대비 이만큼 이상 남깁니다. 작업 시간과 돌아서는 시점에 적용 (지도 색 띠는 고정: 왕복 뒤 남는 산소 20%·10% 경계)": "Keep at least this share of the starting amount when back at base. Changes work time and the turn-back moment; the map colour bands stay fixed (20 % and 10 % O2 left after a round trip).",
   "원래대로": "Reset view",
   "언어": "Language", "화면 언어": "Interface language",
   "메뉴": "Menu",
