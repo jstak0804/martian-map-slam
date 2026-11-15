@@ -1,4 +1,4 @@
-# Mars EVA Walkback & Survival Planner
+# How to Use our Martian-Map
 
 **NASA Space Apps 2026 · Interplanetary Survival Guide: Martian Map** · English | [한국어](README.ko.md)
 
