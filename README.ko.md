@@ -1,4 +1,5 @@
-# Mars EVA Walkback & Survival Planner (화성 EVA 귀환·생존 계획 도구)
+# How to Use our Martian-Map
+
 
 **NASA Space Apps 2026 · Interplanetary Survival Guide: Martian Map** · [English](README.md) | 한국어
 
@@ -10,8 +11,6 @@
 **▶ 데모:** [`reports/18-eva-walkback-demo.html`](reports/18-eva-walkback-demo.html) — 설치 없이 오프라인으로 열리는 HTML 파일 하나입니다.
 GitHub는 HTML을 실행하지 않고 소스로 보여 주므로, 링크에서 **Download raw file**을 눌러 받은 뒤 더블클릭하세요
 (데스크톱 Chrome/Edge, 가로 1440 px 이상 권장).
-플래너가 들어간 발표 페이지는 [`submission/Martian-Map-NASAJOIM.html`](submission/Martian-Map-NASAJOIM.html)입니다.
-
 ### 60초 체험
 
 1. 처음에는 **Gale 크레이터**가 열립니다. 집 모양이 거점, 화살표가 대원입니다.
